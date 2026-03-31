@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>香港保险日报 · 2026-03-25</title>
+  <style>
+    :root {
+      --navy:  #1E2761;
+      --teal:  #028090;
+      --mint:  #02C39A;
+      --off:   #F4F6FB;
+      --gray:  #8892A4;
+      --dark:  #111827;
+      --white: #FFFFFF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--off);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, #162050 60%, var(--teal) 100%);
+      color: var(--white);
+      padding: 40px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    header h1 { font-size: clamp(20px,3vw,28px); font-weight: 700; }
+    .header-sub { font-size: 13px; opacity: .6; margin-top: 4px; }
+    .header-tags { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .header-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.75);
+      border: 1px solid rgba(255,255,255,.15);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── KEY POINTS ── */
+    .key-points {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E8EDF8;
+      padding: 28px 28px 24px;
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title .icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .key-point {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #F0F3FA;
+    }
+    .key-point:last-child { border-bottom: none; }
+    .kp-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .kp-content { flex: 1; }
+    .kp-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .kp-detail {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* ── PLATFORM SECTION ── */
+    .platform-section {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E8EDF8;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .platform-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .platform-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* Platform colors */
+    .platform-xiaohongshu .platform-dot { background: #FF2442; }
+    .platform-douyin .platform-dot      { background: #1A1A1A; }
+    .platform-toutiao .platform-dot     { background: #F04142; }
+    .platform-bilibili .platform-dot    { background: #00A1D6; }
+    .platform-shipinhao .platform-dot   { background: #07C160; }
+
+    /* ── TABLE ── */
+    .content-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .content-table thead th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray);
+      padding: 8px 10px;
+      border-bottom: 2px solid #E8EDF8;
+    }
+    .content-table thead th:first-child {
+      width: 36px;
+      text-align: center;
+    }
+    .content-table thead th:nth-child(3) { width: 60px; }
+    .content-table tbody tr {
+      border-bottom: 1px solid #F4F6FB;
+      transition: background .1s;
+    }
+    .content-table tbody tr:hover { background: #F8FAFF; }
+    .content-table tbody td {
+      padding: 12px 10px;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .content-table tbody td:first-child {
+      text-align: center;
+      font-weight: 700;
+      color: var(--teal);
+    }
+    .content-table .td-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .content-table .td-type {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .type-note    { background: #FFF0F0; color: #D32F2F; }
+    .type-video   { background: #E8F5FF; color: #0277BD; }
+    .type-article { background: #FFF8E1; color: #F57F17; }
+    .type-tutorial{ background: #E8F5E9; color: #2E7D32; }
+
+    .platform-note {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #F0F3FA;
+      line-height: 1.6;
+    }
+
+    /* ── TRENDS ── */
+    .trends-section {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E8EDF8;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .trend-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #F0F3FA;
+    }
+    .trend-item:last-child { border-bottom: none; }
+    .trend-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+    .trend-detail {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    .disclaimer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray);
+      padding: 20px 24px 0;
+      line-height: 1.6;
+    }
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.4);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-top: 40px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header { padding: 28px 20px 24px; }
+      main { padding: 20px 14px 60px; }
+      .key-points, .platform-section, .trends-section { padding: 20px 16px; }
+      .content-table { font-size: 12px; }
+      .content-table thead th:nth-child(4),
+      .content-table tbody td:nth-child(4) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <a class="back-btn" href="hk-insurance-reports.html">&larr; 返回列表</a>
+    </div>
+    <h1>香港保险 &middot; 每日热门资讯</h1>
+    <div class="header-sub">2026年3月25日 &nbsp;&middot;&nbsp; AI 自动整理，仅供参考</div>
+    <div class="header-tags">
+      <span class="header-tag">储蓄险</span>
+      <span class="header-tag">分红险</span>
+      <span class="header-tag">美元保单</span>
+      <span class="header-tag">理财类产品</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══════ 今日要点 ══════ -->
+  <div class="key-points">
+    <div class="section-title">
+      <span class="icon" style="background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;">&#9654;</span>
+      今日要点
+    </div>
+
+    <div class="key-point">
+      <div class="kp-num">1</div>
+      <div class="kp-content">
+        <div class="kp-title">太保寿险强势入局香港储蓄险市场</div>
+        <div class="kp-detail">3月初推出新品鑫安逸，30年保证复利3.5%（折算单利6.11%），搅动跨境储蓄险竞争格局。</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="kp-num">2</div>
+      <div class="kp-content">
+        <div class="kp-title">全球股市震荡推高港险避险情绪</div>
+        <div class="kp-detail">美股三大指数大跌、韩国熔断、日股暴跌超1400点，港险=避风港叙事在各平台同步发酵，互动量显著提升。</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="kp-num">3</div>
+      <div class="kp-content">
+        <div class="kp-title">友邦3月重磅礼遇月底截止</div>
+        <div class="kp-detail">盈御3叠加优惠最高28%，趸缴额外折扣8.5%，3月31日截止，代理人密集冲量中。</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="kp-num">4</div>
+      <div class="kp-content">
+        <div class="kp-title">分红演示利率新规进入倒计时</div>
+        <div class="kp-detail">7月1日起港元/非港元险上限分别为6%/6.5%，分红实现率横评内容持续热传，消费者聚焦真实收益差距。</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="kp-num">5</div>
+      <div class="kp-content">
+        <div class="kp-title">美元保单需求稳定</div>
+        <div class="kp-detail">预缴利率维持4%-7.2%区间，汇率避险逻辑持续驱动内地客赴港，多货币保单攻略内容活跃。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ 小红书 Top 5 ══════ -->
+  <div class="platform-section platform-xiaohongshu">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">小红书 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">2026年3月港险优惠汇总，哪家最划算？</td>
+          <td><span class="td-type type-note">笔记</span></td>
+          <td>对比友邦、宏利、保诚、富通的3月促销力度，附预缴利率一览表，互动量较高</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">我在香港买了储蓄险，真实体验来了</td>
+          <td><span class="td-type type-note">笔记</span></td>
+          <td>博主亲历投保全流程，分享赴港体检、签约、缴费记录，附代理沟通技巧</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">港险避坑指南：非保证收益到底能不能信？</td>
+          <td><span class="td-type type-note">笔记</span></td>
+          <td>科普保证vs非保证收益区别，结合分红实现率数据提示风险，理性评测风格</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">美元还是港元？买港险选哪种货币保单？</td>
+          <td><span class="td-type type-note">笔记</span></td>
+          <td>从汇率、收益率、用途三维度对比两种保单，适合首次投保人群</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">太保鑫安逸测评：内地险企杀入港险市场</td>
+          <td><span class="td-type type-note">笔记</span></td>
+          <td>新品首测，重点对比与友邦、宏利同类产品差异，关注度持续攀升</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 小红书内容需登录查看，以上为基于热度趋势归纳的热门方向，建议在App内搜索「香港保险」「储蓄险」验证。</div>
+  </div>
+
+  <!-- ══════ 抖音 Top 5 ══════ -->
+  <div class="platform-section platform-douyin">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">抖音 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">股市大跌，我为什么还在买港险？</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>结合近期市场动荡讲解储蓄险锁定收益逻辑，情绪共鸣强，完播率高</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">3分钟看懂香港储蓄险怎么买</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>快速科普投保流程、材料清单，适合入门人群，互动量高</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">友邦3月最后冲刺！这个折扣月底没了 [疑似推广]</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>代理人账号发布促销内容，重点说明截止日期紧迫性</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">我妈让我买港险，我说了这5个问题</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>从子女视角讨论是否适合父母投保，引发大量评论互动</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">港险分红实现率大揭秘：谁说了算？</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>以通俗语言解释分红实现率概念，对比4家公司历史数据</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 抖音算法个性化较强，建议在App内搜索相关关键词获取个性化推荐。</div>
+  </div>
+
+  <!-- ══════ 今日头条 Top 5 ══════ -->
+  <div class="platform-section platform-toutiao">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">今日头条 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">太保寿险在香港开卷，新品搅局跨境储蓄险</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>鑫安逸3月上线，30年保证复利3.5%，附加养老、出行增值服务，与友邦、宏利正面竞争</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">全球股票市场连续大跌！香港保险才是避风港！</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>美股、韩股熔断背景下，分析港险储蓄类产品锁定收益优势和全球资产配置逻辑</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">香港保险内地化，一场爆雷潮正在加速到来</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>警示视角：部分港险收益演示注水，分红实现率不达预期，需关注非保证部分真实兑现率</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">中资港险分红实现率盘点：4家公司横向对比</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>横评4家中资港险历史分红实现率数据，帮助消费者判断非保证收益可信度</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">友邦3月重磅礼遇：大额投保优惠最高28%</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>详解盈御3趸缴折扣8.5%、组合优惠最高28%，适合大额投保人群，3月31日截止</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════ B站 Top 5 ══════ -->
+  <div class="platform-section platform-bilibili">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">B站 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">友邦盈御3多元货币计划有一个致命缺陷！</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>深度测评盈御3，点出多元货币切换隐藏限制，对比港险与内地险区别，附详细攻略</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">太保香港新品来了！鑫安逸值得买吗？</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>新品首测，从保证收益、费率、灵活性维度评分，与主流储蓄险横向对比</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">香港储蓄险完全指南 2026版</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>系统梳理港险储蓄类产品选购逻辑，覆盖保司选择、币种配置、投保时机</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">分红实现率怎么看？手把手教你读懂保险公司报告</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>以4家港险公司为例，逐步解析分红实现率报告，评论区热烈讨论</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">我买港险一年了，来汇报真实收益</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>博主持仓复盘，展示实际保单价值增长，分享投保后服务体验</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════ 视频号 Top 5 ══════ -->
+  <div class="platform-section platform-shipinhao">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">视频号 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">3月港险不买会后悔？真实数据告诉你 [疑似推广]</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>保险从业者账号展示近期投保数量增长数据，传递行动紧迫感</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">香港保险监管新规解读：演示利率限高影响几何？</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>解读7月1日即将实施的演示利率上限新规，分析对消费者选购的实际影响</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">全球市场动荡下，美元资产配置怎么做？</td>
+          <td><span class="td-type type-video">中长视频</span></td>
+          <td>从宏观角度分析美元保单资产配置价值，结合近期股市暴跌背景深度讲解</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">太保PK友邦：你会选谁？</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>趣味对比两家公司新品，侧重收益率、服务、品牌信誉三维度</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">内地客赴港投保全流程：2026年最新版</td>
+          <td><span class="td-type type-tutorial">教程</span></td>
+          <td>更新版投保攻略，涵盖准备材料、预约代理、赴港签单、缴费方式全流程</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 微信视频号内容封闭性较强，建议在微信内搜索相关关键词查看热门内容。</div>
+  </div>
+
+  <!-- ══════ 趋势观察 ══════ -->
+  <div class="trends-section">
+    <div class="section-title">
+      <span class="icon" style="background:linear-gradient(135deg,#C0507A,#7B2D8B);color:#fff;">&#9670;</span>
+      趋势观察
+    </div>
+
+    <div class="trend-item">
+      <div class="trend-title">新玩家入局，竞争加剧</div>
+      <div class="trend-detail">太保寿险香港新品鑫安逸3月上线，内地险企进军香港储蓄险市场引发广泛讨论，市场竞争格局正在重塑。</div>
+    </div>
+
+    <div class="trend-item">
+      <div class="trend-title">避险情绪推动港险热度</div>
+      <div class="trend-detail">3月全球股市剧烈动荡，港险=避风港叙事在各平台同步发酵，相关内容互动量明显提升。</div>
+    </div>
+
+    <div class="trend-item">
+      <div class="trend-title">3月是冲量窗口期</div>
+      <div class="trend-detail">友邦等多家主力险企季度优惠3月底截止，代理人发力推广，攻略对比类内容大量涌现。</div>
+    </div>
+
+    <div class="trend-item">
+      <div class="trend-title">监管新规成为持续话题</div>
+      <div class="trend-detail">演示利率限高（7月1日起）持续发酵，分红实现率真实性、历史履约能力成为消费者关注焦点。</div>
+    </div>
+
+    <div class="trend-item">
+      <div class="trend-title">美元保单需求稳定</div>
+      <div class="trend-detail">人民币汇率压力与全球不确定性背景下，美元计价储蓄险货币多元化优势被反复强调，币种选择类内容持续活跃。</div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    本报告由 AI 自动搜集整理，内容来源于公开网络信息，仅供参考，不构成投资建议。<br>
+    生成时间：2026-03-25
+  </div>
+
+</main>
+
+<footer>
+  保心上人 &middot; CONFIDENTIAL &middot; INTERNAL USE ONLY
+</footer>
+
+</body>
+</html>

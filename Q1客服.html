@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 客服团队Q1渠道分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F3E5AB;
+            --dark-bg: #0A0A0A;
+            --dark-card: #1A1A1A;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #E5E5E5;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        .gold-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8A2E 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .card-shadow:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.6);
+        }
+
+        .table-row:hover {
+            background-color: rgba(212, 175, 55, 0.05);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto mb-12 text-center">
+        <div class="inline-block px-4 py-1 border border-[#D4AF37] text-[#D4AF37] text-xs mb-4 rounded-full tracking-widest">
+            INTERNAL DATA REPORT | 内部管理机密
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 gold-text italic">客服团队 Q1 渠道分发与转化报告</h1>
+        <p class="text-gray-500 text-sm tracking-widest">Analysis of Channel Inbound and Conversion Efficiency</p>
+    </header>
+
+    <!-- Charts Section -->
+    <section class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Top 3 Leads by Account (Pie Chart) -->
+        <div class="bg-[#1A1A1A] p-6 rounded-xl gold-border card-shadow">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <span class="w-1 h-5 gold-gradient-bg"></span> 前三名线索来源账户 (Top 3 Lead Sources)
+            </h3>
+            <div class="h-64">
+                <canvas id="topLeadsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Revenue by Account (Doughnut Chart) -->
+        <div class="bg-[#1A1A1A] p-6 rounded-xl gold-border card-shadow">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <span class="w-1 h-5 gold-gradient-bg"></span> 核心账号成交贡献占比 (Revenue by Account)
+            </h3>
+            <div class="h-64">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Table -->
+    <section class="max-w-7xl mx-auto bg-[#1A1A1A] rounded-xl gold-border overflow-hidden mb-8 card-shadow">
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="text-lg font-bold">核心账户表现明细 (Top 10 By Leads)</h3>
+            <span class="text-xs text-gray-500 italic">* 数据截止至本季度末最后一次统计</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-[#252525] text-gray-400 uppercase text-xs">
+                    <tr>
+                        <th class="px-6 py-4 font-normal">渠道</th>
+                        <th class="px-6 py-4 font-normal">账户名称</th>
+                        <th class="px-6 py-4 font-normal text-right">线索数</th>
+                        <th class="px-6 py-4 font-normal text-right">已方案人数</th>
+                        <th class="px-6 py-4 font-normal text-right">成交额</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-800">
+                    <tr class="table-row">
+                        <td class="px-6 py-4">视频号</td>
+                        <td class="px-6 py-4 text-gray-300">保心上人存钱</td>
+                        <td class="px-6 py-4 text-right font-bold text-white">98</td>
+                        <td class="px-6 py-4 text-right text-gray-400">4</td>
+                        <td class="px-6 py-4 text-right">--</td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="px-6 py-4">公众号</td>
+                        <td class="px-6 py-4 text-gray-300">崔伟说投资</td>
+                        <td class="px-6 py-4 text-right font-bold text-white">72</td>
+                        <td class="px-6 py-4 text-right text-gray-400">8</td>
+                        <td class="px-6 py-4 text-right text-gold-primary">¥284,518</td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="px-6 py-4">公众号</td>
+                        <td class="px-6 py-4 text-gray-300">保心上人存钱</td>
+                        <td class="px-6 py-4 text-right font-bold text-white">46</td>
+                        <td class="px-6 py-4 text-right text-gray-400">0</td>
+                        <td class="px-6 py-4 text-right text-gold-primary">¥21,840</td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="px-6 py-4">公众号</td>
+                        <td class="px-6 py-4 text-gray-300">保心上人投资</td>
+                        <td class="px-6 py-4 text-right font-bold text-white">38</td>
+                        <td class="px-6 py-4 text-right text-gray-400">3</td>
+                        <td class="px-6 py-4 text-right">--</td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="px-6 py-4">快手</td>
+                        <td class="px-6 py-4 text-gray-300">保心上人咨询</td>
+                        <td class="px-6 py-4 text-right font-bold text-white">38</td>
+                        <td class="px-6 py-4 text-right text-gray-400">2</td>
+                        <td class="px-6 py-4 text-right">--</td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="px-6 py-4 text-white font-bold bg-[#1e1e1e]" colspan="2">其他渠道汇总 (17个账户)</td>
+                        <td class="px-6 py-4 text-right font-bold text-white bg-[#1e1e1e]">63</td>
+                        <td class="px-6 py-4 text-right font-bold bg-[#1e1e1e]">13</td>
+                        <td class="px-6 py-4 text-right text-gold-primary bg-[#1e1e1e]">¥137,064</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Insights Section -->
+    <section class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="bg-gradient-to-r from-[#1A1A1A] to-[#252525] p-8 rounded-xl gold-border card-shadow">
+            <h3 class="text-[#D4AF37] text-xl font-bold mb-4 italic">数据洞察 / Key Insights</h3>
+            <div class="space-y-4 text-sm text-gray-400 leading-relaxed">
+                <p><strong class="text-white">1. 流量之王：</strong> 视频号线索占比最高，是客服团队日常接待压力最大的阵地。建议优化自动欢迎语以过滤无效咨询。</p>
+                <p><strong class="text-white">2. 高净值核心：</strong> <strong>“公众号-崔伟说投资”</strong> 是本季度的业绩压舱石，其客单价与转化质量显著优于其他账号。</p>
+                <p><strong class="text-white">3. 漏斗瓶颈：</strong> 整体方案约见率有待提高，Q2 需加强客服在线索初筛时的“服务包”推介话术培训。</p>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-[#1A1A1A] to-[#252525] p-8 rounded-xl gold-border card-shadow">
+            <h3 class="text-[#D4AF37] text-xl font-bold mb-4 italic">客服 Q2 攻坚目标</h3>
+            <ul class="space-y-6 text-sm text-gray-400">
+                <li class="flex items-center gap-4">
+                    <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-[#D4AF37] border border-[#D4AF37] text-sm font-bold shadow-lg">1</span>
+                    <span class="text-white text-base font-medium italic underline decoration-[#D4AF37] decoration-2 underline-offset-4">增加横屏视频内容制作</span>
+                    <span class="text-gray-500">—— 利用差异化展示提升线索获取质量。</span>
+                </li>
+                <li class="flex items-center gap-4">
+                    <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-[#D4AF37] border border-[#D4AF37] text-sm font-bold shadow-lg">2</span>
+                    <span class="text-white text-base">针对“崔伟说投资”系列账号，建立专属的高质量客户响应通道。</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <footer class="text-center text-gray-600 text-xs py-8">
+        保心上人公司 · 客服管理中心 · Q1 数据统计决算表
+    </footer>
+
+    <script>
+        Chart.defaults.color = '#888';
+        Chart.defaults.font.family = 'PingFang SC';
+
+        // Top 3 Leads Chart (Pie Chart)
+        const topLeadsCtx = document.getElementById('topLeadsChart').getContext('2d');
+        new Chart(topLeadsCtx, {
+            type: 'pie',
+            data: {
+                labels: ['视频号-保心上人存钱', '公众号-崔伟说投资', '公众号-保心上人存钱'],
+                datasets: [{
+                    data: [98, 72, 46],
+                    backgroundColor: ['#D4AF37', '#AA8A2E', '#7D6622'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { 
+                            boxWidth: 10, 
+                            padding: 15, 
+                            color: '#AAA',
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Revenue Chart (Doughnut Chart)
+        const revCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    '公众号: 崔伟说投资', 
+                    '其它账户汇总', 
+                    '抖音: 崔伟说投资', 
+                    '公众号: 保心上人存钱', 
+                    '头条: 崔伟说投资'
+                ],
+                datasets: [{
+                    data: [284518, 137064, 28000, 21840, 15000],
+                    backgroundColor: ['#D4AF37', '#AA8A2E', '#7D6622', '#4D4015', '#C0C0C0'],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { 
+                            boxWidth: 10, 
+                            padding: 15, 
+                            color: '#AAA',
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

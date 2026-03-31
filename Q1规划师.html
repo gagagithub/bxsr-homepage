@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 2026年Q2工作展望与Q1全维度分析报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto+Sans+SC', sans-serif;
+            background-color: #050505;
+            color: #d4af37;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .gap-indicator {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            border-left: 4px solid #ef4444;
+        }
+
+        .section-title {
+            position: relative;
+            padding-left: 1rem;
+            border-left: 4px solid #d4af37;
+        }
+
+        .funnel-stage {
+            clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+
+        .funnel-stage:hover {
+            filter: brightness(1.2);
+            transform: scale(1.01);
+        }
+
+        .directive-card {
+            border: 4px solid;
+            transition: transform 0.3s;
+        }
+        .directive-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .deficit-row {
+            background: rgba(239, 68, 68, 0.05);
+            border-left: 4px solid #ef4444;
+        }
+
+        .surplus-row {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 4px solid #d4af37;
+        }
+
+        .rating-card {
+            background: linear-gradient(90deg, rgba(30, 30, 30, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .rating-card:hover {
+            border-color: #d4af37;
+            transform: scale(1.01);
+        }
+
+        .rating-s { color: #fcf6ba; text-shadow: 0 0 15px rgba(252, 246, 186, 0.5); }
+        .rating-c { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+
+        .giant-directive {
+            border: 4px solid transparent;
+            background: linear-gradient(#111, #111) padding-box, 
+                        linear-gradient(to bottom, #d4af37, #333) border-box;
+        }
+
+        .giant-directive-red {
+            border: 4px solid transparent;
+            background: linear-gradient(#111, #111) padding-box, 
+                        linear-gradient(to bottom, #ef4444, #333) border-box;
+        }
+
+        /* 封面特有样式 */
+        .cover-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 5rem;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 5rem;
+        }
+
+        .plan-520-title {
+            font-size: 10rem;
+            line-height: 1;
+            font-weight: 900;
+            margin: 1.5rem 0;
+            letter-spacing: -2px;
+        }
+
+        /* HR指令高亮样式 */
+        .hr-command-box {
+            background: linear-gradient(135deg, #450a0a 0%, #000 100%);
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-20">
+
+    <!-- NEW PART: Q2 OUTLOOK COVER (520 PLAN) -->
+    <section class="cover-section animate-fade-in">
+        <div class="mb-6">
+            <h1 class="text-4xl md:text-6xl font-bold gold-gradient-text tracking-widest uppercase mb-4">保心上人</h1>
+            <p class="text-zinc-500 text-2xl tracking-[0.4em] italic font-light uppercase">Q2工作展望报告 · 2026</p>
+        </div>
+
+        <div class="border-y border-amber-900/50 py-8 my-6 relative overflow-hidden text-center md:text-left">
+            <div class="absolute right-0 top-0 text-[18rem] font-black text-white/[0.02] pointer-events-none select-none">520</div>
+            <h2 class="plan-520-title gold-gradient-text italic tracking-tighter">520 计划</h2>
+            <p class="text-3xl md:text-5xl text-white font-black tracking-[0.3em] uppercase">生 存 之 本 · 粮 草 保 障</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-6">
+            <!-- Point 1: 规划师与HR指令 -->
+            <div class="card p-10 rounded-[3rem] border-t-8 border-amber-600 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="text-6xl font-black text-amber-500/30 font-mono italic">01</div>
+                        <h3 class="text-4xl font-black text-white italic tracking-tighter">规划师：生存之本</h3>
+                    </div>
+                    <p class="text-zinc-100 text-2xl leading-relaxed font-bold mb-10">
+                        3个规划师，每个月产生<span class="text-amber-500 text-4xl underline mx-2">5万</span>的保费规模是公司的生存之本。
+                    </p>
+                </div>
+                
+                <div class="hr-command-box p-8 rounded-[2rem] relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-red-600 text-white text-xs font-black px-3 py-1 rounded uppercase tracking-widest animate-pulse">HR指令 / CRITICAL COMMAND</span>
+                    </div>
+                    <p class="text-white text-xl font-black leading-relaxed">
+                        随时与当月不达标同事保持沟通。
+                        <span class="text-red-500 underline underline-offset-8">无意愿或无能力者建议调岗</span>。
+                        HR需尽快补充新鲜规划师替补，保持公司正常运作。
+                    </p>
+                    <div class="absolute right-[-10px] bottom-[-20px] opacity-10">
+                        <svg width="100" height="100" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Point 2: 编辑与剪辑 -->
+            <div class="card p-10 rounded-[3rem] border-t-8 border-zinc-500 bg-gradient-to-b from-zinc-900/50 to-transparent">
+                <div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="text-6xl font-black text-zinc-500/30 font-mono italic">02</div>
+                        <h3 class="text-4xl font-black text-white italic tracking-tighter">编辑：粮草保障</h3>
+                    </div>
+                    <p class="text-zinc-100 text-2xl leading-relaxed font-bold mb-8">
+                        3个编辑，每个月产生<span class="text-zinc-100 text-4xl underline mx-2">20个线索</span>，事关到规划师的粮草问题。
+                    </p>
+                    <p class="text-zinc-400 text-lg leading-relaxed mb-10 italic border-l-4 border-zinc-700 pl-4">
+                        在此基础上，要持续提高线索质量，全力争取更多“能做方案”的高意向线索数。
+                    </p>
+                </div>
+
+                <div class="bg-zinc-800/40 p-8 rounded-[2rem] border border-zinc-700">
+                    <h6 class="text-amber-500/80 font-black text-sm uppercase tracking-widest mb-4 italic">剪辑支撑 / Video Production</h6>
+                    <p class="text-zinc-100 text-xl font-bold leading-relaxed">
+                        剪辑同事需争取达到 <span class="text-amber-500 text-3xl font-black underline">25%</span> 的2S跳出率，
+                        以优质的前端视觉呈现为编辑同事解决后顾之忧。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 1: Executive Summary & Financial Gap (DO NOT EDIT) -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-zinc-800 pb-8 animate-fade-in">
+        <div>
+            <h1 class="text-5xl font-bold gold-gradient-text tracking-widest mb-4 uppercase">保心上人</h1>
+            <p class="text-zinc-500 tracking-[0.4em] text-xs">Q1 COMPREHENSIVE BUSINESS AUDIT · 2026</p>
+        </div>
+        <div class="text-right">
+            <h2 class="text-2xl font-light text-zinc-300">2026年第一季度全维度经营报告</h2>
+            <p class="text-amber-600 font-mono text-sm mt-1 uppercase">盈亏平衡目标: 450,000 CNY</p>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 animate-fade-in" style="animation-delay: 0.1s">
+        <!-- Gap Metric -->
+        <div class="gap-indicator card p-8 rounded-2xl flex flex-col justify-center overflow-hidden relative min-h-[220px]">
+            <div class="relative z-10">
+                <h2 class="text-zinc-500 text-sm uppercase tracking-widest mb-2 italic">季度团队盈亏平衡缺口</h2>
+                <div class="flex items-baseline gap-4">
+                    <span class="text-7xl font-bold text-white tracking-tighter">-104,790</span>
+                    <span class="text-red-500 text-xl font-light">CNY</span>
+                </div>
+                <div class="mt-6 flex items-center gap-4">
+                    <div class="w-64 bg-zinc-900 h-2 rounded-full overflow-hidden">
+                        <div class="bg-red-600 h-full" style="width: 76.7%"></div>
+                    </div>
+                    <span class="text-zinc-400 text-sm">达成率: 76.7%</span>
+                </div>
+            </div>
+            <div class="absolute right-0 top-0 text-[140px] font-bold text-white/[0.02] pointer-events-none select-none italic">GAP</div>
+        </div>
+
+        <!-- Metric: Total Leads for Q1 -->
+        <div class="card p-8 rounded-2xl flex flex-col justify-center relative overflow-hidden min-h-[220px] border-l-4 border-amber-500 bg-gradient-to-br from-amber-900/10 to-transparent">
+            <div class="relative z-10">
+                <h2 class="text-amber-500 text-sm font-bold uppercase tracking-widest mb-2 italic">Q1 季度总线索分发 (Total Leads)</h2>
+                <div class="flex items-baseline gap-4">
+                    <span class="text-7xl font-bold text-white tracking-tighter">400</span>
+                    <span class="text-amber-500 text-xl font-light">人</span>
+                </div>
+                <p class="text-zinc-400 text-xs mt-6">第一季度累计新获客分发总数。</p>
+            </div>
+            <div class="absolute right-[-20px] bottom-[-20px] text-[120px] font-bold text-amber-500/[0.05] pointer-events-none select-none italic tracking-tighter">LEADS</div>
+        </div>
+    </div>
+
+    <!-- Part 2: Responsibility Audit -->
+    <div class="card p-10 rounded-3xl mb-16 animate-fade-in" style="animation-delay: 0.2s">
+        <h4 class="section-title text-2xl font-bold text-white mb-10 italic">盈亏责任审计 (Responsibility Gap)</h4>
+        <div class="grid grid-cols-1 gap-4 mb-8">
+            <div class="surplus-row p-6 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-amber-500 text-xl">盈</div>
+                    <div><p class="text-white text-lg font-bold">林付贤</p><p class="text-xs text-zinc-500">实际: 197,177</p></div>
+                </div>
+                <div class="text-right"><p class="text-amber-500 font-bold text-3xl">+47,177</p></div>
+            </div>
+            <div class="deficit-row p-6 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center font-bold text-red-500 text-xl">缺</div>
+                    <div><p class="text-white text-lg font-bold">马康挺</p><p class="text-xs text-zinc-500">实际: 102,852</p></div>
+                </div>
+                <div class="text-right"><p class="text-red-500 font-bold text-3xl">-47,148</p></div>
+            </div>
+            <div class="deficit-row p-6 rounded-xl flex items-center justify-between border-l-8">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 rounded-full bg-red-500/40 flex items-center justify-center font-bold text-red-500 text-2xl animate-pulse">!</div>
+                    <div><p class="text-white text-lg font-bold">江宁</p><p class="text-xs text-zinc-500">实际: 45,181</p></div>
+                </div>
+                <div class="text-right"><p class="text-red-500 font-bold text-5xl tracking-tighter">-104,819</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part 3: Deep Dive - Funnel Analysis -->
+    <div class="mb-16 animate-fade-in" style="animation-delay: 0.3s">
+        <h4 class="section-title text-2xl font-bold text-white mb-10 italic">动因分析：业务行为逻辑透视</h4>
+        <div class="space-y-12">
+            <div class="card p-10 rounded-3xl border-amber-500/40 bg-gradient-to-r from-amber-950/10 to-transparent">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                    <div class="lg:col-span-5">
+                        <h5 class="text-3xl font-bold text-white mb-4">林付贤</h5>
+                        <p class="text-amber-500 font-bold mb-6 text-lg italic underline decoration-amber-500/30">“顶级收割者 · 高效收口”</p>
+                        <div class="bg-amber-900/10 p-6 rounded-2xl border border-amber-900/20"><p class="text-sm text-zinc-300 leading-relaxed">沟通后讲解转化率高达 <span class="text-white font-black underline text-lg">82%</span>。在最终收口阶段具备顶级专业素养。</p></div>
+                    </div>
+                    <div class="lg:col-span-7 flex flex-col items-center">
+                        <div class="w-full max-w-md space-y-2">
+                            <div class="funnel-stage w-full h-12 bg-zinc-800/80 text-zinc-400 text-sm">分发: 173</div>
+                            <div class="funnel-stage w-[90%] mx-auto h-12 bg-zinc-700/80 text-amber-500 text-sm">添加: 61%</div>
+                            <div class="funnel-stage w-[80%] mx-auto h-12 bg-amber-900/30 text-amber-500 text-sm font-bold">沟通: 10%</div>
+                            <div class="funnel-stage w-[70%] mx-auto h-16 bg-amber-500 text-black text-xl shadow-[0_0_25px_rgba(212,175,55,0.4)]">讲解: 82%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-10 rounded-3xl border-amber-500/30 bg-gradient-to-r from-zinc-900/50 to-transparent">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                    <div class="lg:col-span-5">
+                        <h5 class="text-3xl font-bold text-white mb-4">马康挺</h5>
+                        <p class="text-zinc-300 font-bold mb-6 text-lg italic">“信任基石 · 稳健转化”</p>
+                        <div class="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800"><p class="text-sm text-zinc-400 leading-relaxed">讲解转化率达 <span class="text-white font-bold">75%</span>。前端信任感最强（添加率67%）。</p></div>
+                    </div>
+                    <div class="lg:col-span-7 flex flex-col items-center">
+                        <div class="w-full max-w-md space-y-2">
+                            <div class="funnel-stage w-full h-12 bg-zinc-800/80 text-zinc-500 text-sm">分发: 98</div>
+                            <div class="funnel-stage w-[90%] mx-auto h-12 bg-zinc-700/80 text-amber-500 text-sm font-bold">添加: 67%</div>
+                            <div class="funnel-stage w-[80%] mx-auto h-12 bg-zinc-600/80 text-zinc-300 text-sm">沟通: 12%</div>
+                            <div class="funnel-stage w-[70%] mx-auto h-16 bg-zinc-200 text-black text-xl">讲解: 75%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-10 rounded-3xl border-red-900/30 bg-gradient-to-r from-red-950/10 to-transparent">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                    <div class="lg:col-span-5">
+                        <h5 class="text-3xl font-bold text-white mb-4">江宁</h5>
+                        <p class="text-red-500 font-bold mb-6 text-lg italic underline decoration-red-500/50">“资源损耗 · 临门一脚缺失”</p>
+                        <div class="bg-red-900/10 p-6 rounded-2xl border border-red-900/20"><p class="text-sm text-zinc-400 leading-relaxed">讲解率仅为 <span class="text-red-500 font-black text-xl">20%</span>。大量沟通（15%）在最后环节断流。</p></div>
+                    </div>
+                    <div class="lg:col-span-7 flex flex-col items-center">
+                        <div class="w-full max-w-md space-y-2">
+                            <div class="funnel-stage w-full h-12 bg-zinc-800/80 text-zinc-500 text-sm">分发: 103</div>
+                            <div class="funnel-stage w-[90%] mx-auto h-12 bg-zinc-700/80 text-amber-500 text-sm">添加: 64%</div>
+                            <div class="funnel-stage w-[80%] mx-auto h-12 bg-zinc-600/80 text-zinc-300 text-sm">沟通: 15%</div>
+                            <div class="funnel-stage w-[70%] mx-auto h-16 bg-red-900 text-white text-xl animate-pulse italic">讲解: 20%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part 4: Analytical Visuals -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 animate-fade-in" style="animation-delay: 0.4s">
+        <div class="card p-8 rounded-3xl">
+            <h4 class="section-title text-xl font-bold mb-8 italic text-white">动作效率 vs 变现价值对比矩阵</h4>
+            <div class="h-80"><canvas id="matrixChart"></canvas></div>
+        </div>
+        <div class="card p-8 rounded-3xl">
+            <h4 class="section-title text-xl font-bold mb-8 italic text-white">月度保费趋势 vs 目标线</h4>
+            <div class="h-80"><canvas id="trendChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Part 5: Capacity Rating -->
+    <div class="mb-20 animate-fade-in" style="animation-delay: 0.5s">
+        <div class="text-center mb-12">
+            <h4 class="section-title text-3xl font-bold text-white italic inline-block border-b-2 border-amber-500 pb-2">Q1 综合能力等级评定 (Capacity Rating)</h4>
+            <p class="text-zinc-500 mt-4 text-lg">单客产值数据体现开发上限，决定 Q2 资源分配核心权重</p>
+        </div>
+        
+        <div class="space-y-8">
+            <!-- 林 S -->
+            <div class="rating-card p-10 rounded-[3rem] flex flex-wrap items-center justify-between gap-8 border-l-[12px] border-l-amber-500 shadow-2xl bg-zinc-900/40">
+                <div class="flex items-center gap-10 min-w-[300px]">
+                    <div class="text-center">
+                        <p class="text-zinc-500 text-sm uppercase mb-2">规划师</p>
+                        <p class="text-4xl font-black text-white tracking-tighter">林付贤</p>
+                    </div>
+                    <div class="h-20 w-[1px] bg-zinc-800"></div>
+                    <div>
+                        <p class="text-zinc-500 text-sm uppercase mb-2">能力评级</p>
+                        <p class="text-7xl font-black rating-s italic">S</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1 flex flex-col items-center justify-center px-10 border-x border-zinc-800/50">
+                    <p class="text-amber-500 text-xl font-black uppercase mb-4 tracking-widest flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
+                        单客产值 (LEAD VALUE)
+                    </p>
+                    <p class="text-8xl font-black text-white tracking-tighter shadow-sm">¥ 1,140</p>
+                    <p class="text-zinc-500 mt-2 font-bold">全团顶级变现效率 · 资源分发第一优先级</p>
+                </div>
+
+                <div class="text-right min-w-[200px]">
+                    <div class="mb-4">
+                        <p class="text-zinc-500 text-xs uppercase mb-1">前端获信</p>
+                        <p class="text-2xl font-bold text-zinc-300">61%</p>
+                    </div>
+                    <div>
+                        <p class="text-zinc-500 text-xs uppercase mb-1">讲解转化</p>
+                        <p class="text-2xl font-bold text-green-500">82%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 马 S -->
+            <div class="rating-card p-10 rounded-[3rem] flex flex-wrap items-center justify-between gap-8 border-l-[12px] border-l-amber-500 shadow-2xl bg-zinc-900/40">
+                <div class="flex items-center gap-10 min-w-[300px]">
+                    <div class="text-center">
+                        <p class="text-zinc-500 text-sm uppercase mb-2">规划师</p>
+                        <p class="text-4xl font-black text-white tracking-tighter">马康挺</p>
+                    </div>
+                    <div class="h-20 w-[1px] bg-zinc-800"></div>
+                    <div>
+                        <p class="text-zinc-500 text-sm uppercase mb-2">能力评级</p>
+                        <p class="text-7xl font-black rating-s italic">S</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1 flex flex-col items-center justify-center px-10 border-x border-zinc-800/50">
+                    <p class="text-amber-500 text-xl font-black uppercase mb-4 tracking-widest flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
+                        单客产值 (LEAD VALUE)
+                    </p>
+                    <p class="text-8xl font-black text-white tracking-tighter shadow-sm">¥ 1,050</p>
+                    <p class="text-zinc-500 mt-2 font-bold">王牌级变现效率 · 业务核心支柱</p>
+                </div>
+
+                <div class="text-right min-w-[200px]">
+                    <div class="mb-4">
+                        <p class="text-zinc-500 text-xs uppercase mb-1">前端获信</p>
+                        <p class="text-2xl font-bold text-amber-500">67%</p>
+                    </div>
+                    <div>
+                        <p class="text-zinc-500 text-xs uppercase mb-1">讲解转化</p>
+                        <p class="text-2xl font-bold text-green-400">75%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 江 C -->
+            <div class="rating-card p-10 rounded-[3rem] flex flex-wrap items-center justify-between gap-8 border-l-[12px] border-l-red-900 shadow-2xl bg-red-950/5">
+                <div class="flex items-center gap-10 min-w-[300px]">
+                    <div class="text-center">
+                        <p class="text-zinc-500 text-sm uppercase mb-2">规划师</p>
+                        <p class="text-4xl font-black text-zinc-400 tracking-tighter">江宁</p>
+                    </div>
+                    <div class="h-20 w-[1px] bg-zinc-800"></div>
+                    <div>
+                        <p class="text-zinc-500 text-sm uppercase mb-2">能力评级</p>
+                        <p class="text-7xl font-black rating-c italic">C</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1 flex flex-col items-center justify-center px-10 border-x border-zinc-800/50">
+                    <p class="text-red-500 text-xl font-black uppercase mb-4 tracking-widest animate-pulse">单客产值 (LEAD VALUE)</p>
+                    <p class="text-8xl font-black text-red-500 tracking-tighter shadow-sm">¥ 439</p>
+                    <p class="text-red-900 mt-2 font-bold uppercase">业务重灾区 · 资源损耗严重 · 待优化</p>
+                </div>
+
+                <div class="text-right min-w-[200px]">
+                    <div class="mb-4">
+                        <p class="text-zinc-500 text-xs uppercase mb-1">前端获信</p>
+                        <p class="text-2xl font-bold text-zinc-300">64%</p>
+                    </div>
+                    <div>
+                        <p class="text-zinc-500 text-xs uppercase mb-1">讲解转化</p>
+                        <p class="text-2xl font-bold text-red-500">20%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part 6: Q2 WAR DIRECTIVES -->
+    <div class="mb-32 animate-fade-in" style="animation-delay: 0.6s">
+        <div class="text-center mb-16">
+            <h4 class="text-6xl font-black gold-gradient-text italic tracking-tighter uppercase mb-4">Q2 规划师个人决战指令</h4>
+            <p class="text-zinc-500 text-xl tracking-[0.3em]">INDIVIDUAL WAR DIRECTIVES · 2026 Q2</p>
+        </div>
+        
+        <div class="space-y-12">
+            <!-- 江宁 -->
+            <div class="giant-directive-red p-12 rounded-[3rem] shadow-[0_0_100px_rgba(239,68,68,0.1)]">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-8">
+                    <h5 class="text-7xl font-black text-white italic tracking-tighter">江宁</h5>
+                    <div class="bg-red-600 text-white px-8 py-4 rounded-2xl text-2xl font-black animate-pulse"># 转化提速·存量深耕 #</div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div>
+                        <h6 class="text-red-500 text-3xl font-black mb-8 uppercase">工作重点 / Key Focus</h6>
+                        <ul class="space-y-6 text-2xl text-zinc-100 font-bold leading-tight">
+                            <li class="flex items-start gap-4"><span class="text-red-500">●</span> 转化率突破：尽快将第一季度的讲解转化率优化至 70% 以上平均水平。</li>
+                            <li class="flex items-start gap-4"><span class="text-red-500">●</span> 存量资源活化：针对 Q1 留存 of 103 个已沟通客户逐一进行二次深度开发与补讲。</li>
+                        </ul>
+                    </div>
+                    <div class="bg-zinc-900/80 p-10 rounded-[2rem] border-2 border-red-900/50">
+                        <h6 class="text-zinc-500 text-xl font-bold mb-6 italic">管理注意点 / Attention</h6>
+                        <p class="text-zinc-400 text-2xl leading-relaxed italic text-white font-bold">
+                            Q2 必须全力闭合“临门一脚”的开发缺口，确保高质量客户不因后端转化无力而流失。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 林付贤 -->
+            <div class="giant-directive p-12 rounded-[3rem] shadow-[0_0_100px_rgba(212,175,55,0.1)]">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-8">
+                    <h5 class="text-7xl font-black text-white italic tracking-tighter">林付贤</h5>
+                    <div class="bg-amber-500 text-black px-8 py-4 rounded-2xl text-2xl font-black"># 前端突围·极致触达 #</div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div>
+                        <h6 class="text-amber-500 text-3xl font-black mb-8 uppercase">工作重点 / Key Focus</h6>
+                        <ul class="space-y-6 text-2xl text-zinc-100 font-bold leading-tight">
+                            <li class="flex items-start gap-4"><span class="text-amber-500">●</span> 强化获信能力：针对添加率（61%）与沟通率（10%）全团最低的短板，进行专项攻坚。</li>
+                            <li class="flex items-start gap-4"><span class="text-amber-500">●</span> 扩大漏斗基数：适度加强前端互动频率，优化初次触达话术，让顶级收口能力覆盖更多流量。</li>
+                        </ul>
+                    </div>
+                    <div class="bg-zinc-900/80 p-10 rounded-[2rem] border-2 border-amber-900/50">
+                        <h6 class="text-zinc-500 text-xl font-bold mb-6 italic">管理注意点 / Attention</h6>
+                        <p class="text-zinc-400 text-2xl leading-relaxed italic text-white font-bold">
+                            保持王牌收割效率的同时，必须在获客前端投入更多精力，将“窄漏斗”变为“宽漏斗”，实现规模化稳定盈利。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 马康挺 -->
+            <div class="giant-directive p-12 rounded-[3rem] border-zinc-600 shadow-[0_0_100px_rgba(255,255,255,0.05)]" style="background: linear-gradient(#111, #111) padding-box, linear-gradient(to bottom, #ccc, #333) border-box;">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-8">
+                    <h5 class="text-7xl font-black text-white italic tracking-tighter">马康挺</h5>
+                    <div class="bg-zinc-200 text-black px-8 py-4 rounded-2xl text-2xl font-black"># 港险专家·经验分享 #</div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div>
+                        <h6 class="text-zinc-400 text-3xl font-black mb-8 uppercase">工作重点 / Key Focus</h6>
+                        <ul class="space-y-6 text-2xl text-zinc-100 font-bold leading-tight">
+                            <li class="flex items-start gap-4"><span class="text-zinc-400">●</span> 流量加权发放：Q2 将显著增加线索分发量，充分释放专业战力。</li>
+                            <li class="flex items-start gap-4"><span class="text-zinc-400">●</span> 核心险种攻坚：集中处理 IUL、融资保单等高专业度香港保险新型需求。</li>
+                            <li class="flex items-start gap-4"><span class="text-zinc-400">●</span> 团队赋能分享：针对新型需求的客户处理案例，每周进行全团经验萃取分享。</li>
+                        </ul>
+                    </div>
+                    <div class="bg-zinc-900/80 p-10 rounded-[2rem] border-2 border-zinc-800">
+                        <h6 class="text-zinc-500 text-xl font-bold mb-6 italic">管理注意点 / Attention</h6>
+                        <p class="text-zinc-400 text-2xl leading-relaxed italic text-white font-bold">
+                            充分发挥香港保险从业经验丰富的核心特点。作为团队“技术担当”，通过实战经验分享提升全员对新型、高产值保单的处理上限。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-16 text-zinc-700 text-[10px] tracking-[0.5em] uppercase border-t border-zinc-900 mt-20">Confidential Audit · Bao Xin Shang Ren</footer>
+
+    <script>
+        const goldMain = '#d4af37';
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: ['1月', '2月', '3月'],
+                datasets: [{ label: '实际产出', data: [157266, 114989, 72955], borderColor: goldMain, backgroundColor: 'rgba(212, 175, 55, 0.1)', fill: true, tension: 0.4, borderWidth: 3 },
+                           { label: '盈亏线', data: [150000, 150000, 150000], borderColor: '#ef4444', borderDash: [5, 5], fill: false }]
+            },
+            options: { 
+                responsive: true, maintainAspectRatio: false, 
+                plugins: { legend: { labels: { color: '#ccc' } } }, 
+                scales: { 
+                    y: { beginAtZero: true, grid: { color: 'rgba(212,175,55,0.05)' }, ticks: { color: '#666' } }, 
+                    x: { grid: { display: false }, ticks: { color: '#666' } } 
+                } 
+            }
+        });
+        new Chart(document.getElementById('matrixChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{ label: '江宁 (预警)', data: [{x: 20, y: 439}], backgroundColor: '#ef4444', pointRadius: 15 },
+                           { label: '马康挺 (S级)', data: [{x: 75, y: 1050}], backgroundColor: goldMain, pointRadius: 15 },
+                           { label: '林付贤 (极致)', data: [{x: 82, y: 1140}], backgroundColor: '#fff', pointRadius: 15 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: '讲解完成率 (%)', color: '#666' }, grid: { display: false }, ticks: { color: '#666' } }, y: { title: { display: true, text: '单客产值 (元)', color: '#666' }, grid: { color: 'rgba(212,175,55,0.05)' }, ticks: { color: '#666' } } }, plugins: { legend: { labels: { color: '#999' } } } }
+        });
+    </script>
+</body>
+</html>

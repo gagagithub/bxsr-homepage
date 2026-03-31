@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 让天下人老有所养 | 2024第一季度季报</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-secondary: #FFD700;
+            --black-bg: #0A0A0A;
+            --black-card: #1A1A1A;
+            --text-gray: #A0A0A0;
+            --pass-color: #10B981;
+            --fail-color: #EF4444;
+            --warning-gold: #AA771C;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #FFFFFF;
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .gold-glow:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            border-color: var(--gold-primary);
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background: var(--black-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 2rem 4rem 2rem;
+        }
+
+        .badge-pass { background: rgba(16, 185, 129, 0.2); color: var(--pass-color); border: 1px solid var(--pass-color); }
+        .badge-fail { background: rgba(239, 68, 68, 0.2); color: var(--fail-color); border: 1px solid var(--fail-color); }
+        .badge-strategy { background: rgba(212, 175, 55, 0.1); color: var(--gold-primary); border: 1px solid var(--gold-primary); }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-yellow-900/30 px-6 py-4 flex justify-between items-center">
+        <div class="text-xl font-bold gold-gradient-text tracking-wide">保心上人 - 让天下人老有所养</div>
+        <div class="text-sm text-yellow-600 font-bold uppercase">Strategy: Efficiency & Quality</div>
+    </nav>
+
+    <!-- 第一页：全渠道汇总 & 线索工时效率 -->
+    <section class="slide-section fade-in">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Global Lead Sources & Efficiency</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-8">Q1 线索渠道汇总与工时成本分析</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="card gold-glow border-l-4 border-l-red-800">
+                    <p class="text-gray-400 text-xs mb-1">极短视频（婷婷）</p>
+                    <p class="text-[10px] text-gray-500 mb-2">投入：4h/天</p>
+                    <div class="flex items-baseline mb-2">
+                        <h4 class="text-4xl font-bold text-yellow-500">98</h4>
+                        <span class="text-xs text-yellow-700 ml-1">总线索</span>
+                    </div>
+                    <div class="pt-2 border-t border-gray-800">
+                        <p class="text-[11px] text-red-400 mb-1">高质量(方案)：<span class="font-bold">4个</span></p>
+                        <p class="text-[12px] text-white font-bold">工时成本：<span class="text-yellow-500">2.7h / 条</span></p>
+                    </div>
+                </div>
+                <div class="card gold-glow border-l-4 border-l-yellow-600">
+                    <p class="text-gray-400 text-xs mb-1">编辑团队（Q1）</p>
+                    <p class="text-[10px] text-gray-500 mb-2">投入：24h/天</p>
+                    <div class="flex items-baseline mb-2">
+                        <h4 class="text-4xl font-bold text-white">155</h4>
+                        <span class="text-xs text-gray-500 ml-1">总线索</span>
+                    </div>
+                    <div class="pt-2 border-t border-gray-800">
+                        <p class="text-[11px] text-yellow-500 mb-1">高质量(方案)：<span class="text-white">11个</span></p>
+                        <p class="text-[12px] text-white font-bold">工时成本：<span class="text-red-500">10.2h / 条</span></p>
+                    </div>
+                </div>
+                <div class="card gold-glow border-l-4 border-l-gray-600">
+                    <p class="text-gray-400 text-xs mb-1">崔伟</p>
+                    <p class="text-[10px] text-gray-500 mb-2">投入：2h/天</p>
+                    <div class="flex items-baseline mb-2">
+                        <h4 class="text-4xl font-bold text-white">36</h4>
+                        <span class="text-xs text-gray-500 ml-1">总线索</span>
+                    </div>
+                    <div class="pt-2 border-t border-gray-800">
+                        <p class="text-[11px] text-gray-300 mb-1">高质量(方案)：<span class="font-bold">2个</span></p>
+                        <p class="text-[12px] text-white font-bold">工时成本：<span class="text-yellow-500">5.0h / 条</span></p>
+                    </div>
+                </div>
+                <div class="card gold-glow border-l-4 border-l-gray-600">
+                    <p class="text-gray-400 text-xs mb-2 text-center">全渠道 Q1 汇总</p>
+                    <div class="text-center">
+                        <h4 class="text-4xl font-bold text-white">400</h4>
+                        <span class="text-xs text-gray-500">总线索总数</span>
+                    </div>
+                    <div class="pt-2 border-t border-gray-800 mt-2">
+                        <p class="text-[11px] text-gray-500 text-center italic">包含其他渠道线索 111 条</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div class="md:col-span-5 card">
+                    <canvas id="sourcePieChart" style="max-height: 300px;"></canvas>
+                </div>
+                <div class="md:col-span-7 card bg-gradient-to-br from-yellow-950/20 to-black border-yellow-600/30">
+                    <h5 class="text-2xl font-bold mb-6 text-yellow-500 flex items-center">
+                        <span class="mr-3">📊</span> 效率警示：高昂的“时间成本”
+                    </h5>
+                    <div class="space-y-6">
+                        <div class="flex items-start bg-red-950/20 p-4 rounded-lg border border-red-900/30">
+                            <div class="w-12 h-12 flex-shrink-0 bg-red-900/50 rounded-full flex items-center justify-center text-red-200 font-bold mr-4">X</div>
+                            <div>
+                                <h6 class="font-bold text-red-400 mb-1">编辑组效率赤字</h6>
+                                <p class="text-gray-400 text-sm">编辑团队每获取一条线索需投入 <span class="text-white font-bold">10.2 小时</span>，是极短视频渠道成本的 <span class="text-red-400 font-bold">3.8倍</span>。投入产出比亟待优化。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start bg-yellow-950/20 p-4 rounded-lg border border-yellow-600/40">
+                            <div class="w-12 h-12 flex-shrink-0 bg-yellow-600/50 rounded-full flex items-center justify-center text-yellow-100 font-bold mr-4">✔</div>
+                            <div>
+                                <h6 class="font-bold text-yellow-500 mb-1">唯一破局点：干货视频杠杆</h6>
+                                <p class="text-gray-300 text-sm font-bold leading-relaxed">
+                                    我们不能通过增加工时来解决客户短缺，唯一的出路是利用**干货短视频的杠杆效应**，将 13.9h 的单条获取成本降下来，同时保住高质客户。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第二页：个人线索成本深度核算 -->
+    <section class="slide-section bg-[#0a0a0a]">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Cost of Acquisition Detail</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">个人线索成本深度核算 (22工作日制)</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- 获客效率对比：个人普通线索获取成本 -->
+                <div class="card flex flex-col justify-center">
+                    <h5 class="text-xl font-bold mb-8 text-white">个人单条普通线索获客效率对比 (h/Lead)</h5>
+                    <div class="p-4 bg-black/40 rounded-xl mb-6">
+                        <canvas id="normalLeadEfficiencyChart" style="max-height: 250px;"></canvas>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                        <div class="p-2 border border-green-900/30 rounded bg-green-950/10">
+                            <p class="text-[9px] text-gray-500">婷婷(4h)</p>
+                            <p class="text-sm font-bold text-green-500">2.7h</p>
+                        </div>
+                        <div class="p-2 border border-yellow-900/30 rounded bg-yellow-950/10">
+                            <p class="text-[9px] text-gray-500">崔伟(2h)</p>
+                            <p class="text-sm font-bold text-yellow-600">3.7h</p>
+                        </div>
+                        <div class="p-2 border border-red-900/30 rounded bg-red-950/10 font-bold">
+                            <p class="text-[9px] text-gray-400">军伟(8h)</p>
+                            <p class="text-sm font-bold text-red-400">8.5h</p>
+                        </div>
+                        <div class="p-2 border border-red-900/30 rounded bg-red-950/10 font-bold">
+                            <p class="text-[9px] text-gray-400">陈鑫(8h)</p>
+                            <p class="text-sm font-bold text-red-500">10.0h</p>
+                        </div>
+                        <div class="p-2 border border-red-900/30 rounded bg-red-950/10 font-bold">
+                            <p class="text-[9px] text-gray-400">小雪(8h)</p>
+                            <p class="text-sm font-bold text-red-600">13.2h</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人高质量线索效率对比 -->
+                <div class="card flex flex-col justify-center">
+                    <h5 class="text-xl font-bold mb-8 text-white font-bold">个人高质量线索获取成本 (h/Lead)</h5>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1">
+                                <span class="text-gray-400">婷婷 - 高质量线索成本 (4条)</span>
+                                <span class="text-green-500 font-bold">66.0h</span>
+                            </div>
+                            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
+                                <div class="bg-green-500 h-full" style="width: 25%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1">
+                                <span class="text-gray-400">崔伟 - 高质量线索成本 (2条)</span>
+                                <span class="text-yellow-600 font-bold">66.0h</span>
+                            </div>
+                            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
+                                <div class="bg-green-500 h-full" style="width: 25%"></div>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-gray-800">
+                            <div class="flex justify-between text-[10px] mb-1">
+                                <span class="text-white font-bold">军伟 - 高质量线索成本 (2条)</span>
+                                <span class="text-red-400 font-bold">264.0h</span>
+                            </div>
+                            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
+                                <div class="bg-red-400 h-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1">
+                                <span class="text-white font-bold">陈鑫 - 高质量线索成本 (4条)</span>
+                                <span class="text-red-500 font-bold">132.0h</span>
+                            </div>
+                            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
+                                <div class="bg-red-500 h-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1 text-white font-bold">
+                                <span>小雪 - 高质量线索成本 (5条)</span>
+                                <span class="text-red-600 font-bold">105.6h</span>
+                            </div>
+                            <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden">
+                                <div class="bg-red-600 h-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 p-4 bg-red-950/10 border border-red-900/20 rounded-lg text-center">
+                        <p class="text-xs text-gray-300 leading-relaxed font-bold">
+                            “数据极其尖锐：军伟单条高质量线索成本高达 <span class="text-red-500 text-lg font-black">264小时</span>。小雪虽然线索总数最少，但高质量产出最高且成本最优（105h）。全员必须通过干货视频化降低获客杠杆。”
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第三页：编辑团队作战指标 & KPI 达成明细表 (合并页) -->
+    <section class="slide-section bg-[#050505]">
+        <div class="max-w-6xl mx-auto w-full">
+            <h3 class="text-3xl font-bold mb-10 flex items-center">
+                <span class="w-8 h-8 bg-yellow-600 rounded-full mr-4 inline-block"></span>
+                编辑团队作战指标与 KPI 明细 <span class="text-yellow-700 ml-4 text-sm font-normal">Core Mission & Individual Quality</span>
+            </h3>
+            
+            <!-- 团队汇总数据 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="card gold-glow text-center py-8">
+                    <p class="text-gray-400 text-sm mb-2">编辑组 Q1 总和</p>
+                    <h4 class="text-4xl font-bold text-yellow-500">155 <span class="text-xs text-yellow-600">条</span></h4>
+                </div>
+                <div class="card gold-glow text-center py-8">
+                    <p class="text-gray-400 text-sm mb-2">季度满标线</p>
+                    <h4 class="text-4xl font-bold text-yellow-500">180 <span class="text-xs text-yellow-600">条</span></h4>
+                </div>
+                <div class="card gold-glow text-center py-8">
+                    <p class="text-gray-400 text-sm mb-2">季度达成率</p>
+                    <h4 class="text-4xl font-bold text-yellow-500">86.1% <span class="text-xs text-red-500">缺25条</span></h4>
+                </div>
+                <div class="card gold-glow text-center py-8">
+                    <p class="text-gray-400 text-sm mb-2">高质量(已做方案)</p>
+                    <h4 class="text-4xl font-bold text-yellow-500">11 <span class="text-xs text-green-500">个</span></h4>
+                </div>
+            </div>
+
+            <!-- 个人明细卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 吕军伟 -->
+                <div class="card gold-border">
+                    <h4 class="text-2xl font-bold mb-6 text-yellow-500 border-b border-yellow-900/30 pb-2 text-center">吕军伟</h4>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm font-bold">1月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">18</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-gray-700 font-bold leading-none">0</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm font-bold">2月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">15</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-gray-700 font-bold leading-none">0</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center bg-yellow-600/10 p-2 rounded -mx-2">
+                            <span class="text-yellow-600 text-sm font-black">3月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-black leading-none">29</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-500 font-black leading-none text-xl">2</p><p class="text-[9px] text-yellow-700 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-800 flex justify-between items-center font-black">
+                            <span class="text-xs text-gray-400">季度总计:</span>
+                            <span class="text-yellow-600">62 线索 / 2 高质</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 陈鑫 -->
+                <div class="card gold-border">
+                    <h4 class="text-2xl font-bold mb-6 text-yellow-500 border-b border-yellow-900/30 pb-2 text-center">陈鑫</h4>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center bg-yellow-600/5 p-2 rounded -mx-2 border-l-2 border-yellow-700">
+                            <span class="text-gray-300 text-sm font-bold">1月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">20</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-600 font-black leading-none">1</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center bg-yellow-600/10 p-2 rounded -mx-2 border-l-2 border-yellow-500">
+                            <span class="text-gray-300 text-sm font-bold">2月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">21</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-500 font-black leading-none text-xl">2</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm font-bold">3月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">12</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-600 font-black leading-none">1</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-800 flex justify-between items-center font-black">
+                            <span class="text-xs text-gray-400">季度总计:</span>
+                            <span class="text-yellow-600">53 线索 / 4 高质</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 小雪 -->
+                <div class="card gold-border">
+                    <h4 class="text-2xl font-bold mb-6 text-yellow-500 border-b border-yellow-900/30 pb-2 text-center">小雪</h4>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center bg-yellow-600/20 p-2 rounded -mx-2 border-l-4 border-yellow-500">
+                            <span class="text-white text-sm font-black italic underline">1月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-black leading-none text-lg">27</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-400 font-black leading-none text-2xl">3</p><p class="text-[9px] text-yellow-700 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm font-bold">2月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">7</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-600 font-black leading-none">1</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm font-bold">3月</span>
+                            <div class="flex space-x-4">
+                                <div class="text-right"><p class="text-white font-bold leading-none">6</p><p class="text-[9px] text-gray-500 uppercase">Leads</p></div>
+                                <div class="text-right w-12"><p class="text-yellow-600 font-black leading-none">1</p><p class="text-[9px] text-gray-600 uppercase">HQ</p></div>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-800 flex justify-between items-center font-black">
+                            <span class="text-xs text-gray-400">季度总计:</span>
+                            <span class="text-yellow-600">40 线索 / 5 高质</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第四页：小雪 Q1 渠道复盘 -->
+    <section class="slide-section">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Case Study: Xiaoxue Q1 Breakdown</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">小雪 Q1 渠道复盘：流量滑坡深度分析</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card border-l-4 border-l-red-600">
+                    <h4 class="text-xl font-bold mb-4 text-red-500">公众号：保心上人投资</h4>
+                    <p class="text-gray-400 mb-4 text-sm">3月账号被限流，流量从1月的17个降至6个。结论：Q2起公众号必须退居防御位，不能作为主攻渠道。</p>
+                </div>
+                <div class="card border-l-4 border-l-yellow-600">
+                    <h4 class="text-xl font-bold mb-4 text-yellow-500">视频号：保心上人投资</h4>
+                    <p class="text-gray-400 mb-4 text-sm">未被限流。结论：Q2将通过极短视频策略在此渠道实现“借壳重生”。目标恢复每月6-10个线索。</p>
+                </div>
+                <div class="card border-l-4 border-l-gold-primary">
+                    <h4 class="text-xl font-bold mb-4 text-gold-primary">今日头条：崔老师说理财</h4>
+                    <p class="text-gray-400 mb-4 text-sm">该渠道曾是高流量、高线索的核心阵地，因Q1转型竖视频被战略性搁置。现阶段公众号受限，Q2将重新激活并重启深度开发。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第五页：小雪 Q2 战略执行方案与合规告诫 -->
+    <section class="slide-section bg-[#050505]">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Xiaoxue Q2 Strategy</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">小雪 Q2：战略转型与内容作战方案</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <div class="card border-l-4 border-l-yellow-600 bg-black/60">
+                        <h5 class="text-lg font-bold text-yellow-500 mb-3">极短视频内容产出</h5>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li>• <span class="text-white">灵活产出</span>：根据账号实际情况与流量反馈，灵活安排极短视频的输出数量趋势。</li>
+                            <li>• <span class="text-white">分发策略</span>：视频号为主阵地，同步公众号次屏。</li>
+                        </ul>
+                    </div>
+                    <div class="card border-l-4 border-l-gold-primary bg-black/60">
+                        <h5 class="text-lg font-bold text-gold-primary mb-3">深度横屏视频产出</h5>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li>• <span class="text-white">核心平台</span>：今日头条（崔老师说理财）。</li>
+                            <li>• <span class="text-white">自主掌控</span>：持续产出高质量横屏视频，重启该流量源泉。</li>
+                        </ul>
+                    </div>
+                    <div class="card border-2 border-red-900 bg-red-950/20">
+                        <h5 class="text-lg font-bold text-red-500 mb-2">⚖️ 合规底线：公众号休养生息</h5>
+                        <p class="text-gray-300 text-xs italic">
+                            准则：言语保守，通过改编头条内容降低风险。静待第三季度满血复活。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card bg-gradient-to-br from-yellow-950/30 to-black border-2 border-yellow-600 text-center">
+                    <h5 class="text-2xl font-bold text-yellow-500 mb-8 uppercase tracking-widest">4月 流量目标</h5>
+                    <div class="space-y-12 py-8">
+                        <div>
+                            <p class="text-gray-400 text-sm mb-2 italic">视频号</p>
+                            <h4 class="text-6xl font-black gold-gradient-text">10 <span class="text-xl">个</span></h4>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm mb-2 italic">头条号</p>
+                            <h4 class="text-6xl font-black gold-gradient-text">10 <span class="text-xl">个</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第六页：吕军伟 Q2 战略布局与4月作战方案 -->
+    <section class="slide-section bg-[#0a0a0a]">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Lu Junwei Q2 Strategy</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12 text-center md:text-left">吕军伟 Q2：核心护城河与全速冲刺</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="card gold-border bg-black/50 border-t-4 border-t-green-600">
+                    <h4 class="text-2xl font-bold mb-6 text-green-500 flex items-center">🛡️ 现状：最稳健的获客引擎</h4>
+                    <p class="text-gray-300 mb-6">各分发渠道极其完善，**无任何限流异常**。</p>
+                    <div class="p-4 bg-yellow-950/10 border border-yellow-600/20 rounded">
+                        <h6 class="text-yellow-500 font-bold mb-2">Q2 目标：30条/月</h6>
+                        <p class="text-gray-400 text-sm italic">确立团队领跑标杆地位。</p>
+                    </div>
+                </div>
+
+                <div class="card bg-gradient-to-br from-yellow-950/20 to-black border-yellow-600/30">
+                    <h4 class="text-2xl font-bold mb-8 text-yellow-500 flex items-center">🚀 4月核心攻坚战</h4>
+                    <ul class="space-y-6 text-sm text-gray-400">
+                        <li>• <span class="text-white font-bold">视频号（保心上人存钱）</span>：在极短视频内容上实现突破。</li>
+                        <li>• <span class="text-white font-bold">公众号</span>：保持防御性稳健运营，绝对不限流。</li>
+                    </ul>
+                    <div class="mt-12 p-4 text-center bg-yellow-600 text-black font-black rounded-xl">
+                        4月目标：30个线索
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第七页：陈鑫第一季度数据复盘 -->
+    <section class="slide-section bg-black">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Chen Xin Q1 Breakdown</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">陈鑫 Q1 复盘：稳扎稳打的基本盘</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="card border-t-2 border-yellow-600">
+                    <p class="text-gray-500 text-xs mb-2">TOP 1 渠道</p>
+                    <h5 class="text-lg font-bold text-white mb-2">公众号：崔伟说投资</h5>
+                    <h4 class="text-4xl font-black text-yellow-500">30 <span class="text-sm">条</span></h4>
+                </div>
+                <div class="card border-t-2 border-yellow-700">
+                    <p class="text-gray-500 text-xs mb-2">TOP 2 渠道</p>
+                    <h5 class="text-lg font-bold text-white mb-2">视频号：崔伟说投资</h5>
+                    <h4 class="text-4xl font-black text-yellow-600">9 <span class="text-sm">条</span></h4>
+                </div>
+                <div class="card border-t-2 border-gray-600">
+                    <p class="text-gray-500 text-xs mb-2">TOP 3 渠道</p>
+                    <h5 class="text-lg font-bold text-white mb-2">今日头条</h5>
+                    <h4 class="text-4xl font-black text-gray-400">5 <span class="text-sm">条</span></h4>
+                </div>
+            </div>
+
+            <div class="card bg-black/60 border border-yellow-900/30">
+                <h4 class="text-xl font-bold mb-6 text-yellow-600 flex items-center">
+                    <span class="w-1.5 h-6 bg-yellow-600 mr-3"></span> 月度达标回顾 (1、2月连续满分)
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                    <div class="p-4 border-l-2 border-green-600 bg-green-950/5">
+                        <h6 class="text-green-500 font-bold mb-2">1月：完美达标 (15条)</h6>
+                        <p class="text-gray-400">公号6 / 头条5 / 快手4。渠道结构最均衡的一月。</p>
+                    </div>
+                    <div class="p-4 border-l-2 border-green-600 bg-green-950/5">
+                        <h6 class="text-green-500 font-bold mb-2">2月：超额爆发 (20条)</h6>
+                        <p class="text-gray-400">公号爆发14个线索，视频号贡献6个。主战场效能极高。</p>
+                    </div>
+                    <div class="p-4 border-l-2 border-red-600 bg-red-950/5">
+                        <h6 class="text-red-500 font-bold mb-2">3月：遭遇滑坡 (10条)</h6>
+                        <p class="text-gray-400">仅靠公众号支撑。面临限流挑战，转型迫在眉睫。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第八页：陈鑫 Q2 战略执行与4月攻坚 -->
+    <section class="slide-section bg-[#050505]">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Chen Xin Q2 Tactics</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">陈鑫 Q2：内容杠杆与“一鱼两吃”战法</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div class="md:col-span-7 space-y-6">
+                    <div class="card gold-border bg-black/60">
+                        <h4 class="text-2xl font-bold text-yellow-500 mb-6 flex items-center">
+                            <span class="mr-3">🐟</span> 核心战法：一鱼两吃
+                        </h4>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 flex-shrink-0 bg-yellow-600 text-black font-bold rounded flex items-center justify-center mr-4">1</div>
+                                <div>
+                                    <h6 class="text-white font-bold mb-1">视频号（崔伟说投资）：流量引水</h6>
+                                    <p class="text-gray-400 text-xs leading-relaxed">
+                                        注重**“2秒完播率”**。视频内容短小精悍，旨在快速建立视觉冲击，引导用户评论区或主页留线索。
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 flex-shrink-0 bg-yellow-600 text-black font-bold rounded flex items-center justify-center mr-4">2</div>
+                                <div>
+                                    <h6 class="text-white font-bold mb-1">公众号（文章）：深度转化</h6>
+                                    <p class="text-gray-400 text-xs leading-relaxed">
+                                        目前处于限流状态，不能完全休养。需利用更熟练的文案技巧，对视频号内容进行图文深度化表达，争取早日摆脱限流。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-2 border-red-900 bg-red-950/10">
+                        <h4 class="text-lg font-bold text-red-500 mb-2">⚠️ 合规与技巧的双重挑战</h4>
+                        <p class="text-gray-300 text-xs leading-relaxed">
+                            陈鑫的账号价值极高，Q2 必须通过更“软”、更巧妙的技巧性编辑，严格遵守合规性，在维持产出的同时，静待权重恢复。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4月目标看板 -->
+                <div class="md:col-span-5">
+                    <div class="card h-full bg-gradient-to-br from-yellow-950/40 to-black border-2 border-yellow-600 text-center p-8">
+                        <h5 class="text-sm tracking-widest text-yellow-600 mb-8 uppercase font-black">Target for April</h5>
+                        
+                        <div class="space-y-12">
+                            <div>
+                                <p class="text-gray-500 text-xs mb-2 italic">视频号 (主攻爆发)</p>
+                                <h4 class="text-7xl font-black gold-gradient-text">15 <span class="text-xl">条</span></h4>
+                            </div>
+                            
+                            <div class="w-full h-px bg-yellow-900/30"></div>
+                            
+                            <div>
+                                <p class="text-gray-400 text-xs mb-2 italic">公众号 (合规恢复)</p>
+                                <h4 class="text-5xl font-black text-white">05 <span class="text-xl">条</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第九页：极短视频（婷婷）Q1 数据复盘 -->
+    <section class="slide-section bg-black">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Tingting Q1 Data Review</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">极短视频（婷婷）：获客结构的稳定性基石</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="card border-t-2 border-green-600 bg-black/40 text-center">
+                    <p class="text-gray-500 text-xs mb-2">1月 线索量</p>
+                    <h4 class="text-5xl font-black text-white">32 <span class="text-sm">条</span></h4>
+                </div>
+                <div class="card border-t-2 border-green-600 bg-black/40 text-center">
+                    <p class="text-gray-500 text-xs mb-2">2月 线索量</p>
+                    <h4 class="text-5xl font-black text-white">30 <span class="text-sm">条</span></h4>
+                </div>
+                <div class="card border-t-2 border-green-600 bg-black/40 text-center">
+                    <p class="text-gray-500 text-xs mb-2">3月 线索量</p>
+                    <h4 class="text-5xl font-black text-yellow-500">36 <span class="text-sm">条</span></h4>
+                </div>
+            </div>
+
+            <div class="card bg-green-950/10 border border-green-900/30">
+                <div class="flex items-center p-6">
+                    <div class="w-16 h-16 bg-green-900/50 rounded-full flex items-center justify-center text-3xl mr-6">⚖️</div>
+                    <div>
+                        <h4 class="text-xl font-bold text-green-500 mb-2">稳定性分析</h4>
+                        <p class="text-gray-400 leading-relaxed text-sm">
+                            婷婷在第一季度的表现极其稳定，月均产出维持在 30 条以上。这种稳定性为公司提供了可靠的基础流量保障，受外部波动影响极小，是团队效率的标杆。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第十页：婷婷 Q2 战略目标 -->
+    <section class="slide-section bg-[#0a0a0a]">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-yellow-500 text-sm tracking-[0.4em] mb-4 uppercase">Tingting Q2 Strategy</h2>
+            <h1 class="text-5xl font-bold gold-gradient-text mb-12">婷婷 Q2：守住底线，持续高效</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="card gold-border bg-black/50 flex flex-col justify-center">
+                    <h4 class="text-2xl font-bold mb-6 text-yellow-500 flex items-center">
+                        <span class="mr-3">📌</span> 核心战略要求
+                    </h4>
+                    <ul class="space-y-6 text-gray-300">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✔</span>
+                            <p class="text-sm">保持现有节奏，确保 Q2 每一个月线索量稳定在 <span class="text-white font-bold">30个以上</span>。</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✔</span>
+                            <p class="text-sm">作为全团队的“效率模范”，继续维持低工时成本高产出的极短视频模式。</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card bg-gradient-to-br from-green-900/20 to-black border-2 border-green-600/50 flex flex-col justify-center items-center text-center">
+                    <h5 class="text-sm tracking-widest text-green-600 mb-6 uppercase">Q2 Baseline Target</h5>
+                    <div class="py-4">
+                        <h4 class="text-8xl font-black gold-gradient-text">30+</h4>
+                        <p class="text-lg text-gray-500 mt-2">每月线索目标</p>
+                    </div>
+                    <div class="mt-8 px-6 py-2 border border-green-500/30 rounded-full">
+                        <p class="text-[10px] text-green-600 font-bold tracking-widest">STABILITY & EFFICIENCY</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最后一页：Q2 战略执行：干货视频倍增计划 -->
+    <section class="slide-section bg-gradient-to-b from-black to-yellow-950/40">
+        <div class="max-w-6xl mx-auto w-full text-center">
+            <h3 class="text-sm tracking-[0.5em] text-yellow-600 mb-4 uppercase">The Only Exit</h3>
+            <h2 class="text-5xl font-bold gold-gradient-text mb-16">Q2 破局：编辑团队干货视频化</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="card gold-border bg-black/60">
+                    <h5 class="text-yellow-500 font-bold mb-4 text-xl">内容形态大迁徙</h5>
+                    <p class="text-gray-400 text-sm">纯文字转高质视频。</p>
+                </div>
+                <div class="card gold-border bg-black/60">
+                    <h5 class="text-yellow-500 font-bold mb-4 text-xl">高净值线索抢夺</h5>
+                    <p class="text-gray-400 text-sm">高质量占比升至15%以上。</p>
+                </div>
+                <div class="card gold-border bg-black/60">
+                    <h5 class="text-yellow-500 font-bold mb-4 text-xl">全员 20+ 底线思维</h5>
+                    <p class="text-gray-400 text-sm">月度目标满分达成。</p>
+                </div>
+            </div>
+            <div class="mt-20">
+                <button onclick="button_print()" class="px-12 py-4 bg-yellow-600 hover:bg-yellow-500 text-black font-black rounded-full transition-all tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                    导出 Q2 战略版 PDF
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-8 text-center text-gray-700 text-[10px] border-t border-yellow-900/20">
+        CONFIDENTIAL · 保心上人 · 让天下人老有所养
+    </footer>
+
+    <script>
+        function button_print() { window.print(); }
+        Chart.defaults.color = '#888';
+        Chart.defaults.borderColor = 'rgba(212, 175, 55, 0.1)';
+
+        window.onload = function() {
+            const ctx0 = document.getElementById('sourcePieChart').getContext('2d');
+            new Chart(ctx0, {
+                type: 'doughnut',
+                data: {
+                    labels: ['极短(婷婷) 98', '编辑团队 155', '崔伟 36', '其他 111'],
+                    datasets: [{
+                        data: [98, 155, 36, 111],
+                        backgroundColor: ['#EF4444', '#D4AF37', '#AA771C', '#333333'],
+                        borderWidth: 3,
+                        borderColor: '#0A0A0A'
+                    }]
+                },
+                options: { 
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 10 } } } }
+                }
+            });
+
+            const ctxEfficiency = document.getElementById('normalLeadEfficiencyChart').getContext('2d');
+            new Chart(ctxEfficiency, {
+                type: 'bar',
+                data: {
+                    labels: ['婷婷', '崔伟', '军伟', '陈鑫', '小雪'],
+                    datasets: [{
+                        label: '单条线索工时 (h)',
+                        data: [2.7, 3.7, 8.5, 10.0, 13.2],
+                        backgroundColor: ['#10B981', '#D4AF37', '#EF4444', '#B91C1C', '#7F1D1D'],
+                        borderWidth: 0,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: '工时 (h)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>

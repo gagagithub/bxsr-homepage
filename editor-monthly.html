@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>编辑团队绩效考评手册</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+
+  .header .subtitle {
+    font-size: 15px;
+    color: #7c8db0;
+    font-weight: 400;
+  }
+
+  /* ── Section Title ── */
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #7c8db0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    margin-top: 48px;
+    padding-left: 4px;
+  }
+
+  /* ── Flow Diagram ── */
+  .flow-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 24px;
+  }
+
+  .flow-steps {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    flex: 1;
+    min-width: 120px;
+    max-width: 160px;
+    text-align: center;
+    position: relative;
+    padding: 0 8px;
+  }
+
+  .flow-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 24px;
+  }
+
+  .flow-step:nth-child(1) .flow-icon { background: #eef2ff; }
+  .flow-step:nth-child(2) .flow-icon { background: #f0fdf4; }
+  .flow-step:nth-child(3) .flow-icon { background: #fefce8; }
+  .flow-step:nth-child(4) .flow-icon { background: #fff7ed; }
+  .flow-step:nth-child(5) .flow-icon { background: #fef2f2; }
+
+  .flow-step .flow-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    margin-bottom: 4px;
+  }
+
+  .flow-step .flow-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-size: 20px;
+    flex-shrink: 0;
+    padding-bottom: 24px;
+  }
+
+  /* ── Metric Cards ── */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .metric-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-card-header {
+    padding: 24px 28px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .metric-rank {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .rank-1 { background: linear-gradient(135deg, #f59e0b, #f97316); }
+  .rank-2 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .rank-3 { background: linear-gradient(135deg, #10b981, #34d399); }
+
+  .metric-card-header .info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2px;
+  }
+
+  .metric-card-header .info .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  .tag-money { background: #fef3c7; color: #b45309; }
+  .tag-growth { background: #dbeafe; color: #2563eb; }
+
+  .metric-card-body {
+    padding: 0 28px 24px;
+  }
+
+  .metric-why {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #e2e8f0;
+  }
+
+  .metric-why strong {
+    color: #475569;
+  }
+
+  /* ── Reward Detail ── */
+  .reward-box {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .reward-box .reward-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+
+  .reward-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .reward-row:last-child {
+    border-bottom: none;
+  }
+
+  .reward-row .condition {
+    font-size: 14px;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .reward-row .amount {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .reward-row .amount.zero {
+    color: #cbd5e1;
+    font-weight: 500;
+  }
+
+  .reward-row .amount.highlight {
+    color: #f59e0b;
+  }
+
+  .reward-single {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+  }
+
+  .reward-single .big-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #6366f1;
+    line-height: 1;
+  }
+
+  .reward-single .big-unit {
+    font-size: 14px;
+    color: #6366f1;
+    font-weight: 500;
+  }
+
+  .reward-single .big-desc {
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  .commission-note {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #fffbeb;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #92400e;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .commission-note .note-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── Process Card ── */
+  .process-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .process-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .process-content h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+  }
+
+  .process-content .process-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: #64748b;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .process-content p {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.7;
+  }
+
+  /* ── Summary Card ── */
+  .summary-card {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border-radius: 16px;
+    padding: 36px 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    margin-top: 24px;
+    color: #fff;
+  }
+
+  .summary-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #f1f5f9;
+  }
+
+  .summary-formula {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .formula-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .formula-item .f-label {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+
+  .formula-item .f-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .formula-plus {
+    font-size: 20px;
+    color: #64748b;
+    font-weight: 300;
+  }
+
+  .formula-equals {
+    font-size: 20px;
+    color: #f59e0b;
+    font-weight: 700;
+  }
+
+  .summary-examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .example-box {
+    background: rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .example-box .ex-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .example-box .ex-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot-good { background: #34d399; }
+  .dot-great { background: #f59e0b; }
+
+  .example-box .ex-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #cbd5e1;
+    padding: 3px 0;
+  }
+
+  .example-box .ex-line .ex-val {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .example-box .ex-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f59e0b;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding: 20px;
+    color: #94a3b8;
+    font-size: 12px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .flow-steps { flex-direction: column; align-items: center; }
+    .flow-arrow { transform: rotate(90deg); padding: 0; margin: 4px 0; }
+    .flow-step { max-width: 200px; }
+    .summary-examples { grid-template-columns: 1fr; }
+    .summary-formula { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>编辑团队绩效考评手册</h1>
+    <div class="subtitle">清晰目标 &middot; 透明激励 &middot; 持续成长</div>
+  </div>
+
+  <div class="section-title">你的工作如何创造价值</div>
+
+  <div class="flow-card">
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-icon">&#9997;&#65039;</div>
+        <div class="flow-label">撰写脚本</div>
+        <div class="flow-desc">编辑产出<br/>视频口播稿</div>
+      </div>
+      <div class="flow-arrow">&#10132;</div>
+      <div class="flow-step">
+        <div class="flow-icon">&#127909;</div>
+        <div class="flow-label">发布视频</div>
+        <div class="flow-desc">口播录制<br/>发布上线</div>
+      </div>
+      <div class="flow-arrow">&#10132;</div>
+      <div class="flow-step">
+        <div class="flow-icon">&#128172;</div>
+        <div class="flow-label">获取客户</div>
+        <div class="flow-desc">客户私信/评论<br/>留下联系方式</div>
+      </div>
+      <div class="flow-arrow">&#10132;</div>
+      <div class="flow-step">
+        <div class="flow-icon">&#128203;</div>
+        <div class="flow-label">做方案</div>
+        <div class="flow-desc">规划师深度沟通<br/>输出方案</div>
+      </div>
+      <div class="flow-arrow">&#10132;</div>
+      <div class="flow-step">
+        <div class="flow-icon">&#127881;</div>
+        <div class="flow-label">成交</div>
+        <div class="flow-desc">销售跟进<br/>签约付款</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">月度考评 &middot; 三大核心指标</div>
+
+  <div class="metric-grid">
+
+    <!-- Card 1: 成交提佣 -->
+    <div class="metric-card">
+      <div class="metric-card-header">
+        <div class="metric-rank rank-1">1</div>
+        <div class="info">
+          <h3>成交提佣</h3>
+          <span class="tag tag-money">核心激励 &middot; 上不封顶</span>
+        </div>
+      </div>
+      <div class="metric-card-body">
+        <div class="metric-why">
+          <strong>为什么最重要？</strong> 你写的每一篇脚本，最终目的就是帮助客户做出决策、促成签约。成交是整条链路的终点，也是公司收入的直接来源。你的内容越精准、越有说服力，成交就越多，你的收入也越高。
+        </div>
+        <div class="reward-box">
+          <div class="reward-title">奖励规则</div>
+          <div class="reward-row">
+            <span class="condition">主打产品提佣</span>
+            <span class="amount highlight">成交金额 × 5%</span>
+          </div>
+          <div class="commission-note">
+            <span class="note-icon">&#128204;</span>
+            <span>按客户实际成交当月计入。客户来源追溯到对应视频的编辑。具体提佣比例每月初更新公布。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: 可做方案客户数 -->
+    <div class="metric-card">
+      <div class="metric-card-header">
+        <div class="metric-rank rank-2">2</div>
+        <div class="info">
+          <h3>可做方案客户数</h3>
+          <span class="tag tag-growth">质量指标 &middot; 系统自动统计</span>
+        </div>
+      </div>
+      <div class="metric-card-body">
+        <div class="metric-why">
+          <strong>为什么重要？</strong> 留电话的客户很多，但真正愿意坐下来和规划师深聊20分钟以上的，才是高意向客户。这个数字直接反映你的脚本是否精准触达了"对的人"，而不只是吸引了眼球。可做方案客户越多，离成交就越近。
+        </div>
+        <div class="reward-box">
+          <div class="reward-title">奖励规则</div>
+          <div class="reward-single">
+            <div>
+              <span class="big-number">300</span>
+              <span class="big-unit">元/个</span>
+            </div>
+            <div>
+              <div class="big-desc">每个可做方案客户奖励300元，不设上限</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: 留电话客户数 -->
+    <div class="metric-card">
+      <div class="metric-card-header">
+        <div class="metric-rank rank-3">3</div>
+        <div class="info">
+          <h3>留电话客户数</h3>
+          <span class="tag tag-money">基础指标 &middot; 阶梯奖励</span>
+        </div>
+      </div>
+      <div class="metric-card-body">
+        <div class="metric-why">
+          <strong>为什么重要？</strong> 客户愿意留下电话，说明你的视频内容建立了初步信任。这是整个转化漏斗的入口——没有足够多的留电话客户，后面的方案和成交都无从谈起。保持稳定的客户获取量，是一切的基础。
+        </div>
+        <div class="reward-box">
+          <div class="reward-title">阶梯奖励明细</div>
+          <div class="reward-row">
+            <span class="condition">不足 20 个</span>
+            <span class="amount zero">0 元</span>
+          </div>
+          <div class="reward-row">
+            <span class="condition">20 ~ 30 个</span>
+            <span class="amount">1,000 元</span>
+          </div>
+          <div class="reward-row">
+            <span class="condition">30 ~ 45 个</span>
+            <span class="amount">1,500 元</span>
+          </div>
+          <div class="reward-row">
+            <span class="condition">45 个以上</span>
+            <span class="amount highlight">2,000 元</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">周度追踪 &middot; 内容质量</div>
+
+  <div class="process-card">
+    <div class="process-icon">&#128200;</div>
+    <div class="process-content">
+      <h3>视频完播率</h3>
+      <span class="process-tag">每周晨会复盘 &middot; 不挂奖惩</span>
+      <p>
+        完播率越高，说明观众愿意把视频看完，你和客户之间建立的信任感就越强。每周晨会上，我们会对完播率特别优秀或明显不及格的视频做全员拆解分析——好的学习方法论，差的找到改进方向。完播率不直接挂钱，但它是你提升前三项指标的"先行信号"。
+      </p>
+    </div>
+  </div>
+
+  <div class="section-title">你的月度绩效收入</div>
+
+  <div class="summary-card">
+    <h3>绩效收入 = 成交提佣 + 可做方案客户奖 + 留电话客户阶梯奖</h3>
+
+    <div class="summary-formula">
+      <div class="formula-item">
+        <div class="f-label">成交提佣</div>
+        <div class="f-value">成交额 × 比例</div>
+      </div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">
+        <div class="f-label">可做方案客户</div>
+        <div class="f-value">个数 × 300元</div>
+      </div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">
+        <div class="f-label">留电话客户</div>
+        <div class="f-value">阶梯奖励</div>
+      </div>
+      <div class="formula-equals">=</div>
+      <div class="formula-item" style="background:rgba(245,158,11,0.2);">
+        <div class="f-label">当月绩效</div>
+        <div class="f-value" style="color:#f59e0b;">&#128176; 总收入</div>
+      </div>
+    </div>
+
+    <div class="summary-examples">
+      <div class="example-box">
+        <div class="ex-title"><span class="dot dot-good"></span>中等偏上表现</div>
+        <div class="ex-line"><span>成交 1 单（5万）× 5%</span><span class="ex-val">2,500 元</span></div>
+        <div class="ex-line"><span>可做方案客户 2 个</span><span class="ex-val">600 元</span></div>
+        <div class="ex-line"><span>留电话 25 个（20-30档）</span><span class="ex-val">1,000 元</span></div>
+        <div class="ex-total"><span>当月绩效合计</span><span>4,100 元</span></div>
+      </div>
+      <div class="example-box">
+        <div class="ex-title"><span class="dot dot-great"></span>优秀表现</div>
+        <div class="ex-line"><span>成交 1 单（10万）× 5%</span><span class="ex-val">5,000 元</span></div>
+        <div class="ex-line"><span>可做方案客户 4 个</span><span class="ex-val">1,200 元</span></div>
+        <div class="ex-line"><span>留电话 35 个（30-45档）</span><span class="ex-val">1,500 元</span></div>
+        <div class="ex-total"><span>当月绩效合计</span><span>7,700 元</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    以上绩效方案自发布之日起执行 &middot; 主打产品提佣比例以每月公告为准
+  </div>
+
+</div>
+
+</body>
+</html>
