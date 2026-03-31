@@ -12,32 +12,15 @@ permissions:
 
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    # 使用自托管 Runner（运行在 IP 已加入企业微信白名单的服务器上）
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
       - name: Install dependencies
-        run: pip install anthropic pycryptodome
-
-      - name: Download WeWork Finance SDK
-        run: |
-          mkdir -p sdk
-          # 从企业微信官方下载 Linux x86_64 版 SDK
-          # 下载地址需根据企业微信开发者中心最新版本更新
-          # https://developer.work.weixin.qq.com/document/path/91774
-          if [ ! -f sdk/libWeWorkFinanceSdk_C.so ]; then
-            echo "WARNING: SDK .so file not found in sdk/ directory."
-            echo "Please download from WeWork developer center and add to repo."
-            echo "See: https://developer.work.weixin.qq.com/document/path/91774"
-            exit 1
-          fi
+        run: pip3 install anthropic pycryptodome
 
       - name: Generate daily report
         env:
@@ -47,7 +30,7 @@ jobs:
           WEWORK_PRIVATE_KEY: ${{ secrets.WEWORK_PRIVATE_KEY }}
           WEWORK_PLANNER_MAP: ${{ secrets.WEWORK_PLANNER_MAP }}
           LD_LIBRARY_PATH: ${{ github.workspace }}/sdk
-        run: python scripts/generate-planner-daily.py
+        run: python3 scripts/generate-planner-daily.py
 
       - name: Commit and push
         run: |
