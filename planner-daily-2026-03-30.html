@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>规划师日报 · 2026年3月30日</title>
+  <style>
+    :root {
+      --navy:  #1E2761;
+      --teal:  #028090;
+      --off:   #F4F6FB;
+      --gray:  #8892A4;
+      --dark:  #111827;
+      --white: #FFFFFF;
+      --blue:  #1976D2;
+      --blue-light: #E3F2FD;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--off);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0D47A1 0%, #1565C0 60%, #1976D2 100%);
+      color: var(--white);
+      padding: 40px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    header h1 { font-size: clamp(20px,3vw,28px); font-weight: 700; }
+    header .subtitle { font-size: 14px; opacity: .7; margin-top: 4px; }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    .summary-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      border: 1.5px solid #EEF2FF;
+    }
+    .summary-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+    .summary-label {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 4px;
+    }
+
+    /* ── SECTION ── */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #DDE3EE;
+    }
+
+    /* ── PLANNER CARDS ── */
+    .planner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .planner-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #EEF2FF;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+    .planner-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(13,71,161,.12);
+      border-color: var(--blue);
+    }
+    .planner-card-header {
+      background: linear-gradient(135deg, #0D47A1, #1976D2);
+      color: var(--white);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .planner-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .planner-name { font-size: 16px; font-weight: 700; }
+    .planner-card-body { padding: 18px 20px; }
+    .planner-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .p-stat {
+      background: var(--blue-light);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .p-stat-num {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0D47A1;
+    }
+    .p-stat-label {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    .planner-highlight {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .planner-highlight strong {
+      color: var(--blue);
+    }
+    .planner-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #EEF2FF;
+    }
+    .score-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .score-high  { background: #E8F5E9; color: #2E7D32; }
+    .score-mid   { background: #FFF8E1; color: #F57F17; }
+    .score-low   { background: #FFEBEE; color: #C62828; }
+    .score-text  { font-size: 12px; color: var(--gray); }
+    .view-detail {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.4);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-nav">
+      <a class="back-btn" href="planner-daily-reports.html">&larr; 日报列表</a>
+    </div>
+    <h1>规划师日报 &middot; 2026年3月30日（周日）</h1>
+    <div class="subtitle">基于企业微信聊天记录 &middot; AI 自动分析</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 全队汇总 ── -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-num">6</div>
+      <div class="summary-label">活跃规划师</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num">23</div>
+      <div class="summary-label">沟通客户数</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num">156</div>
+      <div class="summary-label">消息总量</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num">7.2</div>
+      <div class="summary-label">团队平均分</div>
+    </div>
+  </div>
+
+  <!-- ── 各规划师 ── -->
+  <div class="section-title">各规划师沟通概况</div>
+
+  <div class="planner-grid">
+
+    <!-- 江宁 -->
+    <a class="planner-card" href="planner-detail-2026-03-30-jiangning.html">
+      <div class="planner-card-header">
+        <div class="planner-avatar">江</div>
+        <div class="planner-name">江宁</div>
+      </div>
+      <div class="planner-card-body">
+        <div class="planner-stats">
+          <div class="p-stat"><div class="p-stat-num">5</div><div class="p-stat-label">沟通客户</div></div>
+          <div class="p-stat"><div class="p-stat-num">32</div><div class="p-stat-label">消息数</div></div>
+        </div>
+        <div class="planner-highlight">
+          <strong>进展最好：</strong>客户王女士已确认投保意向，预计本周签单。<br>
+          <strong>需关注：</strong>客户李先生连续3天未回复。
+        </div>
+        <div class="planner-score">
+          <span class="score-badge score-high">8.5 分</span>
+          <span class="score-text">跟进质量高，方案讲解清晰</span>
+        </div>
+        <div class="view-detail">查看详情 ›</div>
+      </div>
+    </a>
+
+    <!-- 马康挺 -->
+    <a class="planner-card" href="planner-detail-2026-03-30-makangting.html">
+      <div class="planner-card-header">
+        <div class="planner-avatar">马</div>
+        <div class="planner-name">马康挺</div>
+      </div>
+      <div class="planner-card-body">
+        <div class="planner-stats">
+          <div class="p-stat"><div class="p-stat-num">7</div><div class="p-stat-label">沟通客户</div></div>
+          <div class="p-stat"><div class="p-stat-num">48</div><div class="p-stat-label">消息数</div></div>
+        </div>
+        <div class="planner-highlight">
+          <strong>进展最好：</strong>向3位客户发送了美元理财方案，客户反馈积极。<br>
+          <strong>需关注：</strong>有2位客户对汇率问题有顾虑。
+        </div>
+        <div class="planner-score">
+          <span class="score-badge score-high">8.0 分</span>
+          <span class="score-text">主动性强，沟通量领先</span>
+        </div>
+        <div class="view-detail">查看详情 ›</div>
+      </div>
+    </a>
+
+    <!-- 林付贤 -->
+    <a class="planner-card" href="planner-detail-2026-03-30-linfuxian.html">
+      <div class="planner-card-header">
+        <div class="planner-avatar">林</div>
+        <div class="planner-name">林付贤</div>
+      </div>
+      <div class="planner-card-body">
+        <div class="planner-stats">
+          <div class="p-stat"><div class="p-stat-num">3</div><div class="p-stat-label">沟通客户</div></div>
+          <div class="p-stat"><div class="p-stat-num">18</div><div class="p-stat-label">消息数</div></div>
+        </div>
+        <div class="planner-highlight">
+          <strong>进展最好：</strong>客户张先生有意了解香港配置方案。<br>
+          <strong>需关注：</strong>整体沟通量偏低，建议加强主动触达。
+        </div>
+        <div class="planner-score">
+          <span class="score-badge score-mid">6.0 分</span>
+          <span class="score-text">沟通量偏少，需提升主动性</span>
+        </div>
+        <div class="view-detail">查看详情 ›</div>
+      </div>
+    </a>
+
+    <!-- 李颢 -->
+    <a class="planner-card" href="planner-detail-2026-03-30-lihao.html">
+      <div class="planner-card-header">
+        <div class="planner-avatar">李</div>
+        <div class="planner-name">李颢</div>
+      </div>
+      <div class="planner-card-body">
+        <div class="planner-stats">
+          <div class="p-stat"><div class="p-stat-num">2</div><div class="p-stat-label">沟通客户</div></div>
+          <div class="p-stat"><div class="p-stat-num">12</div><div class="p-stat-label">消息数</div></div>
+        </div>
+        <div class="planner-highlight">
+          <strong>进展最好：</strong>客户对重疾险产品有初步兴趣。<br>
+          <strong>需关注：</strong>当日活跃度较低。
+        </div>
+        <div class="planner-score">
+          <span class="score-badge score-mid">5.5 分</span>
+          <span class="score-text">客户量少，需增加触达</span>
+        </div>
+        <div class="view-detail">查看详情 ›</div>
+      </div>
+    </a>
+
+    <!-- 任龙 -->
+    <a class="planner-card" href="planner-detail-2026-03-30-renlong.html">
+      <div class="planner-card-header">
+        <div class="planner-avatar">任</div>
+        <div class="planner-name">任龙</div>
+      </div>
+      <div class="planner-card-body">
+        <div class="planner-stats">
+          <div class="p-stat"><div class="p-stat-num">4</div><div class="p-stat-label">沟通客户</div></div>
+          <div class="p-stat"><div class="p-stat-num">28</div><div class="p-stat-label">消息数</div></div>
+        </div>
+        <div class="planner-highlight">
+          <strong>进展最好：</strong>客户赵女士已进入方案比较阶段。<br>
+          <strong>需关注：</strong>1位客户明确表示暂不考虑。
+        </div>
+        <div class="planner-score">
+          <span class="score-badge score-high">7.5 分</span>
+          <span class="score-text">跟进节奏合理，有明确推进</span>
+        </div>
+        <div class="view-detail">查看详情 ›</div>
+      </div>
+    </a>
+
+    <!-- 周鑫鑫 -->
+    <a class="planner-card" href="planner-detail-2026-03-30-zhouxinxin.html">
+      <div class="planner-card-header">
+        <div class="planner-avatar">周</div>
+        <div class="planner-name">周鑫鑫</div>
+      </div>
+      <div class="planner-card-body">
+        <div class="planner-stats">
+          <div class="p-stat"><div class="p-stat-num">2</div><div class="p-stat-label">沟通客户</div></div>
+          <div class="p-stat"><div class="p-stat-num">18</div><div class="p-stat-label">消息数</div></div>
+        </div>
+        <div class="planner-highlight">
+          <strong>进展最好：</strong>客户对储蓄险有兴趣，已发送资料。<br>
+          <strong>需关注：</strong>新客户转化尚未破冰。
+        </div>
+        <div class="planner-score">
+          <span class="score-badge score-mid">6.5 分</span>
+          <span class="score-text">有跟进动作，但转化待提升</span>
+        </div>
+        <div class="view-detail">查看详情 ›</div>
+      </div>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  保心上人 &middot; CONFIDENTIAL &middot; INTERNAL USE ONLY
+</footer>
+
+</body>
+</html>

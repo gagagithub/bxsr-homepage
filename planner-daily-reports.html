@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>保心上人 · 规划师日报</title>
+  <style>
+    :root {
+      --navy:  #1E2761;
+      --teal:  #028090;
+      --mint:  #02C39A;
+      --off:   #F4F6FB;
+      --gray:  #8892A4;
+      --dark:  #111827;
+      --white: #FFFFFF;
+      --blue:  #1976D2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--off);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, #162050 60%, var(--teal) 100%);
+      color: var(--white);
+      padding: 40px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    .header-text h1 { font-size: clamp(20px,3vw,28px); font-weight: 700; }
+    .header-text p  { font-size: 13px; opacity: .6; margin-top: 3px; }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── YEAR GROUP ── */
+    .year-group { margin-bottom: 40px; }
+    .year-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #DDE3EE;
+    }
+
+    /* ── MONTH GROUP ── */
+    .month-group { margin-bottom: 8px; }
+    .month-label {
+      font-size: 13px;
+      color: var(--gray);
+      font-weight: 600;
+      padding: 6px 0 10px;
+    }
+
+    /* ── REPORT CARD ── */
+    .report-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: inherit;
+      border: 1.5px solid #EEF2FF;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30,39,97,.10);
+      border-color: var(--blue);
+    }
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0D47A1, #1976D2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .card-body { flex: 1; min-width: 0; }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-meta {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 3px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .card-stats {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .stat-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+      background: #E3F2FD;
+      color: #0D47A1;
+    }
+    .card-arrow {
+      color: var(--gray);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: transform .15s, color .15s;
+    }
+    .report-card:hover .card-arrow { transform: translateX(3px); color: var(--blue); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+    }
+    .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.4);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-btn" href="index.html">&larr; 首页</a>
+    <div class="header-text">
+      <h1>规划师日报</h1>
+      <p>企业微信聊天分析 &nbsp;&middot;&nbsp; AI 自动生成 &nbsp;&middot;&nbsp; 内部专用</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="year-group">
+    <div class="year-label">2026</div>
+
+    <div class="month-group">
+      <div class="month-label">3 月</div>
+
+      <!-- NEW_ENTRY_HERE -->
+
+      <a class="report-card" href="planner-daily-2026-03-30.html">
+        <div class="card-icon">💬</div>
+        <div class="card-body">
+          <div class="card-title">规划师日报 &nbsp;&middot;&nbsp; 3月30日（周日）</div>
+          <div class="card-meta">
+            <span>📅 2026年3月30日</span>
+            <span>🤖 AI 自动分析</span>
+          </div>
+        </div>
+        <div class="card-stats">
+          <span class="stat-badge">6 位规划师</span>
+          <span class="stat-badge">23 位客户</span>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  保心上人 &middot; CONFIDENTIAL &middot; INTERNAL USE ONLY
+</footer>
+
+</body>
+</html>

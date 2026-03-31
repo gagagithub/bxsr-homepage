@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>马康挺 · 规划师日报 · 2026年3月30日</title>
+  <style>
+    :root {
+      --navy:  #1E2761;
+      --teal:  #028090;
+      --off:   #F4F6FB;
+      --gray:  #8892A4;
+      --dark:  #111827;
+      --white: #FFFFFF;
+      --blue:  #1976D2;
+      --blue-dark: #0D47A1;
+      --blue-light: #E3F2FD;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--off);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0D47A1 0%, #1565C0 60%, #1976D2 100%);
+      color: var(--white);
+      padding: 40px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+
+    .planner-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .planner-avatar-lg {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .planner-header h1 { font-size: clamp(20px,3vw,28px); font-weight: 700; }
+    .planner-header .subtitle { font-size: 14px; opacity: .7; margin-top: 4px; }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── OVERVIEW ── */
+    .overview-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .overview-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      border: 1.5px solid #EEF2FF;
+    }
+    .overview-num {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+    .overview-label {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 3px;
+    }
+
+    /* ── SCORE BANNER ── */
+    .score-banner {
+      background: var(--white);
+      border-radius: 14px;
+      border: 1.5px solid #E3F2FD;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .score-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0D47A1, #1976D2);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .score-info h3 { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .score-info p  { font-size: 13px; color: var(--gray); margin-top: 3px; line-height: 1.5; }
+
+    /* ── SECTION ── */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #DDE3EE;
+    }
+
+    /* ── CLIENT CARDS ── */
+    .client-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #EEF2FF;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .client-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #EEF2FF;
+    }
+    .client-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .client-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #E3F2FD;
+      color: var(--blue-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .client-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .client-meta { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+    .status-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .status-active   { background: #E8F5E9; color: #2E7D32; }
+    .status-pending   { background: #FFF8E1; color: #F57F17; }
+    .status-cold      { background: #FFEBEE; color: #C62828; }
+    .status-new       { background: #E3F2FD; color: #0D47A1; }
+    .status-proposal  { background: #F3E5F5; color: #7B1FA2; }
+
+    .client-body { padding: 18px 20px; }
+
+    .chat-summary {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .chat-summary strong { color: var(--dark); }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .analysis-item {
+      background: var(--off);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .analysis-label {
+      font-size: 11px;
+      color: var(--gray);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .analysis-value {
+      font-size: 13px;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .concerns {
+      background: #FFF8E1;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .concerns-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #F57F17;
+      margin-bottom: 4px;
+    }
+    .concerns-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .next-step {
+      background: #E8F5E9;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .next-step-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #2E7D32;
+      margin-bottom: 4px;
+    }
+    .next-step-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* ── AI SUMMARY ── */
+    .ai-summary {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E3F2FD;
+      padding: 24px;
+      margin-top: 32px;
+    }
+    .ai-summary h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .ai-summary ul {
+      list-style: none;
+      padding: 0;
+    }
+    .ai-summary li {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.7;
+      padding: 6px 0;
+      border-bottom: 1px solid #F0F4FF;
+    }
+    .ai-summary li:last-child { border-bottom: none; }
+    .ai-summary li::before {
+      content: "💡 ";
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.4);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-nav">
+      <a class="back-btn" href="planner-daily-2026-03-30.html">&larr; 返回当日总览</a>
+    </div>
+    <div class="planner-header">
+      <div class="planner-avatar-lg">马</div>
+      <div>
+        <h1>马康挺 · 客户沟通详情</h1>
+        <div class="subtitle">2026年3月30日（周日） &middot; 共沟通 7 位客户</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 数据概览 ── -->
+  <div class="overview-row">
+    <div class="overview-card">
+      <div class="overview-num">7</div>
+      <div class="overview-label">沟通客户数</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num">48</div>
+      <div class="overview-label">发出消息</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num">35</div>
+      <div class="overview-label">收到回复</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num">5</div>
+      <div class="overview-label">主动发起</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num">3</div>
+      <div class="overview-label">发送方案</div>
+    </div>
+  </div>
+
+  <!-- ── AI 评分 ── -->
+  <div class="score-banner">
+    <div class="score-circle">8.0</div>
+    <div class="score-info">
+      <h3>当日跟进质量评分</h3>
+      <p>主动性强，沟通量领先全队。向3位客户发送了美元理财方案，话术专业，客户反馈积极。建议对汇率顾虑客户准备针对性解答材料。</p>
+    </div>
+  </div>
+
+  <!-- ── 客户沟通详情 ── -->
+  <div class="section-title">客户沟通详情（7 位）</div>
+
+  <!-- 客户1 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">陈</div>
+        <div>
+          <div class="client-name">陈先生</div>
+          <div class="client-meta">消息 12 条 · 主动发起 · 时长约 25 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-proposal">已发方案</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>马康挺主动联系陈先生，介绍了一款美元理财产品，强调收益不会特别高但可以锁定5年期。陈先生对产品有兴趣，但担心明年部分产品可能停售。马康挺解释了折扣可能下降的情况，并发送了中银那款3年收益的产品资料作为对比参考。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">较强 — 主动询问细节</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">规划师主动触达</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">涉及产品</div>
+          <div class="analysis-value">美元理财 / 储蓄险</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">是否有下一步</div>
+          <div class="analysis-value">✅ 等客户看完资料后跟进</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">明天下午跟进陈先生是否看完资料，如有疑问可约视频详细讲解方案。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户2 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">刘</div>
+        <div>
+          <div class="client-name">刘女士</div>
+          <div class="client-meta">消息 8 条 · 客户发起 · 时长约 15 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-active">有效沟通</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>刘女士主动询问香港保险配置的问题，表示想考虑香港方面的资产配置。马康挺回复表示可以一起规划，并提到下个月4月15号会有一场高净值客户活动，邀请刘女士参加。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">中等 — 在了解阶段</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">客户主动咨询</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">涉及产品</div>
+          <div class="analysis-value">香港保险配置</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">是否有下一步</div>
+          <div class="analysis-value">✅ 邀约4.15客户活动</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">发送4月15日活动详情给刘女士，确认是否能参加，提前准备针对性方案。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户3 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">赵</div>
+        <div>
+          <div class="client-name">赵先生</div>
+          <div class="client-meta">消息 9 条 · 主动发起 · 时长约 20 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-proposal">已发方案</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>马康挺向赵先生介绍了一年交5万美金、总保费70万到150万的保险产品方案。赵先生觉得"都不难"，表现出积极态度。马康挺发送了一张产品说明图片作为参考。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">强 — 态度积极正面</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">规划师主动触达</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">涉及产品</div>
+          <div class="analysis-value">美元保险（年交5万刀）</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">是否有下一步</div>
+          <div class="analysis-value">✅ 待确认投保意愿</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">趁客户情绪积极，尽快推进到具体投保流程，确认缴费年限和保额。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户4 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">王</div>
+        <div>
+          <div class="client-name">王先生</div>
+          <div class="client-meta">消息 6 条 · 主动发起 · 时长约 10 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-active">有效沟通</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>马康挺与王先生讨论了购汇结汇的问题。王先生关心每年5万美金结汇限制，担心国家不想让大量美金出去。马康挺解释了可以通过家人或者汇到香港的方式处理。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">中等 — 有顾虑待解决</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">规划师主动触达</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">涉及产品</div>
+          <div class="analysis-value">美元理财（汇率相关）</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">是否有下一步</div>
+          <div class="analysis-value">⏳ 客户需要时间消化</div>
+        </div>
+      </div>
+      <div class="concerns">
+        <div class="concerns-title">客户顾虑</div>
+        <div class="concerns-text">购汇限额问题（每人每年5万美金限制）和跨境资金流动的合规性。</div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">准备一份购汇合规操作指南发给王先生，消除其顾虑。可结合已成功操作的案例说明。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户5 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">张</div>
+        <div>
+          <div class="client-name">张女士</div>
+          <div class="client-meta">消息 5 条 · 主动发起 · 时长约 8 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-proposal">已发方案</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>马康挺引用了一条之前的聊天记录，主动跟进张女士。讨论了2年缴费的美元产品方案，强调国内产品收益太低，正常客户一年交5万美金、2至5年交的方案。发送了产品图片。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">中等 — 跟进中</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">规划师主动跟进</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">涉及产品</div>
+          <div class="analysis-value">美元储蓄（2-5年缴费）</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">是否有下一步</div>
+          <div class="analysis-value">⏳ 等客户反馈</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">如2天内无回复，发送简短跟进消息，询问是否需要安排详细讲解。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户6 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">李</div>
+        <div>
+          <div class="client-name">李先生</div>
+          <div class="client-meta">消息 4 条 · 主动发起 · 时长约 5 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-cold">无回应</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>马康挺发送了保险产品信息和一张产品图片给李先生，但李先生全天未回复任何消息。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">不明 — 无回应</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">规划师单向发送</div>
+        </div>
+      </div>
+      <div class="concerns">
+        <div class="concerns-title">需关注</div>
+        <div class="concerns-text">已连续2天发送消息未获回复，可能需要更换沟通方式或暂停推送避免打扰。</div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">暂停推送产品信息，改为发送一条轻松的问候或有价值的行业资讯，重新建立互动。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户7 -->
+  <div class="client-card">
+    <div class="client-header">
+      <div class="client-info">
+        <div class="client-avatar">吴</div>
+        <div>
+          <div class="client-name">吴女士</div>
+          <div class="client-meta">消息 4 条 · 客户发起 · 时长约 6 分钟</div>
+        </div>
+      </div>
+      <span class="status-tag status-new">初次接触</span>
+    </div>
+    <div class="client-body">
+      <div class="chat-summary">
+        <strong>沟通摘要：</strong>吴女士通过朋友圈看到马康挺分享的内容后主动咨询，简单了解了美元理财产品。马康挺做了初步介绍并表示后续可以发送详细资料。
+      </div>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <div class="analysis-label">客户意向</div>
+          <div class="analysis-value">初步 — 刚建立联系</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">沟通方式</div>
+          <div class="analysis-value">客户主动咨询</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-title">建议下一步</div>
+        <div class="next-step-text">今天发送一份简洁的产品介绍资料，约定后续详细沟通时间。新客户要趁热跟进。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI 综合建议 ── -->
+  <div class="ai-summary">
+    <h3>AI 综合建议</h3>
+    <ul>
+      <li>赵先生态度最积极，建议优先推进到签单流程，是本周最有希望成交的客户。</li>
+      <li>陈先生和张女士都已收到方案资料，明天应做一轮跟进确认。</li>
+      <li>王先生的购汇顾虑是共性问题，建议准备标准化话术文档供全团队使用。</li>
+      <li>李先生连续无回复，需调整策略，避免过度推送导致客户屏蔽。</li>
+      <li>吴女士是新客户线索，来自朋友圈引流，说明内容营销有效，建议继续保持朋友圈更新频率。</li>
+      <li>今日沟通量全队第一（48条消息），主动性强，值得表扬。</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  保心上人 &middot; CONFIDENTIAL &middot; INTERNAL USE ONLY
+</footer>
+
+</body>
+</html>
