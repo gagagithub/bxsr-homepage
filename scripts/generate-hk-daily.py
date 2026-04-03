@@ -195,7 +195,14 @@ def analyze_with_minimax(search_text):
     if start != -1 and end > start:
         result_text = result_text[start:end]
 
-    return json.loads(result_text)
+    # 先尝试标准解析，失败则用 json_repair 修复
+    try:
+        return json.loads(result_text)
+    except json.JSONDecodeError as e:
+        print(f"  JSON parse error: {e}, trying json_repair...")
+        from json_repair import repair_json
+        repaired = repair_json(result_text)
+        return json.loads(repaired)
 
 
 # ── HTML 生成 ─────────────────────────────────────────
