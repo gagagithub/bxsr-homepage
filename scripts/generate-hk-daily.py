@@ -97,6 +97,7 @@ def collect_search_results():
         for i, r in enumerate(results[:10], 1):
             text_parts.append(f"{i}. 标题：{r['title']}")
             text_parts.append(f"   摘要：{r['snippet']}")
+            text_parts.append(f"   链接：{r['link']}")
 
     return "\n".join(text_parts), merged
 
@@ -126,7 +127,8 @@ def analyze_with_minimax(search_text):
         {{
           "title": "内容标题",
           "type": "笔记/视频/文章/教程",
-          "summary": "核心摘要（30-50字）"
+          "summary": "核心摘要（30-50字）",
+          "link": "对应的搜索结果链接，没有则留空字符串"
         }}
       ],
       "note": "平台特别提示（可选，没有则留空字符串）"
@@ -252,10 +254,15 @@ def build_platform_html(key, platform):
     rows = ""
     for i, item in enumerate(platform.get("items", [])[:5], 1):
         type_cls = TYPE_CLASS_MAP.get(item.get("type", ""), "type-note")
+        link = item.get("link", "").strip()
+        title_html = (
+            f'<a href="{esc(link)}" target="_blank" rel="noopener" class="item-link">{esc(item["title"])}</a>'
+            if link else esc(item["title"])
+        )
         rows += f"""
         <tr>
           <td>{i}</td>
-          <td class="td-title">{esc(item['title'])}</td>
+          <td class="td-title">{title_html}</td>
           <td><span class="td-type {type_cls}">{esc(item.get('type',''))}</span></td>
           <td>{esc(item['summary'])}</td>
         </tr>"""
@@ -527,6 +534,16 @@ def generate_detail_page(data):
     .type-video   {{ background: #E8F5FF; color: #0277BD; }}
     .type-article {{ background: #FFF8E1; color: #F57F17; }}
     .type-tutorial{{ background: #E8F5E9; color: #2E7D32; }}
+
+    .item-link {{
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 600;
+    }}
+    .item-link:hover {{
+      color: var(--teal);
+      text-decoration: underline;
+    }}
 
     .platform-note {{
       font-size: 12px;
