@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>香港保险日报 &middot; 2026-04-03</title>
+  <style>
+    :root {
+      --navy:  #1E2761;
+      --teal:  #028090;
+      --mint:  #02C39A;
+      --off:   #F4F6FB;
+      --gray:  #8892A4;
+      --dark:  #111827;
+      --white: #FFFFFF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--off);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, #162050 60%, var(--teal) 100%);
+      color: var(--white);
+      padding: 40px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    header h1 { font-size: clamp(20px,3vw,28px); font-weight: 700; }
+    .header-sub { font-size: 13px; opacity: .6; margin-top: 4px; }
+    .header-tags { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .header-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.75);
+      border: 1px solid rgba(255,255,255,.15);
+    }
+
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    .key-points {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E8EDF8;
+      padding: 28px 28px 24px;
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title .icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .key-point {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #F0F3FA;
+    }
+    .key-point:last-child { border-bottom: none; }
+    .kp-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .kp-content { flex: 1; }
+    .kp-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .kp-detail {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    .platform-section {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E8EDF8;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .platform-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .platform-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .platform-xiaohongshu .platform-dot { background: #FF2442; }
+    .platform-douyin .platform-dot      { background: #1A1A1A; }
+    .platform-toutiao .platform-dot     { background: #F04142; }
+    .platform-bilibili .platform-dot    { background: #00A1D6; }
+    .platform-shipinhao .platform-dot   { background: #07C160; }
+
+    .content-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .content-table thead th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray);
+      padding: 8px 10px;
+      border-bottom: 2px solid #E8EDF8;
+    }
+    .content-table thead th:first-child {
+      width: 36px;
+      text-align: center;
+    }
+    .content-table thead th:nth-child(3) { width: 60px; }
+    .content-table tbody tr {
+      border-bottom: 1px solid #F4F6FB;
+      transition: background .1s;
+    }
+    .content-table tbody tr:hover { background: #F8FAFF; }
+    .content-table tbody td {
+      padding: 12px 10px;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .content-table tbody td:first-child {
+      text-align: center;
+      font-weight: 700;
+      color: var(--teal);
+    }
+    .content-table .td-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .content-table .td-type {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .type-note    { background: #FFF0F0; color: #D32F2F; }
+    .type-video   { background: #E8F5FF; color: #0277BD; }
+    .type-article { background: #FFF8E1; color: #F57F17; }
+    .type-tutorial{ background: #E8F5E9; color: #2E7D32; }
+
+    .platform-note {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #F0F3FA;
+      line-height: 1.6;
+    }
+
+    .trends-section {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1.5px solid #E8EDF8;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .trend-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #F0F3FA;
+    }
+    .trend-item:last-child { border-bottom: none; }
+    .trend-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+    .trend-detail {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray);
+      padding: 20px 24px 0;
+      line-height: 1.6;
+    }
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.4);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 28px 20px 24px; }
+      main { padding: 20px 14px 60px; }
+      .key-points, .platform-section, .trends-section { padding: 20px 16px; }
+      .content-table { font-size: 12px; }
+      .content-table thead th:nth-child(4),
+      .content-table tbody td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <a class="back-btn" href="hk-insurance-reports.html">&larr; 返回列表</a>
+    </div>
+    <h1>香港保险 &middot; 每日热门资讯</h1>
+    <div class="header-sub">2026年4月3日 &nbsp;&middot;&nbsp; AI 自动整理，仅供参考</div>
+    <div class="header-tags">
+      <span class="header-tag">储蓄险</span>
+      <span class="header-tag">分红险</span>
+      <span class="header-tag">美元保单</span>
+      <span class="header-tag">理财类产品</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="key-points">
+    <div class="section-title">
+      <span class="icon" style="background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;">&#9654;</span>
+      今日要点
+    </div>
+
+    <div class="key-point">
+      <div class="kp-num">1</div>
+      <div class="kp-content">
+        <div class="kp-title">港险榜单发布引关注</div>
+        <div class="kp-detail">2026年港险榜单出炉，12款热门产品中仅3款值得购买，储蓄险、养老险、高保证险等分类榜单受追捧。</div>
+      </div>
+    </div>
+    <div class="key-point">
+      <div class="kp-num">2</div>
+      <div class="kp-content">
+        <div class="kp-title">网红夸大宣传被曝光</div>
+        <div class="kp-detail">抖音、小红书涌现港险网红，涉嫌夸大宣传「年领7万」「年息6%」等，实际收益与宣传存在明显落差。</div>
+      </div>
+    </div>
+    <div class="key-point">
+      <div class="kp-num">3</div>
+      <div class="kp-content">
+        <div class="kp-title">监管制度持续升级</div>
+        <div class="kp-detail">香港保险业正式实施风险为本资本制度，与国际标准看齐，提升保险公司财务稳健性。</div>
+      </div>
+    </div>
+    <div class="key-point">
+      <div class="kp-num">4</div>
+      <div class="kp-content">
+        <div class="kp-title">避坑指南热度高</div>
+        <div class="kp-detail">「揭秘港险7大坑」「第一批跟风港险的人后悔了」等避坑内容在B站等平台获高点击。</div>
+      </div>
+    </div>
+    <div class="key-point">
+      <div class="kp-num">5</div>
+      <div class="kp-content">
+        <div class="kp-title">跨境投保监管收紧</div>
+        <div class="kp-detail">广东金融监管局专项整治非法境外保险销售，要求机构10月15日前提交自查报告。</div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="platform-section platform-xiaohongshu">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">小红书 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">保险机构经营小红书：多限于品牌展示，种草逻辑遭遇转化难题</td>
+          <td><span class="td-type type-note">笔记</span></td>
+          <td>分析保险公司官号运营现状，月活3亿用户多为一线城市女性，但转化困难。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 保险公司官号内容围绕知识科普，种草到转化存在难度</div>
+  </div>
+  <div class="platform-section platform-douyin">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">抖音 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">2026最新港险榜单，12款热门产品，只有3款值得买！</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>2026年港险产品测评，12款热门中推荐3款值得购买的产品。</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">高才通 抖音小紅書湧現香港保險網紅誇大宣傳年領7萬專攻內地客</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>网红宣传年息6%实际仅0.5%，不直接销售引导私域成交，涉嫌误导。</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">社交平台惊现众多港险销售网红</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>港险团队精英聚集，Sales姐姐豪横推荐，引发关注讨论。</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">2026香港港险四大榜单，10款精选好品</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>四大榜单整理：储蓄榜、养老榜、高保证榜、重疾榜，适配不同需求。</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">香港卖保险博主</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>搜索香港保险博主相关内容，获取更多相关视频和直播信息。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 存在夸大宣传、误导消费者等问题，监管需加强</div>
+  </div>
+  <div class="platform-section platform-toutiao">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">今日头条 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">香港保险哪家好？2026 头部梯队全解析</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>解析友邦、保诚、宏利、安盛、永明金融等头部保险公司排名。</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">2026年315最新曝光!香港保险再陷暴雷风波?</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>315晚会后港险被点名，保单无法兑付等关键词冲上热搜，真相揭秘。</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">香港保险内地化，一场爆雷潮正在加速到来</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>内地客户赴港投保创历史新高，助推香港新单保费规模增长。</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">32万亿存款到期！180年零破产，香港保险成2026财富避险最优选</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>港险凭180年零破产记录和全球配置优势，成为财富安全港。</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">香港保險業正式實施風險為本資本制度與國際標準看齊</td>
+          <td><span class="td-type type-article">文章</span></td>
+          <td>保監局引入RBC制度，提升保险公司财务稳健性，与国际标准看齐。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 头部保险公司排名及监管动态受关注</div>
+  </div>
+  <div class="platform-section platform-bilibili">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">B站 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">2025港险最新排名，10大香港储蓄险</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>10大香港储蓄险产品测评及分红实现率统计。</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">揭秘港险7大坑，千万别跟风买！收割百万内地中产</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>郎教授揭港险骗局，深度分析港险潜在风险和坑点。</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">为什么大家都在购买香港保险</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>香港保险优缺点分析，保险知识和避坑指南。</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">港险这样规划，每月领取1.2万，活多久领多久</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>港险养老金规划方案演示，每月稳定领取1.2万。</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">干货香港保险和内地保险的优缺点比较</td>
+          <td><span class="td-type type-video">视频</span></td>
+          <td>详细对比港险与内地保险的差异，包括收益兑付、利润分配等。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 避坑指南和产品对比内容热度高</div>
+  </div>
+  <div class="platform-section platform-shipinhao">
+    <div class="platform-header">
+      <div class="platform-dot"></div>
+      <div class="platform-name">视频号 Top 5</div>
+    </div>
+    <table class="content-table">
+      <thead><tr><th>#</th><th>标题</th><th>类型</th><th>核心摘要</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="td-title">每年领7万、年收益6%？社交平台惊现众多港险销售网红</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>网红以复利6%等话术吸引客户，实际收益与宣传存在明显落差。</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="td-title">赴港买保险莫忽视风险</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>内地居民必须亲自赴港签署合同，任何远程操作购买均非法。</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="td-title">买香港保险的有福了！香港微信钱包WeChat Pay HK支持交保费了</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>香港微信钱包支持交保费功能开通指引和流程说明。</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="td-title">赴港投保出乱象：微信引流、无牌销售……监管亮剑表态零容忍</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>广东金融监管局专项整治非法境外保险销售，要求机构自查。</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="td-title">如何避免變成孤兒？香港保險業議論紛紛</td>
+          <td><span class="td-type type-video">短视频</span></td>
+          <td>保监局新规讨论，如何防止保单变成孤儿单问题。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="platform-note">&#9888; 监管整治和合规投保提示受关注</div>
+  </div>
+
+  <div class="trends-section">
+    <div class="section-title">
+      <span class="icon" style="background:linear-gradient(135deg,#C0507A,#7B2D8B);color:#fff;">&#9670;</span>
+      趋势观察
+    </div>
+
+    <div class="trend-item">
+      <div class="trend-title">分红实现率稳定</div>
+      <div class="trend-detail">过去三年港险分红实现率平均保持95%以上，头部公司旗舰产品表现优异。</div>
+    </div>
+    <div class="trend-item">
+      <div class="trend-title">监管持续收紧</div>
+      <div class="trend-detail">风险为本资本制度实施，跨境投保监管趋严，整治非法销售行为。</div>
+    </div>
+    <div class="trend-item">
+      <div class="trend-title">社交平台推广乱象</div>
+      <div class="trend-detail">抖音小红书涌现大量港险网红，夸大宣传问题频发，误导消费者。</div>
+    </div>
+    <div class="trend-item">
+      <div class="trend-title">产品创新升级</div>
+      <div class="trend-detail">无限次更换受保人、保单拆分等功能推出，资产传承功能强化。</div>
+    </div>
+    <div class="trend-item">
+      <div class="trend-title">内地投保热情高</div>
+      <div class="trend-detail">32万亿存款到期背景下，港险作为财富避险工具受青睐，赴港投保升温。</div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    本报告由 AI 自动搜集整理，内容来源于公开网络信息，仅供参考，不构成投资建议。<br>
+    生成时间：2026-04-03 &nbsp;&middot;&nbsp; 搜索引擎：Serper &nbsp;&middot;&nbsp; 分析模型：MiniMax
+  </div>
+
+</main>
+
+<footer>
+  保心上人 &middot; CONFIDENTIAL &middot; INTERNAL USE ONLY
+</footer>
+
+</body>
+</html>
