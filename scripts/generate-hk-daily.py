@@ -27,7 +27,7 @@ LIST_FILE = os.path.join(PROJECT_ROOT, "hk-insurance-reports.html")
 MINIMAX_API_KEY = os.environ["MINIMAX_API_KEY"]
 SERPER_API_KEY = os.environ["SERPER_API_KEY"]
 
-MINIMAX_URL = "https://api.minimax.chat/v1/text/chatcompletion_v2"
+MINIMAX_BASE_URL = "https://api.minimax.chat/v1"
 MINIMAX_MODEL = "MiniMax-Text-01"
 
 # ── Serper 搜索 ───────────────────────────────────────
@@ -103,7 +103,7 @@ def collect_search_results():
 
 # ── MiniMax 分析 ──────────────────────────────────────
 def analyze_with_minimax(search_text):
-    """将搜索结果发给 MiniMax，返回结构化 JSON。"""
+    """将搜索结果发给 MiniMax（OpenAI 兼容接口），返回结构化 JSON。"""
     prompt = f"""以下是今天（{DATE_CN}）关于「香港保险」的全网搜索结果，来自小红书、抖音、今日头条、B站、微信视频号等平台：
 
 {search_text}
@@ -152,6 +152,8 @@ def analyze_with_minimax(search_text):
 - 如有明显推广内容，在标题后标注 [疑似推广]
 - 只输出 JSON，不要有其他任何文字"""
 
+    # 使用 OpenAI 兼容接口
+    url = f"{MINIMAX_BASE_URL}/chat/completions"
     headers = {
         "Authorization": f"Bearer {MINIMAX_API_KEY}",
         "Content-Type": "application/json",
@@ -165,12 +167,20 @@ def analyze_with_minimax(search_text):
         "temperature": 0.3,
     }
 
-    resp = requests.post(MINIMAX_URL, headers=headers, json=payload, timeout=120)
+    resp = requests.post(url, headers=headers, json=payload, timeout=120)
     resp.raise_for_status()
     data = resp.json()
 
-    # 提取文本
-    result_text = data["choices"][0]["message"]["content"].strip()
+    # 打印响应结构，方便调试
+    print(f"  MiniMax response keys: {list(data.keys())}")
+    if "base_resp" in data:
+        print(f"  base_resp: {data['base_resp']}")
+
+    choices = data.get("choices")
+    if not choices:
+        raise ValueError(f"MiniMax returned no choices. Full response: {json.dumps(data, ensure_ascii=False)[:500]}")
+
+    result_text = choices[0]["message"]["content"].strip()
 
     # 清理可能的 markdown 包裹
     if result_text.startswith("```"):
