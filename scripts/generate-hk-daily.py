@@ -182,11 +182,18 @@ def analyze_with_minimax(search_text):
         raise ValueError(f"MiniMax returned no choices. Full response: {json.dumps(data, ensure_ascii=False)[:500]}")
 
     result_text = choices[0]["message"]["content"].strip()
+    print(f"  Raw response (first 300 chars): {result_text[:300]}")
 
-    # 清理可能的 markdown 包裹
-    if result_text.startswith("```"):
+    # 清理 markdown 包裹
+    if "```" in result_text:
         result_text = re.sub(r"^```(?:json)?\s*", "", result_text)
-        result_text = re.sub(r"\s*```$", "", result_text)
+        result_text = re.sub(r"\s*```\s*$", "", result_text.strip())
+
+    # 提取最外层的 JSON 对象
+    start = result_text.find("{")
+    end = result_text.rfind("}") + 1
+    if start != -1 and end > start:
+        result_text = result_text[start:end]
 
     return json.loads(result_text)
 
