@@ -2,22 +2,21 @@
 """
 香港保险日报 - 自动生成脚本
 每天 10:00 (北京时间) 由 GitHub Actions 调用，
-通过 Claude API + Web Search 搜集全网「香港保险」热门话题，
-生成 HTML 详情页并更新列表页。
+通过 Serper 搜索 + MiniMax 分析，生成香港保险热门资讯 HTML。
 """
 
 import os
 import json
 import re
+import time
+import requests
 from datetime import datetime, timezone, timedelta
-
-import anthropic
 
 # ── 配置 ──────────────────────────────────────────────
 BEIJING_TZ = timezone(timedelta(hours=8))
 TODAY = datetime.now(BEIJING_TZ)
-DATE_STR = TODAY.strftime("%Y-%m-%d")           # 2026-03-30
-DATE_CN = TODAY.strftime("%Y年%-m月%-d日")        # 2026年3月30日
+DATE_STR = TODAY.strftime("%Y-%m-%d")
+DATE_CN = TODAY.strftime("%Y年%-m月%-d日")
 MONTH_NUM = TODAY.month
 YEAR_NUM = TODAY.year
 
@@ -25,25 +24,93 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DETAIL_FILE = os.path.join(PROJECT_ROOT, f"hk-insurance-{DATE_STR}.html")
 LIST_FILE = os.path.join(PROJECT_ROOT, "hk-insurance-reports.html")
 
-PLATFORMS = ["小红书", "抖音", "今日头条", "B站", "微信视频号"]
+MINIMAX_API_KEY = os.environ["MINIMAX_API_KEY"]
+SERPER_API_KEY = os.environ["SERPER_API_KEY"]
 
-# ── Claude API 调用 ───────────────────────────────────
-def fetch_daily_report():
-    """调用 Claude API + web_search 搜集香港保险热门话题，返回结构化 JSON。"""
-    client = anthropic.Anthropic()
+MINIMAX_URL = "https://api.minimax.chat/v1/text/chatcompletion_v2"
+MINIMAX_MODEL = "MiniMax-Text-01"
 
-    system_prompt = f"""你是一个专业的香港保险市场研究助手。今天是 {DATE_CN}。
+# ── Serper 搜索 ───────────────────────────────────────
+PLATFORM_QUERIES = [
+    ("xiaohongshu", "小红书",   f"site:xiaohongshu.com 香港保险 OR 港险 OR 香港储蓄险"),
+    ("xiaohongshu2","小红书",   f"小红书 香港保险 热门 {DATE_STR[:7]}"),
+    ("douyin",      "抖音",     f"抖音 香港保险 OR 港险 热门 {DATE_STR[:7]}"),
+    ("toutiao",     "今日头条", f"今日头条 香港保险 OR 港险 {DATE_STR[:7]}"),
+    ("bilibili",    "B站",      f"site:bilibili.com 香港保险 OR 港险"),
+    ("shipinhao",   "视频号",   f"微信视频号 香港保险 OR 港险 {DATE_STR[:7]}"),
+    ("general",     "综合",     f"香港保险 香港储蓄险 分红险 {DATE_STR[:7]} 最新"),
+]
 
-你的任务：搜索全网关于「香港保险」的最新热门话题和讨论，覆盖以下5个平台：
-1. 小红书
-2. 抖音
-3. 今日头条
-4. B站（哔哩哔哩）
-5. 微信视频号
 
-请使用 web_search 工具搜索每个平台上关于「香港保险」「港险」「香港储蓄险」「香港分红险」的热门内容。
+def serper_search(query, num=8):
+    """调用 Serper API 搜索，返回结果列表。"""
+    try:
+        resp = requests.post(
+            "https://google.serper.dev/search",
+            headers={"X-API-KEY": SERPER_API_KEY, "Content-Type": "application/json"},
+            json={"q": query, "hl": "zh-cn", "gl": "cn", "num": num},
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        results = []
+        for item in data.get("organic", []):
+            results.append({
+                "title": item.get("title", ""),
+                "snippet": item.get("snippet", ""),
+                "link": item.get("link", ""),
+            })
+        return results
+    except Exception as e:
+        print(f"  Serper search failed for '{query}': {e}")
+        return []
 
-搜索完成后，请输出严格的 JSON（不要有任何 markdown 包裹），格式如下：
+
+def collect_search_results():
+    """搜索所有平台，返回汇总文本供 MiniMax 分析。"""
+    all_results = {}
+    for key, name, query in PLATFORM_QUERIES:
+        print(f"  Searching: {name} — {query}")
+        results = serper_search(query)
+        all_results.setdefault(key, []).extend(results)
+        time.sleep(0.5)  # 避免请求过快
+
+    # 合并同平台重复 key（如 xiaohongshu + xiaohongshu2）
+    merged = {}
+    for key, results in all_results.items():
+        base_key = key.rstrip("0123456789")
+        merged.setdefault(base_key, []).extend(results)
+
+    # 格式化为文本
+    text_parts = []
+    for key, results in merged.items():
+        name_map = {
+            "xiaohongshu": "小红书",
+            "douyin": "抖音",
+            "toutiao": "今日头条",
+            "bilibili": "B站",
+            "shipinhao": "视频号",
+            "general": "综合搜索",
+        }
+        name = name_map.get(key, key)
+        text_parts.append(f"\n=== {name} 搜索结果 ===")
+        for i, r in enumerate(results[:10], 1):
+            text_parts.append(f"{i}. 标题：{r['title']}")
+            text_parts.append(f"   摘要：{r['snippet']}")
+
+    return "\n".join(text_parts), merged
+
+
+# ── MiniMax 分析 ──────────────────────────────────────
+def analyze_with_minimax(search_text):
+    """将搜索结果发给 MiniMax，返回结构化 JSON。"""
+    prompt = f"""以下是今天（{DATE_CN}）关于「香港保险」的全网搜索结果，来自小红书、抖音、今日头条、B站、微信视频号等平台：
+
+{search_text}
+
+请根据以上搜索内容，整理成香港保险每日资讯报告。
+
+输出严格的 JSON（不要有任何 markdown 包裹或其他文字），格式如下：
 {{
   "date": "{DATE_STR}",
   "key_points": [
@@ -58,32 +125,16 @@ def fetch_daily_report():
       "items": [
         {{
           "title": "内容标题",
-          "type": "笔记/视频/...",
+          "type": "笔记/视频/文章/教程",
           "summary": "核心摘要（30-50字）"
         }}
       ],
-      "note": "平台特别提示（可选）"
+      "note": "平台特别提示（可选，没有则留空字符串）"
     }},
-    "douyin": {{
-      "name": "抖音",
-      "items": [...],
-      "note": "..."
-    }},
-    "toutiao": {{
-      "name": "今日头条",
-      "items": [...],
-      "note": "..."
-    }},
-    "bilibili": {{
-      "name": "B站",
-      "items": [...],
-      "note": "..."
-    }},
-    "shipinhao": {{
-      "name": "视频号",
-      "items": [...],
-      "note": "..."
-    }}
+    "douyin": {{"name": "抖音", "items": [...], "note": ""}},
+    "toutiao": {{"name": "今日头条", "items": [...], "note": ""}},
+    "bilibili": {{"name": "B站", "items": [...], "note": ""}},
+    "shipinhao": {{"name": "视频号", "items": [...], "note": ""}}
   }},
   "trends": [
     {{
@@ -94,30 +145,34 @@ def fetch_daily_report():
 }}
 
 要求：
-- key_points 提供 5 条今日要点
-- 每个平台提供 Top 5 热门内容
+- key_points 提供 5 条今日要点，基于搜索内容提炼
+- 每个平台提供 Top 5 热门内容（若搜索结果不足5条，尽量补充合理推断）
 - trends 提供 3-5 条趋势观察
 - type 字段使用：笔记、短视频、视频、中长视频、文章、教程
-- 如有疑似推广内容，在标题后标注 [疑似推广]
-- 内容必须基于你搜索到的真实信息，不要编造
-- 如果某个平台搜索不到足够内容，可以基于搜到的相关信息合理推断热门方向
-- 只输出 JSON，不要有其他文字"""
+- 如有明显推广内容，在标题后标注 [疑似推广]
+- 只输出 JSON，不要有其他任何文字"""
 
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=16000,
-        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 15}],
-        messages=[{"role": "user", "content": system_prompt}],
-    )
+    headers = {
+        "Authorization": f"Bearer {MINIMAX_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "model": MINIMAX_MODEL,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 4096,
+        "temperature": 0.3,
+    }
 
-    # 提取最终文本（跳过 tool_use / tool_result 块）
-    result_text = ""
-    for block in message.content:
-        if block.type == "text":
-            result_text += block.text
+    resp = requests.post(MINIMAX_URL, headers=headers, json=payload, timeout=120)
+    resp.raise_for_status()
+    data = resp.json()
+
+    # 提取文本
+    result_text = data["choices"][0]["message"]["content"].strip()
 
     # 清理可能的 markdown 包裹
-    result_text = result_text.strip()
     if result_text.startswith("```"):
         result_text = re.sub(r"^```(?:json)?\s*", "", result_text)
         result_text = re.sub(r"\s*```$", "", result_text)
@@ -127,12 +182,12 @@ def fetch_daily_report():
 
 # ── HTML 生成 ─────────────────────────────────────────
 TYPE_CLASS_MAP = {
-    "笔记":   "type-note",
-    "短视频": "type-video",
-    "视频":   "type-video",
+    "笔记":    "type-note",
+    "短视频":  "type-video",
+    "视频":    "type-video",
     "中长视频":"type-video",
-    "文章":   "type-article",
-    "教程":   "type-tutorial",
+    "文章":    "type-article",
+    "教程":    "type-tutorial",
 }
 
 PLATFORM_CSS_MAP = {
@@ -142,6 +197,14 @@ PLATFORM_CSS_MAP = {
     "bilibili":    "platform-bilibili",
     "shipinhao":   "platform-shipinhao",
 }
+
+
+def esc(text):
+    return (str(text)
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;"))
 
 
 def build_key_points_html(key_points):
@@ -163,12 +226,12 @@ def build_platform_html(key, platform):
     name = platform["name"]
     rows = ""
     for i, item in enumerate(platform.get("items", [])[:5], 1):
-        type_cls = TYPE_CLASS_MAP.get(item["type"], "type-note")
+        type_cls = TYPE_CLASS_MAP.get(item.get("type", ""), "type-note")
         rows += f"""
         <tr>
           <td>{i}</td>
           <td class="td-title">{esc(item['title'])}</td>
-          <td><span class="td-type {type_cls}">{esc(item['type'])}</span></td>
+          <td><span class="td-type {type_cls}">{esc(item.get('type',''))}</span></td>
           <td>{esc(item['summary'])}</td>
         </tr>"""
 
@@ -201,17 +264,7 @@ def build_trends_html(trends):
     return items
 
 
-def esc(text):
-    """基本 HTML 转义。"""
-    return (text
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace('"', "&quot;"))
-
-
 def generate_detail_page(data):
-    """根据结构化数据生成完整的 HTML 详情页。"""
     key_points_html = build_key_points_html(data["key_points"])
 
     platforms_html = ""
@@ -550,7 +603,7 @@ def generate_detail_page(data):
 
   <div class="disclaimer">
     本报告由 AI 自动搜集整理，内容来源于公开网络信息，仅供参考，不构成投资建议。<br>
-    生成时间：{DATE_STR}
+    生成时间：{DATE_STR} &nbsp;&middot;&nbsp; 搜索引擎：Serper &nbsp;&middot;&nbsp; 分析模型：MiniMax
   </div>
 
 </main>
@@ -566,7 +619,6 @@ def generate_detail_page(data):
 
 # ── 更新列表页 ────────────────────────────────────────
 def update_list_page():
-    """在 hk-insurance-reports.html 的 <!-- NEW_ENTRY_HERE --> 标记后插入新条目。"""
     day = TODAY.day
     month = TODAY.month
 
@@ -609,24 +661,29 @@ def update_list_page():
 def main():
     print(f"=== 香港保险日报生成 · {DATE_STR} ===")
 
-    # 1. 调用 Claude API 搜集内容
-    print("Step 1: Calling Claude API with web search...")
-    data = fetch_daily_report()
+    # 1. Serper 搜索
+    print("Step 1: Searching with Serper...")
+    search_text, _ = collect_search_results()
+    print(f"  - Search text length: {len(search_text)} chars")
+
+    # 2. MiniMax 分析
+    print("Step 2: Analyzing with MiniMax...")
+    data = analyze_with_minimax(search_text)
     print(f"  - Got {len(data['key_points'])} key points")
     for key in ["xiaohongshu", "douyin", "toutiao", "bilibili", "shipinhao"]:
         count = len(data["platforms"].get(key, {}).get("items", []))
         print(f"  - {key}: {count} items")
     print(f"  - Got {len(data['trends'])} trends")
 
-    # 2. 生成 HTML 详情页
-    print("Step 2: Generating detail page...")
+    # 3. 生成 HTML 详情页
+    print("Step 3: Generating detail page...")
     html = generate_detail_page(data)
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  - Written to: {DETAIL_FILE}")
 
-    # 3. 更新列表页
-    print("Step 3: Updating list page...")
+    # 4. 更新列表页
+    print("Step 4: Updating list page...")
     update_list_page()
 
     print("=== Done ===")
