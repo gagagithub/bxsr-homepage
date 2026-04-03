@@ -28,7 +28,7 @@ MINIMAX_API_KEY = os.environ["MINIMAX_API_KEY"]
 SERPER_API_KEY = os.environ["SERPER_API_KEY"]
 
 MINIMAX_URL = "https://api.minimax.chat/v1/text/chatcompletion_v2"
-MINIMAX_MODEL = "abab6.5s-chat"
+MINIMAX_MODEL = "MiniMax-M2.5"
 
 # ── Serper 搜索 ───────────────────────────────────────
 PLATFORM_QUERIES = [
