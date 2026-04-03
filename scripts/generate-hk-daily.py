@@ -27,8 +27,8 @@ LIST_FILE = os.path.join(PROJECT_ROOT, "hk-insurance-reports.html")
 MINIMAX_API_KEY = os.environ["MINIMAX_API_KEY"]
 SERPER_API_KEY = os.environ["SERPER_API_KEY"]
 
-MINIMAX_BASE_URL = "https://api.minimax.chat/v1"
-MINIMAX_MODEL = "MiniMax-Text-01"
+MINIMAX_URL = "https://api.minimax.chat/v1/text/chatcompletion_v2"
+MINIMAX_MODEL = "abab6.5s-chat"
 
 # ── Serper 搜索 ───────────────────────────────────────
 PLATFORM_QUERIES = [
@@ -152,8 +152,6 @@ def analyze_with_minimax(search_text):
 - 如有明显推广内容，在标题后标注 [疑似推广]
 - 只输出 JSON，不要有其他任何文字"""
 
-    # 使用 OpenAI 兼容接口
-    url = f"{MINIMAX_BASE_URL}/chat/completions"
     headers = {
         "Authorization": f"Bearer {MINIMAX_API_KEY}",
         "Content-Type": "application/json",
@@ -167,11 +165,14 @@ def analyze_with_minimax(search_text):
         "temperature": 0.3,
     }
 
-    resp = requests.post(url, headers=headers, json=payload, timeout=120)
-    resp.raise_for_status()
-    data = resp.json()
+    resp = requests.post(MINIMAX_URL, headers=headers, json=payload, timeout=120)
 
-    # 打印响应结构，方便调试
+    # 打印响应体，方便调试
+    if not resp.ok:
+        print(f"  MiniMax HTTP error {resp.status_code}: {resp.text[:500]}")
+    resp.raise_for_status()
+
+    data = resp.json()
     print(f"  MiniMax response keys: {list(data.keys())}")
     if "base_resp" in data:
         print(f"  base_resp: {data['base_resp']}")
