@@ -163,7 +163,7 @@ def analyze_with_minimax(search_text):
         "messages": [
             {"role": "user", "content": prompt}
         ],
-        "max_tokens": 4096,
+        "max_tokens": 8192,
         "temperature": 0.3,
     }
 
@@ -711,6 +711,11 @@ def main():
     # 2. MiniMax 分析
     print("Step 2: Analyzing with MiniMax...")
     data = analyze_with_minimax(search_text)
+    # 防御性补全缺失字段
+    data.setdefault("key_points", [])
+    data.setdefault("platforms", {})
+    data.setdefault("trends", [])
+
     print(f"  - Got {len(data['key_points'])} key points")
     for key in ["xiaohongshu", "douyin", "toutiao", "bilibili", "shipinhao"]:
         count = len(data["platforms"].get(key, {}).get("items", []))
