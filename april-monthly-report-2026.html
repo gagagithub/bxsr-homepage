@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 4月业务策略报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-secondary: #F9E79F;
+            --black-bg: #0A0A0A;
+            --black-card: #1A1A1A;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #E5E5E5;
+            font-family: 'Inter', 'Noto Serif SC', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, #D4AF37, #F9E79F, #AA8439);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8439 100%);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .section-animate {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--black-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 10px; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 glass-nav px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold gold-text">保心上人</div>
+        <div class="flex space-x-8 text-sm uppercase tracking-widest">
+            <a href="#overview" class="hover:text-[#D4AF37] transition">概览</a>
+            <a href="#products" class="hover:text-[#D4AF37] transition">主打产品</a>
+            <a href="#campaign" class="hover:text-[#D4AF37] transition">限时冲刺</a>
+            <a href="#rewards" class="hover:text-[#D4AF37] transition">达标奖</a>
+        </div>
+    </nav>
+
+    <!-- 封面 -->
+    <header id="overview" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-20">
+        <div class="section-animate">
+            <h2 class="text-gold-primary tracking-[0.5em] mb-4 text-xl">APRIL BUSINESS STRATEGY</h2>
+            <h1 class="text-6xl md:text-8xl font-bold gold-text mb-8">4月业务策略报告</h1>
+            <p class="text-gray-400 max-w-2xl text-lg leading-relaxed">
+                聚力攻坚，共创辉煌。针对 4 月市场趋势，我们制定了极具竞争力的激励政策，助力团队冲击更高目标。
+            </p>
+        </div>
+    </header>
+
+    <!-- 1. 主打产品 -->
+    <section id="products" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="flex items-center mb-12">
+            <div class="w-12 h-[2px] gold-gradient-bg mr-4"></div>
+            <h2 class="text-3xl font-bold">1. 主打产品策略 <span class="text-gold-primary font-normal text-lg ml-4">Core Products</span></h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 永明 -->
+            <div class="bg-gradient-to-br from-[#1A1A1A] to-[#111] p-10 rounded-3xl border border-white/5 relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 text-white/5 text-9xl font-bold italic group-hover:text-gold-primary/10 transition duration-700">SUNLIFE</div>
+                <div class="mb-6">
+                    <span class="bg-gold-primary/20 text-gold-primary px-3 py-1 rounded text-xs">永明金融</span>
+                    <h3 class="text-4xl font-bold mt-4 mb-2">星河尊享 2</h3>
+                    <p class="text-gray-500">长期财富增值与传承之选</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <span>规划师佣金</span>
+                        <span class="text-xl font-bold gold-text">15%</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <span>高级规划师佣金</span>
+                        <span class="text-xl font-bold text-yellow-200">20%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>内容编辑奖励</span>
+                        <span class="text-xl font-bold text-gray-300">5%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 友邦 -->
+            <div class="bg-gradient-to-br from-[#1A1A1A] to-[#111] p-10 rounded-3xl border border-white/5 relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 text-white/5 text-9xl font-bold italic group-hover:text-gold-primary/10 transition duration-700">AIA</div>
+                <div class="mb-6">
+                    <span class="bg-red-900/20 text-red-400 px-3 py-1 rounded text-xs border border-red-900/50">友邦保险</span>
+                    <h3 class="text-4xl font-bold mt-4 mb-2">环宇盈活</h3>
+                    <p class="text-gray-500">全方位保障与稳健理财</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <span>规划师佣金</span>
+                        <span class="text-xl font-bold gold-text">15%</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <span>高级规划师佣金</span>
+                        <span class="text-xl font-bold text-yellow-200">20%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>内容编辑奖励</span>
+                        <span class="text-xl font-bold text-gray-300">5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 限时大冲刺 -->
+    <section id="campaign" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="bg-gradient-to-r from-black to-[#1a1a1a] p-1 text-gold-primary rounded-3xl overflow-hidden gold-border">
+            <div class="bg-black p-12 rounded-[calc(1.5rem-4px)] flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-10 lg:mb-0">
+                    <h4 class="text-gold-primary tracking-widest mb-2 font-bold italic">LIMITED OFFER</h4>
+                    <h2 class="text-5xl font-bold mb-6">4月15日 香港安盛<br>线下活动大冲刺</h2>
+                    <p class="text-gray-400 text-lg mb-8">
+                        针对安盛线下专场，佣金比例全面上调！<br>
+                        主推产品：<span class="text-white font-bold">安盛盛利 2 (AXA Fortune 2)</span>
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-[#111] p-4 rounded-xl border border-white/10 text-center">
+                            <p class="text-xs text-gray-500 uppercase mb-1">规划师佣金</p>
+                            <p class="text-3xl font-bold text-red-500">20%</p>
+                        </div>
+                        <div class="bg-[#111] p-4 rounded-xl border border-white/10 text-center">
+                            <p class="text-xs text-gray-500 uppercase mb-1">内容编辑奖励</p>
+                            <p class="text-3xl font-bold text-white">8%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 lg:pl-20">
+                    <div class="relative w-full aspect-video bg-[#111] rounded-2xl overflow-hidden flex items-center justify-center border border-white/5">
+                        <div class="absolute inset-0 gold-gradient-bg opacity-10"></div>
+                        <div class="text-center">
+                            <div class="text-6xl mb-4 text-gold-primary">📍</div>
+                            <p class="text-2xl font-bold">香港安盛总部</p>
+                            <p class="text-gray-500">签单即享超高提成</p>
+                            <div class="mt-6 text-sm text-gold-primary border border-gold-primary px-4 py-2 inline-block">即将开启</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 达标奖 -->
+    <section id="rewards" class="max-w-7xl mx-auto px-6 mb-32 text-center">
+        <h2 class="text-4xl font-bold mb-16">50,000 达标奖计划</h2>
+        <div class="max-w-3xl mx-auto bg-gradient-to-b from-[#1A1A1A] to-transparent p-12 rounded-3xl gold-border relative">
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-black rounded-full border-2 border-gold-primary flex items-center justify-center text-3xl">🏆</div>
+            <h3 class="text-2xl mb-4">月底业绩达标激励</h3>
+            <p class="text-gray-400 mb-8">所有规划师均可参与，不设上限</p>
+            
+            <div class="flex flex-col items-center">
+                <div class="text-sm text-gray-500 uppercase tracking-widest mb-2">业绩目标</div>
+                <div class="text-5xl font-bold mb-8">HKD 50,000</div>
+                
+                <div class="w-full max-w-sm h-1 gold-gradient-bg mb-8"></div>
+                
+                <div class="text-sm text-gray-500 uppercase tracking-widest mb-2">额外奖励</div>
+                <div class="text-7xl font-bold gold-text">+ HKD 2,000</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-10 border-t border-white/10 mt-20">
+        <p class="text-gray-600 text-sm">© 2024 保心上人公司 - 内部机密文件 严禁外传</p>
+    </footer>
+
+    <!-- 简易交互脚本 -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
