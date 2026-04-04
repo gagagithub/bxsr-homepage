@@ -6,21 +6,24 @@
   <title>保心上人 · 内部工作台</title>
   <style>
     :root {
-      --navy:  #1E2761;
-      --teal:  #028090;
-      --mint:  #02C39A;
-      --off:   #F4F6FB;
-      --gray:  #8892A4;
-      --dark:  #111827;
-      --white: #FFFFFF;
+      --cream:   #FAF7F2;
+      --warm:    #F2EBE0;
+      --paper:   #FFFDF9;
+      --brown:   #3D2B1F;
+      --mid:     #7A5C48;
+      --light:   #B09880;
+      --accent:  #8B5E3C;
+      --accent2: #C4884A;
+      --border:  #E5D9CC;
+      --shadow:  rgba(61,43,31,.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      background: var(--off);
-      color: var(--dark);
+      background: var(--cream);
+      color: var(--brown);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -28,50 +31,99 @@
 
     /* ── HEADER ── */
     header {
-      background: linear-gradient(135deg, var(--navy) 0%, #162050 60%, var(--teal) 100%);
-      color: var(--white);
-      padding: 56px 40px 48px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--border);
+      padding: 52px 40px 44px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
+
+    /* 背景纹理：细竖线 */
     header::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background-image: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 39px,
+        rgba(139,94,60,.04) 39px,
+        rgba(139,94,60,.04) 40px
+      );
+      pointer-events: none;
     }
+
     .header-inner { position: relative; z-index: 1; }
-    .brand {
+
+    .brand-tag {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 100px;
-      padding: 6px 20px;
-      font-size: 14px;
-      margin-bottom: 20px;
+      gap: 6px;
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 16px;
+      font-size: 12px;
+      color: var(--mid);
+      letter-spacing: 2px;
+      margin-bottom: 22px;
     }
-    header h1 { font-size: clamp(22px, 4vw, 36px); font-weight: 700; letter-spacing: -0.5px; }
-    header p  { font-size: 14px; opacity: .6; margin-top: 8px; }
+
+    header h1 {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--brown);
+    }
+
+    .header-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 18px auto 0;
+      max-width: 240px;
+    }
+    .header-divider::before,
+    .header-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .header-sub {
+      font-size: 12px;
+      color: var(--light);
+      letter-spacing: 3px;
+      white-space: nowrap;
+    }
 
     /* ── MAIN ── */
     main {
       flex: 1;
-      max-width: 760px;
+      max-width: 800px;
       width: 100%;
       margin: 0 auto;
-      padding: 48px 24px 80px;
+      padding: 52px 24px 80px;
     }
 
     .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 3px;
-      color: var(--gray);
+      color: var(--light);
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
+    }
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
     /* ── ENTRY CARDS ── */
@@ -84,109 +136,104 @@
     .entry-card {
       display: flex;
       flex-direction: column;
-      background: var(--white);
-      border-radius: 20px;
-      border: 1.5px solid #E8EDF8;
+      background: var(--paper);
+      border-radius: 8px;
+      border: 1px solid var(--border);
       text-decoration: none;
       color: inherit;
       overflow: hidden;
-      transition: transform .18s, box-shadow .18s, border-color .18s;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      box-shadow: 0 2px 8px var(--shadow);
     }
     .entry-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(30,39,97,.12);
-      border-color: var(--teal);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px var(--shadow);
+      border-color: var(--accent2);
     }
 
     .entry-card-top {
-      height: 120px;
+      height: 96px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
+      font-size: 40px;
       position: relative;
       overflow: hidden;
-    }
-    .entry-card-top.weekly {
-      background: linear-gradient(135deg, var(--navy), var(--teal));
-    }
-    .entry-card-top.daily {
-      background: linear-gradient(135deg, #2C5F2D, #028090);
-    }
-    .entry-card-top.planner {
-      background: linear-gradient(135deg, #7B2D8B, #C0507A);
-    }
-    .entry-card-top.editor {
-      background: linear-gradient(135deg, #B8860B, #DAA520);
-    }
-    .entry-card-top.service {
-      background: linear-gradient(135deg, #1A5276, #2E86C1);
-    }
-    .entry-card-top.hk-daily {
-      background: linear-gradient(135deg, #7B2D8B, #C0507A);
-    }
-    .entry-card-top.planner-daily {
-      background: linear-gradient(135deg, #0D47A1, #1976D2);
-    }
-    .entry-card-top::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='8'/%3E%3C/g%3E%3C/svg%3E");
+      background: var(--warm);
+      border-bottom: 1px solid var(--border);
     }
 
+    /* 每张卡片的颜色条 — 只用左边的细色带来区分，不用大色块 */
+    .entry-card::before {
+      content: "";
+      display: block;
+      height: 3px;
+      background: var(--accent);
+    }
+    .entry-card.weekly::before    { background: linear-gradient(90deg, #8B5E3C, #C4884A); }
+    .entry-card.daily::before     { background: linear-gradient(90deg, #5C7A3E, #8AAF5A); }
+    .entry-card.hk-daily::before  { background: linear-gradient(90deg, #7B4A8B, #B07AC0); }
+    .entry-card.planner::before   { background: linear-gradient(90deg, #3A6E8A, #5AA0C4); }
+
     .entry-card-body {
-      padding: 24px 24px 28px;
+      padding: 22px 24px 26px;
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
+
     .entry-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      color: var(--navy);
+      color: var(--brown);
+      letter-spacing: 0.5px;
     }
+
     .entry-desc {
       font-size: 13px;
-      color: var(--gray);
-      line-height: 1.6;
+      color: var(--mid);
+      line-height: 1.75;
       flex: 1;
     }
+
     .entry-cta {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 16px;
-      font-size: 13px;
+      margin-top: 14px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--teal);
+      color: var(--accent);
+      letter-spacing: 1px;
     }
-    .entry-card:hover .entry-cta { gap: 10px; }
-    .entry-cta span { transition: transform .15s; }
-    .entry-card:hover .entry-cta span { transform: translateX(3px); }
+    .entry-cta .arrow {
+      transition: transform .15s;
+      font-style: normal;
+    }
+    .entry-card:hover .entry-cta .arrow { transform: translateX(4px); }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--navy);
-      color: rgba(255,255,255,.4);
+      background: var(--warm);
+      border-top: 1px solid var(--border);
+      color: var(--light);
       text-align: center;
-      padding: 28px 24px;
-      font-size: 12px;
-      letter-spacing: 1px;
+      padding: 24px;
+      font-size: 11px;
+      letter-spacing: 2px;
     }
-
-
   </style>
 </head>
 <body>
 
-
 <header>
   <div class="header-inner">
-    <div class="brand">🏡 保心上人 · 让天下人老有所养</div>
+    <div class="brand-tag">🏡 保心上人 · 让天下人老有所养</div>
     <h1>内部工作台</h1>
-    <p>团队数据 · 内容分析 · 仅限内部使用</p>
+    <div class="header-divider">
+      <span class="header-sub">团队数据 · 内容分析 · 仅限内部</span>
+    </div>
   </div>
 </header>
 
@@ -195,44 +242,45 @@
 
   <div class="entry-grid">
 
-    <a class="entry-card" href="weekly-reports.html">
-      <div class="entry-card-top weekly">📋</div>
+    <a class="entry-card weekly" href="weekly-reports.html">
+      <div class="entry-card-top">📋</div>
       <div class="entry-card-body">
         <div class="entry-title">团队周/月/季度/年报</div>
         <div class="entry-desc">规划师、编辑、剪辑三大团队的周度数据汇总，含季度、月度、年度专项报告，覆盖拓客成果、完播率、成交转化等核心指标。</div>
-        <div class="entry-cta">查看报告列表 <span>›</span></div>
+        <div class="entry-cta">查看报告列表 <i class="arrow">›</i></div>
       </div>
     </a>
 
-    <a class="entry-card" href="https://rainbow-hummingbird-0239e1.netlify.app/daily-report.html">
-      <div class="entry-card-top daily">🔥</div>
+    <a class="entry-card daily" href="https://rainbow-hummingbird-0239e1.netlify.app/daily-report.html">
+      <div class="entry-card-top">🔥</div>
       <div class="entry-card-body">
         <div class="entry-title">每日热门话题</div>
         <div class="entry-desc">每日精选高互动选题参考，帮助内容团队快速发现趋势话题，提升视频选题的爆款率。</div>
-        <div class="entry-cta">查看今日热点 <span>›</span></div>
+        <div class="entry-cta">查看今日热点 <i class="arrow">›</i></div>
       </div>
     </a>
 
-    <a class="entry-card" href="hk-insurance-reports.html">
-      <div class="entry-card-top hk-daily">📰</div>
+    <!-- 香港保险日报（暂时隐藏）
+    <a class="entry-card hk-daily" href="hk-insurance-reports.html">
+      <div class="entry-card-top">📰</div>
       <div class="entry-card-body">
         <div class="entry-title">香港保险日报</div>
         <div class="entry-desc">每日自动搜集全网关于「香港保险」的热门话题，覆盖小红书、抖音、今日头条、B站、视频号五大平台。</div>
-        <div class="entry-cta">查看日报列表 <span>›</span></div>
+        <div class="entry-cta">查看日报列表 <i class="arrow">›</i></div>
       </div>
     </a>
+    -->
 
-    <a class="entry-card" href="planner-daily-reports.html">
-      <div class="entry-card-top planner-daily">💬</div>
+    <a class="entry-card planner" href="planner-daily-reports.html">
+      <div class="entry-card-top">💬</div>
       <div class="entry-card-body">
         <div class="entry-title">规划师日报</div>
         <div class="entry-desc">基于企业微信聊天记录，AI 自动分析每位规划师昨日客户沟通情况，含进展判断、质量评分与跟进建议。</div>
-        <div class="entry-cta">查看日报列表 <span>›</span></div>
+        <div class="entry-cta">查看日报列表 <i class="arrow">›</i></div>
       </div>
     </a>
 
   </div>
-
 </main>
 
 <footer>
