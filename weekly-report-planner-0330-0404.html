@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人公司 - 规划师团队周报 (3/30 - 4/3)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+        :root {
+            --gold: #D4AF37;
+            --dark-gold: #996515;
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--black);
+            color: #e5e7eb;
+            font-family: 'Noto Serif SC', serif;
+            overflow-x: hidden;
+            font-size: 16px; /* 提升全局基础字号 */
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, #fcf6ba, #d4af37, #fcf6ba);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .gold-border {
+            border: 1px solid var(--gold);
+        }
+
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #d4af37 0%, #996515 100%);
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            letter-spacing: 0.1em;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .highlight-box {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(10, 10, 10, 0) 100%);
+            border-left: 4px solid var(--gold);
+        }
+
+        .data-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.05);
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        /* 优化打印时的清晰度 */
+        @media print {
+            body { background: white; color: black; font-size: 12pt; }
+            .card { border: 1px solid #ddd; background: white; box-shadow: none; }
+            .gold-text { -webkit-text-fill-color: #996515; background: none; color: #996515 !important; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10 lg:p-16">
+
+    <!-- Header Section -->
+    <header class="max-w-7xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-end border-b border-gray-800 pb-12">
+        <div class="animate-fade-in">
+            <h2 class="text-xl tracking-[0.4em] text-gray-500 mb-3 uppercase font-light">Bao Xin Shang Ren | Weekly Report</h2>
+            <h1 class="text-5xl md:text-6xl gold-text font-bold italic">规划师团队业务周报</h1>
+            <p class="text-gray-400 mt-4 flex items-center text-lg">
+                <span class="mr-6 tracking-widest">汇报周期：2026.03.30 - 2026.04.03</span>
+                <span class="px-3 py-1 bg-gold/10 text-gold text-xs rounded border border-gold/20 font-black">WEEK 14</span>
+            </p>
+        </div>
+        <div class="text-right mt-8 md:mt-0 animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="text-base text-gray-400 font-light italic">卓越财富规划 · 守护心上之人</div>
+            <div class="text-sm text-gold/60 mt-2 uppercase tracking-widest font-bold">Confidential Analytics</div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto space-y-12">
+        
+        <!-- Key Metrics Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-8 animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="card p-8">
+                <div class="data-label mb-2">Total New Leads / 本周新客</div>
+                <div class="text-4xl font-bold gold-text italic">26</div>
+                <div class="flex items-center mt-3 text-sm">
+                    <span class="text-gold mr-2 italic">林13 | 马11 | 江2</span>
+                </div>
+            </div>
+            <div class="card p-8">
+                <div class="data-label mb-2">Stock Engagement / 存量沟通</div>
+                <div class="text-4xl font-bold gold-text italic">122</div>
+                <div class="flex items-center mt-3 text-sm">
+                    <span class="text-gray-500">存量客户深度经营</span>
+                </div>
+            </div>
+            <div class="card p-8">
+                <div class="data-label mb-2">Weekly Premium / 本周保费</div>
+                <div class="text-4xl font-bold gold-text italic">¥116.9W</div>
+                <div class="flex items-center mt-3 text-sm">
+                    <span class="text-green-500 mr-2 font-bold">↑ 强势爆发</span>
+                </div>
+            </div>
+            <div class="card p-8">
+                <div class="data-label mb-2">Team Conv. Rate / 平均转化率</div>
+                <div class="text-4xl font-bold gold-text italic">3.8%</div>
+                <div class="flex items-center mt-3 text-sm">
+                    <span class="text-gray-500">全流程转化均值</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Conversion Module -->
+        <section class="animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="card p-10">
+                <h3 class="text-2xl font-bold mb-10 gold-text section-title italic text-center md:text-left">新发客户转化效能深度分析</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <!-- Planner 1: Lin -->
+                    <div class="p-8 bg-white/5 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-2xl font-bold text-white">林付贤</span>
+                            <span class="px-3 py-1 bg-gold/20 text-gold text-xs rounded-full font-bold">稳健闭环型</span>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">新发客户</span>
+                                    <span class="text-white font-bold">13人</span>
+                                </div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">好友添加率</span>
+                                    <span class="text-gold font-bold">38%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="bg-gold h-full" style="width: 38%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">方案制作率</span>
+                                    <span class="text-gold font-bold">20%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="bg-gold h-full" style="width: 20%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">方案讲解率</span>
+                                    <span class="text-green-500 font-black">100%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="bg-green-500 h-full" style="width: 100%"></div></div>
+                            </div>
+                            <div class="pt-6 border-t border-white/10 flex justify-between items-center">
+                                <span class="text-sm text-gray-400 font-bold italic">总平均转化率</span>
+                                <span class="text-2xl font-bold text-gold italic">7.6%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Planner 2: Ma -->
+                    <div class="p-8 bg-white/5 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-2xl font-bold text-white">马康挺</span>
+                            <span class="px-3 py-1 bg-blue-900/20 text-blue-400 text-xs rounded-full font-bold">高潜磁吸型</span>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">新发客户</span>
+                                    <span class="text-white font-bold">11人</span>
+                                </div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">好友添加率</span>
+                                    <span class="text-green-500 font-black">64%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="bg-green-500 h-full" style="width: 64%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">方案制作率</span>
+                                    <span class="text-red-500 font-bold">0%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="bg-red-500/20 h-full" style="width: 0%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">方案讲解率</span>
+                                    <span class="text-red-500 font-bold">0%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="bg-red-500/20 h-full" style="width: 0%"></div></div>
+                            </div>
+                            <div class="pt-6 border-t border-white/10 flex justify-between items-center">
+                                <span class="text-sm text-gray-400 font-bold italic">总平均转化率</span>
+                                <span class="text-2xl font-bold text-gray-600 italic">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expert Review -->
+                    <div class="flex flex-col justify-between space-y-6">
+                        <div class="highlight-box p-8 mb-4">
+                            <h4 class="text-gold font-bold text-lg mb-3 italic">江宁专项执行指令</h4>
+                            <p class="text-base text-gray-300 leading-relaxed">
+                                基于第一季度总结，江宁Q1方案讲解率(20%)与目标(70%)差距巨大。需立即罗列相关客户情况，<span class="text-white font-black underline underline-offset-4 decoration-gold">崔伟配合系统修改与确认</span>。
+                            </p>
+                        </div>
+                        <div class="highlight-box p-8">
+                            <h4 class="text-gold font-bold text-lg mb-3 italic">策略诊断 (Strategic Audit)</h4>
+                            <p class="text-base text-gray-300 leading-relaxed">
+                                <span class="text-white font-bold italic">林付贤：</span>100%讲解率是转化的关键，展现了极强的执行力。<br><br>
+                                <span class="text-white font-bold italic">马康挺：</span>64%添加率证明前端吸引力极强。16W美金单证明收割力，下步需将“新客转方案”流程化。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stock Customer Engagement Module -->
+        <section class="animate-fade-in" style="animation-delay: 0.4s;">
+            <div class="card p-10 border-t-2 border-t-gold/30">
+                <div class="flex justify-between items-center mb-10">
+                    <h3 class="text-2xl font-bold gold-text section-title italic">存量客户服务与沟通统计</h3>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest italic font-bold">Stock Customer Management</div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="flex items-center space-x-8 p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="w-16 h-16 rounded-full gold-gradient-bg flex items-center justify-center text-black font-black text-2xl">江</div>
+                        <div>
+                            <div class="text-sm text-gray-400 uppercase tracking-widest font-bold">江宁</div>
+                            <div class="text-4xl font-bold gold-text">36<span class="text-base ml-2 font-normal text-gray-500">人</span></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-8 p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="w-16 h-16 rounded-full gold-gradient-bg flex items-center justify-center text-black font-black text-2xl">林</div>
+                        <div>
+                            <div class="text-sm text-gray-400 uppercase tracking-widest font-bold">林付贤</div>
+                            <div class="text-4xl font-bold gold-text">44<span class="text-base ml-2 font-normal text-gray-500">人</span></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-8 p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="w-16 h-16 rounded-full gold-gradient-bg flex items-center justify-center text-black font-black text-2xl">马</div>
+                        <div>
+                            <div class="text-sm text-gray-400 uppercase tracking-widest font-bold">马康挺</div>
+                            <div class="text-4xl font-bold gold-text">42<span class="text-base ml-2 font-normal text-gray-500">人</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WeChat Communication Quality Module -->
+        <section class="animate-fade-in" style="animation-delay: 0.45s;">
+            <div class="card p-10 border-t-2 border-t-gold/30">
+                <div class="flex justify-between items-center mb-10">
+                    <h3 class="text-2xl font-bold gold-text section-title italic">规划师微信沟通质量深度分析</h3>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest italic font-bold">WeChat Engagement Quality</div>
+                </div>
+                <div class="overflow-x-auto mb-10">
+                    <table class="w-full text-left text-base">
+                        <thead>
+                            <tr class="text-gray-400 border-b border-gray-700 uppercase tracking-tighter">
+                                <th class="pb-6 font-bold">规划师</th>
+                                <th class="pb-6 font-bold">发出消息</th>
+                                <th class="pb-6 font-bold">收到回复</th>
+                                <th class="pb-6 font-bold">触达客户</th>
+                                <th class="pb-6 font-bold">回复客户</th>
+                                <th class="pb-6 font-bold text-gold">回复率</th>
+                                <th class="pb-6 font-bold">对话深度</th>
+                                <th class="pb-6 font-bold">互动比</th>
+                                <th class="pb-6 font-bold">类型数</th>
+                                <th class="pb-6 font-bold text-right">综合得分</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800/50">
+                            <tr class="group hover:bg-white/5 transition-colors">
+                                <td class="py-6 font-bold italic text-lg">江宁</td>
+                                <td class="py-6 text-gray-400 font-mono">490</td>
+                                <td class="py-6 text-gray-400 font-mono">363</td>
+                                <td class="py-6 text-gray-400 font-mono">46</td>
+                                <td class="py-6 text-gray-400 font-mono">26</td>
+                                <td class="py-6 text-gold font-black">57%</td>
+                                <td class="py-6 text-gray-300">17.4轮</td>
+                                <td class="py-6 text-gray-300">0.74</td>
+                                <td class="py-6 text-gray-300">12</td>
+                                <td class="py-6 text-right"><span class="px-5 py-2 gold-gradient-bg text-black font-black rounded-lg italic text-xl">89</span></td>
+                            </tr>
+                            <tr class="group hover:bg-white/5 transition-colors">
+                                <td class="py-6 font-bold italic text-lg">林付贤</td>
+                                <td class="py-6 text-gray-400 font-mono">370</td>
+                                <td class="py-6 text-gray-400 font-mono">160</td>
+                                <td class="py-6 text-gray-400 font-mono">57</td>
+                                <td class="py-6 text-gray-400 font-mono">20</td>
+                                <td class="py-6 text-gold font-black">35%</td>
+                                <td class="py-6 text-gray-300">9.1轮</td>
+                                <td class="py-6 text-gray-300">0.43</td>
+                                <td class="py-6 text-gray-300">11</td>
+                                <td class="py-6 text-right"><span class="px-5 py-2 bg-gray-800 text-gold border border-gold/30 font-black rounded-lg italic text-xl">59</span></td>
+                            </tr>
+                            <tr class="group hover:bg-white/5 transition-colors">
+                                <td class="py-6 font-bold italic text-lg">马康挺</td>
+                                <td class="py-6 text-gray-400 font-mono">397</td>
+                                <td class="py-6 text-gray-400 font-mono">144</td>
+                                <td class="py-6 text-gray-400 font-mono">57</td>
+                                <td class="py-6 text-gray-400 font-mono">18</td>
+                                <td class="py-6 text-gold font-black">32%</td>
+                                <td class="py-6 text-gray-300">9.2轮</td>
+                                <td class="py-6 text-gray-300">0.36</td>
+                                <td class="py-6 text-gray-300">12</td>
+                                <td class="py-6 text-right"><span class="px-5 py-2 bg-gray-800 text-gold border border-gold/30 font-black rounded-lg italic text-xl">58</span></td>
+                            </tr>
+                            <tr class="group hover:bg-white/5 transition-colors">
+                                <td class="py-6 font-bold italic text-lg">周鑫鑫</td>
+                                <td class="py-6 text-gray-400 font-mono">59</td>
+                                <td class="py-6 text-gray-400 font-mono">37</td>
+                                <td class="py-6 text-gray-400 font-mono">5</td>
+                                <td class="py-6 text-gray-400 font-mono">5</td>
+                                <td class="py-6 text-gold font-black">100%</td>
+                                <td class="py-6 text-gray-300">16.0轮</td>
+                                <td class="py-6 text-gray-300">0.63</td>
+                                <td class="py-6 text-gray-300">5</td>
+                                <td class="py-6 text-right"><span class="px-5 py-2 gold-gradient-bg text-black font-black rounded-lg italic text-xl">79</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Supplemental Analysis -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="highlight-box p-6 bg-gold/5">
+                        <h4 class="text-gold font-bold text-lg mb-3">江宁沟通质量评估</h4>
+                        <p class="text-base text-gray-300 italic leading-relaxed">沟通深入，质量表现优异，但<span class="text-white font-black underline">总工作量偏少</span>，亟需提高业务勤奋度，增加客户触达基数。</p>
+                    </div>
+                    <div class="highlight-box p-6 bg-gray-800/50">
+                        <h4 class="text-gold font-bold text-lg mb-3">马康挺 & 林付贤沟通质量评估</h4>
+                        <p class="text-base text-gray-300 italic leading-relaxed">沟通范围广，规模效应明显，但<span class="text-white font-black underline">沟通质量偏低</span>。需复盘话术，在维持广度的基础上提高深度，做得更加“聪明”一些。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Milestone Analysis -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in" style="animation-delay: 0.5s;">
+            <div class="card p-10 border-r-4 border-r-gold">
+                <div class="flex justify-between items-start mb-8">
+                    <h3 class="text-2xl font-bold gold-text italic">MILESTONE | 传承件重大突破</h3>
+                    <span class="px-4 py-1 bg-gold/20 text-gold text-xs rounded-full font-bold">里程碑事件</span>
+                </div>
+                <div class="highlight-box p-6 mb-6">
+                    <div class="text-xl font-bold italic text-white">马康挺：盈傳創富保障計劃3 (优选版)</div>
+                    <div class="text-gold text-lg mt-2 font-black italic">成交金额：160,000 USD (约 115W+ CNY)</div>
+                </div>
+                <div class="text-base text-gray-300 leading-relaxed space-y-4">
+                    <p>● <span class="text-white font-bold italic">需求洞察：</span>该需求在超高净值人群中客观存在且极其旺盛。</p>
+                    <p>● <span class="text-white font-bold italic">核心价值：</span>本次成交标志着团队正式攻克<span class="text-gold font-black italic">“家族财富传承”</span>这一顶层规划需求。</p>
+                </div>
+            </div>
+
+            <div class="card p-10 border-r-4 border-r-gold">
+                <div class="flex justify-between items-start mb-8">
+                    <h3 class="text-2xl font-bold gold-text italic">RESURGENCE | 颢姐强势回归</h3>
+                    <span class="px-4 py-1 bg-green-900/20 text-green-500 text-xs rounded-full font-bold">状态回归</span>
+                </div>
+                <div class="highlight-box p-6 mb-6">
+                    <div class="text-xl font-bold italic text-white">颢姐：大黄蜂16号少儿重疾险</div>
+                    <div class="text-gold text-lg mt-2 font-black italic">成交金额：12,306 CNY</div>
+                </div>
+                <div class="text-base text-gray-300 leading-relaxed space-y-4">
+                    <p>● <span class="text-white font-bold italic">榜样意义：</span>颢姐在经历沉淀后，通过精细化挖掘<span class="text-gold font-black italic">重新开单</span>。</p>
+                    <p>● <span class="text-white font-bold italic">团队寄语：</span>“开单即是新起点”，少儿保障作为家庭配置的敲门砖，非常棒！</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Row -->
+        <section class="animate-fade-in" style="animation-delay: 0.6s;">
+            <div class="card p-10">
+                <h3 class="text-2xl font-bold mb-8 gold-text section-title italic">本周工作量全景对比 (新客 vs 存量)</h3>
+                <div class="relative h-[400px] md:h-[500px] w-full">
+                    <canvas id="workloadChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Honor Roll -->
+        <section class="animate-fade-in" style="animation-delay: 0.7s;">
+            <div class="card p-10">
+                <h3 class="text-2xl font-bold mb-8 gold-text section-title italic uppercase tracking-widest">Weekly Stars | 规划之星荣誉榜</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-base">
+                        <thead>
+                            <tr class="text-gray-400 border-b border-gray-800 uppercase tracking-widest">
+                                <th class="pb-6 font-bold">Rank</th>
+                                <th class="pb-6 font-bold">Planner</th>
+                                <th class="pb-6 font-bold">Product / 产品项目</th>
+                                <th class="pb-6 font-bold">Premium / 贡献保费</th>
+                                <th class="pb-6 font-bold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800/50">
+                            <tr class="group">
+                                <td class="py-8 text-gold font-black italic text-2xl">01</td>
+                                <td class="py-8 font-bold italic text-lg text-white">马康挺</td>
+                                <td class="py-8 text-base italic">盈傳創富保障計劃3 (传承预约)</td>
+                                <td class="py-8 text-gold font-black italic text-xl">¥1,156,800 <span class="text-xs text-gray-500">(est.)</span></td>
+                                <td class="py-8"><span class="px-3 py-1 border border-gold text-xs text-gold font-black italic">MILESTONE</span></td>
+                            </tr>
+                            <tr class="group">
+                                <td class="py-8 text-gray-500 font-black italic text-2xl">02</td>
+                                <td class="py-8 font-bold italic text-lg text-white">颢姐</td>
+                                <td class="py-8 text-base italic">少儿重疾险大黄蜂16号</td>
+                                <td class="py-8 text-gold font-black italic text-xl">¥12,306</td>
+                                <td class="py-8"><span class="px-3 py-1 border border-green-700 text-xs text-green-500 font-black italic">RESURGENT</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategic Focus -->
+        <section class="card p-10 gold-gradient-bg text-black mb-20 animate-fade-in" style="animation-delay: 0.8s;">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-3xl font-black italic uppercase tracking-tighter">Strategic Action Matrix | 专项行动矩阵</h3>
+                    <div class="mt-8 space-y-4 text-lg font-bold italic leading-relaxed">
+                        <p class="flex items-start">
+                            <span class="mr-3 text-xl">▶</span> 
+                            <span><span class="bg-black text-gold px-2 py-0.5 rounded mr-2">江宁专项</span>立即罗列Q1未讲解客户，崔伟配合系统修正，力争由20%提高至70%。</span>
+                        </p>
+                        <p class="flex items-start">
+                            <span class="mr-3 text-xl">▶</span> 
+                            <span><span class="bg-black text-gold px-2 py-0.5 rounded mr-2">质量优化</span>马康挺、林付贤复盘话术，提升沟通深度；江宁加大获客动作。</span>
+                        </p>
+                        <p class="flex items-start">
+                            <span class="mr-3 text-xl">▶</span> 
+                            <span><span class="bg-black text-gold px-2 py-0.5 rounded mr-2">传承突破</span>全员深度复盘马康挺传承单逻辑，作为高净值市场切入口。</span>
+                        </p>
+                    </div>
+                </div>
+                <button onclick="window.print()" class="bg-black text-white px-10 py-4 rounded-full font-black hover:scale-105 transition-transform no-print italic shadow-2xl">
+                    PRINT ANALYTICS
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxWork = document.getElementById('workloadChart').getContext('2d');
+            new Chart(ctxWork, {
+                type: 'bar',
+                data: {
+                    labels: ['江宁', '林付贤', '马康挺'],
+                    datasets: [
+                        {
+                            label: '新发客户沟通',
+                            data: [2, 13, 11],
+                            backgroundColor: '#D4AF37',
+                            borderRadius: 6
+                        },
+                        {
+                            label: '存量客户沟通',
+                            data: [36, 44, 42],
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            stacked: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' }, 
+                            ticks: { color: '#aaa', font: { size: 14 } } 
+                        },
+                        x: { 
+                            stacked: true,
+                            grid: { display: false }, 
+                            ticks: { color: '#aaa', font: { size: 16, weight: 'bold' } } 
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#fff', font: { size: 14, weight: 'bold' } } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

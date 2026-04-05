@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人公司 - 编辑部周报 (3/30 - 4/3)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+
+        :root {
+            --gold: #D4AF37;
+            --light-gold: #fcf6ba;
+            --dark-gold: #996515;
+            --black: #050505;
+            --dark-gray: #121212;
+            --failure-red: #ff4d4d;
+            --success-green: #10b981;
+            --warning-yellow: #f59e0b;
+        }
+
+        body {
+            background-color: var(--black);
+            color: #ffffff;
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.6;
+            font-size: 20px;
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, #fcf6ba, #d4af37, #fcf6ba);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .card {
+            background: #111111;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+            letter-spacing: 0.15em;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 5px;
+            background: var(--gold);
+        }
+
+        /* 完播率仪表盘 - 深度修复显示不正常问题 */
+        .stat-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+        .stat-val { 
+            font-size: 42px; 
+            font-weight: 900; 
+            line-height: 1; 
+            margin-bottom: 8px;
+        }
+        .stat-label { 
+            font-size: 16px; 
+            font-weight: 900; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* 矩阵指令板块 */
+        .crisis-section {
+            background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 3px solid var(--gold);
+            padding: 3rem;
+            border-radius: 24px;
+        }
+
+        .instruction-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+        }
+
+        .instruction-num {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-right: 2rem;
+            line-height: 1;
+            font-style: italic;
+        }
+
+        .instruction-tag {
+            display: inline-block;
+            background: var(--gold);
+            color: #000;
+            padding: 4px 15px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .instruction-text {
+            font-size: 22px;
+            color: #e5e7eb;
+            font-weight: 700;
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            background: var(--gold);
+            color: black;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 900;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        @media print {
+            .print-btn { display: none; }
+            body { background: white; color: black; }
+            .card { border: 1px solid #ccc; box-shadow: none; }
+            .gold-text { -webkit-text-fill-color: #996515; }
+        }
+    </style>
+</head>
+<body class="p-6 md:p-16 max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-24 flex flex-col md:flex-row justify-between items-end border-b-2 border-gray-900 pb-16">
+        <div>
+            <h2 class="text-2xl tracking-[0.6em] text-gray-500 mb-4 font-light uppercase">Performance Review</h2>
+            <h1 class="text-6xl md:text-8xl gold-text italic mb-6">编辑部周报</h1>
+            <div class="flex space-x-6 items-center">
+                <span class="text-gray-400 text-xl font-medium tracking-widest uppercase">3/30 - 4/3</span>
+                <span class="bg-red-600/20 text-red-500 px-4 py-1 rounded border border-red-500 font-black text-sm italic uppercase">Target Deviation Alert</span>
+            </div>
+        </div>
+        <div class="text-right mt-12 md:mt-0">
+            <p class="text-gray-500 text-lg italic">结果审计：编辑线表现未达标</p>
+            <p class="text-red-500 text-2xl font-black mt-2 tracking-tighter italic">达成率仅 33.3%</p>
+        </div>
+    </header>
+
+    <!-- KPI Summary Row -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-20">
+        <div class="card p-8 border-b-4 border-b-red-600 bg-red-950/10">
+            <div class="data-label mb-3">Total Leads / 线索总计</div>
+            <div class="text-6xl font-black text-red-500 italic">5 <span class="text-2xl text-gray-700 font-normal">/ 15</span></div>
+            <p class="text-xs text-red-600 font-black mt-4 uppercase">表现不佳 · 转化待提速</p>
+        </div>
+        <div class="card p-8">
+            <div class="data-label mb-3">Rate / 总线索达成率</div>
+            <div class="text-6xl font-black gold-text italic">33.3%</div>
+            <p class="text-xs text-gray-500 font-bold mt-4 uppercase">目标缺口: 10个</p>
+        </div>
+        <div class="card p-8">
+            <div class="data-label mb-3">Heat / 评论私信数</div>
+            <div class="text-6xl font-black gold-text italic">27</div>
+            <p class="text-xs text-gold font-bold mt-4 uppercase">互动转化率不足</p>
+        </div>
+        <div class="card p-8">
+            <div class="data-label mb-3">Output / 视频发布数</div>
+            <div class="text-6xl font-black gold-text italic">13</div>
+            <p class="text-xs text-gray-500 font-bold mt-4 uppercase">核心编辑实发产出</p>
+        </div>
+    </section>
+
+    <!-- Lead Breakdown -->
+    <section class="mb-20">
+        <div class="card p-12">
+            <h3 class="text-3xl font-black gold-text section-title italic">编辑个人线索达成表 <span class="text-sm text-gray-500 ml-6 uppercase tracking-widest">(Target: 5)</span></h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <div class="space-y-8">
+                    <!-- 军伟 -->
+                    <div class="p-8 bg-white/5 border border-white/10 rounded-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-3xl font-black italic">军伟</span>
+                            <span class="text-4xl font-black text-gold italic">3 / 5</span>
+                        </div>
+                        <div class="w-full bg-gray-950 h-4 rounded-full overflow-hidden border border-white/5">
+                            <div class="bg-gold h-full shadow-[0_0_20px_#D4AF37]" style="width: 60%"></div>
+                        </div>
+                        <div class="mt-4 flex justify-between text-base font-black italic text-gold">
+                            <span>达成率: 60%</span>
+                            <span class="text-gray-500 uppercase font-black">Below Target / 需提升</span>
+                        </div>
+                    </div>
+                    <!-- 其他编辑 -->
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="p-8 bg-red-950/20 border border-red-500/30 rounded-2xl text-center">
+                            <h4 class="text-2xl font-black text-red-500 italic mb-4">陈鑫</h4>
+                            <p class="text-4xl font-black text-white italic mb-2">1 / 5</p>
+                            <p class="text-sm font-black text-red-500 italic">达成率 20%</p>
+                        </div>
+                        <div class="p-8 bg-red-950/20 border border-red-500/30 rounded-2xl text-center">
+                            <h4 class="text-2xl font-black text-red-500 italic mb-4">小雪</h4>
+                            <p class="text-4xl font-black text-white italic mb-2">1 / 5</p>
+                            <p class="text-sm font-black text-red-500 italic">达成率 20%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="highlight-box p-10 bg-red-600/5 border-l-[10px] border-red-600 shadow-2xl">
+                        <h4 class="text-red-500 font-black text-3xl mb-6 italic tracking-tighter uppercase">管理评估：亟待提效</h4>
+                        <p class="text-2xl text-gray-100 font-black mb-6 italic leading-snug">
+                            “内容需回归获客逻辑。”
+                        </p>
+                        <p class="text-lg text-gray-400 font-bold leading-relaxed italic">
+                            本周 13 条视频仅带来 5 个线索，职业编辑团队的线索产出效率下滑。尤其是陈鑫和小雪，需要重新校准选题方向，强化视频结尾的“钩子”设计，减少流量损耗。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conversion Crisis -->
+    <section class="mb-20">
+        <div class="card p-12 border-l-8 border-l-gold bg-gradient-to-r from-black to-[#0a0a0a]">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8">
+                <h3 class="text-4xl font-black gold-text italic">评论私信转化深度审计</h3>
+                <div class="bg-red-600/30 border border-red-500/50 text-red-500 px-6 py-3 rounded-full font-black text-xl italic animate-pulse">
+                    转化率断层警告: 18.5%
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center p-8 bg-gold/10 border border-gold/30 rounded-2xl">
+                        <span class="text-2xl font-black italic text-white">军伟</span>
+                        <span class="text-4xl font-black gold-text">15 <span class="text-base font-bold text-gray-500 ml-2 uppercase">条互动</span></span>
+                    </div>
+                    <div class="flex justify-between items-center p-8 bg-white/5 border border-white/10 rounded-2xl opacity-60">
+                        <span class="text-2xl font-black italic text-white">陈鑫</span>
+                        <span class="text-4xl font-black text-white">10 <span class="text-base font-bold text-gray-500 ml-2 uppercase">条互动</span></span>
+                    </div>
+                    <div class="flex justify-between items-center p-8 bg-white/5 border border-white/10 rounded-2xl opacity-40">
+                        <span class="text-2xl font-black italic text-white">小雪</span>
+                        <span class="text-4xl font-black text-white">2 <span class="text-base font-bold text-gray-500 ml-2 uppercase">条互动</span></span>
+                    </div>
+                </div>
+                
+                <div class="space-y-8 p-10 bg-red-950/10 border-2 border-red-500/20 rounded-3xl">
+                    <h4 class="text-red-500 font-black text-3xl mb-4 italic underline decoration-red-600 underline-offset-8 uppercase">核心问题：转化漏洞</h4>
+                    <p class="text-xl text-gray-300 font-bold italic leading-relaxed">
+                        本周互动数达到 <span class="text-white">27条</span>，但线索转化仅 <span class="text-white">5个</span>。<br><br>
+                        这种极高的漏损率指向了客服回复质量问题。回复不及时、话术死板、缺乏后续动作是目前必须立即解决的阻碍点。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Completion Analysis - FIXED PAGE VISIBILITY -->
+    <section class="mb-20">
+        <div class="card p-12 bg-[#080808]">
+            <h3 class="text-3xl font-black text-white italic mb-12 uppercase tracking-widest">编辑视频完播率质量监测</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- 陈鑫 -->
+                <div class="p-10 bg-[#121212] border-2 border-white/5 rounded-3xl flex flex-col items-center">
+                    <h4 class="text-3xl font-black gold-text mb-10 italic">陈鑫</h4>
+                    <div class="stat-box mb-10">
+                        <div class="stat-item bg-green-950/30 text-[#10b981] border border-green-500/30">
+                            <div class="stat-val">1</div>
+                            <div class="stat-label">优秀</div>
+                        </div>
+                        <div class="stat-item bg-yellow-950/30 text-[#f59e0b] border border-yellow-500/30">
+                            <div class="stat-val">2</div>
+                            <div class="stat-label">中等</div>
+                        </div>
+                        <div class="stat-item bg-red-950/30 text-[#ff4d4d] border border-red-500/30">
+                            <div class="stat-val">1</div>
+                            <div class="stat-label">失败</div>
+                        </div>
+                    </div>
+                    <div class="w-full text-center">
+                        <p class="text-sm font-black text-gray-500 uppercase italic mb-1">Weekly Avg. / 周均值</p>
+                        <p class="text-2xl font-black text-white italic">10.32%</p>
+                    </div>
+                </div>
+                <!-- 军伟 -->
+                <div class="p-10 bg-[#121212] border-2 border-red-600/30 rounded-3xl flex flex-col items-center shadow-[0_0_40px_rgba(255,0,0,0.1)]">
+                    <h4 class="text-3xl font-black text-red-500 mb-10 italic">军伟</h4>
+                    <div class="stat-box mb-10">
+                        <div class="stat-item bg-gray-900/50 text-gray-600 border border-gray-800">
+                            <div class="stat-val">0</div>
+                            <div class="stat-label">优秀</div>
+                        </div>
+                        <div class="stat-item bg-yellow-950/30 text-[#f59e0b] border border-yellow-500/30">
+                            <div class="stat-val">3</div>
+                            <div class="stat-label">中等</div>
+                        </div>
+                        <div class="stat-item bg-red-950/40 text-[#ff4d4d] border border-red-500/50">
+                            <div class="stat-val">2</div>
+                            <div class="stat-label">失败</div>
+                        </div>
+                    </div>
+                    <div class="w-full text-center">
+                        <p class="text-sm font-black text-red-500 uppercase italic mb-1 underline underline-offset-4 decoration-2">Quality Alert / 质量预警</p>
+                        <p class="text-2xl font-black text-white italic">7.41%</p>
+                    </div>
+                </div>
+                <!-- 小雪 -->
+                <div class="p-10 bg-[#121212] border-2 border-white/5 rounded-3xl flex flex-col items-center">
+                    <h4 class="text-3xl font-black gold-text mb-10 italic">小雪</h4>
+                    <div class="stat-box mb-10">
+                        <div class="stat-item bg-gray-900/50 text-gray-600 border border-gray-800">
+                            <div class="stat-val">0</div>
+                            <div class="stat-label">优秀</div>
+                        </div>
+                        <div class="stat-item bg-yellow-950/30 text-[#f59e0b] border border-yellow-500/30">
+                            <div class="stat-val">4</div>
+                            <div class="stat-label">中等</div>
+                        </div>
+                        <div class="stat-item bg-red-950/30 text-[#ff4d4d] border border-red-500/30">
+                            <div class="stat-val">1</div>
+                            <div class="stat-label">失败</div>
+                        </div>
+                    </div>
+                    <div class="w-full text-center">
+                        <p class="text-sm font-black text-gray-500 uppercase italic mb-1">Efficiency Level / 产出水平</p>
+                        <p class="text-2xl font-black text-white italic">6.13%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Editing Team Core Metrics -->
+    <section class="mb-20">
+        <div class="card p-12 bg-[#0a0a0a] border-2 border-gold shadow-[0_0_50px_rgba(212,175,55,0.1)]">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 gap-6">
+                <div>
+                    <h3 class="text-4xl font-black gold-text italic">剪辑团队核心指标审计</h3>
+                    <p class="text-base text-gray-500 mt-3 font-bold italic tracking-[0.2em] uppercase">Metric: 2S Jump Rate (2S跳出率)</p>
+                </div>
+                <div class="flex space-x-6">
+                    <div class="px-4 py-2 border border-green-500 text-green-500 rounded text-sm font-black italic">优秀: &lt;25%</div>
+                    <div class="px-4 py-2 border border-gray-600 text-gray-400 rounded text-sm font-black italic">合格: &lt;40%</div>
+                </div>
+            </div>
+
+            <!-- Jump Rate Grid (14 Raw Data Points) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-12 text-center font-black">
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">30.43%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">36.28%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">37.54%</div>
+                <div class="p-4 bg-red-900/20 rounded-lg border border-red-500/50 text-red-500">48.65%</div>
+                <div class="p-4 bg-green-900/20 rounded-lg border border-green-500/50 text-green-500">24.39%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">36.00%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">33.33%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">35.36%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">26.59%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">28.62%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">35.85%</div>
+                <div class="p-4 bg-white/5 rounded-lg border border-white/10 text-gray-300">36.96%</div>
+                <div class="p-4 bg-green-900/20 rounded-lg border border-green-500/50 text-green-500">22.11%</div>
+                <div class="p-4 bg-green-900/20 rounded-lg border border-green-500/50 text-green-500">24.30%</div>
+            </div>
+
+            <div class="p-8 bg-gold/5 border-l-8 border-l-gold rounded-r-2xl">
+                <h4 class="text-gold font-black text-xl mb-3">视觉反馈汇总</h4>
+                <p class="text-lg text-gray-400">本周2S跳出率表现整体合格，单项数据最高48.65%需要注意视觉开头引导；两项低于25%的数据证明了剪辑端的爆发力，应全员复盘该两支视频的剪辑手法。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultra-short Video专项分析 (婷婷) -->
+    <section class="mb-20">
+        <div class="card p-12 bg-[#0a0a0a] border-2 border-gold shadow-[0_0_50px_rgba(212,175,55,0.1)]">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 gap-6">
+                <div>
+                    <h3 class="text-4xl font-black gold-text italic">极短视频专项审计 (婷婷)</h3>
+                    <p class="text-base text-gray-500 mt-3 font-bold italic tracking-[0.2em] uppercase">Metric: Interaction Index (互动指数)</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <div class="bg-red-900/20 border border-red-500/50 px-6 py-3 rounded-lg text-red-500 font-black italic text-xl shadow-lg">
+                        线索达成率: 50% (4 / 8)
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 uppercase font-bold tracking-widest">Target: 8 Leads / Week</p>
+                </div>
+            </div>
+
+            <!-- Interaction Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12 text-center font-black">
+                <div class="p-6 bg-white/5 rounded-xl border border-white/10 text-gray-300"><p class="text-xs text-gray-500 mb-2">作品 01</p>250</div>
+                <div class="p-6 bg-red-900/10 rounded-xl border border-red-500/30 text-red-500"><p class="text-xs text-red-500/60 mb-2">作品 02</p>0</div>
+                <div class="p-6 bg-white/5 rounded-xl border border-white/10 text-gray-500"><p class="text-xs text-gray-500 mb-2">作品 03</p>159</div>
+                <div class="p-6 bg-white/5 rounded-xl border border-white/10 text-gray-500"><p class="text-xs text-gray-500 mb-2">作品 04</p>172</div>
+                <div class="p-6 bg-white/5 rounded-xl border border-white/10 text-gold shadow-gold-sm"><p class="text-xs text-gray-500 mb-2">作品 05</p>268</div>
+                <div class="p-6 bg-gold/10 rounded-xl border border-gold/30 text-gold shadow-gold-md"><p class="text-xs text-gray-500 mb-2">作品 06</p>741</div>
+            </div>
+
+            <div class="p-10 bg-red-950/10 border-l-8 border-l-red-600 rounded-r-3xl">
+                <h4 class="text-red-500 font-black text-2xl mb-4 italic">过程审计：结果与互动断层</h4>
+                <p class="text-xl text-gray-300 font-bold italic leading-relaxed">
+                    婷婷本周极短视频虽然有单篇 741 互动的亮点，但由于出现了 0 互动的异常表现和多篇未及格数据，导致最终线索产出仅实现 50%。内容冲击力需要进一步标准化。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategic Optimization Measures -->
+    <section class="crisis-section mb-32 shadow-[0_30px_100px_rgba(212,175,55,0.2)]">
+        <h3 class="text-5xl font-black italic gold-text border-b-2 border-gold/30 pb-10 mb-16 uppercase tracking-tighter">本周整改建议与行动计划</h3>
+        
+        <div class="space-y-12">
+            <div class="instruction-row">
+                <div class="instruction-num">01</div>
+                <div>
+                    <div class="instruction-tag">回复质量专项审计</div>
+                    <p class="instruction-text">
+                        编辑应立即逐条查看上周所有评论/私信的处理记录。深度分析：<span class="text-gold italic underline decoration-2">是否存在回复生硬、响应延迟、留资引导不充分？</span> 需共同找出互动与线索比例失调的根源。
+                    </p>
+                </div>
+            </div>
+
+            <div class="instruction-row border-none pb-0 mb-0">
+                <div class="instruction-num">02</div>
+                <div>
+                    <div class="instruction-tag">线索转化提升目标</div>
+                    <p class="instruction-text">
+                        下周起，全员力争实现 <span class="text-white font-black text-3xl">5 个线索/人</span> (婷婷目标维持8个) 的目标达成。针对产出效能较低的作品，建议团队加强内部复盘，优化选题及内容获客钩子的设计。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <button onclick="window.print()" class="print-btn no-print uppercase">
+        Print Audit Report
+    </button>
+
+</body>
+</html>
