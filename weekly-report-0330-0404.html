@@ -95,6 +95,10 @@
       color: #00C96E;
       border-bottom-color: #00C96E;
     }
+    .tab.chat.active {
+      color: #D4AF37;
+      border-bottom-color: #D4AF37;
+    }
 
     .frame-wrap {
       flex: 1;
@@ -128,11 +132,13 @@
 <nav>
   <div class="tab active" onclick="switchTab('planner', this)">📊 规划师团队</div>
   <div class="tab editor" onclick="switchTab('editor', this)">✍️ 编辑团队</div>
+  <div class="tab chat" onclick="switchTab('chat', this)">💬 规划师沟通分析</div>
 </nav>
 
 <div class="frame-wrap">
   <iframe id="frame-planner" class="active" src="weekly-report-planner-0330-0404.html"></iframe>
   <iframe id="frame-editor" src="weekly-report-editor-0330-0404.html"></iframe>
+  <iframe id="frame-chat" src="weekly-report-planner-chat-0330-0404.html"></iframe>
 </div>
 
 <script>

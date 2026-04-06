@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>规划师沟通分析周报（3/30 - 4/5）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f5f0eb;
+            color: #3a2e25;
+            padding: 30px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #6b4c30;
+            margin-bottom: 6px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #9a8577;
+            font-size: 14px;
+            margin-bottom: 36px;
+        }
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 12px rgba(107,76,48,0.08);
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #6b4c30;
+            border-left: 4px solid #c49a6c;
+            padding-left: 12px;
+            margin-bottom: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        thead th {
+            background: #6b4c30;
+            color: #fff;
+            padding: 10px 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+        thead th:first-child { border-radius: 6px 0 0 0; }
+        thead th:last-child { border-radius: 0 6px 0 0; }
+        tbody td {
+            padding: 9px 12px;
+            text-align: center;
+            border-bottom: 1px solid #f0e8e0;
+        }
+        tbody tr:hover { background: #faf6f2; }
+        tbody tr:last-child td:first-child { border-radius: 0 0 0 6px; }
+        tbody tr:last-child td:last-child { border-radius: 0 0 6px 0; }
+        .tag-good {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .tag-warn {
+            display: inline-block;
+            background: #fff3e0;
+            color: #e65100;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .tag-low {
+            display: inline-block;
+            background: #ffebee;
+            color: #c62828;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .insight {
+            background: #faf6f2;
+            border-left: 3px solid #c49a6c;
+            padding: 12px 16px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #6b5a4e;
+            border-radius: 0 6px 6px 0;
+        }
+        .score-bar {
+            display: inline-block;
+            height: 20px;
+            border-radius: 10px;
+            vertical-align: middle;
+        }
+        .score-num {
+            font-size: 22px;
+            font-weight: 700;
+            color: #6b4c30;
+        }
+        .planner-card {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .planner-item {
+            flex: 1;
+            min-width: 220px;
+            background: #faf6f2;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .planner-item h3 {
+            font-size: 18px;
+            color: #6b4c30;
+            margin-bottom: 10px;
+        }
+        .planner-item .score {
+            font-size: 42px;
+            font-weight: 800;
+            margin: 8px 0;
+        }
+        .planner-item .score-label {
+            font-size: 12px;
+            color: #9a8577;
+        }
+        .score-s { color: #2e7d32; }
+        .score-a { color: #6b4c30; }
+        .score-b { color: #e65100; }
+        .score-c { color: #c62828; }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 14px;
+        }
+        .detail-grid .metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e8ddd3;
+        }
+        .detail-grid .metric span:last-child { font-weight: 600; color: #6b4c30; }
+        .chart-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+        }
+        .chart-bar-label {
+            width: 60px;
+            text-align: right;
+            font-size: 12px;
+            color: #9a8577;
+        }
+        .chart-bar-track {
+            flex: 1;
+            height: 18px;
+            background: #f0e8e0;
+            border-radius: 9px;
+            overflow: hidden;
+        }
+        .chart-bar-fill {
+            height: 100%;
+            border-radius: 9px;
+            transition: width 0.6s ease;
+        }
+        .chart-bar-value {
+            width: 40px;
+            font-size: 12px;
+            color: #6b5a4e;
+            font-weight: 600;
+        }
+        .footer {
+            text-align: center;
+            color: #bfb0a3;
+            font-size: 12px;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>规划师沟通分析周报</h1>
+    <p class="subtitle">统计周期：2026年3月30日 - 4月5日 | 数据来源：企业微信聊天记录</p>
+
+    <!-- 综合评分 -->
+    <div class="section">
+        <h2>综合评分</h2>
+        <div class="planner-card">
+            <div class="planner-item">
+                <h3>江宁</h3>
+                <div class="score score-s">89</div>
+                <div class="score-label">综合评分 / 100</div>
+                <div class="detail-grid">
+                    <div class="metric"><span>工作量</span><span>28/30</span></div>
+                    <div class="metric"><span>回复率</span><span>25/25</span></div>
+                    <div class="metric"><span>对话深度</span><span>20/20</span></div>
+                    <div class="metric"><span>材料发送</span><span>6/15</span></div>
+                    <div class="metric"><span>时间覆盖</span><span>10/10</span></div>
+                </div>
+            </div>
+            <div class="planner-item">
+                <h3>马康挺</h3>
+                <div class="score score-a">79</div>
+                <div class="score-label">综合评分 / 100</div>
+                <div class="detail-grid">
+                    <div class="metric"><span>工作量</span><span>30/30</span></div>
+                    <div class="metric"><span>回复率</span><span>16/25</span></div>
+                    <div class="metric"><span>对话深度</span><span>14/20</span></div>
+                    <div class="metric"><span>材料发送</span><span>10/15</span></div>
+                    <div class="metric"><span>时间覆盖</span><span>9/10</span></div>
+                </div>
+            </div>
+            <div class="planner-item">
+                <h3>林付贤</h3>
+                <div class="score score-a">75</div>
+                <div class="score-label">综合评分 / 100</div>
+                <div class="detail-grid">
+                    <div class="metric"><span>工作量</span><span>26/30</span></div>
+                    <div class="metric"><span>回复率</span><span>13/25</span></div>
+                    <div class="metric"><span>对话深度</span><span>14/20</span></div>
+                    <div class="metric"><span>材料发送</span><span>15/15</span></div>
+                    <div class="metric"><span>时间覆盖</span><span>7/10</span></div>
+                </div>
+            </div>
+            <div class="planner-item">
+                <h3>周鑫鑫</h3>
+                <div class="score score-c">56</div>
+                <div class="score-label">综合评分 / 100</div>
+                <div class="detail-grid">
+                    <div class="metric"><span>工作量</span><span>5/30</span></div>
+                    <div class="metric"><span>回复率</span><span>20/25</span></div>
+                    <div class="metric"><span>对话深度</span><span>18/20</span></div>
+                    <div class="metric"><span>材料发送</span><span>8/15</span></div>
+                    <div class="metric"><span>时间覆盖</span><span>5/10</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 工作量总览 -->
+    <div class="section">
+        <h2>一、工作量总览</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>总消息数</th>
+                    <th>发出</th>
+                    <th>收到</th>
+                    <th>收发比</th>
+                    <th>活跃天数</th>
+                    <th>联系客户数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>江宁</strong></td>
+                    <td>865</td>
+                    <td>500</td>
+                    <td>365</td>
+                    <td>1 : 0.73</td>
+                    <td>5天</td>
+                    <td>46人</td>
+                </tr>
+                <tr>
+                    <td><strong>马康挺</strong></td>
+                    <td>650</td>
+                    <td>461</td>
+                    <td>189</td>
+                    <td>1 : 0.41</td>
+                    <td><span class="tag-good">7天</span></td>
+                    <td><span class="tag-good">63人</span></td>
+                </tr>
+                <tr>
+                    <td><strong>林付贤</strong></td>
+                    <td>635</td>
+                    <td>439</td>
+                    <td>196</td>
+                    <td>1 : 0.45</td>
+                    <td>6天</td>
+                    <td>60人</td>
+                </tr>
+                <tr>
+                    <td><strong>周鑫鑫</strong></td>
+                    <td>96</td>
+                    <td>59</td>
+                    <td>37</td>
+                    <td>1 : 0.63</td>
+                    <td><span class="tag-low">4天</span></td>
+                    <td><span class="tag-low">5人</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="insight">
+            马康挺联系客户数最多（63人），且全周7天无休，工作量最大。周鑫鑫一周仅联系5个客户，需重点关注。
+        </div>
+    </div>
+
+    <!-- 客户回复率 -->
+    <div class="section">
+        <h2>二、客户回复率</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>主动联系客户</th>
+                    <th>有回复的客户</th>
+                    <th>回复率</th>
+                    <th>评价</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>江宁</strong></td>
+                    <td>46人</td>
+                    <td>29人</td>
+                    <td><strong>63.0%</strong></td>
+                    <td><span class="tag-good">优秀</span></td>
+                </tr>
+                <tr>
+                    <td><strong>马康挺</strong></td>
+                    <td>63人</td>
+                    <td>25人</td>
+                    <td>39.7%</td>
+                    <td><span class="tag-warn">一般</span></td>
+                </tr>
+                <tr>
+                    <td><strong>林付贤</strong></td>
+                    <td>60人</td>
+                    <td>20人</td>
+                    <td>33.3%</td>
+                    <td><span class="tag-warn">偏低</span></td>
+                </tr>
+                <tr>
+                    <td><strong>周鑫鑫</strong></td>
+                    <td>5人</td>
+                    <td>6人</td>
+                    <td>~100%</td>
+                    <td><span style="font-size:12px;color:#9a8577;">样本少</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- 可视化条形图 -->
+        <div style="margin-top: 18px;">
+            <div class="chart-bar-container">
+                <div class="chart-bar-label">江宁</div>
+                <div class="chart-bar-track"><div class="chart-bar-fill" style="width:63%;background:#4caf50;"></div></div>
+                <div class="chart-bar-value">63.0%</div>
+            </div>
+            <div class="chart-bar-container">
+                <div class="chart-bar-label">马康挺</div>
+                <div class="chart-bar-track"><div class="chart-bar-fill" style="width:39.7%;background:#ff9800;"></div></div>
+                <div class="chart-bar-value">39.7%</div>
+            </div>
+            <div class="chart-bar-container">
+                <div class="chart-bar-label">林付贤</div>
+                <div class="chart-bar-track"><div class="chart-bar-fill" style="width:33.3%;background:#ff9800;"></div></div>
+                <div class="chart-bar-value">33.3%</div>
+            </div>
+        </div>
+        <div class="insight">
+            江宁的回复率远超其他人，说明沟通质量高、开场话术有效。林付贤联系量大但回复率仅33%，建议优化首次沟通内容。
+        </div>
+    </div>
+
+    <!-- 对话深度 -->
+    <div class="section">
+        <h2>三、对话深度</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>沟通客户数</th>
+                    <th>平均对话轮次</th>
+                    <th>最深对话</th>
+                    <th>深度对话(≥5轮)</th>
+                    <th>仅1条消息</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>江宁</strong></td>
+                    <td>49人</td>
+                    <td><strong>17.7轮</strong></td>
+                    <td>120轮</td>
+                    <td><span class="tag-good">29个</span></td>
+                    <td>5个</td>
+                </tr>
+                <tr>
+                    <td><strong>周鑫鑫</strong></td>
+                    <td>6人</td>
+                    <td>16.0轮</td>
+                    <td>38轮</td>
+                    <td>3个</td>
+                    <td><span class="tag-good">0个</span></td>
+                </tr>
+                <tr>
+                    <td><strong>林付贤</strong></td>
+                    <td>61人</td>
+                    <td>10.4轮</td>
+                    <td>111轮</td>
+                    <td>17个</td>
+                    <td><span class="tag-warn">8个</span></td>
+                </tr>
+                <tr>
+                    <td><strong>马康挺</strong></td>
+                    <td>64人</td>
+                    <td>10.2轮</td>
+                    <td>76轮</td>
+                    <td>21个</td>
+                    <td><span class="tag-good">1个</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="insight">
+            江宁平均每个客户有17.7轮对话，深度对话29个，沟通最深入。林付贤有8个客户只发了1条消息就没有下文，"无效沟通"比例偏高。
+        </div>
+    </div>
+
+    <!-- 消息类型 -->
+    <div class="section">
+        <h2>四、消息类型分布（规划师发出）</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>文字</th>
+                    <th>图片</th>
+                    <th>语音</th>
+                    <th>文件/方案</th>
+                    <th>链接</th>
+                    <th>其他</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>江宁</strong></td>
+                    <td>465</td>
+                    <td>14</td>
+                    <td>0</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td><strong>林付贤</strong></td>
+                    <td>364</td>
+                    <td>36</td>
+                    <td>2</td>
+                    <td><span class="tag-good">30</span></td>
+                    <td>0</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td><strong>马康挺</strong></td>
+                    <td>320</td>
+                    <td><span class="tag-good">97</span></td>
+                    <td>1</td>
+                    <td>9</td>
+                    <td>4</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td><strong>周鑫鑫</strong></td>
+                    <td>49</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="insight">
+            林付贤发送了30个文件/方案，专业材料输出领先。马康挺善用图片（97张），沟通方式最多样。江宁以文字为主，建议增加方案和图片辅助。
+        </div>
+    </div>
+
+    <!-- 文字消息质量 -->
+    <div class="section">
+        <h2>五、文字消息质量</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>平均字数</th>
+                    <th>最长消息</th>
+                    <th>长消息占比(&gt;50字)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>马康挺</strong></td>
+                    <td><strong>47.3字</strong></td>
+                    <td>1673字</td>
+                    <td><span class="tag-good">21.9%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>林付贤</strong></td>
+                    <td>33.4字</td>
+                    <td>261字</td>
+                    <td>12.9%</td>
+                </tr>
+                <tr>
+                    <td><strong>周鑫鑫</strong></td>
+                    <td>30.9字</td>
+                    <td>294字</td>
+                    <td>12.2%</td>
+                </tr>
+                <tr>
+                    <td><strong>江宁</strong></td>
+                    <td>30.6字</td>
+                    <td>198字</td>
+                    <td>16.1%</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="insight">
+            马康挺的文字消息最详细（平均47字），长消息（深度回复）占比最高。说明回复内容更充实、更有针对性。
+        </div>
+    </div>
+
+    <!-- 工作时段 -->
+    <div class="section">
+        <h2>六、工作时段分布</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>上午 8-12</th>
+                    <th>午休 12-14</th>
+                    <th>下午 14-18</th>
+                    <th>晚间 18-23</th>
+                    <th>非工作时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>江宁</strong></td>
+                    <td>234</td>
+                    <td>73</td>
+                    <td>180</td>
+                    <td>12</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td><strong>马康挺</strong></td>
+                    <td>163</td>
+                    <td>64</td>
+                    <td>184</td>
+                    <td>45</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td><strong>林付贤</strong></td>
+                    <td>87</td>
+                    <td>37</td>
+                    <td><strong>306</strong></td>
+                    <td>9</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td><strong>周鑫鑫</strong></td>
+                    <td>20</td>
+                    <td>1</td>
+                    <td>14</td>
+                    <td>24</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- 可视化 -->
+        <div style="margin-top:18px;">
+            <p style="font-size:13px;color:#9a8577;margin-bottom:10px;">各时段消息占比（发出）：</p>
+            <div style="margin-bottom:10px;">
+                <span style="font-size:13px;font-weight:600;display:inline-block;width:60px;">江宁</span>
+                <span style="display:inline-block;width:46.8%;height:14px;background:#c49a6c;border-radius:3px 0 0 3px;" title="上午 234"></span><span style="display:inline-block;width:14.6%;height:14px;background:#dbb896;" title="午休 73"></span><span style="display:inline-block;width:36%;height:14px;background:#e8d5c0;" title="下午 180"></span><span style="display:inline-block;width:2.4%;height:14px;background:#f0e8e0;border-radius:0 3px 3px 0;" title="晚间 12"></span>
+            </div>
+            <div style="margin-bottom:10px;">
+                <span style="font-size:13px;font-weight:600;display:inline-block;width:60px;">马康挺</span>
+                <span style="display:inline-block;width:33.5%;height:14px;background:#c49a6c;border-radius:3px 0 0 3px;" title="上午 163"></span><span style="display:inline-block;width:13.2%;height:14px;background:#dbb896;" title="午休 64"></span><span style="display:inline-block;width:37.8%;height:14px;background:#e8d5c0;" title="下午 184"></span><span style="display:inline-block;width:9.2%;height:14px;background:#f0e8e0;border-radius:0 3px 3px 0;" title="晚间 45"></span>
+            </div>
+            <div style="margin-bottom:10px;">
+                <span style="font-size:13px;font-weight:600;display:inline-block;width:60px;">林付贤</span>
+                <span style="display:inline-block;width:19.8%;height:14px;background:#c49a6c;border-radius:3px 0 0 3px;" title="上午 87"></span><span style="display:inline-block;width:8.4%;height:14px;background:#dbb896;" title="午休 37"></span><span style="display:inline-block;width:69.7%;height:14px;background:#e8d5c0;" title="下午 306"></span><span style="display:inline-block;width:2%;height:14px;background:#f0e8e0;border-radius:0 3px 3px 0;" title="晚间 9"></span>
+            </div>
+            <div style="margin-bottom:10px;">
+                <span style="font-size:13px;font-weight:600;display:inline-block;width:60px;">周鑫鑫</span>
+                <span style="display:inline-block;width:33.9%;height:14px;background:#c49a6c;border-radius:3px 0 0 3px;" title="上午 20"></span><span style="display:inline-block;width:1.7%;height:14px;background:#dbb896;" title="午休 1"></span><span style="display:inline-block;width:23.7%;height:14px;background:#e8d5c0;" title="下午 14"></span><span style="display:inline-block;width:40.7%;height:14px;background:#f0e8e0;border-radius:0 3px 3px 0;" title="晚间 24"></span>
+            </div>
+            <div style="font-size:11px;color:#bfb0a3;margin-top:6px;">
+                <span style="display:inline-block;width:12px;height:12px;background:#c49a6c;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>上午
+                <span style="display:inline-block;width:12px;height:12px;background:#dbb896;border-radius:2px;vertical-align:middle;margin-left:12px;margin-right:4px;"></span>午休
+                <span style="display:inline-block;width:12px;height:12px;background:#e8d5c0;border-radius:2px;vertical-align:middle;margin-left:12px;margin-right:4px;"></span>下午
+                <span style="display:inline-block;width:12px;height:12px;background:#f0e8e0;border-radius:2px;vertical-align:middle;margin-left:12px;margin-right:4px;"></span>晚间
+            </div>
+        </div>
+        <div class="insight">
+            林付贤集中在下午工作（306条，占70%），上午相对较少。江宁上下午分布均匀，工作节奏最稳定。周鑫鑫晚间活跃度最高。
+        </div>
+    </div>
+
+    <!-- 每日明细 -->
+    <div class="section">
+        <h2>七、每日工作明细</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>规划师</th>
+                    <th>日期</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>工作时长</th>
+                    <th>发出</th>
+                    <th>收到</th>
+                    <th>联系客户</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td rowspan="5" style="vertical-align:middle;font-weight:700;">江宁</td>
+                    <td>3/30(日)</td><td>09:29</td><td>20:24</td><td>~11h</td><td>176</td><td>113</td><td>28</td></tr>
+                <tr><td>3/31(一)</td><td>09:07</td><td>19:37</td><td>~10.5h</td><td>146</td><td>97</td><td>21</td></tr>
+                <tr><td>4/1(二)</td><td>09:39</td><td>18:04</td><td>~8.5h</td><td>81</td><td>64</td><td>14</td></tr>
+                <tr><td>4/2(三)</td><td>04:25</td><td>18:04</td><td>~13.5h</td><td>67</td><td>69</td><td>11</td></tr>
+                <tr><td>4/3(四)</td><td>08:43</td><td>21:46</td><td>~13h</td><td>30</td><td>22</td><td>4</td></tr>
+
+                <tr style="border-top:2px solid #e8d5c0;">
+                    <td rowspan="7" style="vertical-align:middle;font-weight:700;">马康挺</td>
+                    <td>3/30(日)</td><td>09:04</td><td>21:09</td><td>~12h</td><td>93</td><td>24</td><td>22</td></tr>
+                <tr><td>3/31(一)</td><td>06:55</td><td>20:06</td><td>~13h</td><td>69</td><td>35</td><td>10</td></tr>
+                <tr><td>4/1(二)</td><td>04:22</td><td>22:07</td><td>~18h</td><td>64</td><td>12</td><td>19</td></tr>
+                <tr><td>4/2(三)</td><td>09:27</td><td>18:56</td><td>~9.5h</td><td>119</td><td>53</td><td>13</td></tr>
+                <tr><td>4/3(四)</td><td>08:52</td><td>22:29</td><td>~13.5h</td><td>101</td><td>54</td><td>20</td></tr>
+                <tr><td>4/4(五)</td><td>02:32</td><td>15:18</td><td>~13h</td><td>15</td><td>10</td><td>1</td></tr>
+                <tr><td>4/5(六)</td><td>10:50</td><td>10:50</td><td>-</td><td>0</td><td>1</td><td>0</td></tr>
+
+                <tr style="border-top:2px solid #e8d5c0;">
+                    <td rowspan="6" style="vertical-align:middle;font-weight:700;">林付贤</td>
+                    <td>3/30(日)</td><td>13:32</td><td>21:18</td><td>~8h</td><td>39</td><td>24</td><td>13</td></tr>
+                <tr><td>3/31(一)</td><td>04:52</td><td>17:55</td><td>~13h</td><td>13</td><td>13</td><td>3</td></tr>
+                <tr><td>4/1(二)</td><td>09:16</td><td>20:30</td><td>~11h</td><td>150</td><td>79</td><td>22</td></tr>
+                <tr><td>4/2(三)</td><td>09:16</td><td>23:39</td><td>~14.5h</td><td>128</td><td>34</td><td>28</td></tr>
+                <tr><td>4/3(四)</td><td>09:50</td><td>20:47</td><td>~11h</td><td>89</td><td>33</td><td>14</td></tr>
+                <tr><td>4/4(五)</td><td>08:25</td><td>19:40</td><td>~11h</td><td>20</td><td>13</td><td>2</td></tr>
+
+                <tr style="border-top:2px solid #e8d5c0;">
+                    <td rowspan="4" style="vertical-align:middle;font-weight:700;">周鑫鑫</td>
+                    <td>3/30(日)</td><td>14:42</td><td>14:43</td><td>~1min</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>3/31(一)</td><td>11:40</td><td>19:52</td><td>~8h</td><td>36</td><td>29</td><td>2</td></tr>
+                <tr><td>4/1(二)</td><td>09:54</td><td>16:24</td><td>~6.5h</td><td>12</td><td>7</td><td>3</td></tr>
+                <tr><td>4/2(三)</td><td>10:30</td><td>14:21</td><td>~4h</td><td>10</td><td>0</td><td>1</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 关键发现 -->
+    <div class="section">
+        <h2>八、关键发现与建议</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div style="background:#e8f5e9;border-radius:8px;padding:16px;">
+                <h3 style="font-size:15px;color:#2e7d32;margin-bottom:8px;">江宁 — 综合最强 (89分)</h3>
+                <ul style="font-size:13px;padding-left:18px;color:#33691e;">
+                    <li>回复率63%，远超团队平均</li>
+                    <li>平均对话17.7轮，沟通最深入</li>
+                    <li>工作时间分布均匀，节奏稳定</li>
+                    <li><strong>建议：</strong>增加方案/文件发送（当前仅5个），提升专业材料输出</li>
+                </ul>
+            </div>
+            <div style="background:#fff8e1;border-radius:8px;padding:16px;">
+                <h3 style="font-size:15px;color:#f57f17;margin-bottom:8px;">马康挺 — 最勤奋 (79分)</h3>
+                <ul style="font-size:13px;padding-left:18px;color:#e65100;">
+                    <li>联系客户最多（63人），全周7天无休</li>
+                    <li>消息质量最高（平均47字），回复充实</li>
+                    <li>图片使用最多（97张），沟通方式多样</li>
+                    <li><strong>建议：</strong>回复率39.7%有提升空间，优化开场策略</li>
+                </ul>
+            </div>
+            <div style="background:#fff3e0;border-radius:8px;padding:16px;">
+                <h3 style="font-size:15px;color:#e65100;margin-bottom:8px;">林付贤 — 方案达人 (75分)</h3>
+                <ul style="font-size:13px;padding-left:18px;color:#bf360c;">
+                    <li>发送30个文件/方案，专业材料输出最多</li>
+                    <li>工作集中在下午（306条，占70%）</li>
+                    <li>回复率仅33.3%，8个客户只发1条就没下文</li>
+                    <li><strong>建议：</strong>优化首次沟通话术，减少无效单次消息</li>
+                </ul>
+            </div>
+            <div style="background:#ffebee;border-radius:8px;padding:16px;">
+                <h3 style="font-size:15px;color:#c62828;margin-bottom:8px;">周鑫鑫 — 需关注 (56分)</h3>
+                <ul style="font-size:13px;padding-left:18px;color:#b71c1c;">
+                    <li>一周仅联系5个客户，工作量明显不足</li>
+                    <li>活跃天数仅4天，且每天时长较短</li>
+                    <li>对话质量尚可（平均16轮），但覆盖面太窄</li>
+                    <li><strong>建议：</strong>大幅增加每日联系客户数量</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        保心上人内部工作台 | 规划师沟通分析系统 | 报告生成时间：2026-04-06
+    </div>
+
+</div>
+</body>
+</html>
