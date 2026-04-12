@@ -326,10 +326,10 @@ def search_xiaohongshu(keyword):
     for item in raw_list[:15]:
         if not isinstance(item, dict):
             continue
-        note = item.get("note_card", item)
+        note = item.get("note_card") or item.get("note") or item
         title = (note.get("display_title") or note.get("title")
                  or note.get("desc") or note.get("name", ""))
-        note_id = note.get("note_id") or item.get("id") or item.get("note_id", "")
+        note_id = note.get("note_id") or note.get("id") or item.get("id", "")
         url = f"https://www.xiaohongshu.com/explore/{note_id}" if note_id else ""
         interact = note.get("interact_info", {})
         like = interact.get("liked_count", 0) or note.get("liked_count", 0)
