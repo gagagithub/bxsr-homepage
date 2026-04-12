@@ -188,12 +188,8 @@ def search_xigua(keyword):
             url = f"https://www.ixigua.com/{group_id}"
         play = vdata.get("play_count", 0) or vdata.get("video_watch_count", 0)
         like = vdata.get("digg_count", 0) or vdata.get("like_count", 0)
+        comment = vdata.get("comment_count", 0)
         create_time = vdata.get("create_time", 0) or vdata.get("publish_time", 0)
-        # 调试：打印所有数值字段帮助发现可用指标
-        if not items:  # 只打印第一条
-            num_fields = {k: v for k, v in vdata.items()
-                          if isinstance(v, (int, float)) and v > 0}
-            print(f"    Xigua numeric fields: {num_fields}")
         # 如果还是没 title，尝试从 itemDataStr 解析
         if not title:
             ids = item.get("itemDataStr", "")
@@ -212,7 +208,7 @@ def search_xigua(keyword):
                     pass
         if title:
             items.append({"title": title, "url": url, "play": play, "like": like,
-                          "create_time": create_time})
+                          "comment": comment, "create_time": create_time})
     return items
 
 
@@ -400,8 +396,8 @@ def collect_all_data():
                     ct = item.get("create_time", 0)
                     if ct and ct < THREE_MONTHS_AGO:
                         continue
-                    # 2) 西瓜视频：播放量 >= 10万
-                    if platform == "xigua" and item.get("play", 0) < 100000:
+                    # 2) 西瓜视频：评论数 >= 100
+                    if platform == "xigua" and item.get("comment", 0) < 100:
                         continue
                     # 3) 抖音/小红书：点赞 >= 200
                     if platform in ("douyin", "xiaohongshu") and item.get("like", 0) < 200:
@@ -457,10 +453,13 @@ def build_platform_section(platform_key, items):
         stats = []
         play_str = format_count(item.get("play", 0))
         like_str = format_count(item.get("like", 0))
+        comment_str = format_count(item.get("comment", 0))
         if play_str:
             stats.append(f"▶ {play_str}")
         if like_str:
             stats.append(f"♥ {like_str}")
+        if comment_str:
+            stats.append(f"💬 {comment_str}")
         stats_html = f'<span class="stats">{" · ".join(stats)}</span>' if stats else ""
 
         rows += f"""<tr>
