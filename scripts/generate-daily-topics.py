@@ -24,8 +24,7 @@ DATE_STR = TODAY.strftime("%Y-%m-%d")
 DATE_CN = TODAY.strftime("%Y年%-m月%-d日")
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DETAIL_FILE = os.path.join(PROJECT_ROOT, f"daily-topics-{DATE_STR}.html")
-LIST_FILE = os.path.join(PROJECT_ROOT, "daily-topics-reports.html")
+DETAIL_FILE = os.path.join(PROJECT_ROOT, "daily-topics.html")
 
 TIKHUB_API_KEY = os.environ["TIKHUB_API_KEY"]
 TIKHUB_BASE = "https://api.tikhub.io"
@@ -596,7 +595,7 @@ def generate_detail_page(data):
 
 <header>
   <div class="header-inner">
-    <a class="back-btn" href="daily-topics-reports.html">&larr; 返回列表</a>
+    <a class="back-btn" href="index.html">&larr; 返回首页</a>
     <h1>🔥 每日热门话题</h1>
     <div class="header-sub">{DATE_CN} · {platforms_str}</div>
   </div>
@@ -612,54 +611,6 @@ def generate_detail_page(data):
 
 </body>
 </html>"""
-
-
-# ── 更新列表页 ────────────────────────────────────────
-def update_list_page():
-    day = TODAY.day
-    month = TODAY.month
-
-    # 收集所有平台 tag
-    all_tags = []
-    for topic in TOPICS:
-        for s in topic["searches"]:
-            p = s["platform"]
-            cls = PLATFORM_TAG_CLASSES.get(p, "")
-            name = PLATFORM_NAMES.get(p, p)
-            tag = f'<span class="tag {cls}">{name}</span>'
-            if tag not in all_tags:
-                all_tags.append(tag)
-    tags_html = "\n          ".join(all_tags)
-
-    new_entry = f"""
-      <a class="report-card" href="daily-topics-{DATE_STR}.html">
-        <div class="card-icon">🔥</div>
-        <div class="card-body">
-          <div class="card-title">每日热门话题 &nbsp;&middot;&nbsp; {month}月{day}日</div>
-          <div class="card-meta">
-            <span>📅 {DATE_CN}</span>
-            <span>🤖 TikHub 自动采集</span>
-          </div>
-        </div>
-        <div class="card-tags">
-          {tags_html}
-        </div>
-        <div class="card-arrow">›</div>
-      </a>
-"""
-
-    with open(LIST_FILE, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    marker = "<!-- NEW_ENTRY_HERE -->"
-    if marker in content:
-        content = content.replace(marker, marker + new_entry)
-    else:
-        content = content.replace("</main>", new_entry + "\n</main>")
-
-    with open(LIST_FILE, "w", encoding="utf-8") as f:
-        f.write(content)
-    print(f"  Updated list page.")
 
 
 # ── 主流程 ────────────────────────────────────────────
@@ -680,9 +631,6 @@ def main():
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  Written: {DETAIL_FILE}")
-
-    print("Step 3: Updating list page...")
-    update_list_page()
 
     print("=== Done ===")
 
