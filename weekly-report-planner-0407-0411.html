@@ -15,6 +15,7 @@
             --black-bg: #0d0d0d;
             --black-card: #1a1a1a;
             --danger: #ff4d4f;
+            --success: #52c41a;
         }
 
         body {
@@ -71,6 +72,20 @@
         .formula-box {
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(20, 20, 20, 1) 100%);
             border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .task-number {
+            width: 20px;
+            height: 20px;
+            background: var(--gold-primary);
+            color: black;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-right: 8px;
         }
 
         @media print { .no-print { display: none; } }
@@ -159,13 +174,12 @@
                     成交转化率我们每周都在评估，客单价（APL）每月也在评估。<strong>现在是我们必须高度重视存量客户、提升复购率的关键时机。</strong> 复购率的提升是规划师收入倍增的第三引擎。
                 </p>
             </div>
-            <!-- 背景装饰 -->
             <div class="absolute -right-10 -bottom-10 opacity-5">
                 <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
             </div>
         </div>
 
-        <!-- 新增模块：存量成交客户联系情况 -->
+        <!-- 存量成交客户联系现状模块 -->
         <div class="card mb-10 border-t-2 border-t-[#D4AF37]/50 bg-gradient-to-b from-[#1c1c1c] to-[#1a1a1a]">
             <h3 class="text-lg font-bold mb-6 flex items-center">
                 <span class="w-1 h-5 bg-[#D4AF37] mr-3"></span> 存量成交客户联系现状
@@ -287,42 +301,95 @@
         </div>
     </section>
 
-    <!-- 4、备注 -->
+    <!-- 4、本周任务 -->
     <section class="mb-16">
-        <h2 class="section-header gold-gradient-text">4、备注</h2>
-        <div class="card bg-gradient-to-br from-[#1a1111] to-[#0d0d0d] border-red-900/40 shadow-2xl shadow-red-900/10">
-            <!-- 林付贤备注 -->
-            <div class="mb-10 pb-8 border-b border-white/5">
-                <h3 class="text-xl font-bold mb-4 text-orange-500 uppercase tracking-wider">林付贤：获客效率反馈</h3>
-                <p class="text-sm text-gray-300 leading-relaxed font-bold">
-                    林付贤：4月的好友添加率是团队的平均水平的50%，本周需要把4月好友添加率提高到平均水平，避免影响下周新客户的发放。
-                </p>
+        <h2 class="section-header gold-gradient-text">4、本周任务</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 林付贤任务 -->
+            <div class="card border-l-4 border-l-orange-500">
+                <h3 class="text-xl font-bold mb-6 text-orange-500">林付贤</h3>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <span class="task-number">1</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            本周需要把4月好友添加率提高到平均水平，避免影响下周新客户的发放。
+                        </p>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="task-number">2</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            每天激活 <span class="text-orange-400 font-bold underline">1个</span> 存量客户。
+                        </p>
+                    </div>
+                </div>
             </div>
 
-            <!-- 江宁备注 -->
-            <div class="mb-10 pb-8 border-b border-white/5">
-                <h3 class="text-xl font-bold mb-4 text-green-500 uppercase tracking-wider">江宁：方案讲解进阶建议</h3>
-                <p class="text-sm text-gray-300 leading-relaxed font-bold">
-                    江宁：继续提高第一季度的方案讲解率，恢复到团队平均水平。
-                </p>
+            <!-- 江宁任务 -->
+            <div class="card border-l-4 border-l-green-500">
+                <h3 class="text-xl font-bold mb-6 text-green-500">江宁</h3>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <span class="task-number">1</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            每天激活 <span class="text-green-400 font-bold underline">2个</span> 存量客户。
+                        </p>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="task-number">2</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            继续提高第一季度的方案讲解率，恢复到团队平均水平。
+                        </p>
+                    </div>
+                </div>
             </div>
 
+            <!-- 马康挺任务 -->
+            <div class="card border-l-4 border-l-blue-500">
+                <h3 class="text-xl font-bold mb-6 text-blue-400">马康挺</h3>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <span class="task-number">1</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            本周一共激活 <span class="text-blue-400 font-bold underline">3个</span> 存量客户。
+                        </p>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="task-number">2</span>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            提高方案制作率水平。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 璐璐反馈 -->
+        <div class="mt-8 p-6 bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-xl">
+            <h3 class="text-sm font-bold gold-text mb-2 uppercase tracking-widest">团队执行反馈 (璐璐)</h3>
+            <p class="text-gray-400 text-sm italic">加快新规划师接客的节奏。</p>
+        </div>
+    </section>
+
+    <!-- 5、备注（深度复盘） -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">5、备注</h2>
+        <div class="card bg-gradient-to-br from-[#1a1111] to-[#0d0d0d] border-red-900/40">
             <h3 class="text-xl font-bold mb-6 text-red-500 uppercase tracking-wider">马康挺：方案制作率低原因深度分析</h3>
             
-            <div class="space-y-8 text-sm leading-relaxed">
+            <div class="space-y-8 text-sm leading-relaxed text-gray-300">
                 <div>
                     <h4 class="text-white font-bold mb-2 italic">1. 过早推产品，跳过需求挖掘</h4>
-                    <p class="text-gray-400 mb-4 font-light">得知姓名后直接发送产品资料，未了解家庭结构、收入预算及购买动机。</p>
-                    <div class="pl-4 border-l-2 border-red-500/30 space-y-2 text-gray-500 text-xs">
-                        <p><span class="text-gray-300">戴眼镜的胖子：</span>发完资料后客户仅回“我就先看看”，对话终结。</p>
-                        <p><span class="text-gray-300">纪念：</span>问完姓名直接发3图1链接，再无下文。</p>
-                        <p><span class="text-gray-300">廖华琼：</span>连续发4链接1张图，客户仅礼貌回复“好的”。</p>
+                    <p class="text-gray-400 mb-4">得知姓名后直接发送产品资料，未了解家庭结构、收入预算及购买动机。</p>
+                    <div class="pl-4 border-l-2 border-red-500/30 space-y-2 text-xs">
+                        <p><span class="text-red-400 font-bold">戴眼镜的胖子：</span>发完资料后客户仅回“我就先看看”，对话终结。</p>
+                        <p><span class="text-red-400 font-bold">纪念：</span>问完姓名直接发3图1链接，再无下文。</p>
+                        <p><span class="text-red-400 font-bold">廖华琼：</span>连续发4链接1张图，客户仅礼貌回复“好的”。</p>
                     </div>
                 </div>
 
                 <div>
                     <h4 class="text-white font-bold mb-2 italic">2. 单向输出过重，互动失衡</h4>
-                    <p class="text-gray-400 mb-2">规划师连续发 5-8 条消息，客户仅回 1-2 条。缺乏提问引导。</p>
+                    <p class="text-gray-400">规划师连续发 5-8 条消息，客户仅回 1-2 条。缺乏提问引导。</p>
                 </div>
 
                 <div>
@@ -333,21 +400,13 @@
                     </ul>
                 </div>
 
-                <!-- 核心判词 -->
-                <div class="mt-10 p-6 bg-red-600 rounded-lg text-black text-center shadow-lg shadow-red-500/20">
+                <!-- 判词 -->
+                <div class="mt-10 p-6 bg-red-600 rounded-lg text-black text-center">
                     <p class="text-xs font-bold uppercase tracking-widest mb-1 opacity-80">本周判词</p>
                     <p class="text-xl font-black italic">
                         “发资料等回复”，而不是“问问题做方案”
                     </p>
                 </div>
-            </div>
-
-            <!-- 新增：璐璐备注 -->
-            <div class="mt-10 pt-8 border-t border-white/5">
-                <h3 class="text-xl font-bold mb-4 gold-text uppercase tracking-wider">璐璐：团队执行反馈</h3>
-                <p class="text-sm text-gray-300 leading-relaxed font-bold">
-                    璐璐的备注：加快新规划师接客的节奏。
-                </p>
             </div>
         </div>
     </section>
