@@ -241,31 +241,42 @@ def search_bilibili(keyword):
 
 
 def search_douyin(keyword):
-    """搜索抖音（使用 App V2 search_notes 接口）"""
-    data = tikhub_get("/api/v1/douyin/app/v2/search_notes", {
-        "keyword": keyword,
-        "count": 15,
-    })
-    if not data:
+    """搜索抖音（使用 POST /douyin/search/fetch_general_search_v2）"""
+    url = f"{TIKHUB_BASE}/api/v1/douyin/search/fetch_general_search_v2"
+    try:
+        resp = requests.post(url, headers=HEADERS, json={
+            "keyword": keyword,
+            "offset": 0,
+            "count": 15,
+            "sort_type": "0",
+        }, timeout=30)
+        if resp.status_code != 200:
+            print(f"  API error {resp.status_code}: {resp.text[:300]}")
+            return []
+        data = resp.json()
+    except Exception as e:
+        print(f"  API request failed: {e}")
         return []
     raw_list = extract_items(data, ["data", "aweme_list", "items", "results"])
     items = []
     for item in raw_list[:15]:
         if not isinstance(item, dict):
             continue
-        # 逐层查找 aweme_info：item.aweme_info 或 item.data.aweme_info
+        # 抖音结构: item.data.aweme_info 或 item.aweme_info
         aweme = item.get("aweme_info")
-        if not aweme and isinstance(item.get("data"), dict):
-            aweme = item["data"].get("aweme_info", item["data"])
         if not aweme:
+            inner = item.get("data", {})
+            if isinstance(inner, dict):
+                aweme = inner.get("aweme_info", inner)
+        if not aweme or not isinstance(aweme, dict):
             aweme = item
         desc = aweme.get("desc", "") or aweme.get("title", "")
         stats = aweme.get("statistics", {})
-        url = aweme.get("share_url", "")
+        share_url = aweme.get("share_url", "")
         play = stats.get("play_count", 0) or aweme.get("play_count", 0)
         like = stats.get("digg_count", 0) or aweme.get("digg_count", 0)
         if desc:
-            items.append({"title": desc, "url": url, "play": play, "like": like})
+            items.append({"title": desc, "url": share_url, "play": play, "like": like})
     return items
 
 
@@ -277,25 +288,40 @@ def search_xiaohongshu(keyword):
     })
     if not data:
         return []
-    # 小红书嵌套: TikHub.data -> XHS.{data:{items/notes}}
+    # 深度遍历找到笔记列表
     d = data.get("data", {})
     raw_list = []
     if isinstance(d, dict):
+        # 可能的嵌套: data.data.items / data.data.notes / data.items
         inner = d.get("data", d)
         if isinstance(inner, dict):
             raw_list = (inner.get("items", []) or inner.get("notes", [])
-                        or inner.get("note_list", []))
+                        or inner.get("note_list", []) or inner.get("data", []))
+            # 如果 items 里每个元素有 note_card，说明找对了
             if not raw_list:
                 for v in inner.values():
-                    if isinstance(v, list) and v:
+                    if isinstance(v, list) and v and isinstance(v[0], dict):
                         raw_list = v
                         break
             print(f"    XHS inner keys: {list(inner.keys())[:10]}")
-            if raw_list and isinstance(raw_list[0], dict):
-                print(f"    XHS first item keys: {list(raw_list[0].keys())[:10]}")
-                print(f"    XHS first item: {json.dumps(raw_list[0], ensure_ascii=False)[:300]}")
         elif isinstance(inner, list):
             raw_list = inner
+        # 如果第一层 data 直接有 items
+        if not raw_list:
+            raw_list = d.get("items", []) or d.get("notes", [])
+    # 调试
+    if raw_list and isinstance(raw_list[0], dict):
+        print(f"    XHS found {len(raw_list)} items")
+        print(f"    XHS first item keys: {list(raw_list[0].keys())[:12]}")
+        print(f"    XHS first item: {json.dumps(raw_list[0], ensure_ascii=False)[:300]}")
+    else:
+        # 打印完整 data 结构帮助调试
+        print(f"    XHS no items found. data type: {type(d).__name__}")
+        if isinstance(d, dict):
+            for k, v in d.items():
+                vtype = type(v).__name__
+                vlen = len(v) if isinstance(v, (list, dict, str)) else ""
+                print(f"      data.{k}: {vtype}({vlen})")
     items = []
     for item in raw_list[:15]:
         if not isinstance(item, dict):
