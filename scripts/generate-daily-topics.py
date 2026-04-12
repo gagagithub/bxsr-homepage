@@ -29,6 +29,9 @@ DETAIL_FILE = os.path.join(PROJECT_ROOT, "daily-topics.html")
 TIKHUB_API_KEY = os.environ["TIKHUB_API_KEY"]
 TIKHUB_BASE = "https://api.tikhub.io"
 
+# 3个月前的时间戳，用于过滤太旧的内容
+THREE_MONTHS_AGO = int((TODAY - timedelta(days=90)).timestamp())
+
 HEADERS = {
     "Authorization": f"Bearer {TIKHUB_API_KEY}",
     "Content-Type": "application/json",
@@ -178,9 +181,14 @@ def search_xigua(keyword):
             vdata = item
         title = (vdata.get("title") or vdata.get("video_title")
                  or vdata.get("content") or vdata.get("desc", ""))
+        # 构建链接：优先 share_url，否则用 group_id 拼接
         url = vdata.get("share_url") or vdata.get("url") or vdata.get("article_url", "")
+        group_id = vdata.get("group_id") or vdata.get("gid", "")
+        if not url and group_id:
+            url = f"https://www.ixigua.com/{group_id}"
         play = vdata.get("play_count", 0) or vdata.get("video_watch_count", 0)
         like = vdata.get("digg_count", 0) or vdata.get("like_count", 0)
+        create_time = vdata.get("create_time", 0) or vdata.get("publish_time", 0)
         # 如果还是没 title，尝试从 itemDataStr 解析
         if not title:
             ids = item.get("itemDataStr", "")
@@ -189,10 +197,17 @@ def search_xigua(keyword):
                     ids_data = json.loads(ids)
                     title = ids_data.get("title") or ids_data.get("content", "")
                     url = url or ids_data.get("share_url", "")
+                    if not url:
+                        gid = ids_data.get("group_id") or ids_data.get("gid", "")
+                        if gid:
+                            url = f"https://www.ixigua.com/{gid}"
+                    play = play or ids_data.get("play_count", 0)
+                    create_time = create_time or ids_data.get("create_time", 0)
                 except (json.JSONDecodeError, TypeError):
                     pass
         if title:
-            items.append({"title": title, "url": url, "play": play, "like": like})
+            items.append({"title": title, "url": url, "play": play, "like": like,
+                          "create_time": create_time})
     return items
 
 
@@ -234,8 +249,10 @@ def search_bilibili(keyword):
         url = f"https://www.bilibili.com/video/{bvid}" if bvid else item.get("arcurl", "")
         play = item.get("play", 0) or item.get("view", 0)
         like = item.get("like", 0) or item.get("favorites", 0)
+        create_time = item.get("pubdate", 0) or item.get("senddate", 0)
         if title and item.get("type", "") != "bili_user":
-            items.append({"title": title, "url": url, "play": play, "like": like})
+            items.append({"title": title, "url": url, "play": play, "like": like,
+                          "create_time": create_time})
     return items
 
 
@@ -274,8 +291,10 @@ def search_douyin(keyword):
         share_url = aweme.get("share_url", "")
         play = stats.get("play_count", 0) or aweme.get("play_count", 0)
         like = stats.get("digg_count", 0) or aweme.get("digg_count", 0)
+        create_time = aweme.get("create_time", 0)
         if desc:
-            items.append({"title": desc, "url": share_url, "play": play, "like": like})
+            items.append({"title": desc, "url": share_url, "play": play, "like": like,
+                          "create_time": create_time})
     return items
 
 
@@ -338,8 +357,10 @@ def search_xiaohongshu(keyword):
                 like = int(float(like))
             except ValueError:
                 like = 0
+        create_time = note.get("time", 0) or note.get("last_update_time", 0)
         if title:
-            items.append({"title": title, "url": url, "play": 0, "like": like})
+            items.append({"title": title, "url": url, "play": 0, "like": like,
+                          "create_time": create_time})
     return items
 
 
@@ -368,8 +389,18 @@ def collect_all_data():
             for kw in search_cfg["keywords"]:
                 print(f"  [{topic['name']}] {PLATFORM_NAMES[platform]}: {kw}")
                 items = search_fn(kw)
-                print(f"    -> {len(items)} results")
+                print(f"    -> {len(items)} raw results")
                 for item in items:
+                    # 1) 最近3个月过滤
+                    ct = item.get("create_time", 0)
+                    if ct and ct < THREE_MONTHS_AGO:
+                        continue
+                    # 2) 西瓜视频：播放量 >= 10万
+                    if platform == "xigua" and item.get("play", 0) < 100000:
+                        continue
+                    # 3) 抖音/小红书：点赞 >= 200
+                    if platform in ("douyin", "xiaohongshu") and item.get("like", 0) < 200:
+                        continue
                     # 按标题去重
                     key = item["title"][:20]
                     if key not in seen_titles:
@@ -377,6 +408,7 @@ def collect_all_data():
                         merged.append(item)
                 time.sleep(0.5)
 
+            print(f"    After filter: {len(merged)} items")
             topic_data["platforms"][platform] = merged[:10]
 
         results.append(topic_data)
