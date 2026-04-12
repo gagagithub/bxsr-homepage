@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日热门话题 · 2026-04-12</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background: #f0f2f8;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1E2761 0%, #162050 60%, #028090 100%);
+      color: #fff;
+      padding: 28px 24px 24px;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      margin-bottom: 14px;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    header h1 { font-size: clamp(18px,3vw,26px); font-weight: 700; margin-bottom: 4px; }
+    .header-sub { font-size: 13px; opacity: .6; }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .topic-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .topic-header {
+      padding: 14px 20px;
+      font-size: 1.05em;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+      color: white;
+    }
+
+    .platform-section {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .platform-section:last-child { border-bottom: none; }
+
+    .platform-name {
+      font-size: 0.75em;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+    td {
+      padding: 5px 6px;
+      border-bottom: 1px solid #f8f8f8;
+      vertical-align: top;
+    }
+    td.rank { color: #ccc; width: 22px; font-weight: 600; text-align: center; }
+    tr:nth-child(-n+3) td.rank { color: #f59e0b; }
+    tr:last-child td { border-bottom: none; }
+
+    .tl {
+      color: #1E2761;
+      text-decoration: none;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .tl:hover { color: #028090; text-decoration: underline; }
+
+    .stats {
+      display: block;
+      color: #aaa;
+      font-size: 0.85em;
+      margin-top: 2px;
+    }
+
+    .empty {
+      padding: 20px;
+      text-align: center;
+      color: #ccc;
+      font-size: 0.9em;
+    }
+
+    footer {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.8em;
+      padding: 20px;
+    }
+
+    @media (max-width: 680px) {
+      .topic-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-btn" href="daily-topics-reports.html">&larr; 返回列表</a>
+    <h1>🔥 每日热门话题</h1>
+    <div class="header-sub">2026年4月12日 · B站 / 小红书 / 抖音 / 西瓜视频</div>
+  </div>
+</header>
+
+<main>
+  <div class="topic-grid">
+    
+    <div class="topic-card">
+      <div class="topic-header" style="background:#F59E0B;">
+        💰 存钱
+      </div>
+      <div class="empty">暂无数据</div>
+    </div>
+    <div class="topic-card">
+      <div class="topic-header" style="background:#6366F1;">
+        🏦 存款/定存/国债
+      </div>
+      <div class="empty">暂无数据</div>
+    </div>
+    <div class="topic-card">
+      <div class="topic-header" style="background:#EC4899;">
+        🛡️ 香港保险/分红险
+      </div>
+      <div class="empty">暂无数据</div>
+    </div>
+    <div class="topic-card">
+      <div class="topic-header" style="background:#10B981;">
+        🏡 养老
+      </div>
+      <div class="empty">暂无数据</div>
+    </div>
+  </div>
+</main>
+
+<footer>🔄 每日自动更新 · TikHub API</footer>
+
+</body>
+</html>
