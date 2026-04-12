@@ -38,42 +38,43 @@ HEADERS = {
 }
 
 # ── 话题/平台配置 ─────────────────────────────────────
+# 所有平台列表
+ALL_PLATFORMS = ["xigua", "bilibili", "douyin", "xiaohongshu"]
+
 TOPICS = [
     {
         "name": "存钱",
         "icon": "💰",
         "color": "#F59E0B",
-        "searches": [
-            {"keywords": ["存钱"], "platform": "xigua"},
-            {"keywords": ["存钱"], "platform": "bilibili"},
-        ],
+        "keywords": ["存钱"],
     },
     {
         "name": "存款/定存/国债",
         "icon": "🏦",
         "color": "#6366F1",
-        "searches": [
-            {"keywords": ["存款", "定存", "国债"], "platform": "xigua"},
-        ],
+        "keywords": ["存款", "定存", "国债"],
     },
     {
         "name": "香港保险/分红险",
         "icon": "🛡️",
         "color": "#EC4899",
-        "searches": [
-            {"keywords": ["香港保险", "分红险"], "platform": "douyin"},
-            {"keywords": ["香港保险", "分红险"], "platform": "xiaohongshu"},
-        ],
+        "keywords": ["香港保险", "分红险"],
     },
     {
         "name": "养老",
         "icon": "🏡",
         "color": "#10B981",
-        "searches": [
-            {"keywords": ["养老"], "platform": "xigua"},
-        ],
+        "keywords": ["养老"],
     },
 ]
+
+# 各平台筛选标准
+PLATFORM_FILTERS = {
+    "xigua":       lambda item: item.get("comment", 0) >= 100,
+    "bilibili":    lambda item: item.get("play", 0) >= 10000,
+    "douyin":      lambda item: item.get("like", 0) >= 200,
+    "xiaohongshu": lambda item: item.get("like", 0) >= 200,
+}
 
 PLATFORM_NAMES = {
     "xigua": "西瓜视频",
@@ -374,20 +375,20 @@ SEARCH_FUNCS = {
 
 
 def collect_all_data():
-    """按话题/平台/关键词组合搜索，返回结构化数据。"""
+    """每个话题搜索全部4个平台，按平台标准筛选。"""
     results = []
 
     for topic in TOPICS:
         topic_data = {"name": topic["name"], "icon": topic["icon"],
                       "color": topic["color"], "platforms": {}}
 
-        for search_cfg in topic["searches"]:
-            platform = search_cfg["platform"]
+        for platform in ALL_PLATFORMS:
             search_fn = SEARCH_FUNCS[platform]
+            quality_filter = PLATFORM_FILTERS[platform]
             merged = []
             seen_titles = set()
 
-            for kw in search_cfg["keywords"]:
+            for kw in topic["keywords"]:
                 print(f"  [{topic['name']}] {PLATFORM_NAMES[platform]}: {kw}")
                 items = search_fn(kw)
                 print(f"    -> {len(items)} raw results")
@@ -396,11 +397,8 @@ def collect_all_data():
                     ct = item.get("create_time", 0)
                     if ct and ct < THREE_MONTHS_AGO:
                         continue
-                    # 2) 西瓜视频：评论数 >= 100
-                    if platform == "xigua" and item.get("comment", 0) < 100:
-                        continue
-                    # 3) 抖音/小红书：点赞 >= 200
-                    if platform in ("douyin", "xiaohongshu") and item.get("like", 0) < 200:
+                    # 2) 按平台质量标准过滤
+                    if not quality_filter(item):
                         continue
                     # 按标题去重
                     key = item["title"][:20]
