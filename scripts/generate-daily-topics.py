@@ -101,121 +101,155 @@ def tikhub_get(path, params=None):
     try:
         resp = requests.get(url, headers=HEADERS, params=params, timeout=30)
         if resp.status_code == 200:
-            return resp.json()
-        print(f"  API error {resp.status_code}: {resp.text[:300]}")
+            data = resp.json()
+            # 调试：打印响应结构的顶层 keys
+            if isinstance(data, dict):
+                print(f"    Response keys: {list(data.keys())}")
+                d = data.get("data")
+                if isinstance(d, dict):
+                    print(f"    data keys: {list(d.keys())[:10]}")
+            return data
+        print(f"  API error {resp.status_code}: {resp.text[:500]}")
         return None
     except Exception as e:
         print(f"  API request failed: {e}")
         return None
 
 
+def extract_items(data, list_keys):
+    """从嵌套的 API 响应中提取列表数据。
+    list_keys: 尝试的 key 路径列表，按优先级排列。"""
+    if not data or not isinstance(data, dict):
+        return []
+    d = data.get("data", data)
+    if isinstance(d, dict):
+        for key in list_keys:
+            val = d.get(key)
+            if isinstance(val, list) and val:
+                return val
+        # 递归查找第一个非空列表
+        for key, val in d.items():
+            if isinstance(val, list) and val and isinstance(val[0], dict):
+                print(f"    Found list in data.{key} ({len(val)} items)")
+                return val
+    if isinstance(d, list):
+        return d
+    return []
+
+
 def search_xigua(keyword):
     """搜索西瓜视频"""
-    data = tikhub_get("/api/v1/xigua/app/v2/search_video", {"keyword": keyword})
+    data = tikhub_get("/api/v1/xigua/app/v2/search_video", {
+        "keyword": keyword,
+        "order_type": "play_count",
+    })
     if not data:
         return []
+    raw_list = extract_items(data, ["data", "video_list", "items"])
     items = []
-    # 尝试从不同层级提取数据
-    raw_list = (data.get("data", {}).get("data", [])
-                or data.get("data", {}).get("video_list", [])
-                or data.get("data", []))
-    if isinstance(raw_list, dict):
-        raw_list = raw_list.get("data", [])
     for item in raw_list[:15]:
-        if isinstance(item, dict):
-            title = (item.get("title") or item.get("video_title")
-                     or item.get("content", ""))
-            url = item.get("share_url") or item.get("url") or ""
-            play = item.get("play_count", 0) or item.get("video_watch_count", 0)
-            like = item.get("digg_count", 0) or item.get("like_count", 0)
-            if title:
-                items.append({"title": title, "url": url, "play": play, "like": like})
+        if not isinstance(item, dict):
+            continue
+        title = (item.get("title") or item.get("video_title")
+                 or item.get("content") or item.get("desc", ""))
+        url = item.get("share_url") or item.get("url") or ""
+        play = item.get("play_count", 0) or item.get("video_watch_count", 0)
+        like = item.get("digg_count", 0) or item.get("like_count", 0)
+        if title:
+            items.append({"title": title, "url": url, "play": play, "like": like})
     return items
 
 
 def search_bilibili(keyword):
     """搜索B站"""
     data = tikhub_get("/api/v1/bilibili/web/fetch_general_search", {
-        "keyword": keyword, "page": 1, "page_size": 15
+        "keyword": keyword,
+        "order": "totalrank",
+        "page": 1,
+        "page_size": 15,
     })
     if not data:
         return []
+    raw_list = extract_items(data, ["result", "data", "items"])
     items = []
-    raw_list = (data.get("data", {}).get("result", [])
-                or data.get("data", {}).get("data", [])
-                or data.get("data", []))
-    if isinstance(raw_list, dict):
-        raw_list = raw_list.get("result", [])
     for item in raw_list[:15]:
-        if isinstance(item, dict):
-            title = (item.get("title") or item.get("name") or "")
-            # 清除B站搜索结果中的高亮标签
-            title = title.replace('<em class="keyword">', '').replace('</em>', '')
-            bvid = item.get("bvid", "")
-            url = f"https://www.bilibili.com/video/{bvid}" if bvid else item.get("arcurl", "")
-            play = item.get("play", 0) or item.get("view", 0)
-            like = item.get("like", 0) or item.get("favorites", 0)
-            if title and item.get("type", "") != "bili_user":
-                items.append({"title": title, "url": url, "play": play, "like": like})
+        if not isinstance(item, dict):
+            continue
+        title = (item.get("title") or item.get("name") or "")
+        # 清除B站搜索结果中的高亮标签
+        title = title.replace('<em class="keyword">', '').replace('</em>', '')
+        bvid = item.get("bvid", "")
+        url = f"https://www.bilibili.com/video/{bvid}" if bvid else item.get("arcurl", "")
+        play = item.get("play", 0) or item.get("view", 0)
+        like = item.get("like", 0) or item.get("favorites", 0)
+        if title and item.get("type", "") != "bili_user":
+            items.append({"title": title, "url": url, "play": play, "like": like})
     return items
 
 
 def search_douyin(keyword):
-    """搜索抖音"""
-    data = tikhub_get("/api/v1/douyin/app/v1/fetch_general_search_result", {
-        "keyword": keyword
+    """搜索抖音（使用 App V3 接口）"""
+    data = tikhub_get("/api/v1/douyin/app/v3/fetch_general_search_result", {
+        "keyword": keyword,
+        "offset": 0,
+        "count": 15,
     })
     if not data:
         return []
+    raw_list = extract_items(data, ["data", "aweme_list", "items"])
     items = []
-    raw_list = (data.get("data", {}).get("data", [])
-                or data.get("data", []))
-    if isinstance(raw_list, dict):
-        raw_list = raw_list.get("data", [])
     for item in raw_list[:15]:
-        if isinstance(item, dict):
-            # 抖音搜索结果可能嵌套在 aweme_info 中
-            aweme = item.get("aweme_info", item)
-            desc = aweme.get("desc", "") or aweme.get("title", "")
-            stats = aweme.get("statistics", {})
-            url = aweme.get("share_url", "")
-            play = stats.get("play_count", 0) or aweme.get("play_count", 0)
-            like = stats.get("digg_count", 0) or aweme.get("digg_count", 0)
-            if desc:
-                items.append({"title": desc, "url": url, "play": play, "like": like})
+        if not isinstance(item, dict):
+            continue
+        # 抖音搜索结果可能嵌套在 aweme_info 中
+        aweme = item.get("aweme_info", item)
+        desc = aweme.get("desc", "") or aweme.get("title", "")
+        stats = aweme.get("statistics", {})
+        url = aweme.get("share_url", "")
+        play = stats.get("play_count", 0) or aweme.get("play_count", 0)
+        like = stats.get("digg_count", 0) or aweme.get("digg_count", 0)
+        if desc:
+            items.append({"title": desc, "url": url, "play": play, "like": like})
     return items
 
 
 def search_xiaohongshu(keyword):
     """搜索小红书"""
+    # 先尝试 V2，失败则回退 V1
     data = tikhub_get("/api/v1/xiaohongshu/web_v2/fetch_search_notes", {
-        "keywords": keyword, "sort_type": "popularity_descending"
+        "keywords": keyword,
+        "sort_type": "popularity_descending",
+        "note_type": "0",
     })
     if not data:
+        # 回退到 V1 接口
+        print(f"    Falling back to V1 API...")
+        data = tikhub_get("/api/v1/xiaohongshu/web/search_notes", {
+            "keyword": keyword,
+            "sort": "popularity_descending",
+        })
+    if not data:
         return []
+    raw_list = extract_items(data, ["items", "notes", "data", "note_list"])
     items = []
-    raw_list = (data.get("data", {}).get("items", [])
-                or data.get("data", {}).get("notes", [])
-                or data.get("data", {}).get("data", [])
-                or data.get("data", []))
-    if isinstance(raw_list, dict):
-        raw_list = raw_list.get("items", []) or raw_list.get("notes", [])
     for item in raw_list[:15]:
-        if isinstance(item, dict):
-            note = item.get("note_card", item)
-            title = note.get("display_title") or note.get("title") or note.get("desc", "")
-            note_id = note.get("note_id") or item.get("id", "")
-            url = f"https://www.xiaohongshu.com/explore/{note_id}" if note_id else ""
-            interact = note.get("interact_info", {})
-            like = interact.get("liked_count", 0) or note.get("liked_count", 0)
-            if isinstance(like, str):
-                like = like.replace("万", "0000")
-                try:
-                    like = int(float(like))
-                except ValueError:
-                    like = 0
-            if title:
-                items.append({"title": title, "url": url, "play": 0, "like": like})
+        if not isinstance(item, dict):
+            continue
+        note = item.get("note_card", item)
+        title = (note.get("display_title") or note.get("title")
+                 or note.get("desc") or note.get("name", ""))
+        note_id = note.get("note_id") or item.get("id", "")
+        url = f"https://www.xiaohongshu.com/explore/{note_id}" if note_id else ""
+        interact = note.get("interact_info", {})
+        like = interact.get("liked_count", 0) or note.get("liked_count", 0)
+        if isinstance(like, str):
+            like = like.replace("万", "0000")
+            try:
+                like = int(float(like))
+            except ValueError:
+                like = 0
+        if title:
+            items.append({"title": title, "url": url, "play": 0, "like": like})
     return items
 
 
