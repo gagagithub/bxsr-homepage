@@ -241,13 +241,30 @@ def search_bilibili(keyword):
 
 
 def search_douyin(keyword):
-    """搜索抖音（使用 App V2 接口）"""
-    resp = tikhub_get("/api/v1/douyin/app/v2/fetch_general_search_result", {
-        "keyword": keyword,
-        "offset": 0,
-        "count": 15,
-        "sort_type": 0,
-    })
+    """搜索抖音（使用搜索 V2 接口，POST 方法）"""
+    url = f"{TIKHUB_BASE}/api/v1/douyin/search/fetch_general_search_v2"
+    try:
+        resp = requests.post(url, headers=HEADERS, json={
+            "keyword": keyword,
+            "offset": 0,
+            "count": 15,
+            "sort_type": 0,
+        }, timeout=30)
+        if resp.status_code == 200:
+            data = resp.json()
+            if isinstance(data, dict):
+                print(f"    Response keys: {list(data.keys())}")
+                d = data.get("data")
+                if isinstance(d, dict):
+                    print(f"    data keys: {list(d.keys())[:10]}")
+            resp_data = data
+        else:
+            print(f"  API error {resp.status_code}: {resp.text[:500]}")
+            resp_data = None
+    except Exception as e:
+        print(f"  API request failed: {e}")
+        resp_data = None
+    resp = resp_data
     if not resp:
         return []
     raw_list = extract_items(resp, ["data", "aweme_list", "items", "results"])
@@ -271,12 +288,12 @@ def search_douyin(keyword):
 
 
 def search_xiaohongshu(keyword):
-    """搜索小红书（使用 Web V2 接口）"""
-    data = tikhub_get("/api/v1/xiaohongshu/web_v2/fetch_search_notes", {
-        "keywords": keyword,
+    """搜索小红书（使用 App V2 接口）"""
+    data = tikhub_get("/api/v1/xiaohongshu/app_v2/search_notes", {
+        "keyword": keyword,
         "page": 1,
         "sort_type": "general",
-        "note_type": "0",
+        "note_type": "不限",
     })
     if not data:
         return []
