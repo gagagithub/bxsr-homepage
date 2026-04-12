@@ -1,0 +1,41 @@
+name: 每日热门话题 - TikHub 自动采集
+
+on:
+  schedule:
+    # 每天北京时间 10:00 (UTC 02:00) 运行
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # 支持手动触发（方便测试）
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate daily topics report
+        env:
+          TIKHUB_API_KEY: ${{ secrets.TIKHUB_API_KEY }}
+        run: python scripts/generate-daily-topics.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          DATE=$(TZ='Asia/Shanghai' date +%Y-%m-%d)
+          git diff --staged --quiet || git commit -m "auto: 每日热门话题 ${DATE}"
+          git push
