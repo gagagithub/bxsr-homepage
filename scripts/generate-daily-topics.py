@@ -189,6 +189,11 @@ def search_xigua(keyword):
         play = vdata.get("play_count", 0) or vdata.get("video_watch_count", 0)
         like = vdata.get("digg_count", 0) or vdata.get("like_count", 0)
         create_time = vdata.get("create_time", 0) or vdata.get("publish_time", 0)
+        # 调试：打印所有数值字段帮助发现可用指标
+        if not items:  # 只打印第一条
+            num_fields = {k: v for k, v in vdata.items()
+                          if isinstance(v, (int, float)) and v > 0}
+            print(f"    Xigua numeric fields: {num_fields}")
         # 如果还是没 title，尝试从 itemDataStr 解析
         if not title:
             ids = item.get("itemDataStr", "")
