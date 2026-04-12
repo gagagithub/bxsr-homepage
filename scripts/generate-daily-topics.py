@@ -241,42 +241,24 @@ def search_bilibili(keyword):
 
 
 def search_douyin(keyword):
-    """搜索抖音（使用搜索 V2 接口，POST 方法）"""
-    url = f"{TIKHUB_BASE}/api/v1/douyin/search/fetch_general_search_v2"
-    try:
-        resp = requests.post(url, headers=HEADERS, json={
-            "keyword": keyword,
-            "offset": 0,
-            "count": 15,
-            "sort_type": "0",
-        }, timeout=30)
-        if resp.status_code == 200:
-            data = resp.json()
-            if isinstance(data, dict):
-                print(f"    Response keys: {list(data.keys())}")
-                d = data.get("data")
-                if isinstance(d, dict):
-                    print(f"    data keys: {list(d.keys())[:10]}")
-            resp_data = data
-        else:
-            print(f"  API error {resp.status_code}: {resp.text[:500]}")
-            resp_data = None
-    except Exception as e:
-        print(f"  API request failed: {e}")
-        resp_data = None
-    resp = resp_data
-    if not resp:
+    """搜索抖音（使用 App V2 search_notes 接口）"""
+    data = tikhub_get("/api/v1/douyin/app/v2/search_notes", {
+        "keyword": keyword,
+        "count": 15,
+    })
+    if not data:
         return []
-    raw_list = extract_items(resp, ["data", "aweme_list", "items", "results"])
+    raw_list = extract_items(data, ["data", "aweme_list", "items", "results"])
     items = []
     for item in raw_list[:15]:
         if not isinstance(item, dict):
             continue
-        # 抖音搜索结果可能嵌套在 aweme_info 中
-        aweme = item.get("aweme_info", item)
-        # 也可能在 item.data 里
-        if not aweme.get("desc") and isinstance(item.get("data"), dict):
-            aweme = item["data"]
+        # 逐层查找 aweme_info：item.aweme_info 或 item.data.aweme_info
+        aweme = item.get("aweme_info")
+        if not aweme and isinstance(item.get("data"), dict):
+            aweme = item["data"].get("aweme_info", item["data"])
+        if not aweme:
+            aweme = item
         desc = aweme.get("desc", "") or aweme.get("title", "")
         stats = aweme.get("statistics", {})
         url = aweme.get("share_url", "")
@@ -288,8 +270,8 @@ def search_douyin(keyword):
 
 
 def search_xiaohongshu(keyword):
-    """搜索小红书（使用 App V2 接口）"""
-    data = tikhub_get("/api/v1/xiaohongshu/app_v2/search_notes", {
+    """搜索小红书（使用 App 接口）"""
+    data = tikhub_get("/api/v1/xiaohongshu/app/search_notes", {
         "keyword": keyword,
         "page": 1,
     })
