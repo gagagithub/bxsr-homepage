@@ -241,11 +241,12 @@ def search_bilibili(keyword):
 
 
 def search_douyin(keyword):
-    """搜索抖音（使用 App V3 接口）"""
-    resp = tikhub_get("/api/v1/douyin/app/v3/fetch_general_search_result", {
+    """搜索抖音（使用 App V2 接口）"""
+    resp = tikhub_get("/api/v1/douyin/app/v2/fetch_general_search_result", {
         "keyword": keyword,
         "offset": 0,
         "count": 15,
+        "sort_type": 0,
     })
     if not resp:
         return []
@@ -270,10 +271,12 @@ def search_douyin(keyword):
 
 
 def search_xiaohongshu(keyword):
-    """搜索小红书"""
-    # 直接用 V1 接口（V2 经常报 400）
-    data = tikhub_get("/api/v1/xiaohongshu/web/search_notes", {
-        "keyword": keyword,
+    """搜索小红书（使用 Web V2 接口）"""
+    data = tikhub_get("/api/v1/xiaohongshu/web_v2/fetch_search_notes", {
+        "keywords": keyword,
+        "page": 1,
+        "sort_type": "general",
+        "note_type": "0",
     })
     if not data:
         return []
@@ -291,6 +294,9 @@ def search_xiaohongshu(keyword):
                         raw_list = v
                         break
             print(f"    XHS inner keys: {list(inner.keys())[:10]}")
+            if raw_list and isinstance(raw_list[0], dict):
+                print(f"    XHS first item keys: {list(raw_list[0].keys())[:10]}")
+                print(f"    XHS first item: {json.dumps(raw_list[0], ensure_ascii=False)[:300]}")
         elif isinstance(inner, list):
             raw_list = inner
     items = []
