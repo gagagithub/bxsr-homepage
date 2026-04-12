@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 编辑团队周报 (04.06-04.10)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F5E6AD;
+            --black-bg: #0d0d0d;
+            --black-card: #1a1a1a;
+            --danger: #ff4d4f;
+            --success: #52c41a;
+            --warning: #faad14;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .gold-text { color: var(--gold-primary); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header {
+            border-left: 4px solid var(--gold-primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .card {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .progress-container {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            transition: width 1s ease-in-out;
+        }
+
+        .data-table th {
+            color: var(--gold-primary);
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-size: 0.8rem;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+        }
+
+        .quality-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .excellent { background: rgba(82, 196, 26, 0.1); color: #52c41a; border: 1px solid #52c41a; }
+        .qualified { background: rgba(250, 173, 20, 0.1); color: #faad14; border: 1px solid #faad14; }
+        .failed { background: rgba(255, 77, 79, 0.1); color: #ff4d4f; border: 1px solid #ff4d4f; }
+
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+    <!-- 顶栏 -->
+    <header class="flex justify-between items-center mb-16 no-print">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+            <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+        </div>
+        <div class="text-right text-sm text-gray-500">
+            编辑团队周报 | 2026.04.06 - 04.10
+        </div>
+    </header>
+
+    <!-- 1. 概览篇 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">1、概览篇</h2>
+        
+        <!-- 双线索达成对比 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 编辑线索 (独立) -->
+            <div class="card flex flex-col justify-center border-l-4 border-l-red-500 shadow-xl shadow-red-500/5">
+                <div class="flex justify-between items-end mb-2">
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">编辑内容线索达成</p>
+                        <p class="text-4xl font-bold text-red-500">7 <span class="text-lg text-gray-500">/ 30</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-red-500 font-bold">达成率：23.3%</p>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar bg-red-500 shadow-lg shadow-red-500/50" style="width: 23.3%"></div>
+                </div>
+                <p class="text-[10px] text-gray-600 mt-2 italic">评价：完成情况非常糟糕，需严正复盘</p>
+            </div>
+
+            <!-- 极短视频线索 (独立) -->
+            <div class="card flex flex-col justify-center border-l-4 border-l-green-500 shadow-xl shadow-green-500/5">
+                <div class="flex justify-between items-end mb-2">
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">极短视频线索达成</p>
+                        <p class="text-4xl font-bold text-green-500">20 <span class="text-lg text-gray-500">/ 30</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-green-500 font-bold">达成率：66.7%</p>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar bg-green-500 shadow-lg shadow-green-500/50" style="width: 66.7%"></div>
+                </div>
+                <p class="text-[10px] text-gray-600 mt-2 italic">评价：表现稳健，距离月度目标一步之遥</p>
+            </div>
+        </div>
+
+        <!-- 质量概括 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card text-center">
+                <p class="text-[10px] text-gray-500 mb-2">干货视频合格率</p>
+                <p class="text-2xl font-bold gold-text">75%</p>
+            </div>
+            <div class="card text-center">
+                <p class="text-[10px] text-gray-500 mb-2">视频剪辑优良率</p>
+                <p class="text-2xl font-bold gold-text">91%</p>
+            </div>
+            <div class="card text-center border-t-2 border-t-red-900/40">
+                <p class="text-[10px] text-gray-500 mb-2">封面制作优良率</p>
+                <p class="text-2xl font-bold text-red-500">30%</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2、内容产出篇 (完播率监控) -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">2、内容产出篇 (完播率重点监控)</h2>
+        <div class="card overflow-x-auto">
+            <table class="w-full data-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>编辑</th>
+                        <th>核心标题内容</th>
+                        <th>完播率</th>
+                        <th>质量判定</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 优秀内容罗列 (>12%) -->
+                    <tr class="bg-green-500/5">
+                        <td>4/8</td>
+                        <td>崔伟</td>
+                        <td class="font-bold">丈夫意外身故，妻子去银行取钱，才发现这笔钱根本动不了？！</td>
+                        <td class="font-mono font-bold text-green-500">13.95%</td>
+                        <td><span class="quality-badge excellent">优秀</span></td>
+                    </tr>
+                    <tr class="bg-green-500/5">
+                        <td>4/8</td>
+                        <td>军伟</td>
+                        <td class="font-bold">30万最新存钱攻略，锁利5.6%！每年到手3万6，一辈子吃息！</td>
+                        <td class="font-mono font-bold text-green-500">12.95%</td>
+                        <td><span class="quality-badge excellent">优秀</span></td>
+                    </tr>
+                    <tr class="bg-green-500/5">
+                        <td>4/9</td>
+                        <td>小雪</td>
+                        <td class="font-bold">银行存钱有讲究！银行存钱4个注意事项+3种存钱法，看完少踩坑</td>
+                        <td class="font-mono font-bold text-green-500">12.82%</td>
+                        <td><span class="quality-badge excellent">优秀</span></td>
+                    </tr>
+                    <!-- 分割线 -->
+                    <tr><td colspan="5" class="py-1 bg-white/5 opacity-10"></td></tr>
+                    <!-- 不合格内容罗列 (<6%) -->
+                    <tr class="bg-red-500/5">
+                        <td>4/10</td>
+                        <td>陈鑫</td>
+                        <td>安盛盛利2（2年缴）全面测评！2026最值得买的储蓄险？</td>
+                        <td class="font-mono text-red-500">5.93%</td>
+                        <td><span class="quality-badge failed">不合格</span></td>
+                    </tr>
+                    <tr class="bg-red-500/5">
+                        <td>4/10</td>
+                        <td>小雪</td>
+                        <td>4月17日停售！复利3.5%的全保证储蓄险要绝版了！</td>
+                        <td class="font-mono text-red-500">5.75%</td>
+                        <td><span class="quality-badge failed">不合格</span></td>
+                    </tr>
+                    <tr class="bg-red-500/5">
+                        <td>4/8</td>
+                        <td>陈鑫</td>
+                        <td>房贷、辅导班、生活费...如果收入突然暂停，你家的存款能撑几个月？</td>
+                        <td class="font-mono text-red-500">5.03%</td>
+                        <td><span class="quality-badge failed">不合格</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-[10px] text-gray-600 mt-4 italic">* 以上仅展示 4/7-4/10 期间大于 12%（优秀）及低于 6%（不合格）的内容明细。</p>
+        </div>
+    </section>
+
+    <!-- 3、极短视频篇 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">3、极短视频篇 (核心指标监控)</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card text-center">
+                <p class="text-xs text-gray-500 mb-1 uppercase">最高播放值</p>
+                <p class="text-3xl font-black gold-text">7985</p>
+                <span class="quality-badge excellent">优秀</span>
+            </div>
+            <div class="card lg:col-span-3">
+                <div class="flex justify-between items-center mb-4">
+                    <p class="text-sm font-bold">极短视频质量分布统计 (判定标准: >200 合格, >1000 优秀)</p>
+                </div>
+                <div class="h-32">
+                    <canvas id="ultraShortChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据卡片矩阵 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <div class="card p-4 text-center border-white/5"><p class="text-xs text-gray-500 mb-1">#1</p><p class="font-bold">103</p><span class="text-[8px] text-red-500">FAILED</span></div>
+            <div class="card p-4 text-center bg-white/5"><p class="text-xs text-gray-500 mb-1">#2</p><p class="font-bold gold-text">692</p><span class="text-[8px] text-yellow-500">PASS</span></div>
+            <div class="card p-4 text-center border-white/5"><p class="text-xs text-gray-500 mb-1">#3</p><p class="font-bold">83</p><span class="text-[8px] text-red-500">FAILED</span></div>
+            <div class="card p-4 text-center bg-gold-900/10 border-gold-500/30"><p class="text-xs text-gray-500 mb-1">#4</p><p class="font-bold text-green-500">7985</p><span class="text-[8px] text-green-500">BEST</span></div>
+            <div class="card p-4 text-center border-white/5"><p class="text-xs text-gray-500 mb-1">#5</p><p class="font-bold">114</p><span class="text-[8px] text-red-500">FAILED</span></div>
+            <div class="card p-4 text-center border-white/5"><p class="text-xs text-gray-500 mb-1">#6</p><p class="font-bold">100</p><span class="text-[8px] text-red-500">FAILED</span></div>
+            <div class="card p-4 text-center bg-white/5"><p class="text-xs text-gray-500 mb-1">#7</p><p class="font-bold gold-text">540</p><span class="text-[8px] text-yellow-500">PASS</span></div>
+        </div>
+    </section>
+
+    <!-- 4、备注 (深度复盘) -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">4、备注</h2>
+        <div class="card bg-gradient-to-br from-[#1a1111] to-[#0d0d0d] border-red-900/40">
+            <h3 class="text-xl font-bold mb-6 text-red-500 italic">本周复盘警示：</h3>
+            
+            <div class="space-y-8 text-sm leading-relaxed">
+                <div class="mt-10 p-6 bg-red-600 rounded-lg text-black text-center">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-1">判词</p>
+                    <p class="text-xl font-black italic">
+                        “留住人（完播率）是基本功，带回人（线索数）是硬本事；跌破 6% 是严重的制作事故”
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-10 no-print border-t border-white/5">
+        <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition">打印并导出编辑报告</button>
+        <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase">保心上人，保护你的心上人。 · 编辑团队复盘</p>
+    </footer>
+
+    <script>
+        // 极短视频图表
+        const ctxUltra = document.getElementById('ultraShortChart').getContext('2d');
+        new Chart(ctxUltra, {
+            type: 'bar',
+            data: {
+                labels: ['优秀 (>1000)', '合格 (>200)', '不合格'],
+                datasets: [{
+                    data: [1, 2, 4],
+                    backgroundColor: ['#52c41a', '#faad14', '#ff4d4f'],
+                    borderRadius: 8,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#666' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', stepSize: 1 } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

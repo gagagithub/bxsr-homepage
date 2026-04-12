@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 人事行政周报 (04.07-04.10)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F5E6AD;
+            --black-bg: #0d0d0d;
+            --black-card: #1a1a1a;
+            --accent-blue: #4A90E2;
+            --danger-red: #ff4d4f;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .gold-text { color: var(--gold-primary); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header {
+            border-left: 4px solid var(--gold-primary);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .card {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .step-pill {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 0.75rem;
+            color: var(--gold-primary);
+        }
+
+        .ai-suggestion-card {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(20, 20, 20, 1) 100%);
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .strategy-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(10, 10, 10, 1) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+    <!-- 顶栏 -->
+    <header class="flex justify-between items-center mb-12 no-print">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+            <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+        </div>
+        <div class="text-right text-sm text-gray-500">
+            人事行政周报 | 2026.04.07 - 04.10
+        </div>
+    </header>
+
+    <!-- 1、招聘进展（漏斗可视化） -->
+    <section class="mb-12">
+        <h2 class="section-header gold-gradient-text">1、规划师招聘漏斗</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="card lg:col-span-2">
+                <p class="text-sm font-bold mb-6">本周简历转化效能 (306 简历池)</p>
+                <div class="h-64">
+                    <canvas id="recruitmentFunnel"></canvas>
+                </div>
+            </div>
+            <div class="card flex flex-col justify-around py-4">
+                <div class="text-center">
+                    <p class="text-xs text-gray-500 mb-1 uppercase">意向沟通率</p>
+                    <p class="text-3xl font-bold">24.2%</p>
+                </div>
+                <div class="h-[1px] bg-white/5 my-2"></div>
+                <div class="text-center">
+                    <p class="text-xs text-gray-500 mb-1 uppercase">简历有效率</p>
+                    <p class="text-3xl font-bold gold-text">5.2%</p>
+                </div>
+                <div class="h-[1px] bg-white/5 my-2"></div>
+                <div class="text-center">
+                    <p class="text-xs text-gray-500 mb-1 uppercase">面试邀约率</p>
+                    <p class="text-3xl font-bold text-[#ff4d4f]">0.03%</p>
+                    <p class="text-[10px] text-red-500 mt-1 italic font-bold">有点偏低的厉害</p>
+                </div>
+                <div class="h-[1px] bg-white/5 my-2"></div>
+                <div class="text-center">
+                    <p class="text-xs text-gray-500 mb-1 uppercase">本周初面人数</p>
+                    <p class="text-3xl font-bold">1</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2、财务与薪资核对 -->
+    <section class="mb-12">
+        <h2 class="section-header gold-gradient-text">2、财务与薪资结算</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card border-t-2 border-t-[#D4AF37]/30">
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <span class="mr-2">💰</span> 考勤与绩效结算
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">●</span>
+                        <span>完成考勤核对制表，并逐一完成全员确认。</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">●</span>
+                        <span>完成本月绩效表及工资单制作。</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="card border-t-2 border-t-[#D4AF37]/30">
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <span class="mr-2">📑</span> 佣金与对账事宜
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">●</span>
+                        <span>对接代账公司开票。</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">●</span>
+                        <span>完成国内险及港险对账单复核，并与规划师完成佣金明细核对。</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3、账号与合规运营 -->
+    <section class="mb-12">
+        <h2 class="section-header gold-gradient-text">3、账号运营与合规</h2>
+        <div class="card">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+                        <span class="step-pill">微信公众号</span> 崔伟说养老
+                    </h4>
+                    <p class="text-sm text-gray-400">完成认证信息核对与资料完善，目前认证流程顺利推进中。</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+                        <span class="step-pill bg-blue-900/20 border-blue-500 text-blue-400">抖音</span> 崔伟说投资
+                    </h4>
+                    <p class="text-sm text-gray-400">完成企业号注销，同步开启理财师黄V认证注册，已提交资质材料申请。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4、行政与 AI 提效复盘 -->
+    <section class="mb-12">
+        <h2 class="section-header gold-gradient-text">4、行政与提效复盘</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 其它常规 -->
+            <div class="card border-l-4 border-l-gray-600">
+                <h3 class="text-lg font-bold mb-4">其它行政事务</h3>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li>🎁 <strong>客户关怀：</strong>完成客户生日礼寄送及签收闭环。</li>
+                    <li>⚖️ <strong>法务跟进：</strong>对接法院沟通租金押金案，完成强制执行材料准备与寄送。</li>
+                </ul>
+            </div>
+
+            <!-- AI 提效专栏 -->
+            <div class="card ai-suggestion-card">
+                <h3 class="text-lg font-bold mb-4 text-[#4A90E2] flex items-center gap-2">
+                    <span>⚡</span> AI 提效建议（下周重点）
+                </h3>
+                <div class="space-y-5 text-xs leading-relaxed">
+                    <div>
+                        <p class="font-bold text-gray-200 text-sm mb-1">1. 考勤数据智能化核对</p>
+                        <p class="text-gray-400">
+                            考勤数据的核对可以通过AI来完成，把 <span class="text-white font-bold">4个小时</span> 的工作量降低到 <span class="text-green-400 font-bold">20分钟</span>。从这件小事做起，学会用AI来分析数据，指导日常工作。4月月报时，通过AI来做考勤数据的收集，分析，解读。
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-200 text-sm mb-1">2. 简历智能初筛 (针对 306 份简历)</p>
+                        <p class="text-gray-400">建议使用 AI Resume Screener。将招聘标准喂给 AI，自动标记出符合“规划师”画像的 Top 10，减少人工肉眼筛选的 80% 时间。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5、下周战略重点 -->
+    <section class="mb-12">
+        <h2 class="section-header gold-gradient-text">5、下周战略聚焦</h2>
+        <div class="card strategy-card relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <h3 class="text-xl font-bold text-white">核心任务：加速新规划师梯队建设</h3>
+                </div>
+                
+                <p class="text-gray-300 text-sm mb-8 leading-relaxed italic border-l-2 border-[#D4AF37] pl-4">
+                    “工作重点依旧是：需要加快能处理新客户的新规划师的培养速度。”
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-black/60 p-4 rounded-lg border border-white/5">
+                        <div class="text-[10px] text-[#D4AF37] font-bold mb-2 uppercase">阶段一：能力验证</div>
+                        <p class="font-bold text-gray-200 text-sm mb-1">公海库实战</p>
+                        <p class="text-[10px] text-gray-500 leading-tight">核心验证规划师的【沟通能力】。通过存量线索的有效互动率进行筛选。</p>
+                    </div>
+                    <div class="bg-black/60 p-4 rounded-lg border border-white/5">
+                        <div class="text-[10px] text-[#D4AF37] font-bold mb-2 uppercase">阶段二：成果转化</div>
+                        <p class="font-bold text-gray-200 text-sm mb-1">新客户出单</p>
+                        <p class="text-[10px] text-gray-500 leading-tight">核心验证规划师的【综合实战能力】。观察新发线索的方案制作与成交质量。</p>
+                    </div>
+                    <div class="bg-[#D4AF37]/10 p-4 rounded-lg border border-[#D4AF37]/30">
+                        <div class="text-[10px] text-[#D4AF37] font-bold mb-2 uppercase">阶段三：最终闭环</div>
+                        <p class="font-bold text-white text-sm mb-1">正式转正</p>
+                        <p class="text-[10px] text-gray-400 leading-tight">达成综合 KPI 考核，进入核心团队序列，完成职业化转型。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 装饰图层 -->
+            <div class="absolute right-0 top-0 opacity-10 pointer-events-none">
+                <svg width="300" height="300" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-10 no-print border-t border-white/5">
+        <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">导出人事周报 PDF</button>
+        <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 保护你的心上人 · 梯队建设专项汇报</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('recruitmentFunnel').getContext('2d');
+        
+        const goldGrad = ctx.createLinearGradient(0, 0, 400, 0);
+        goldGrad.addColorStop(0, 'rgba(212, 175, 55, 1)');
+        goldGrad.addColorStop(1, 'rgba(212, 175, 55, 0.2)');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['简历筛选 (306)', '意向沟通 (74)', '有效简历 (16)', '面试邀约 (1)'],
+                datasets: [{
+                    label: '转化人数',
+                    data: [306, 74, 16, 1],
+                    backgroundColor: [
+                        'rgba(212, 175, 55, 0.1)',
+                        'rgba(212, 175, 55, 0.3)',
+                        'rgba(212, 175, 55, 0.6)',
+                        '#D4AF37'
+                    ],
+                    borderRadius: 8,
+                    barThickness: 35
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#666' }, type: 'logarithmic' },
+                    y: { grid: { display: false }, ticks: { color: '#e0e0e0', font: { weight: 'bold' } } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

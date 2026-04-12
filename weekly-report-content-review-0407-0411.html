@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人内容团队 - 编辑部核心方法论</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F9E498;
+            --dark-bg: #0A0A0A;
+            --dark-card: #121212;
+            --text-zinc: #A1A1AA;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #E4E4E7;
+            font-family: 'Inter', 'Noto Serif SC', serif;
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--dark-card);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-item {
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            white-space: nowrap;
+            padding-bottom: 8px;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gold-primary);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-item.active {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .nav-item.active::after {
+            width: 100%;
+        }
+
+        .strategy-tag {
+            border-left: 3px solid var(--gold-primary);
+            padding-left: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .handwritten-content {
+            white-space: pre-line;
+            color: #d4d4d8;
+        }
+
+        .highlight-box {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .hook-badge {
+            background: var(--gold-primary);
+            color: #000;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .dimension-card {
+            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-12 max-w-6xl mx-auto">
+
+    <!-- Header Section -->
+    <header class="text-center mb-12 md:mb-20">
+        <div class="inline-block border-y border-zinc-800 py-4 px-12 mb-6">
+            <h1 class="text-3xl md:text-5xl font-bold tracking-widest gold-gradient-text uppercase">保心上人内容团队</h1>
+        </div>
+        <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs md:text-sm">Content Strategy & Methodology Report</p>
+        <div class="mt-4 text-gold-primary italic font-serif">“流量大 · 产出多 · 能成交”</div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex justify-start md:justify-center space-x-6 md:space-x-12 mb-12 border-b border-zinc-900 overflow-x-auto no-scrollbar pb-2">
+        <div class="nav-item active" onclick="switchSection(this, 'section1')">01 推荐机制</div>
+        <div class="nav-item" onclick="switchSection(this, 'section2')">02 思维突破</div>
+        <div class="nav-item" onclick="switchSection(this, 'section3')">03 心理与结构</div>
+        <div class="nav-item" onclick="switchSection(this, 'section4')">04 干货视频定义</div>
+        <div class="nav-item" onclick="switchSection(this, 'section5')">05 开场钩子库</div>
+    </nav>
+
+    <!-- Content Sections -->
+    <main>
+        
+        <!-- Section 1: 平台推荐机制 -->
+        <section id="section1" class="space-y-8">
+            <h2 class="text-2xl md:text-3xl font-bold gold-gradient-text">1、平台推荐机制</h2>
+            <div class="card p-6 md:p-10 rounded-2xl space-y-6">
+                <p class="text-lg md:text-xl handwritten-content">算法会推荐能让客户尽可能长时间留在平台的内容。他不希望你从抖音跳到小红书，从视频号跳到快手。</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
+                    <div class="highlight-box text-center">
+                        <div class="text-gold-primary font-bold text-2xl mb-1">完播率</div>
+                        <div class="text-zinc-400 text-sm">让用户看完</div>
+                    </div>
+                    <div class="highlight-box text-center">
+                        <div class="text-gold-primary font-bold text-2xl mb-1">互动</div>
+                        <div class="text-zinc-400 text-sm">点赞/评论/分享</div>
+                    </div>
+                    <div class="highlight-box text-center">
+                        <div class="text-gold-primary font-bold text-2xl mb-1">停留时间</div>
+                        <div class="text-zinc-400 text-sm">让用户持续刷</div>
+                    </div>
+                </div>
+
+                <div class="bg-zinc-900/50 p-6 rounded-xl border-l-4 border-gold-primary">
+                    <h3 class="text-white font-bold mb-4 italic text-lg">对应的策略：</h3>
+                    <ul class="space-y-4 text-sm md:text-base">
+                        <li><span class="text-gold-primary font-bold">2S：定生死。</span>开头必须抓人，直接给冲突/悬念/价值</li>
+                        <li><span class="text-gold-primary font-bold">黄金时长：</span>30秒-2分钟最佳，太短没深度，太长完播率低。</li>
+                        <li><span class="text-gold-primary font-bold">引导互动：</span>中间，结尾加CTA</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: 思维突破 -->
+        <section id="section2" class="hidden space-y-8">
+            <h2 class="text-2xl md:text-3xl font-bold gold-gradient-text">2、流量思维 到 用户价值思维的迷茫</h2>
+            <div class="card p-6 md:p-10 rounded-2xl space-y-8">
+                <div class="text-xl italic text-zinc-400 border-l-4 border-zinc-700 pl-6 handwritten-content">很多同事，包括我，都遇到一个囧境，流量大而质量低，质量高而没人看。其实我们需要做一个用户价值思维的突破。</div>
+                <div class="space-y-6">
+                    <div class="strategy-tag">
+                        <span class="text-gold-primary font-bold">2S：</span> 从空洞，浮夸的悬念 -> 展示专业性和真实性（例子 崔伟的title)，展示通过这个视频能解决你的什么问题，给你带来哪些明确的好处？
+                    </div>
+                    <div class="strategy-tag">
+                        <span class="text-gold-primary font-bold">内容结构：</span> 提高内容的价值密度和获得感。（3个步骤，5个技巧）
+                    </div>
+                    <div class="strategy-tag">
+                        <span class="text-gold-primary font-bold">长期价值：</span> 规划系统性内容，形成账号知识体系，让用户有持续关注理由。
+                    </div>
+                    <div class="strategy-tag">
+                        <span class="text-gold-primary font-bold">数据指导：</span> 复盘完播率，点赞比，2s跳出率不是空洞的，是引导加强内容创作的指南针。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: 用户心理学 -->
+        <section id="section3" class="hidden space-y-8">
+            <h2 class="text-2xl md:text-3xl font-bold gold-gradient-text">3、用户心理学</h2>
+            <div class="card p-6 md:p-10 rounded-2xl space-y-10">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-6">用户的三大核心需求：痛点，爽点，痒点</h3>
+                    <div class="space-y-4">
+                        <div class="bg-zinc-900 p-5 rounded border-l-4 border-red-900">
+                            <span class="font-bold text-zinc-400">标题+2S (戳痛点):</span> 100万存款到期存哪里收益高？
+                        </div>
+                        <div class="bg-zinc-900 p-5 rounded border-l-4 border-green-900">
+                            <span class="font-bold text-zinc-400">内容 (给爽点):</span> 存100万，能翻3倍
+                        </div>
+                        <div class="bg-zinc-900 p-5 rounded border-l-4 border-blue-900">
+                            <span class="font-bold text-zinc-400">CTA (留痒点):</span> 给关键词，给你材料，给你方案，给你一切
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-10 border-t border-zinc-800">
+                    <h3 class="text-xl font-bold text-gold-primary mb-6 italic">内容结构分段：</h3>
+                    <ul class="space-y-4 text-zinc-300">
+                        <li><span class="text-zinc-500 font-bold w-24 inline-block">标题+2S：</span> 抛出钩子，引导客户痛点。</li>
+                        <li><span class="text-zinc-500 font-bold w-24 inline-block">2s-30s：</span> 核心内容，给到爽点，给到看完的价值。</li>
+                        <li><span class="text-zinc-500 font-bold w-24 inline-block">30s-2m：</span> 深化内容（详细方法，案例讲解）</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 干货视频定义 -->
+        <section id="section4" class="hidden space-y-8">
+            <h2 class="text-2xl md:text-3xl font-bold gold-gradient-text">4、干货视频定义</h2>
+            <div class="card p-6 md:p-10 rounded-2xl space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="highlight-box border-solid">
+                        <h3 class="text-gold-primary font-bold text-lg mb-4">本质认知</h3>
+                        <p class="text-zinc-300 mb-4">干货视频 <span class="text-white font-bold">不等于</span> 信息密集，否则你可以写文章。</p>
+                        <div class="p-4 bg-zinc-900 rounded">
+                            <p class="text-white font-bold mb-2">核心公式：</p>
+                            <p class="text-gold-light text-xl italic">干货视频 = 核心观点可描述</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h3 class="text-white font-bold mb-4">选题会黄金法则：</h3>
+                        <p class="text-zinc-400 italic">“在选题会的时候，你能一两句话说清楚，你准备告诉客户什么？”</p>
+                    </div>
+                </div>
+
+                <div class="pt-10 border-t border-zinc-800">
+                    <h3 class="text-xl font-bold text-gold-primary mb-8 text-center">干货视频的 3 个衡量维度</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="dimension-card p-6 rounded-xl text-center">
+                            <div class="text-zinc-500 font-bold mb-3">维度一：系统看</div>
+                            <p class="text-zinc-300 text-sm">用户看完，互动了，一直在看（<span class="text-gold-primary">完播率高</span>）</p>
+                        </div>
+                        <div class="dimension-card p-6 rounded-xl text-center">
+                            <div class="text-zinc-500 font-bold mb-3">维度二：用户看</div>
+                            <p class="text-zinc-300 text-sm">“<span class="text-gold-primary">我看明白了</span>”</p>
+                        </div>
+                        <div class="dimension-card p-6 rounded-xl text-center">
+                            <div class="text-zinc-500 font-bold mb-3">维度三：我们看</div>
+                            <p class="text-zinc-300 text-sm">用户<span class="text-gold-primary">留资了</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-6 bg-zinc-900 rounded-xl text-center border border-zinc-800">
+                    <span class="text-zinc-400 mr-2">干货视频的目的：</span>
+                    <span class="text-gold-primary font-bold text-lg">建立专业的信任基础</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: 开场钩子库 -->
+        <section id="section5" class="hidden space-y-8">
+            <h2 class="text-2xl md:text-3xl font-bold gold-gradient-text">5、2秒黄金钩子话术库</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子1：直接抛出结构</span><p class="text-lg font-bold text-white italic">“用这个方法，我30天涨粉1万”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子2：制造冲突反差</span><p class="text-lg font-bold text-white italic">“月薪三千的我，是怎么买到LV的？”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子3：提出尖锐问题</span><p class="text-lg font-bold text-white italic">“为什么你这么努力，还是很穷”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子4：展示前后对比</span><p class="text-lg font-bold text-white italic">“3个月前我还在负债，现在已经......”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子5：颠覆认知</span><p class="text-lg font-bold text-white italic">“别再早起了！这才是成功的关键。”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子6：营造紧迫感</span><p class="text-lg font-bold text-white italic">“不在不知道就晚了！平台规则早就变了。”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子7：引发共鸣</span><p class="text-lg font-bold text-white italic">“30岁了还没存款的，举个手”</p></div>
+                <div class="card p-6 rounded-2xl"><span class="hook-badge">钩子8：讲故事开场</span><p class="text-lg font-bold text-white italic">“凌晨3点，我收到了辞退通知.....”</p></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-20 pt-8 border-t border-zinc-900 text-center text-zinc-700 text-xs tracking-widest uppercase">
+        保心上人内容团队 · 编辑部内部经验总结报告 · &copy; 2026
+    </footer>
+
+    <script>
+        function switchSection(el, sectionId) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('main > section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

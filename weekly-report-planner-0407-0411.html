@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 规划师周报 (04.06-04.10)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F5E6AD;
+            --black-bg: #0d0d0d;
+            --black-card: #1a1a1a;
+            --danger: #ff4d4f;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .gold-text { color: var(--gold-primary); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header {
+            border-left: 4px solid var(--gold-primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .card {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .data-table th {
+            color: var(--gold-primary);
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-size: 0.8rem;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+        }
+
+        .badge-warning {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-primary);
+            border: 1px solid var(--gold-primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(20, 20, 20, 1) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+    <!-- 顶栏 -->
+    <header class="flex justify-between items-center mb-16 no-print">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+            <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+        </div>
+        <div class="text-right text-sm text-gray-500">
+            周报周期：2026.04.06 - 04.10
+        </div>
+    </header>
+
+    <!-- 1. 概览篇 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">1、概览篇</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- 核心成交成果 -->
+            <div class="card bg-gradient-to-br from-[#1a1a1a] to-[#252525] border-l-4 border-l-[#D4AF37]">
+                <p class="text-gray-400 text-xs mb-4 uppercase tracking-widest font-bold">成交与预约总榜</p>
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-xs text-gray-500">林付贤</p>
+                        <p class="text-3xl font-bold gold-text">¥ 10,000 <span class="text-xs font-normal text-white">成交</span></p>
+                    </div>
+                    <div class="h-[1px] bg-white/5"></div>
+                    <div>
+                        <p class="text-xs text-gray-500">江宁</p>
+                        <p class="text-3xl font-bold text-white">¥ 25,000 <span class="text-xs font-normal gold-text">预约</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 团队效能可视化对比 -->
+            <div class="lg:col-span-2 card">
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-sm font-bold">规划师能效对比 (新发 vs 激活)</p>
+                    <div class="flex gap-4 text-[10px]">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#D4AF37]"></span>新发客户</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#666]"></span>存量激活</span>
+                    </div>
+                </div>
+                <div class="h-48">
+                    <canvas id="plannerOverviewChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 团队总量汇总统计 -->
+        <div class="grid grid-cols-2 gap-4 mb-8 text-center">
+            <div class="card p-6">
+                <p class="text-xs text-gray-500 uppercase mb-2">本周总新发客户数</p>
+                <p class="text-4xl font-bold">32</p>
+            </div>
+            <div class="card p-6">
+                <p class="text-xs text-gray-500 uppercase mb-2 gold-text">本周存量客户激活数</p>
+                <p class="text-4xl font-bold gold-text">8</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2、存量客户篇 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">2、存量客户篇</h2>
+        
+        <!-- 战略重要性声明板块 -->
+        <div class="formula-box p-8 rounded-xl mb-10 border-l-4 border-l-[#D4AF37] relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="text-xl font-bold mb-4 gold-text">存量管理战略意义</h3>
+                <div class="flex flex-wrap items-center gap-4 text-lg font-bold mb-6">
+                    <span class="bg-white/5 px-4 py-2 rounded">规划师收入</span>
+                    <span class="text-[#D4AF37] text-2xl">=</span>
+                    <span class="border border-white/20 px-4 py-2 rounded text-gray-400">成交转化率</span>
+                    <span class="text-[#D4AF37]">×</span>
+                    <span class="border border-white/20 px-4 py-2 rounded text-gray-400">客单价 (APL)</span>
+                    <span class="text-[#D4AF37]">×</span>
+                    <span class="border border-[#D4AF37] px-4 py-2 rounded gold-text">复购率</span>
+                </div>
+                <p class="text-gray-300 leading-relaxed text-sm max-w-4xl">
+                    成交转化率我们每周都在评估，客单价（APL）每月也在评估。<strong>现在是我们必须高度重视存量客户、提升复购率的关键时机。</strong> 复购率的提升是规划师收入倍增的第三引擎。
+                </p>
+            </div>
+            <!-- 背景装饰 -->
+            <div class="absolute -right-10 -bottom-10 opacity-5">
+                <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            </div>
+        </div>
+
+        <!-- 新增模块：存量成交客户联系情况 -->
+        <div class="card mb-10 border-t-2 border-t-[#D4AF37]/50 bg-gradient-to-b from-[#1c1c1c] to-[#1a1a1a]">
+            <h3 class="text-lg font-bold mb-6 flex items-center">
+                <span class="w-1 h-5 bg-[#D4AF37] mr-3"></span> 存量成交客户联系现状
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm data-table text-center">
+                    <thead>
+                        <tr class="bg-white/5">
+                            <th class="text-left px-4">规划师</th>
+                            <th>成交客户总数</th>
+                            <th>1年未联系占比</th>
+                            <th>3个月未联系占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-left px-4 font-bold">江宁</td>
+                            <td class="font-mono">157人</td>
+                            <td class="text-orange-400">40.8%</td>
+                            <td class="text-red-500 font-bold">79%</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left px-4 font-bold">林付贤</td>
+                            <td class="font-mono">149人</td>
+                            <td class="text-red-500 font-bold">47%</td>
+                            <td class="text-orange-400">55%</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left px-4 font-bold text-green-500">马康挺</td>
+                            <td class="font-mono">17人</td>
+                            <td class="text-green-500 font-bold">5.9%</td>
+                            <td class="text-green-500 font-bold">5.9%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-4 italic text-right px-2">数据说明：占比越高代表客户流失风险越大，需紧急启动挽回计划。</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 林付贤 -->
+            <div class="card border-t-4 border-t-orange-600">
+                <h3 class="text-lg font-bold mb-4 flex justify-between items-center">
+                    林付贤 <span class="badge-warning">避免群发骚扰</span>
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <p><span class="text-gray-500">数据：</span> 触达<span class="text-orange-500 font-bold">1436</span>个，激活5个，激活率<span class="text-orange-500">0.3%</span></p>
+                    <div class="p-3 bg-orange-950/20 rounded">
+                        <p class="text-xs text-gray-400 font-bold mb-1">行动要求：</p>
+                        <p class="text-gray-300">和上周意见一样，<span class="gold-text font-bold">需要更聪明</span>。群发会骚扰到客户，不值得鼓励。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 马康挺 -->
+            <div class="card">
+                <h3 class="text-lg font-bold mb-4">马康挺</h3>
+                <div class="space-y-3 text-sm">
+                    <p><span class="text-gray-500">数据：</span> 触达40个，激活1个，激活率2.5%</p>
+                    <div class="p-3 bg-white/5 rounded">
+                        <p class="text-xs text-gray-400 font-bold mb-1">行动要求：</p>
+                        <p class="text-gray-300 italic">比上周有进步，继续提高有效互动。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 江宁 -->
+            <div class="card border-t-4 border-t-green-600">
+                <h3 class="text-lg font-bold mb-4 flex justify-between items-center">
+                    江宁 <span class="text-green-500 text-xs font-bold border border-green-500 px-2 py-1 rounded">效率标兵</span>
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <p><span class="text-gray-500">数据：</span> 触达8个，激活2个，激活率<span class="text-green-500 font-bold">25%</span></p>
+                    <div class="p-3 bg-green-950/20 rounded">
+                        <p class="text-xs text-gray-400 font-bold mb-1">行动要求：</p>
+                        <p class="text-gray-300">和上周一样：<span class="text-green-500 font-bold">很聪明</span>，但业务总量需提升，需要更勤奋。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3、新发客户篇 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">3、新发客户篇</h2>
+        <div class="card overflow-x-auto mb-8">
+            <table class="w-full data-table">
+                <thead>
+                    <tr>
+                        <th>规划师</th>
+                        <th>新发数</th>
+                        <th>好友添加率</th>
+                        <th>方案制作率</th>
+                        <th>方案讲解率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>林付贤</td>
+                        <td>17</td>
+                        <td class="text-orange-400 font-bold">18% (偏低)</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                    </tr>
+                    <tr>
+                        <td>马康挺</td>
+                        <td>13</td>
+                        <td class="text-green-400 font-bold">46% (优秀)</td>
+                        <td class="text-orange-400 italic">17%</td>
+                        <td class="text-red-500 font-bold underline">0%</td>
+                    </tr>
+                    <tr>
+                        <td>江宁</td>
+                        <td>2</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="text-green-400 font-bold">17% (等待转化)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 4、备注 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">4、备注</h2>
+        <div class="card bg-gradient-to-br from-[#1a1111] to-[#0d0d0d] border-red-900/40 shadow-2xl shadow-red-900/10">
+            <!-- 林付贤备注 -->
+            <div class="mb-10 pb-8 border-b border-white/5">
+                <h3 class="text-xl font-bold mb-4 text-orange-500 uppercase tracking-wider">林付贤：获客效率反馈</h3>
+                <p class="text-sm text-gray-300 leading-relaxed font-bold">
+                    林付贤：4月的好友添加率是团队的平均水平的50%，本周需要把4月好友添加率提高到平均水平，避免影响下周新客户的发放。
+                </p>
+            </div>
+
+            <!-- 江宁备注 -->
+            <div class="mb-10 pb-8 border-b border-white/5">
+                <h3 class="text-xl font-bold mb-4 text-green-500 uppercase tracking-wider">江宁：方案讲解进阶建议</h3>
+                <p class="text-sm text-gray-300 leading-relaxed font-bold">
+                    江宁：继续提高第一季度的方案讲解率，恢复到团队平均水平。
+                </p>
+            </div>
+
+            <h3 class="text-xl font-bold mb-6 text-red-500 uppercase tracking-wider">马康挺：方案制作率低原因深度分析</h3>
+            
+            <div class="space-y-8 text-sm leading-relaxed">
+                <div>
+                    <h4 class="text-white font-bold mb-2 italic">1. 过早推产品，跳过需求挖掘</h4>
+                    <p class="text-gray-400 mb-4 font-light">得知姓名后直接发送产品资料，未了解家庭结构、收入预算及购买动机。</p>
+                    <div class="pl-4 border-l-2 border-red-500/30 space-y-2 text-gray-500 text-xs">
+                        <p><span class="text-gray-300">戴眼镜的胖子：</span>发完资料后客户仅回“我就先看看”，对话终结。</p>
+                        <p><span class="text-gray-300">纪念：</span>问完姓名直接发3图1链接，再无下文。</p>
+                        <p><span class="text-gray-300">廖华琼：</span>连续发4链接1张图，客户仅礼貌回复“好的”。</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-2 italic">2. 单向输出过重，互动失衡</h4>
+                    <p class="text-gray-400 mb-2">规划师连续发 5-8 条消息，客户仅回 1-2 条。缺乏提问引导。</p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-2 italic">3. 跟进迟缓且手段单一</h4>
+                    <ul class="list-disc pl-5 text-gray-400 space-y-1">
+                        <li>跟进间隔长（4/3加人，4/7才首跟，间隔4天）。</li>
+                        <li>10个客户中仅2个尝试电话/会议，过于依赖无温度的文字。</li>
+                    </ul>
+                </div>
+
+                <!-- 核心判词 -->
+                <div class="mt-10 p-6 bg-red-600 rounded-lg text-black text-center shadow-lg shadow-red-500/20">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-1 opacity-80">本周判词</p>
+                    <p class="text-xl font-black italic">
+                        “发资料等回复”，而不是“问问题做方案”
+                    </p>
+                </div>
+            </div>
+
+            <!-- 新增：璐璐备注 -->
+            <div class="mt-10 pt-8 border-t border-white/5">
+                <h3 class="text-xl font-bold mb-4 gold-text uppercase tracking-wider">璐璐：团队执行反馈</h3>
+                <p class="text-sm text-gray-300 leading-relaxed font-bold">
+                    璐璐的备注：加快新规划师接客的节奏。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-10 no-print border-t border-white/5">
+        <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">预览并打印规划师战报</button>
+        <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人，保护你的心上人。 · 规划团队内部复盘</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('plannerOverviewChart').getContext('2d');
+        
+        const goldGrad = ctx.createLinearGradient(0, 0, 400, 0);
+        goldGrad.addColorStop(0, 'rgba(212, 175, 55, 1)');
+        goldGrad.addColorStop(1, 'rgba(212, 175, 55, 0.2)');
+
+        const grayGrad = ctx.createLinearGradient(0, 0, 400, 0);
+        grayGrad.addColorStop(0, 'rgba(100, 100, 100, 0.8)');
+        grayGrad.addColorStop(1, 'rgba(100, 100, 100, 0.1)');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['林付贤', '江宁', '马康挺'],
+                datasets: [
+                    {
+                        label: '新发客户',
+                        data: [17, 2, 13],
+                        backgroundColor: goldGrad,
+                        borderRadius: 20,
+                        barThickness: 12,
+                    },
+                    {
+                        label: '存量激活',
+                        data: [5, 2, 1],
+                        backgroundColor: grayGrad,
+                        borderRadius: 20,
+                        barThickness: 12,
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } },
+                    y: { grid: { display: false }, ticks: { color: '#e0e0e0', font: { weight: 'bold' } } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
