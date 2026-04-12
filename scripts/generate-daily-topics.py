@@ -126,11 +126,18 @@ def extract_items(data, list_keys):
         for key in list_keys:
             val = d.get(key)
             if isinstance(val, list) and val:
+                print(f"    Found list in data.{key} ({len(val)} items)")
+                if isinstance(val[0], dict):
+                    print(f"    First item keys: {list(val[0].keys())[:15]}")
+                    # 打印前100字符帮助调试
+                    print(f"    First item preview: {json.dumps(val[0], ensure_ascii=False)[:200]}")
                 return val
         # 递归查找第一个非空列表
         for key, val in d.items():
             if isinstance(val, list) and val and isinstance(val[0], dict):
                 print(f"    Found list in data.{key} ({len(val)} items)")
+                print(f"    First item keys: {list(val[0].keys())[:15]}")
+                print(f"    First item preview: {json.dumps(val[0], ensure_ascii=False)[:200]}")
                 return val
     if isinstance(d, list):
         return d
