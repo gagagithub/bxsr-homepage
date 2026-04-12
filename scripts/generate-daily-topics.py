@@ -248,7 +248,7 @@ def search_douyin(keyword):
             "keyword": keyword,
             "offset": 0,
             "count": 15,
-            "sort_type": 0,
+            "sort_type": "0",
         }, timeout=30)
         if resp.status_code == 200:
             data = resp.json()
@@ -292,8 +292,6 @@ def search_xiaohongshu(keyword):
     data = tikhub_get("/api/v1/xiaohongshu/app_v2/search_notes", {
         "keyword": keyword,
         "page": 1,
-        "sort_type": "general",
-        "note_type": "不限",
     })
     if not data:
         return []
