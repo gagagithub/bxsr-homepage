@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>话题搜索 · 保心上人</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background: #f0f2f8;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1E2761 0%, #162050 60%, #028090 100%);
+      color: #fff;
+      padding: 28px 24px 24px;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      margin-bottom: 14px;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    header h1 { font-size: clamp(18px,3vw,26px); font-weight: 700; margin-bottom: 4px; }
+    .header-sub { font-size: 13px; opacity: .6; }
+
+    /* ── 搜索框 ── */
+    .search-box {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .search-box input {
+      flex: 1;
+      padding: 12px 18px;
+      font-size: 16px;
+      border: 2px solid #dde3ee;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-box input:focus { border-color: #028090; }
+    .search-box button {
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #1E2761, #028090);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: opacity .2s;
+      white-space: nowrap;
+    }
+    .search-box button:hover { opacity: .9; }
+    .search-box button:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── 提示 ── */
+    .hint {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+      font-size: 13px;
+      color: #8892a4;
+    }
+    .hint span {
+      display: inline-block;
+      background: #eef2ff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin: 3px 4px 3px 0;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .hint span:hover { background: #dde3ee; }
+
+    /* ── 加载中 ── */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #8892a4;
+      display: none;
+    }
+    .loading.active { display: block; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #dde3ee;
+      border-top-color: #028090;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── 结果区 ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .platform-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .platform-header {
+      padding: 14px 20px;
+      font-size: 1.05em;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+      color: white;
+    }
+
+    .platform-body { padding: 12px 16px; }
+    .platform-body.empty {
+      text-align: center;
+      color: #ccc;
+      padding: 24px;
+      font-size: 0.9em;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+    td {
+      padding: 5px 6px;
+      border-bottom: 1px solid #f8f8f8;
+      vertical-align: top;
+    }
+    td.rank { color: #ccc; width: 22px; font-weight: 600; text-align: center; }
+    tr:nth-child(-n+3) td.rank { color: #f59e0b; }
+    tr:last-child td { border-bottom: none; }
+
+    .tl {
+      color: #1E2761;
+      text-decoration: none;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .tl:hover { color: #028090; text-decoration: underline; }
+
+    .stats {
+      display: block;
+      color: #aaa;
+      font-size: 0.85em;
+      margin-top: 2px;
+    }
+
+    .error-msg {
+      text-align: center;
+      color: #e53e3e;
+      padding: 40px 20px;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.8em;
+      padding: 20px;
+    }
+
+    @media (max-width: 680px) {
+      .result-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-btn" href="index.html">&larr; 返回首页</a>
+    <h1>🔍 话题搜索</h1>
+    <div class="header-sub">输入关键词，实时搜索抖音 / 小红书 / B站 / 西瓜视频</div>
+  </div>
+</header>
+
+<div class="search-box">
+  <input type="text" id="keyword" placeholder="输入关键词，如：存钱、香港保险、养老..." />
+  <button id="searchBtn" onclick="doSearch()">搜索</button>
+</div>
+
+<div class="hint">
+  热门搜索：
+  <span onclick="quickSearch('存钱')">存钱</span>
+  <span onclick="quickSearch('存款')">存款</span>
+  <span onclick="quickSearch('香港保险')">香港保险</span>
+  <span onclick="quickSearch('分红险')">分红险</span>
+  <span onclick="quickSearch('养老')">养老</span>
+  <span onclick="quickSearch('国债')">国债</span>
+</div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div>正在搜索 4 个平台，请稍候...</div>
+</div>
+
+<div class="error-msg" id="error"></div>
+
+<main>
+  <div class="result-grid" id="results"></div>
+</main>
+
+<footer>保心上人 · CONFIDENTIAL · INTERNAL USE ONLY</footer>
+
+<script>
+// ⚠️ 部署 Worker 后，将此 URL 替换为你的 Worker 地址
+const WORKER_URL = "https://tikhub-search.firefox-cui.workers.dev";
+
+const PLATFORM_CONFIG = {
+  xigua:       { name: "西瓜视频", color: "#F04142" },
+  bilibili:    { name: "B站",     color: "#00A1D6" },
+  douyin:      { name: "抖音",    color: "#1A1A1A" },
+  xiaohongshu: { name: "小红书",  color: "#FF2442" },
+};
+
+function quickSearch(kw) {
+  document.getElementById("keyword").value = kw;
+  doSearch();
+}
+
+function formatCount(n) {
+  if (!n) return "";
+  if (n >= 10000) return (n / 10000).toFixed(1) + "万";
+  return String(n);
+}
+
+function escHtml(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function doSearch() {
+  const keyword = document.getElementById("keyword").value.trim();
+  if (!keyword) return;
+
+  const btn = document.getElementById("searchBtn");
+  const loading = document.getElementById("loading");
+  const error = document.getElementById("error");
+  const results = document.getElementById("results");
+
+  btn.disabled = true;
+  loading.classList.add("active");
+  error.style.display = "none";
+  results.innerHTML = "";
+
+  try {
+    const resp = await fetch(`${WORKER_URL}/search?keyword=${encodeURIComponent(keyword)}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    if (data.error) throw new Error(data.error);
+
+    renderResults(data.platforms, keyword);
+  } catch (e) {
+    error.textContent = `搜索失败: ${e.message}`;
+    error.style.display = "block";
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove("active");
+  }
+}
+
+function renderResults(platforms, keyword) {
+  const container = document.getElementById("results");
+  let html = "";
+
+  for (const [key, config] of Object.entries(PLATFORM_CONFIG)) {
+    const items = platforms[key] || [];
+    let bodyHtml;
+
+    if (items.length === 0) {
+      bodyHtml = `<div class="platform-body empty">无符合条件的内容</div>`;
+    } else {
+      let rows = "";
+      items.forEach((item, i) => {
+        let title = escHtml(item.title);
+        if (title.length > 60) title = title.slice(0, 60) + "...";
+        const titleHtml = item.url
+          ? `<a href="${escHtml(item.url)}" target="_blank" rel="noopener" class="tl">${title}</a>`
+          : title;
+
+        const stats = [];
+        const playStr = formatCount(item.play);
+        const likeStr = formatCount(item.like);
+        const commentStr = formatCount(item.comment);
+        if (playStr) stats.push(`▶ ${playStr}`);
+        if (likeStr) stats.push(`♥ ${likeStr}`);
+        if (commentStr) stats.push(`💬 ${commentStr}`);
+        const statsHtml = stats.length ? `<span class="stats">${stats.join(" · ")}</span>` : "";
+
+        rows += `<tr><td class="rank">${i + 1}</td><td>${titleHtml}${statsHtml}</td></tr>`;
+      });
+      bodyHtml = `<div class="platform-body"><table><tbody>${rows}</tbody></table></div>`;
+    }
+
+    html += `
+      <div class="platform-card">
+        <div class="platform-header" style="background:${config.color};">${config.name}</div>
+        ${bodyHtml}
+      </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// 回车搜索
+document.getElementById("keyword").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") doSearch();
+});
+</script>
+
+</body>
+</html>
