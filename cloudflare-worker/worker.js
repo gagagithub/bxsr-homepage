@@ -172,14 +172,7 @@ function filterResults(platform, items) {
   return items.filter((item) => {
     // 3个月时间过滤
     if (item.create_time && item.create_time < threeMonthsAgo) return false;
-    // 平台质量过滤
-    switch (platform) {
-      case "xigua": return item.play >= 50000;
-      case "bilibili": return item.play >= 10000;
-      case "douyin": return item.like >= 200;
-      case "xiaohongshu": return item.like >= 200;
-      default: return true;
-    }
+    return true;
   }).slice(0, 10);
 }
 
