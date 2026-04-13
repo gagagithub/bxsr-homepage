@@ -37,7 +37,7 @@ async function searchXigua(keyword, apiKey) {
       return {
         title: vdata.title || vdata.video_title || vdata.content || vdata.desc || "",
         url: vdata.share_url || vdata.url || (groupId ? `https://www.ixigua.com/${groupId}` : ""),
-        play: vdata.play_count || vdata.video_watch_count || 0,
+        play: (vdata.video_detail_info || {}).video_watch_count || vdata.video_watch_count || vdata.play_count || 0,
         like: vdata.digg_count || vdata.like_count || 0,
         comment: vdata.comment_count || 0,
         create_time: vdata.create_time || vdata.publish_time || 0,
@@ -174,7 +174,7 @@ function filterResults(platform, items) {
     if (item.create_time && item.create_time < threeMonthsAgo) return false;
     // 平台质量过滤
     switch (platform) {
-      case "xigua": return item.comment >= 100;
+      case "xigua": return item.play >= 100000;
       case "bilibili": return item.play >= 10000;
       case "douyin": return item.like >= 200;
       case "xiaohongshu": return item.like >= 200;

@@ -70,7 +70,7 @@ TOPICS = [
 
 # 各平台筛选标准
 PLATFORM_FILTERS = {
-    "xigua":       lambda item: item.get("comment", 0) >= 100,
+    "xigua":       lambda item: item.get("play", 0) >= 100000,
     "bilibili":    lambda item: item.get("play", 0) >= 10000,
     "douyin":      lambda item: item.get("like", 0) >= 200,
     "xiaohongshu": lambda item: item.get("like", 0) >= 200,
@@ -187,7 +187,11 @@ def search_xigua(keyword):
         group_id = vdata.get("group_id") or vdata.get("gid", "")
         if not url and group_id:
             url = f"https://www.ixigua.com/{group_id}"
-        play = vdata.get("play_count", 0) or vdata.get("video_watch_count", 0)
+        # 播放量：优先从 video_detail_info.video_watch_count 取
+        vdi = vdata.get("video_detail_info", {})
+        play = (vdi.get("video_watch_count", 0)
+                or vdata.get("video_watch_count", 0)
+                or vdata.get("play_count", 0))
         like = vdata.get("digg_count", 0) or vdata.get("like_count", 0)
         comment = vdata.get("comment_count", 0)
         create_time = vdata.get("create_time", 0) or vdata.get("publish_time", 0)
