@@ -70,7 +70,7 @@ TOPICS = [
 
 # 各平台筛选标准
 PLATFORM_FILTERS = {
-    "xigua":       lambda item: item.get("play", 0) >= 100000,
+    "xigua":       lambda item: item.get("play", 0) >= 50000,
     "bilibili":    lambda item: item.get("play", 0) >= 10000,
     "douyin":      lambda item: item.get("like", 0) >= 200,
     "xiaohongshu": lambda item: item.get("like", 0) >= 200,

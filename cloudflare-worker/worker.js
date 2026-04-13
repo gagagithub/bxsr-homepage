@@ -174,7 +174,7 @@ function filterResults(platform, items) {
     if (item.create_time && item.create_time < threeMonthsAgo) return false;
     // 平台质量过滤
     switch (platform) {
-      case "xigua": return item.play >= 100000;
+      case "xigua": return item.play >= 50000;
       case "bilibili": return item.play >= 10000;
       case "douyin": return item.like >= 200;
       case "xiaohongshu": return item.like >= 200;
