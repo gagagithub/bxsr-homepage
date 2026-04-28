@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 人事行政双周汇总 (04.13-04.24)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F5E6AD;
+            --black-bg: #0d0d0d;
+            --black-card: #1a1a1a;
+            --danger: #ff4d4f;
+            --success: #52c41a;
+            --info: #4A90E2;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .gold-text { color: var(--gold-primary); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header {
+            border-left: 4px solid var(--gold-primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .card {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .data-table th {
+            color: var(--gold-primary);
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-size: 0.75rem;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.8rem;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .status-done { background: rgba(82, 196, 26, 0.1); color: #52c41a; border: 1px solid #52c41a; }
+        .status-pending { background: rgba(74, 144, 226, 0.1); color: #4A90E2; border: 1px solid #4A90E2; }
+        .status-alert { background: rgba(255, 77, 79, 0.1); color: #ff4d4f; border: 1px solid #ff4d4f; }
+
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+    <!-- 顶栏 -->
+    <header class="flex justify-between items-center mb-16 no-print border-b border-white/5 pb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+            <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+        </div>
+        <div class="text-right text-sm text-gray-500">
+            人事行政双周汇总 | 2026.04.13 - 04.24
+        </div>
+    </header>
+
+    <!-- 1、招聘漏斗对比复盘 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">1、规划师招聘漏斗复盘</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="card lg:col-span-2">
+                <p class="text-sm font-bold mb-6">双周招聘效能趋势</p>
+                <div class="h-64">
+                    <canvas id="recruitmentCompareChart"></canvas>
+                </div>
+            </div>
+            <div class="card flex flex-col justify-around">
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1 uppercase">本周核心挑战</p>
+                        <p class="text-sm text-red-400 leading-relaxed font-bold">
+                            主动投递极少，纯试岗模式接受度低，候选人观望情绪浓厚。
+                        </p>
+                    </div>
+                    <div class="h-px bg-white/5"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-[10px] text-gray-500 mb-1">上周约面</p>
+                            <p class="text-xl font-bold">1 <span class="text-xs font-normal">人</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 mb-1">本周约面</p>
+                            <p class="text-xl font-bold">1 <span class="text-xs font-normal">人</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-gradient-to-br from-[#1a1a1a] to-[#252525] border-l-4 border-l-red-500">
+            <h3 class="text-sm font-bold text-white mb-3">🔥 招聘策略紧急优化 (下周重点)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-gray-400">
+                <div class="p-3 bg-black/30 rounded border border-white/5">
+                    <p class="text-white font-bold mb-2">● 话术重构</p>
+                    弱化试岗模式阻力，重点突出【高提成】、【灵活办公】与【行业长期红利】。
+                </div>
+                <div class="p-3 bg-black/30 rounded border border-white/5">
+                    <p class="text-white font-bold mb-2">● 跟进加速</p>
+                    高意向者当天闭环定面；观望者隔天发送岗位收益参考。
+                </div>
+                <div class="p-3 bg-black/30 rounded border border-white/5">
+                    <p class="text-white font-bold mb-2">● 岗位曝光</p>
+                    调整招聘平台文案，增加吸引力，提升公域线索量。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2、财务与薪酬管理 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">2、财务、薪酬与补贴</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card border-t-2 border-t-[#D4AF37]/30">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span>💰</span> 薪资发放与个税
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">●</span>
+                        <span>[完成] 4月全员工资明细核对、个税申报确认及发放闭环。</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">●</span>
+                        <span>[完成] 每周常规财务报销核对与对账。</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="card border-t-2 border-t-blue-500/30">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span>🧧</span> 稳岗补贴申请
+                </h3>
+                <div class="p-4 bg-blue-900/10 rounded-lg border border-blue-500/20">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-white font-bold">补贴金额：3,000 元</span>
+                        <span class="status-badge status-pending">审核中</span>
+                    </div>
+                    <p class="text-[11px] text-gray-400">材料已提交至社保系统，正处于系统审核阶段，预计本季度到账。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3、账号矩阵合规进度 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">3、账号运营与合规认证</h2>
+        <div class="card overflow-x-auto">
+            <table class="w-full text-sm data-table">
+                <thead>
+                    <tr class="bg-white/5">
+                        <th class="pl-4">平台/账号</th>
+                        <th>核心动作</th>
+                        <th>当前状态</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pl-4 font-bold text-white">抖音：崔伟说投资</td>
+                        <td>企业认证注销 / 理财师黄V认证</td>
+                        <td><span class="status-badge status-done">已通过</span></td>
+                        <td class="text-gray-500">资质材料审核完成，成功点亮黄V。</td>
+                    </tr>
+                    <tr>
+                        <td class="pl-4 font-bold text-white">小红书：保心上人规划</td>
+                        <td>账号主体变更 / 认证核对</td>
+                        <td><span class="status-badge status-done">已完成</span></td>
+                        <td class="text-gray-500">相关资料已完善，完成变更。</td>
+                    </tr>
+                    <tr>
+                        <td class="pl-4 font-bold text-white">微信小程序</td>
+                        <td>认证资料上传</td>
+                        <td><span class="status-badge status-pending">二稿待审</span></td>
+                        <td class="text-gray-500">持续关注审核反馈，及时修正。</td>
+                    </tr>
+                    <tr>
+                        <td class="pl-4 font-bold text-white">小红书：保心上人咨询</td>
+                        <td>个人号申请 / 理财师认证</td>
+                        <td><span class="status-badge status-alert">专业号取消中</span></td>
+                        <td class="text-gray-500">正在等待平台取消原专业号审核。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 4、行政事务与法务 -->
+    <section class="mb-16">
+        <h2 class="section-header gold-gradient-text">4、行政事务与法务跟进</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card border-l-4 border-l-orange-500">
+                <h3 class="text-md font-bold mb-4 flex items-center gap-2 text-orange-400">
+                    ⚖️ 房租押金案 (法务)
+                </h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    目前已完成<span class="text-white">立案保全</span>流程。下一步核心动作是配合法院进行对方<span class="text-white font-bold">财产清点</span>，全力推动欠款追回。
+                </p>
+            </div>
+            <div class="card border-l-4 border-l-gray-500">
+                <h3 class="text-md font-bold mb-4 flex items-center gap-2">
+                    🚗 其它行政事务
+                </h3>
+                <ul class="space-y-3 text-xs text-gray-500">
+                    <li>● <strong>生日礼：</strong>完成客户生日礼采购、寄送及签收确认。</li>
+                    <li>● <strong>电信业务：</strong>完成过期电信卡的线下处理。</li>
+                    <li>● <strong>交通事故：</strong>本周发生车辆交通事故，已介入处理并持续跟踪后续进展。</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-10 no-print border-t border-white/5">
+        <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">预览并打印人事双周报</button>
+        <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 保护你的心上人 · 人事行政部</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('recruitmentCompareChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['简历筛选', '意向沟通', '收到简历', '面试邀约'],
+                datasets: [
+                    {
+                        label: '04.13-04.17 (上周)',
+                        data: [244, 66, 13, 1],
+                        backgroundColor: 'rgba(212, 175, 55, 0.4)',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '04.20-04.24 (本周)',
+                        data: [87, 16, 6, 1],
+                        backgroundColor: '#D4AF37',
+                        borderColor: '#F5E6AD',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#666', font: { size: 10 } } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#888' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
