@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人公司 - 4月编辑月报</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --gold: #D4AF37;
+            --dark-gold: #AA8A2E;
+            --black: #0F0F0F;
+            --deep-gray: #1A1A1A;
+            --text-gold: #F3E5AB;
+        }
+
+        body {
+            background-color: var(--black);
+            color: #E0E0E0;
+            font-family: 'Inter', 'Noto Serif SC', serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 50%, #AA8A2E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .card {
+            background: var(--deep-gray);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .status-tag {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .status-excellent { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+        .status-failed { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+        .status-warning { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid #eab308; }
+
+        section {
+            padding: 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .nav-dot.active {
+            background: var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .standard-box {
+            background: linear-gradient(180deg, rgba(26, 26, 26, 1) 0%, rgba(15, 15, 15, 1) 100%);
+            border-top: 2px solid var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-dots">
+        <div class="nav-dot active" onclick="scrollToSection('hero')"></div>
+        <div class="nav-dot" onclick="scrollToSection('standards')"></div>
+        <div class="nav-dot" onclick="scrollToSection('tasks')"></div>
+        <div class="nav-dot" onclick="scrollToSection('quality')"></div>
+        <div class="nav-dot" onclick="scrollToSection('summary')"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center">
+        <div class="mb-6 opacity-0 translate-y-10 transition-all duration-1000 animate-fade-in" id="hero-subtitle">
+            <h2 class="text-2xl tracking-[0.5em] text-gold-gradient mb-2">保心上人公司</h2>
+            <div class="h-0.5 w-24 bg-gold mx-auto"></div>
+        </div>
+        <h1 class="text-6xl md:text-8xl font-bold gold-gradient mb-8 leading-tight">4月编辑月报<br><span class="text-3xl md:text-4xl text-gray-400 font-light tracking-widest uppercase">Editor Performance Report</span></h1>
+        <p class="text-gray-500 max-w-2xl text-lg">线索转化达成 · 完播质量复盘 · 互动数据看板</p>
+    </section>
+
+    <!-- Evaluation Standards Section -->
+    <section id="standards">
+        <h2 class="text-3xl font-bold mb-12 flex items-center">
+            <span class="text-gold mr-4">01</span> 视频剪辑质量标准
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="standard-box p-8 rounded-b-2xl shadow-2xl">
+                <div class="text-gold text-sm mb-2 uppercase tracking-widest">Retention Rate</div>
+                <h3 class="text-2xl font-bold mb-6">视频完播率</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                        <span class="text-gray-400">优秀标准</span>
+                        <span class="text-green-400 font-bold">> 12%</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                        <span class="text-gray-400">不及格线</span>
+                        <span class="text-red-400 font-bold">< 6%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="standard-box p-8 rounded-b-2xl shadow-2xl">
+                <div class="text-gold text-sm mb-2 uppercase tracking-widest">Hook Rate</div>
+                <h3 class="text-2xl font-bold mb-6">2秒跳出率</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                        <span class="text-gray-400">优秀标准</span>
+                        <span class="text-green-400 font-bold">< 25%</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                        <span class="text-gray-400">不及格线</span>
+                        <span class="text-red-400 font-bold">> 40%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="standard-box p-8 rounded-b-2xl shadow-2xl">
+                <div class="text-gold text-sm mb-2 uppercase tracking-widest">Engagement</div>
+                <h3 class="text-2xl font-bold mb-6">互动指数</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                        <span class="text-gray-400">优秀标准</span>
+                        <span class="text-green-400 font-bold">> 1000</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                        <span class="text-gray-400">不及格线</span>
+                        <span class="text-red-400 font-bold">< 200</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Task Completion Section -->
+    <section id="tasks">
+        <h2 class="text-3xl font-bold mb-12 flex items-center">
+            <span class="text-gold mr-4">02</span> 编辑任务指标达成
+        </h2>
+        <div class="mb-10 p-6 gold-border rounded-xl bg-black/40">
+            <p class="text-gray-400 mb-2">月度线索任务目标</p>
+            <div class="flex items-baseline">
+                <span class="text-5xl font-bold text-white">20</span>
+                <span class="ml-2 text-gold">条线索 / 人</span>
+            </div>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-6">
+            <!-- Lü Junwei -->
+            <div class="card p-6 rounded-2xl relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-4">吕军伟</h3>
+                <div class="text-4xl font-bold text-gold mb-2">120%</div>
+                <div class="w-full bg-gray-800 h-1.5 rounded-full mb-3">
+                    <div class="bg-gold h-full" style="width: 100%"></div>
+                </div>
+                <span class="status-tag status-excellent">超额完成</span>
+                <p class="text-xs text-gray-500 mt-4">达成：24条</p>
+            </div>
+            <!-- Chen Xin -->
+            <div class="card p-6 rounded-2xl relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-4">陈鑫</h3>
+                <div class="text-4xl font-bold text-white mb-2">85%</div>
+                <div class="w-full bg-gray-800 h-1.5 rounded-full mb-3">
+                    <div class="bg-gold h-full" style="width: 85%"></div>
+                </div>
+                <span class="status-tag status-normal border border-gold/30 text-gold/80">稳步推进</span>
+                <p class="text-xs text-gray-500 mt-4">达成：17条</p>
+            </div>
+            <!-- Cui Wei -->
+            <div class="card p-6 rounded-2xl relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-4">崔伟</h3>
+                <div class="text-4xl font-bold text-white mb-2">80%</div>
+                <div class="w-full bg-gray-800 h-1.5 rounded-full mb-3">
+                    <div class="bg-gold h-full" style="width: 80%"></div>
+                </div>
+                <span class="status-tag status-normal border border-gold/30 text-gold/80">良好</span>
+                <p class="text-xs text-gray-500 mt-4">达成：16条</p>
+            </div>
+            <!-- Xiao Xue -->
+            <div class="card p-6 rounded-2xl relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-4">小雪</h3>
+                <div class="text-4xl font-bold text-red-500 mb-2">15%</div>
+                <div class="w-full bg-gray-800 h-1.5 rounded-full mb-3">
+                    <div class="bg-red-600 h-full" style="width: 15%"></div>
+                </div>
+                <span class="status-tag status-failed">异常预警</span>
+                <p class="text-xs text-gray-500 mt-4">达成：3条</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Quality Section -->
+    <section id="quality">
+        <h2 class="text-3xl font-bold mb-12 flex items-center">
+            <span class="text-gold mr-4">03</span> 团队视频质量复盘
+        </h2>
+        <div class="grid md:grid-cols-2 gap-10">
+            <div class="card p-8 rounded-3xl border-l-4 border-l-green-500">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-1">完播率合格率</h3>
+                        <p class="text-sm text-gray-400">所有发布视频统计</p>
+                    </div>
+                    <div class="text-4xl font-bold text-green-400">90%</div>
+                </div>
+                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden">
+                    <div class="bg-green-500 h-full" style="width: 90%"></div>
+                </div>
+                <p class="mt-6 text-sm text-gray-300 leading-relaxed">
+                    🌟 表现优秀！全团队完播率在4月表现极其稳健，内容吸引力达到行业高标。
+                </p>
+            </div>
+            <div class="card p-8 rounded-3xl border-l-4 border-l-green-500">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-1">2S跳出率合格率</h3>
+                        <p class="text-sm text-gray-400">全剪辑团队视觉表现</p>
+                    </div>
+                    <div class="text-4xl font-bold text-green-400">90%+</div>
+                </div>
+                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden">
+                    <div class="bg-green-500 h-full" style="width: 95%"></div>
+                </div>
+                <p class="mt-6 text-sm text-gray-300 leading-relaxed">
+                    🌟 表现优秀！黄金2秒的钩子设计已经形成标准作业，视觉冲击力抓手强。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Summary Section -->
+    <section id="summary" class="mb-20">
+        <h2 class="text-3xl font-bold mb-12 flex items-center">
+            <span class="text-gold mr-4">04</span> 月度结语与展望
+        </h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="card p-8 rounded-2xl border-l-4 border-l-gold">
+                <h3 class="text-xl font-bold mb-4 text-gold">4月亮点总结</h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start"><span class="text-gold mr-2">•</span> <strong>个人标杆：</strong>吕军伟达成率120%，是团队的效率核心。</li>
+                    <li class="flex items-start"><span class="text-gold mr-2">•</span> <strong>质量压制：</strong>团队在质量侧（完播/跳出）全面达标，产出极其稳定。</li>
+                </ul>
+            </div>
+            <div class="card p-8 rounded-2xl border-l-4 border-l-red-800">
+                <h3 class="text-xl font-bold mb-4 text-red-400">5月待优化项</h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start"><span class="text-red-500 mr-2">•</span> <strong>末位扶持：</strong>小雪的15%达成率属于极低风险项，需进行针对性复盘。</li>
+                    <li class="flex items-start"><span class="text-red-500 mr-2">•</span> <strong>线索转化：</strong>在保证视频质量的同时，需研究如何进一步提升互动与留资动作。</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center border-t border-gray-900">
+        <p class="text-gray-600 text-sm tracking-widest">© 2024 保心上人公司 · 视频编辑部出品</p>
+    </footer>
+
+    <script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                updateDots(id);
+            }
+        }
+
+        function updateDots(id) {
+            const dots = document.querySelectorAll('.nav-dot');
+            const sections = ['hero', 'standards', 'tasks', 'quality', 'summary'];
+            const index = sections.indexOf(id);
+            dots.forEach((dot, i) => {
+                if (i === index) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const sections = ['hero', 'standards', 'tasks', 'quality', 'summary'];
+            let current = '';
+            sections.forEach(section => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= 200) current = section;
+                }
+            });
+            if (current) updateDots(current);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const subtitle = document.getElementById('hero-subtitle');
+            if (subtitle) {
+                setTimeout(() => {
+                    subtitle.classList.remove('opacity-0', 'translate-y-10');
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
