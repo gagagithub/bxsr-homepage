@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保心上人 - 江宁存量客户激活话术分析</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+:root {
+  --gold-primary: #D4AF37;
+  --gold-light: #F5E6AD;
+  --black-bg: #0d0d0d;
+  --black-card: #1a1a1a;
+  --danger: #ff4d4f;
+  --success: #52c41a;
+  --planner-color: #5DADE2;
+  --customer-color: #E59866;
+}
+body {
+  background-color: var(--black-bg);
+  color: #e0e0e0;
+  font-family: 'Noto Sans SC', sans-serif;
+  line-height: 1.7;
+}
+.gold-text { color: var(--gold-primary); }
+.gold-gradient-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-header {
+  border-left: 4px solid var(--gold-primary);
+  padding-left: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.h3 {
+  border-left: 3px solid var(--gold-primary);
+  padding-left: 0.75rem;
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+.card {
+  background: var(--black-card);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  color: var(--gold-primary);
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem;
+}
+.data-table tr:hover td { background: rgba(255,255,255,0.03); }
+.numeric { font-family: 'JetBrains Mono', monospace; text-align: right; }
+.callout {
+  background: rgba(212, 175, 55, 0.05);
+  border-left: 4px solid var(--gold-primary);
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+.callout-red {
+  background: rgba(255, 77, 79, 0.06);
+  border-left-color: #ff4d4f;
+}
+.callout-red .callout-title { color: #ff4d4f; }
+.callout-title { font-weight: 700; color: var(--gold-primary); margin-bottom: 4px; }
+.case-block {
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--planner-color);
+  padding: 14px 18px;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.case-title {
+  font-weight: 700;
+  color: var(--planner-color);
+  margin-bottom: 10px;
+  font-size: 1.0rem;
+}
+.case-quote {
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-style: italic;
+  color: #ccc;
+  font-size: 0.92rem;
+}
+.case-note {
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+.msg {
+  display: flex;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+.msg-time {
+  color: #666;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  min-width: 70px;
+  flex-shrink: 0;
+  align-self: center;
+}
+.msg-who {
+  font-weight: 700;
+  min-width: 40px;
+  flex-shrink: 0;
+}
+.msg-planner .msg-who { color: var(--planner-color); }
+.msg-customer .msg-who { color: var(--customer-color); }
+.msg-body { color: #d0d0d0; word-break: break-word; }
+.msg-tag {
+  background: rgba(255,255,255,0.08);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #888;
+}
+.dialog-meta {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 8px;
+  padding-left: 8px;
+  border-left: 2px solid rgba(212,175,55,0.3);
+}
+.case-h {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.tag-success { background: rgba(82,196,26,0.12); color: #52c41a; border: 1px solid rgba(82,196,26,0.3); }
+.tag-danger { background: rgba(255,77,79,0.12); color: #ff4d4f; border: 1px solid rgba(255,77,79,0.3); }
+.tag-warn { background: rgba(255,165,0,0.12); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
+.tag-info { background: rgba(93,173,226,0.12); color: #5DADE2; border: 1px solid rgba(93,173,226,0.3); }
+.toc-item {
+  display: block;
+  padding: 8px 12px;
+  color: #aaa;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.toc-item:hover {
+  color: var(--gold-primary);
+  background: rgba(212,175,55,0.05);
+}
+@media print {
+  .no-print { display: none; }
+  body { background: white; color: black; }
+  .card { background: white; border: 1px solid #ddd; box-shadow: none; page-break-inside: avoid; }
+  .gold-gradient-text { color: #b8860b; -webkit-text-fill-color: initial; }
+  .msg-body, .case-quote { color: #333; }
+}
+</style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+<!-- 顶栏 -->
+<header class="flex justify-between items-center mb-12 no-print">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+    <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+  </div>
+  <div class="text-right text-xs md:text-sm text-gray-500">内部资料 · 团队学习</div>
+</header>
+
+<!-- 标题区 -->
+<div class="text-center mb-16">
+  <h1 class="text-3xl md:text-4xl font-bold gold-gradient-text mb-3">江宁存量客户激活话术分析</h1>
+  <p class="text-gray-400 text-sm md:text-base">— 团队学习参考 —</p>
+  <p class="text-gray-500 text-xs mt-4">数据范围：2026.04.01 - 05.09 ｜ 时间纵向：2026.03.09 - 03.31</p>
+  <p class="text-red-400 text-xs mt-2 font-bold">★ 内部仅限团队学习使用，请勿外传 ★</p>
+</div>
+
+<!-- 目录 -->
+<div class="card no-print mb-12 bg-gradient-to-br from-[#1a1a1a] to-[#252525]">
+  <p class="text-xs text-gray-500 uppercase tracking-widest mb-3 font-bold">目录</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+    <a href="#sec-1" class="toc-item">一、核心结论（一页速读）</a>
+    <a href="#sec-2" class="toc-item">二、数据全景：三规划师对比</a>
+    <a href="#sec-3" class="toc-item">三、江宁的 6 大核心打法</a>
+    <a href="#sec-4" class="toc-item">四、38 次激活的内部分层</a>
+    <a href="#sec-5" class="toc-item">五、江宁的失败用例对照</a>
+    <a href="#sec-6" class="toc-item">六、林付贤为什么 2%</a>
+    <a href="#sec-7" class="toc-item">七、马康挺为什么 20%</a>
+    <a href="#sec-8" class="toc-item">八、给规划师的可复制清单</a>
+    <a href="#sec-9" class="toc-item">附录：38 次激活完整对话原文</a>
+  </div>
+</div>
+
+<section class="mb-12" id="sec-1"><h2 class="section-header gold-gradient-text">一、核心结论（一页速读）</h2><div class="card ">
+<ol class="space-y-3 text-sm leading-relaxed list-decimal pl-5">
+  <li><strong class="text-white">江宁的存量激活率（4-5 月 41%、3 月 46%）远高于林付贤、马康挺。</strong>这不是运气，而是稳定可复制的方法论。</li>
+  <li>区分江宁与同事的最大单一指标是：<strong class="gold-text">开场是否带"上次/之前/您说"等个人化记忆点</strong>。江宁占 31.6%，林付贤 1.5%，马康挺 10.6%。</li>
+  <li>江宁的 38 次激活分布均匀，没有依赖单一渠道：服务请求 24%、客户主动询价 24%、个人化唤醒 24%、时效钩子 18%、常规问候 11%。</li>
+  <li>林付贤激活率从 3 月 27.5% <span class="tag tag-danger">暴跌</span> 到 4-5 月 2.0%，根因是 4 月开启大规模"一对一群发"，1 分钟内向 2026 个客户发同一条文案，触达分母被自己拉爆。</li>
+  <li>马康挺持续在 12-20% 区间，问题在开场过于简短（首句平均 8 字），常用"哈喽 在吗"，缺钩子。</li>
+  <li>江宁也有失败 — 触达 92 次、激活 38 次，剩下 54 次未激活。最常见失败原因是<strong class="text-orange-400">"信息倾倒（直接堆产品长文）"</strong>和<strong class="text-orange-400">"连日骚扰同一客户"</strong>。</li>
+</ol></div></section>
+<section class="mb-12" id="sec-2"><h2 class="section-header gold-gradient-text">二、数据全景：三规划师对比</h2><h3 class="h3">2.1 4 月 1 日 ~ 5 月 9 日 数据对比</h3>
+<div class="card ">
+<table class="data-table">
+<thead><tr><th>指标</th><th class="numeric">江宁</th><th class="numeric">林付贤</th><th class="numeric">马康挺</th></tr></thead>
+<tbody>
+<tr><td>触达事件数</td><td class="numeric">92</td><td class="numeric">1,660</td><td class="numeric">132</td></tr>
+<tr><td>激活事件数</td><td class="numeric">38</td><td class="numeric">33</td><td class="numeric">27</td></tr>
+<tr><td><strong>激活率（事件级）</strong></td><td class="numeric"><span class="tag tag-success">41.3%</span></td><td class="numeric"><span class="tag tag-danger">2.0%</span></td><td class="numeric"><span class="tag tag-warn">20.5%</span></td></tr>
+<tr><td>客户全程未回占比</td><td class="numeric">55.4%</td><td class="numeric"><span class="tag tag-danger">97.5%</span></td><td class="numeric">78.8%</td></tr>
+<tr><td>客户主动开口的事件占比</td><td class="numeric">17%</td><td class="numeric">1%</td><td class="numeric">7%</td></tr>
+<tr><td>客户首响时间中位（分钟）</td><td class="numeric"><span class="text-green-400 font-bold">12.8</span></td><td class="numeric">22.4</td><td class="numeric">11.8</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-title">▎ 关键观察</div>江宁的客户首响最快、未回率最低，说明她的开场让客户"愿意立刻回"。</div>
+</div>
+<h3 class="h3">2.2 主动唤醒类开场的指标对比</h3>
+<div class="card ">
+<p class="text-xs text-gray-500 mb-3 italic">仅看"江宁主动开口"的事件，剔除客户先开口的情形</p>
+<table class="data-table">
+<thead><tr><th>指标</th><th class="numeric">江宁</th><th class="numeric">林付贤</th><th class="numeric">马康挺</th></tr></thead>
+<tbody>
+<tr><td>主动唤醒事件数</td><td class="numeric">76</td><td class="numeric">1,639</td><td class="numeric">123</td></tr>
+<tr><td>开场首句平均长度（字）</td><td class="numeric"><span class="text-green-400 font-bold">42.8</span></td><td class="numeric">17.4</td><td class="numeric">7.9</td></tr>
+<tr><td>开场连发条数（中位/最大）</td><td class="numeric">1 / 4</td><td class="numeric">2 / 28</td><td class="numeric">3 / 4</td></tr>
+<tr><td>开场带客户姓名/称谓</td><td class="numeric">19.7%</td><td class="numeric">1.9%</td><td class="numeric">49.6%</td></tr>
+<tr><td><strong>开场带"上次/之前"记忆点</strong></td><td class="numeric"><span class="tag tag-success">31.6%</span></td><td class="numeric"><span class="tag tag-danger">1.5%</span></td><td class="numeric">10.6%</td></tr>
+<tr><td>开场带"下调/即将"时效钩子</td><td class="numeric"><span class="tag tag-success">39.5%</span></td><td class="numeric">1.2%</td><td class="numeric">15.4%</td></tr>
+<tr><td>开场带保单/续费等服务关键词</td><td class="numeric">5.3%</td><td class="numeric">0.3%</td><td class="numeric">7.3%</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-title">▎ 关键差异</div>记忆点 31.6% vs 1.5% — 这是江宁与林付贤之间最具结构性的差异。</div>
+<ul class="text-sm text-gray-300 space-y-2 mt-3 list-disc pl-5">
+<li>江宁不靠连发数取胜（连发中位仅 1 条），靠"<strong>首句长度 + 内容相关度</strong>"。</li>
+<li>马康挺虽然 50% 都带姓名，但记忆点占比仅 10.6%——叫名字不够，要"叫名字 + 提具体上次说过的事"。</li>
+<li>林付贤连发最大达 28 条，是单一群发模板被复制 N 遍。</li>
+</ul>
+</div>
+<h3 class="h3">2.3 时间纵向：3 月 vs 4-5 月</h3>
+<div class="card ">
+<p class="text-xs text-gray-500 mb-3 italic">3 月数据来自本地备份 3/9-3/31 共 23 天，仅做趋势对比</p>
+<table class="data-table">
+<thead><tr><th>规划师</th><th class="numeric">3 月激活率</th><th class="numeric">4-5 月激活率</th><th>趋势</th></tr></thead>
+<tbody>
+<tr><td><strong>江宁</strong></td><td class="numeric">46.2%</td><td class="numeric">41.3%</td><td><span class="tag tag-success">稳定</span></td></tr>
+<tr><td><strong>林付贤</strong></td><td class="numeric">27.5%</td><td class="numeric">2.0%</td><td><span class="tag tag-danger">↓ 暴跌</span></td></tr>
+<tr><td><strong>马康挺</strong></td><td class="numeric">12.4%</td><td class="numeric">20.5%</td><td><span class="tag tag-success">↑ 略升</span></td></tr>
+</tbody></table>
+<div class="callout callout-red"><div class="callout-title">▎ 关键发现</div>林付贤的暴跌不是话术变差。她 3 月触达 120 → 4 月触达 1660，触达数 14 倍增长但激活数几乎没变化。</div>
+<p class="text-sm text-gray-300 mt-3">链路：4/30 13:50:42 ~ 13:51:34 短短 52 秒内，林付贤向 <strong class="text-red-400">2026 个不同客户</strong>分别单独发送了同一条文案：</p>
+<div class="case-quote">"其实 5 天假对我们来说还是值得期待一下的。致敬每一位努力搞钱的劳动人民。请你放下忙碌，尽管吃喝玩乐。五一过后我们携手一起去香港。"</div>
+<p class="text-sm text-gray-400 mt-2">结果：97.5% 客户全程零回复。这种"广播板"式的群发，会把激活率分母严重稀释。</p>
+</div></section>
+<section class="mb-12" id="sec-3"><h2 class="section-header gold-gradient-text">三、江宁的 6 大核心打法</h2><p class="text-xs text-gray-500 mb-6 italic">每一条都配了原始对话案例，规划师可以直接对照学习。</p>
+<h3 class="h3">打法 1：开场必带个人化记忆点，绝不广撒网</h3>
+<p class="text-sm text-gray-300 mb-3">江宁从来不发"你好""在吗"这种万能话术。每个老客户的开场都精准到上次聊到的具体事情：上次买的产品、家人状态、资金到账时间、健康情况、出行计划等。</p>
+
+<div class="case-block">
+<div class="case-title">案例 A：喜羊羊先生（沉默 14+ 天后激活）</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场：</p>
+<div class="case-quote">"您好，好久没有联系了，最近您爱人这边工作的情况怎么样了？之前说他这边今年会晋升，不知道目前情况如何呢？"</div>
+<p class="text-sm text-gray-300">客户立刻给出长回复 + 同时提了"最近有好产品吗"。当日往返 14 段，激活成功。</p>
+<div class="case-note">钩子拆解：① 询问家人 ② 引用客户上次说过的"晋升" ③ 关心+轻量话题，无任何推销。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 B：顽主先生（江宁称"张先生"）</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场：</p>
+<div class="case-quote">"张先生，在不？之前听说您去西双版纳旅游了，现在应该回来了吧？"</div>
+<p class="text-sm text-gray-300 mb-2">客户回"刚回来几天"。江宁立刻接续：</p>
+<div class="case-quote">"哦哦哦，我和您说下，李女士的保单等 5 月份要续费了，您们到时候记着准备好资金续费哈。"</div>
+<div class="case-note">把"旅游问候"作为破冰，紧接着切入"保单续费"，自然过渡到业务，不突兀。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 C：阿蜜叠娃瑟（沉默 30 天）</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场：</p>
+<div class="case-quote">"您好，好久没有联系了，您最近还忙不忙啊？"</div>
+<p class="text-sm text-gray-300 mb-2">客户回"挺忙的，港险的事儿可能要延后了"。江宁继续追问：</p>
+<div class="case-quote">"嗯，那您这块的话就是短时间内，就是之前您是说资金没到，大概要 7 月份资金到，那目前的话就是资金到了的话，您还会考虑吗？还是说短时间内就不看这个事情了。"</div>
+<div class="case-note">"之前您是说资金没到，大概要 7 月份资金到"是关键钩子——江宁记得每个客户的资金时点。</div>
+</div>
+
+<div class="callout"><div class="callout-title">▎ 要点</div>每个老客户开场前，先看上次对话最后留下了什么具体可追溯的信息（家人、出行、资金、健康、产品需求），把那个信息当成开场的第一句话。</div>
+
+<h3 class="h3">打法 2：标准模板 + 时效性触发器</h3>
+<p class="text-sm text-gray-300 mb-3">少量"模板化"开场也都带具体的"现在不聊就亏"信号。</p>
+
+<div class="case-block">
+<div class="case-title">案例 A：米粒（沉默从未双向沟通）</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场（连发两条）：</p>
+<div class="case-quote">"您好，好久没有联系了，最近国内的产品又要继续下降了，不知道您这边还有没有计划在看看储蓄类的产品呢？或者是一些保障类型的产品，都可以帮您在推荐推荐"</div>
+<div class="case-quote">"现在还有代替 5 年期定存的大额存单类的产品哦"</div>
+<p class="text-sm text-gray-300">客户立刻回："多少呢"。当日 34 段，激活成功。</p>
+<div class="case-note">钩子三件套：① 时效（"又要继续下降"）② 上次产品类型（"储蓄类"）③ 替代品（"代替大额存单"）。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 B：湘妹子</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场：</p>
+<div class="case-quote">"您好，好久没有联系了，之前您买过增额寿险产品，马上 7 月样子增额寿险产品利率又要进一步下调了，如果手上资金宽裕的话，再补充一点"</div>
+<div class="case-note">双钩子：① 客户已买的产品类型 ② 7 月利率下调时点 + 给具体行动建议（"补充一点"）。</div>
+</div>
+
+<div class="callout"><div class="callout-title">▎ 要点</div>时效信号 + 上次产品 + 具体行动建议（"补充""了解""对比"）三件套，比纯问候回复率高一个数量级。</div>
+
+<h3 class="h3">打法 3：服务先行，售后即销售线索</h3>
+<p class="text-sm text-gray-300 mb-3">38 次激活里 9 次（24%）是服务请求型，是同行没在做的"金矿"。江宁把每一个看似杂事的服务请求都接住了，接住即是激活。</p>
+
+<div class="case-block">
+<div class="case-title">案例 A：咕咕（生日祝福澄清）</div>
+<p class="text-sm text-gray-300 mb-2">客户上来就质疑："今天很突然的这个人打电话给我，说是什么公司的，说看见今天是我的生日要给我寄一份什么南京的特产，三年了还是第一次，我又不了解他，一直都是和你对接的..."（潜台词：怀疑诈骗）</p>
+<p class="text-sm text-gray-300 mb-2">江宁连发四条解释：</p>
+<div class="case-quote">"对他是这样的，是我们公司同事。我们现在是最近不是很多老客户到生日了嘛，我们公司也是会给每个客户去发一些生日祝福，就是因为之前客户这块都忽略了嘛，所以我们现在也是把这个客户权益提上来了。"</div>
+<div class="case-quote">"嗯，然后就是具体的产品对接，包括售后啊，还有有任何问题，你都可以跟我联系，就我这边还是负责您的后续的一些服务。"</div>
+<div class="case-quote">"只是具体的生日联系，是由他这边来跟进。所以说，也是跟您大概说一下这个情况，怕您到时候可能会摸不着头脑，也可能会觉得很奇怪。"</div>
+<p class="text-sm text-gray-300">客户："对哦，就怕是碰到什么诈骗哦"。江宁："对的，所以说我就赶紧跟你说一下..." 当日 25 段，激活成功，且自然过渡到产品咨询。</p>
+<div class="case-note">把别人造成的混乱翻译成自己的服务连接，售后转销售。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 B：倾听冷暖（汇丰 APP 故障）</div>
+<p class="text-sm text-gray-300 mb-2">客户发图："小张我这个汇丰银行 app 进入不了，现在是这个界面"</p>
+<p class="text-sm text-gray-300">江宁迅速回应："肯定是 APP 要更新了，我来看看" → "你下的 APK 应该不对" → "我来找下" → 发对的二维码。当日 67 段往返。</p>
+<div class="case-note">这种"客户来求救"的场景，江宁没有把它当作分外事，而是当成强化关系的机会。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 C：两只蟹蟹（差旅报销时间表）</div>
+<p class="text-sm text-gray-300 mb-2">江宁主动："之前和您说的，2000 块的差旅报销的那个费用，和您说一下。这个钱给的没有那么快，要等保单过了犹豫期的次月才能给到您这边，所以我提前和您说下"</p>
+<p class="text-sm text-gray-300">主动把可能的时间纠纷讲在前面。客户回："这点信任还是有的，毕竟咱们也接触一年多了" + "我老公对你印象也很好，他的评价是专业，靠谱，认真"。</p>
+<div class="case-note">主动暴露不利信息（钱晚到）反而强化信任。</div>
+</div>
+
+<div class="callout"><div class="callout-title">▎ 要点</div>保单到期、卡过期、APP 故障、亲属拒赔、差旅报销、生日祝福澄清——每一件服务请求都是激活窗口，不要当成分外事。</div>
+
+<h3 class="h3">打法 4：客户拒绝后的两步追问（不死缠也不放手）</h3>
+<p class="text-sm text-gray-300 mb-3">客户说"不"，江宁不会客套收工。她有一个稳定的二段反弹：先承认+反向解释客户的状态，再追问真实顾虑。</p>
+
+<div class="case-block">
+<div class="case-title">案例 A：俞先生</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场带钩子："俞先生后来您和您爱人这边有在详细的沟通一下香港的这个事情吗？我昨天才陪客户去渣打开户..."</p>
+<p class="text-sm text-gray-300 mb-2">客户："暂时搁置了啊，如果有需要再和你说"</p>
+<div class="case-quote">江宁："哦，暂时这个事情就是先放一放了，是吧？哦，好的，那如果你后续有这方面的考虑的话，再跟我说"</div>
+<div class="case-note">把客户的拒绝翻译复述一遍 + 给客户留接口。客户回"谢谢了"，最终留下友善印象。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 B：秋实先生</div>
+<p class="text-sm text-gray-300 mb-2">客户："不想去，太淘神了"（不愿去香港开户签单）</p>
+<div class="case-quote">江宁："您是短时间不能去香港，还是说您不想去香港开户，还是哪方面的顾虑呢？"</div>
+<div class="case-note">三选项反问，逼客户给真实理由。</div>
+</div>
+
+<div class="case-block">
+<div class="case-title">案例 C：阿蜜叠娃瑟</div>
+<p class="text-sm text-gray-300 mb-2">客户："今年应该不买港险了"</p>
+<div class="case-quote">江宁："哦，主要是因为哪方面的原因？是时间上抽不出来，还是资金这块儿暂时空不出来吗？"</div>
+<div class="case-note">二选一反问 + 不带评判语气。</div>
+</div>
+
+<div class="callout"><div class="callout-title">▎ 要点</div>客户拒绝时不要客套结束，用"是 A 还是 B"的二/三选一反问，把对话从 1 段拉到 3 段以上，并探出真实顾虑。</div>
+
+<h3 class="h3">打法 5：反对意见三段式（共情 → 解释机制 → 给替代方案）</h3>
+
+<div class="case-block">
+<div class="case-title">案例：帆先生（沉默 20 天后激活，三段式异议处理范例）</div>
+<p class="text-sm text-gray-300 mb-2">客户提出两个顾虑："主要还是纠结这些分红险对外宣传的究竟有多大的水份，另外我心里不太愿意买美元保单"</p>
+<p class="text-sm text-gray-300 mb-2">江宁连发四条：</p>
+<div class="case-quote">① "其实是这样子的，就是不同的保险公司它的分红实现率是有不同的。而且还有一点就是因为香港的市场是公开透明的，所以说其实保险公司的分红虽然说是不确定的，但是它其实在市场上公布，还是不会有太大波动的。因为这些百年历史的保险公司，它都有这个平滑机制，是会平滑到一些投资不好的年度。"</div>
+<div class="case-quote">② "就是他之前如果比如说盈利非常好的话，他不会拿出来全部分掉，他会存在他的分红盈余池子里面，等到不好的时候再去拿来分。"</div>
+<div class="case-quote">③ "至于美元保单这一说，其实也是有解决方案的，因为现在有不少的保险公司也是支持人民币保单的。如果您担心这个保单会有汇率的这个波动的话，买人民币保单也可以。还有就是现在很多产品它其实是有货币转化的功能。"</div>
+<div class="case-quote">④ "就是，如果你觉得美元不行了，你是可以通过货币转换把它换成别的国家的货币。比如说人民币呀、欧元啊、澳元啊、新加坡元啊，这些都是可以进行兑换的。很多主流的货币都是支持的。"</div>
+<div class="case-note">
+<strong>结构拆解：</strong><br>
+① 第 1 条：承认顾虑（"其实是这样子的"）+ 解释行业机制（公开透明、平滑机制）<br>
+② 第 2 条：补充机制细节（盈余池）<br>
+③ 第 3 条：给第二个顾虑的替代方案（"也是有解决方案的"+ 人民币保单 + 货币转换）<br>
+④ 第 4 条：把替代方案具体化（"美元 → 人民币、欧元、澳元、新加坡元"）
+</div>
+</div>
+
+<div class="callout"><div class="callout-title">▎ 要点</div>承认 → 解释机制 → 给替代品 → 落到具体动作。每条 2~3 句，连发 3-4 条而不是堆一段长文。</div>
+
+<h3 class="h3">打法 6：连发短句替代一条长消息</h3>
+
+<p class="text-sm text-gray-300 mb-3">江宁 76 次主动唤醒事件中，连发条数中位为 1 条但首句平均 42.8 字。她的策略不是"多发几条凑场面"，而是"<strong class="gold-text">第一句把信息装满，必要时连发 2-3 条短消息</strong>"。</p>
+<p class="text-sm text-gray-300 mb-3"><strong>好处三点：</strong></p>
+<ol class="text-sm text-gray-300 list-decimal pl-5 space-y-1">
+<li>在企微聊天列表里"未读 3 条"比"未读 1 条"更容易被点开；</li>
+<li>让客户的回复成本变低（每条都可以单独 reaction）；</li>
+<li>制造"对话感"而不是"通知感"。</li>
+</ol>
+
+<div class="case-block" style="border-left-color: #ff4d4f;">
+<div class="case-title" style="color: #ff4d4f;">反例：本月失败案例 #素年锦时（4/8）</div>
+<p class="text-sm text-gray-300 mb-2">江宁开场两条：</p>
+<div class="case-quote">"还有就是您之前有了解过立桥人寿的智选保吗？确定收益，一次性交，2 年回本，5 年可以取，收益 4.17%，可以作为大额存单的替代"</div>
+<div class="case-quote">"也可以了解了解的"</div>
+<p class="text-sm text-gray-300">客户全程未回。原因：第一条信息倾倒（直接堆产品参数），缺少互动钩子。</p>
+</div>
+
+<div class="callout"><div class="callout-title">▎ 要点</div>第一条要完整传达"为什么要找你聊"，但用短句而非长段；不要把第一条变成产品说明书。</div>
+</section>
+<section class="mb-12" id="sec-4"><h2 class="section-header gold-gradient-text">四、江宁 38 次激活的内部分层</h2><div class="card ">
+<p class="text-sm text-gray-300 mb-4">江宁的激活渠道分布均匀，没有依赖单一打法。这意味着她的方法论是"全场景适配"的。</p>
+<table class="data-table">
+<thead><tr><th>类别</th><th class="numeric">占比</th><th>描述</th></tr></thead>
+<tbody>
+<tr><td><strong>服务请求 / 售后类</strong></td><td class="numeric">9 (24%)</td><td>保单到期、APP 故障、生日澄清、复效、拒赔解释等</td></tr>
+<tr><td><strong>客户主动询价 / 回头</strong></td><td class="numeric">9 (24%)</td><td>客户从后台留言、看视频后主动来问产品</td></tr>
+<tr><td><strong>主动唤醒 - 个人化记忆点</strong></td><td class="numeric">9 (24%)</td><td>开场带"上次/之前/您说"等具体记忆</td></tr>
+<tr><td><strong>主动唤醒 - 时效/产品钩子</strong></td><td class="numeric">7 (18%)</td><td>产品下架、利率下调、新产品上线</td></tr>
+<tr><td><strong>主动唤醒 - 常规问候</strong></td><td class="numeric">4 (11%)</td><td>"在吗""今天有时间吗"等轻量约时间</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-title">▎ 观察</div>
+<ul class="text-sm space-y-1 mt-2 list-disc pl-5">
+<li>客户主动询价占比 24%，说明江宁过去的服务质量已经形成"品牌效应"——客户记得回来找她。</li>
+<li>服务请求占比 24%，说明她把"售后"做成了"销售线索"。</li>
+<li>个人化记忆点 24%——这是同行最缺的，每个客户都需要单独准备开场。</li>
+<li>常规问候只有 11% 且效果一般（4 个里有 3 个最后只是"软关单"），说明纯问候不是高 ROI 的激活方式。</li>
+</ul>
+</div>
+</div></section>
+<section class="mb-12" id="sec-5"><h2 class="section-header gold-gradient-text">五、江宁的失败用例对照</h2><div class="card "><p class="text-sm text-gray-300">江宁本月触达后未激活的事件共 54 个：51 个客户全程没回，3 个客户回了但没破 3 段。从失败案例反推可以避免的"反例"：</p></div>
+<h3 class="h3">反例 1：信息倾倒——开场就堆产品长文</h3>
+<div class="case-block" style="border-left-color: #ff4d4f;">
+<div class="case-title" style="color: #ff4d4f;">客户：李先生（4/8）</div>
+<p class="text-sm text-gray-300">客户问："麻烦你大概介绍一下，"</p>
+<p class="text-sm text-gray-300">江宁连发 5 条产品介绍（每条 100+ 字），客户最后没再回复。</p>
+<div class="case-note">反思：当客户的需求模糊时（"大概介绍一下"），第一条不该直接堆产品参数，应该先反问"您主要想看哪种类型的——年金、增额寿、还是分红险？"</div>
+</div>
+<h3 class="h3">反例 2：连日骚扰同一客户</h3>
+<div class="case-block" style="border-left-color: #ff4d4f;">
+<div class="case-title" style="color: #ff4d4f;">客户：大道至简（4/9 + 4/10）</div>
+<p class="text-sm text-gray-300">江宁 4/9 18:31 发"昨天信号不好，今晚要不要约"，客户没回。</p>
+<p class="text-sm text-gray-300">江宁 4/10 13:30 又发"今天看下午方便还是晚上方便"，客户仍没回。</p>
+<div class="case-note">反思：客户没响应时，连日重复发同样的"约时间"会被当成催促。应该至少隔 3-5 天，或者换一个话题角度（比如"您之前关心的产品 X 上新了"）。</div>
+</div>
+<h3 class="h3">反例 3：开场过于敷衍</h3>
+<div class="case-block" style="border-left-color: #ff4d4f;">
+<div class="case-title" style="color: #ff4d4f;">客户：Aurora（4/30）</div>
+<p class="text-sm text-gray-300">江宁开场只发"您好"两个字，客户全程未回。</p>
+<div class="case-note">反思：和这类客户的近况没有具体记忆点时，宁可先翻聊天记录、查上次对话，也不要发空洞问候。</div>
+</div>
+<h3 class="h3">反例 4：钩子虽好但客户已凉</h3>
+<div class="case-block" style="border-left-color: #ff4d4f;">
+<div class="case-title" style="color: #ff4d4f;">客户：肖先生（4/13）</div>
+<p class="text-sm text-gray-300">江宁开场："肖先生您好，之前您买过增额寿险和分红险的产品，现在国内的产品的利率也是越来越低，后续如果还有资金的话，可以考虑考虑香港的产品，现在有的香港的产品其实收益还是不错的"</p>
+<p class="text-sm text-gray-300">客户只回"明白"，无后续。</p>
+<div class="case-note">反思：开场虽然带了个人化记忆 + 时效钩子，但话术过于推销感（"考虑考虑香港的产品"）。可以改为"您手上钱的去向最近有想法吗？我看到一个东西觉得跟您当时的需求有点匹配"——把"我想推产品给你"改成"我帮你看到一个匹配的机会"。</div>
+</div>
+<div class="callout"><div class="callout-title">▎ 启示</div>江宁也会失败，激活率 41% 不是 100%。但失败模式有规律：信息倾倒、连日骚扰、敷衍开场、推销感过重——这些都是规划师可以警惕的。</div></section>
+<section class="mb-12" id="sec-6"><h2 class="section-header gold-gradient-text">六、对照分析：为什么林付贤激活率只有 2%？</h2><h3 class="h3">6.1 触达数 1 个月暴增 14 倍，激活数纹丝不动</h3>
+<div class="card "><p class="text-sm">3 月触达 120，激活 33（27.5%）→ 4 月触达 <strong class="text-red-400">1660</strong>，激活 33（2.0%）。激活数完全没变，触达数暴增 14 倍。这说明 4 月的新触达全是"无效触达"。</p></div>
+<h3 class="h3">6.2 4 月 30 日 13:50:42 ~ 13:51:34，52 秒内向 2026 客户群发同一文案</h3>
+<div class="card ">
+<p class="text-sm text-gray-300 mb-3">这是用企微的"客户群发"功能实现的——每条都被数据库记为 1 对 1 消息，所以系统的群发判定 LIKE '%;%;' 抓不到。结果就是触达分母被严重稀释。</p>
+<p class="text-sm text-gray-300 mb-2"><strong class="gold-text">文案原文：</strong></p>
+<div class="case-quote">"其实 5 天假对我们来说还是值得期待一下的。致敬每一位努力搞钱的劳动人民👏👏请你放下忙碌，尽管吃喝玩乐。五一过后我们携手一起去香港😬😬"</div>
+<p class="text-sm text-gray-300 mt-3 mb-2"><strong class="gold-text">其他高频群发模板：</strong></p>
+<ul class="text-sm text-gray-300 list-disc pl-5 space-y-1">
+<li>"给你看一下，2025 年的香港保险订单量真的是爆增哈"（45 客户）</li>
+<li>"【香港保险首席】林付贤 全国 COT 荣誉..."（自我介绍宣传文，20 客户）</li>
+<li>"香港保险主要分为三个层次..."（产品科普，12 客户）</li>
+</ul>
+</div>
+<h3 class="h3">6.3 95% 客户根本没看完前三句</h3>
+<div class="card "><p class="text-sm">林付贤的客户首响时间中位 22.4 分钟，比江宁的 12.8 分钟慢一倍——这不是客户慢，是客户少数会回的那部分本身就反应慢。其余 97.5% 全程零回复。</p></div>
+<h3 class="h3">6.4 改善建议</h3>
+<div class="card ">
+<ol class="text-sm text-gray-300 list-decimal pl-5 space-y-2">
+<li>不要把存量客户当群发名单。1500 个客户里能激活的目标 ≤ 100，应当按"上次聊过什么"分组分层。</li>
+<li>群发文案至少加客户姓名变量。"X 哥/姐，五一过后..."用 webhook 批处理也能做。</li>
+<li>"5 天假"这种钩子根本对接不到任何具体决策，应该改成"五一银行只休 1 天，办手续仍可约 X 月 X 日"——把放假信号转成可行动 CTA。</li>
+</ol>
+</div></section>
+<section class="mb-12" id="sec-7"><h2 class="section-header gold-gradient-text">七、对照分析：为什么马康挺激活率只有 20%？</h2><h3 class="h3">7.1 不是量的问题，是开场质量</h3>
+<div class="card "><p class="text-sm">马康挺触达 132 次，远小于林付贤的 1660，说明她不做大规模群发。但 79% 客户全程没回，问题在开场质量。</p></div>
+<h3 class="h3">7.2 开场过于简短，缺钩子</h3>
+<div class="card ">
+<p class="text-sm text-gray-300 mb-3">马康挺主动唤醒事件的开场首句平均长度 <strong class="text-red-400">7.9 字</strong>（江宁是 42.8 字）。常见开场：</p>
+<div class="case-quote">"哈喽 在吗"</div>
+<div class="case-quote">"这两天在忙是吧"</div>
+<div class="case-quote">"5 月有考虑回南京吗"</div>
+<div class="case-quote">"下午好 好久未联系了"</div>
+<div class="case-quote">"章先生 你好"</div>
+</div>
+<h3 class="h3">7.3 虽然 50% 都带姓名，但只有 10% 带具体记忆点</h3>
+<div class="card "><p class="text-sm">马康挺会叫"X 先生"——这点比林付贤好，但仅止于此。"X 先生 你好" 和江宁的 "X 先生，听说您去西双版纳旅游了" 差距巨大。</p></div>
+<h3 class="h3">7.4 改善建议</h3>
+<div class="card ">
+<ol class="text-sm text-gray-300 list-decimal pl-5 space-y-2">
+<li>学打法 1：每个老客户开场带一个"上次聊过的细节"作钩子，而不是"哈喽 在吗"。</li>
+<li>学打法 4：客户拒绝后用"是 A 还是 B"反问，把对话从 1 段拉到 3 段。</li>
+<li>把 7.9 字的首句拉到至少 30 字，把"为什么要找你聊"装在第一句里。</li>
+</ol>
+</div></section>
+<section class="mb-12" id="sec-8"><h2 class="section-header gold-gradient-text">八、给规划师的可复制清单</h2><div class="card ">
+<p class="text-sm text-gray-300 mb-4">下面 6 条是从江宁打法提炼的可立即套用的检查表，每次准备唤醒老客户前对照一下。</p>
+<table class="data-table">
+<thead><tr><th class="numeric">#</th><th>检查项</th><th>示例</th></tr></thead>
+<tbody>
+<tr><td class="numeric">1</td><td><strong>上次聊到什么具体事？</strong></td><td>家人/工作/资金/健康/出行/产品需求</td></tr>
+<tr><td class="numeric">2</td><td><strong>当前有没有时效信号？</strong></td><td>产品下架、利率下调、保单到期、签证有效期</td></tr>
+<tr><td class="numeric">3</td><td><strong>有没有服务关怀切入点？</strong></td><td>保单续费、卡过期、APP 升级、到期提醒</td></tr>
+<tr><td class="numeric">4</td><td><strong>第一句话是否带钩子？</strong></td><td>不要"在吗"，至少 30 字带具体内容</td></tr>
+<tr><td class="numeric">5</td><td><strong>客户拒绝后如何接？</strong></td><td>用"是 A 还是 B"二选一反问</td></tr>
+<tr><td class="numeric">6</td><td><strong>反对意见三段式准备好了吗？</strong></td><td>承认 → 解释机制 → 给替代品 → 给具体动作</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-title">▎ 从今天开始</div>每次准备打开老客户聊天前，先翻一下上次最后 5 条聊天，找出"具体可追溯的信息"作为开场。</div>
+</div></section>
+<section class="mb-12" id="sec-9"><h2 class="section-header gold-gradient-text">附录：江宁 38 次激活完整对话原文</h2><p class="text-xs text-gray-500 mb-6 italic">按时间排序，呈现每次激活的开场对话（前 12 条）。客户名已脱敏。</p>
+
+<div class="card">
+<div class="case-h">#1 2026-04-02 — Fanny</div>
+<div class="dialog-meta">加好友日: 2026-02-12 | 双向沉默: 从未双向沟通 | 当日方向变化: 5 次</div>
+<div class="msg msg-planner"><span class="msg-time">09:31:35</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，您最近这边还有在关注一下香港的产品这块吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:31:43</span><span class="msg-who">江宁</span><span class="msg-body">最近有在研究看看什么产品吗？</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:51:33</span><span class="msg-who">客户</span><span class="msg-body">上午好 下半年再考虑了</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:56:29</span><span class="msg-who">江宁</span><span class="msg-body">哦哦，就是像您说的，您目前手上资金还没有回款回来，所以现在先放放，等下半年的时候再来具体的规划是吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:13:09</span><span class="msg-who">客户</span><span class="msg-body">嗯嗯 等下半年再决定</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:15:55</span><span class="msg-who">江宁</span><span class="msg-body">嗯，好的，那等下半年的时候，我们在具体做沟通</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:16:27</span><span class="msg-who">客户</span><span class="msg-body">好的👌</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#2 2026-04-07 — 帆哥</div>
+<div class="dialog-meta">加好友日: 2025-12-10 | 双向沉默: 20 天 | 当日方向变化: 17 次 | 1对1 消息: 29 条</div>
+<div class="msg msg-planner"><span class="msg-time">10:28:56</span><span class="msg-who">江宁</span><span class="msg-body">您好，在吗？今天是否有时间再一起详细的沟通一下？</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:14:59</span><span class="msg-who">客户</span><span class="msg-body">这款时间挺忙的，保险这个我还在考虑，具体的日程还没有去计划</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:15:52</span><span class="msg-who">江宁</span><span class="msg-body">最近您这边比较忙，是吧？关键是那个通行证的事情，就通行证你要是办好了之后，保险这个可以考虑。然后等考虑好了以后，具体再去。但是，如果通行证办不下来的话，其实保险的话考虑就是意义不大，您说呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:16:52</span><span class="msg-who">客户</span><span class="msg-body">通行证，已经办下来了，但是在公司那里，</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:17:11</span><span class="msg-who">江宁</span><span class="msg-body">哦哦，那就是去之前去公司那边申请就可以了是吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:17:28</span><span class="msg-who">江宁</span><span class="msg-body">那保险这块，您主要在考虑的是哪些点呢？您可以把您比较纠结的点大概说一下，然后我从我专业的角度来帮您综合分析一下。</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:25:12</span><span class="msg-who">客户</span><span class="msg-body">主要还是纠结这些分红险对外宣传的究竟有多大的水份，另外我心里不太愿意买美元保单</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:38:15</span><span class="msg-who">江宁</span><span class="msg-body">其实是这样子的，就是不同的保险公司它的分红实现率是有不同的。而且还有一点就是因为香港的市场是公开透明的，所以说其实保险公司的分红虽然说是不确定的，但是它其实在市场上公布，还是不会有太大波动的。因为这些百年历史的保险公司，它都有这个平滑机制，是会平滑到一些投资不好的年度。</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:38:28</span><span class="msg-who">江宁</span><span class="msg-body">就是他之前如果比如说盈利非常好的话，他不会拿出来全部分掉，他会存在他的分红盈余池子里面，等到不好的时候再去拿来分。</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:38:46</span><span class="msg-who">江宁</span><span class="msg-body">至于美元保单这一说，其实也是有解决方案的，因为现在有不少的保险公司也是支持人民币保单的。如果您担心这个保单会有汇率的这个波动的话，买人民币保单也可以。还有就是现在很多产品它其实是有货币转化的功能。</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:39:04</span><span class="msg-who">江宁</span><span class="msg-body">就是，如果你觉得美元不行了，你是可以通过货币转换把它换成别的国家的货币。比如说人民币呀、欧元啊、澳元啊、新加坡元啊，这些都是可以进行兑换的。很多主流的货币都是支持的。</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:39:16</span><span class="msg-who">江宁</span><span class="msg-body">比如说，你要是就是想在国内进行投资，就是在国内生活，国内用的话，那你可以买人民币的保单。人民币保单其实就不存在这种汇率的问题。</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#3 2026-04-08 — 咕咕</div>
+<div class="dialog-meta">加好友日: 2024-01-26 | 双向沉默: 从未双向沟通 | 当日方向变化: 14 次</div>
+<div class="msg msg-planner"><span class="msg-time">11:49:56</span><span class="msg-who">江宁</span><span class="msg-body">汪女士您好，刚刚我们崔老师和您联系的是吧？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:50:17</span><span class="msg-who">江宁</span><span class="msg-body">您是想了解一下之前您买的那个一生中意的这个产品的情况的是吧？</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:54:24</span><span class="msg-who">客户</span><span class="msg-body">今天很突然的这个人打电话给我，说是什么公司的，说看见今天是我的生日要给我寄一份什么南京的特产，三年了还是第一次，我又不了解他，一直都是和你对接的，聊天中顺便问了一下我买的那个产品情况，他说叫你来</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:56:24</span><span class="msg-who">江宁</span><span class="msg-body">对他是这样的，是我们公司同事。我们现在是最近不是很多老客户到生日了嘛，我们公司也是会给每个客户去发一些生日祝福，就是因为之前客户这块都忽略了嘛，所以我们现在也是把这个客户权益提上来了。</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:56:40</span><span class="msg-who">江宁</span><span class="msg-body">嗯，然后就是具体的产品对接，包括售后啊，还有有任何问题，你都可以跟我联系，就我这边还是负责您的后续的一些服务。</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:57:00</span><span class="msg-who">江宁</span><span class="msg-body">只是具体的生日联系，是由他这边来跟进。所以说，也是跟您大概说一下这个情况，怕您到时候可能会摸不着头脑，也可能会觉得很奇怪。</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:57:43</span><span class="msg-who">客户</span><span class="msg-body">对哦，就怕是碰到什么诈骗哦</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:57:57</span><span class="msg-who">江宁</span><span class="msg-body">对的，所以说我就赶紧跟你说一下，就是这个是我们公司的，所以你也不用担心。</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:58:14</span><span class="msg-who">客户</span><span class="msg-body">我那个产品现在还正常的哇？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:59:06</span><span class="msg-who">江宁</span><span class="msg-body">我刚才帮你查了一下，这两年不是产品它限高嘛，就是限制保险公司的分红。但是前年保险公司的分红是这个70%，去年公布的是百分之百达成的，今年的分红实现率还没有公布，应该是在7~8月份公布。</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:59:20</span><span class="msg-who">江宁</span><span class="msg-body">中意的这个产品，它的分红实现率在整个保险行业里面都是数一数二的，基本上是排前五的，所以分红一直都不错。</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:59:42</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#4 2026-04-10 — 严于律己</div>
+<div class="dialog-meta">加好友日: 2025-08-27 | 双向沉默: 从未双向沟通 | 当日方向变化: 18 次</div>
+<div class="msg msg-planner"><span class="msg-time">13:28:11</span><span class="msg-who">江宁</span><span class="msg-body">严先生，您好，我后来详细的了解过之前我们在电话里面说的这个事情，就是海外保险征税的问题，确实从文件上讲是有这个要纳税的要求，但是这个实际操作下来的话，是要领取的金额超过缴纳的保费以后才会涉及这块的征税。前面每年部分领取的话，暂时不会涉及这方面的事项</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:49:09</span><span class="msg-who">客户</span><span class="msg-body">好的，了解，谢谢</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:49:45</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯，还有什么顾虑或者想法我们可以随时保持沟通</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:51:01</span><span class="msg-who">客户</span><span class="msg-body">我再对比一下其他的。</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:51:24</span><span class="msg-who">江宁</span><span class="msg-body">您指的对比其他的是其他的投资产品？还是其他的港险的产品？</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:52:00</span><span class="msg-who">客户</span><span class="msg-body">投资产品，现在美资的不用CRS</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:52:50</span><span class="msg-who">客户</span><span class="msg-body">比如买BRK</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:30</span><span class="msg-who">江宁</span><span class="msg-body">您可以先了解一下，然后我们可以在一起沟通一下看看</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:52</span><span class="msg-who">江宁</span><span class="msg-body">这样可以沟通看看有没有更合适的投资手段</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:55:52</span><span class="msg-who">客户</span><span class="msg-body">比如美国指数型万能寿险（IUL）</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:57:29</span><span class="msg-who">江宁</span><span class="msg-body">美国的IUL确实是不用CRS的，但是IUL是属于投资型的，不是纯保障，会有一定风险</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:57:47</span><span class="msg-who">江宁</span><span class="msg-body">这个主要也是因为美国不参加CRS</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#5 2026-04-10 — Sunshine</div>
+<div class="dialog-meta">加好友日: 2024-03-25 | 双向沉默: 从未双向沟通 | 当日方向变化: 3 次</div>
+<div class="msg msg-customer"><span class="msg-time">10:19:30</span><span class="msg-who">客户</span><span class="msg-body">你好</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:19:37</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:19:51</span><span class="msg-who">客户</span><span class="msg-body">这个是孩子的身份证过期了吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:19:55</span><span class="msg-who">江宁</span><span class="msg-body">是的，</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:20:14</span><span class="msg-who">江宁</span><span class="msg-body">这个等身份证更新以后，可以在公众号上面更新一下就可以了</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:20:28</span><span class="msg-who">江宁</span><span class="msg-body">不影响保单的利益，只是一个提醒</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:32:08</span><span class="msg-who">客户</span><span class="msg-body">好的</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:32:17</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#6 2026-04-12 — 苹果</div>
+<div class="dialog-meta">加好友日: 2023-11-02 | 双向沉默: 从未双向沟通 | 当日方向变化: 2 次</div>
+<div class="msg msg-planner"><span class="msg-time">08:44:06</span><span class="msg-who">江宁</span><span class="msg-body">这款产品的话，它是香港的保险产品，是安盛的胜利2。然后它可以实现5年交，然后每年可以领出7%。这个上面的演示是每年投20万，然后5年一共100万，然后在第六年的时候就可以取7万块钱用作养老。</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:02:19</span><span class="msg-who">客户</span><span class="msg-body">这个是分红的吧，7％是不确定的吧？</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:09:49</span><span class="msg-who">江宁</span><span class="msg-body">对7%的话，这个领取金额是如果分红达成的情况下，是可以一直按照这样子领取的。</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:10:03</span><span class="msg-who">江宁</span><span class="msg-body">您是想要什么类型的产品？如果你是想要，保守一点的产品的话，那可以针对性的帮你来推荐。</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#7 2026-04-13 — 以斯贴</div>
+<div class="dialog-meta">加好友日: 2023-05-18 | 双向沉默: 14 天 | 当日方向变化: 5 次 | 1对1 消息: 7 条</div>
+<div class="msg msg-customer"><span class="msg-time">15:11:54</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[voice]</span> [voice]</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:14:07</span><span class="msg-who">江宁</span><span class="msg-body">我来查一下，您稍等</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:14:28</span><span class="msg-who">客户</span><span class="msg-body">好的</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:14:36</span><span class="msg-who">江宁</span><span class="msg-body">400-821-6808</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:14:44</span><span class="msg-who">江宁</span><span class="msg-body">这个是客服热线</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:14:46</span><span class="msg-who">客户</span><span class="msg-body">谢谢</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:15:36</span><span class="msg-who">江宁</span><span class="msg-body">不客气的</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#8 2026-04-13 — Helen冉</div>
+<div class="dialog-meta">加好友日: 2024-05-06 | 双向沉默: 从未双向沟通 | 当日方向变化: 14 次</div>
+<div class="msg msg-customer"><span class="msg-time">09:39:53</span><span class="msg-who">客户</span><span class="msg-body">您好！在吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:40:05</span><span class="msg-who">江宁</span><span class="msg-body">您好，在的</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:40:21</span><span class="msg-who">江宁</span><span class="msg-body">有什么可以帮您的吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:41:11</span><span class="msg-who">客户</span><span class="msg-body">请问如果近几年没办法续保，如何处理比较好？</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:41:50</span><span class="msg-who">客户</span><span class="msg-body">手头实在缺钱</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:42:20</span><span class="msg-who">江宁</span><span class="msg-body">最长只能拖2年时间，2年是复效期，这段时间可以保留保单，但是会有利息产生</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:42:34</span><span class="msg-who">客户</span><span class="msg-body">哦</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:42:45</span><span class="msg-who">客户</span><span class="msg-body">具体怎么做呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:42:58</span><span class="msg-who">客户</span><span class="msg-body">需要手续吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:43:32</span><span class="msg-who">江宁</span><span class="msg-body">就是到缴费期，卡上不要留钱，不交钱就可以了</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:43:49</span><span class="msg-who">江宁</span><span class="msg-body">他是2个月宽限期，如果宽限期还不缴费，就会进入2年的复效期</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:43:55</span><span class="msg-who">客户</span><span class="msg-body">我现在后悔当初的冲动，但没办法了，已经交了10万</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#9 2026-04-13 — 雪儿妈妈</div>
+<div class="dialog-meta">加好友日: 2023-04-23 | 双向沉默: 从未双向沟通 | 当日方向变化: 28 次</div>
+<div class="msg msg-customer"><span class="msg-time">16:15:16</span><span class="msg-who">客户</span><span class="msg-body">你好</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:15:34</span><span class="msg-who">江宁</span><span class="msg-body">nih</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:15:36</span><span class="msg-who">江宁</span><span class="msg-body">您好</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:16:27</span><span class="msg-who">客户</span><span class="msg-body">你们是正规保险公司的吗</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:16:57</span><span class="msg-who">江宁</span><span class="msg-body">我们是保险经纪公司，也是持牌的，和各家保险公司合作的</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:18:32</span><span class="msg-who">客户</span><span class="msg-body">那我三年前在你家买了份寿险想看下怎么查不到了</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:19:08</span><span class="msg-who">江宁</span><span class="msg-body">可以查到啊，您之前买的是弘康人寿的增额寿险吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:20:07</span><span class="msg-who">江宁</span><span class="msg-body">您关注一下弘康人寿的官方微信公众号</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:20:27</span><span class="msg-who">客户</span><span class="msg-body">是的，不知道现在保障变了吗，妹妹也想给孩子买在考虑中</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:20:31</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:21:04</span><span class="msg-who">江宁</span><span class="msg-body">服务中心里面有个保单中心，注册一下，就可以查到您的保单的</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:21:20</span><span class="msg-who">客户</span><span class="msg-body">保障是什么你给介绍一下我也忘了</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#10 2026-04-14 — Aurora</div>
+<div class="dialog-meta">加好友日: 2026-02-11 | 双向沉默: 14 天 | 当日方向变化: 2 次 | 1对1 消息: 3 条</div>
+<div class="msg msg-planner"><span class="msg-time">15:27:29</span><span class="msg-who">江宁</span><span class="msg-body">明天您这边是否有时间，我到时候什么时候联系您方便一些</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:58:57</span><span class="msg-who">客户</span><span class="msg-body">没啥问题，出行时间大概5月20左右赴港</span></div>
+<div class="msg msg-planner"><span class="msg-time">23:08:31</span><span class="msg-who">江宁</span><span class="msg-body">产品就是我们确定的两个产品组合吗</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#11 2026-04-14 — 宋先生</div>
+<div class="dialog-meta">加好友日: 2024-07-19 | 双向沉默: 从未双向沟通 | 当日方向变化: 4 次</div>
+<div class="msg msg-customer"><span class="msg-time">13:32:55</span><span class="msg-who">客户</span><span class="msg-body">张老师好，港险225的那个麻烦资料发我一下</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:33:14</span><span class="msg-who">江宁</span><span class="msg-body">您好，哪个是永明的星河尊享2，我来把这个产品的相关资料发您一下，您稍等</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:33:38</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[file]</span> [file]</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:33:38</span><span class="msg-who">江宁</span><span class="msg-body">香港永明星河尊享 2是一款多币种、高灵活、强分红、可传承的终身储蓄分红险，主打稳健增值 + 灵活提领 + 多元货币 + 财富传承。\n二、核心优势\n6 种货币自由转换（第 3 年起）\n支持美元、港元、人民币、加元、澳元、英镑，转换无手续费、无调整基数，多币种预期回报一致，对冲汇率风险。\n收益稳健、双保证红利\n保证现金价值 + 非保证红利，长期保证 IRR 约1%。\n\n提领灵活（“提领天花板”）\n短期缴费（2/5 年缴），预期 6–7 年回本。\n支持多种提领方案：如2 年缴第 2 年起每年领 5% 总保费、5 年缴第 6 年起每年领 7%，适配教育、养老。\n\n传承功能强大（类信托）\n无限次更换受保人、保单拆分、个人 / 联合人寿切换。\n56 + 种身故赔付方式（一次性、分期、事件触发），可指定保单暂托人。\n\n保障与人性化设计\n终身身故保障 +意外护理保障（最高 10 倍保额）。\n保费假期、保费豁免、丧失行为能力代索偿、海外转账</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:34:51</span><span class="msg-who">客户</span><span class="msg-body">[抱拳]谢谢</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:35:03</span><span class="msg-who">江宁</span><span class="msg-body">您可以先看看，如果有不清楚的，我给您做进一步的讲解</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:35:54</span><span class="msg-who">客户</span><span class="msg-body">好的</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#12 2026-04-14 — 大道至简</div>
+<div class="dialog-meta">加好友日: 2025-12-22 | 双向沉默: 19 天 | 当日方向变化: 3 次 | 1对1 消息: 4 条</div>
+<div class="msg msg-customer"><span class="msg-time">16:43:40</span><span class="msg-who">客户</span><span class="msg-body">开会</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:43:46</span><span class="msg-who">江宁</span><span class="msg-body">晚上有时间吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:58:06</span><span class="msg-who">客户</span><span class="msg-body">随后吧，晚上不行</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:58:33</span><span class="msg-who">江宁</span><span class="msg-body">嗯，那明天再看你什么时候空一些</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#13 2026-04-15 — Melody</div>
+<div class="dialog-meta">加好友日: 2024-08-21 | 双向沉默: 从未双向沟通 | 当日方向变化: 21 次</div>
+<div class="msg msg-customer"><span class="msg-time">22:44:12</span><span class="msg-who">客户</span><span class="msg-body">赵张老师</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:44:14</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[revoke]</span> [revoke]</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:44:37</span><span class="msg-who">客户</span><span class="msg-body">张老师，给父母孩子买意外险有什么推荐的吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:45:12</span><span class="msg-who">客户</span><span class="msg-body">父亲60.无基础病，母亲57.有冠心病</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:45:26</span><span class="msg-who">客户</span><span class="msg-body">孩子13岁和9岁</span></div>
+<div class="msg msg-planner"><span class="msg-time">22:47:36</span><span class="msg-who">江宁</span><span class="msg-body">意外险有呀，你现在是父母和孩子都想买意外险，还是父母买意外险？孩子买什么险种呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:48:10</span><span class="msg-who">客户</span><span class="msg-body">都买意外险</span></div>
+<div class="msg msg-planner"><span class="msg-time">22:48:21</span><span class="msg-who">江宁</span><span class="msg-body">有的</span></div>
+<div class="msg msg-planner"><span class="msg-time">22:48:28</span><span class="msg-who">江宁</span><span class="msg-body">父母和孩子现在分别在什么城市呀？</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:48:36</span><span class="msg-who">客户</span><span class="msg-body">你现在都在卖港险了</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:48:45</span><span class="msg-who">客户</span><span class="msg-body">父亲在福建</span></div>
+<div class="msg msg-customer"><span class="msg-time">22:48:53</span><span class="msg-who">客户</span><span class="msg-body">孩子母亲和我在深圳</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#14 2026-04-15 — 天道酬勤</div>
+<div class="dialog-meta">加好友日: 2025-06-19 | 双向沉默: 从未双向沟通 | 当日方向变化: 7 次</div>
+<div class="msg msg-customer"><span class="msg-time">01:23:51</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:48:45</span><span class="msg-who">江宁</span><span class="msg-body">这个产品的话，是中国人寿的产品，是中国人寿在香港销售的保险产品。它是人民币的保单，然后可以按照5年交，然后这样子来领取。</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:48:57</span><span class="msg-who">江宁</span><span class="msg-body">中国人寿，它的人民币保单在香港的产品里面还是算有一点优势的。</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:53:59</span><span class="msg-who">客户</span><span class="msg-body">那得离岸人民币了</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:54:36</span><span class="msg-who">江宁</span><span class="msg-body">对，等于是离岸人民币的保单，它是这样子的，就是在转账的时候，不是不能选人民币吗？那建议的话，是选择港币直接过去。港币的话，是香港的这个法定货币，然后直接给保险公司港币去买人民币的保单就可以了。</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:03:31</span><span class="msg-who">客户</span><span class="msg-body">也是得在香港才能买的</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:03:41</span><span class="msg-who">江宁</span><span class="msg-body">是的，属于香港的产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:03:49</span><span class="msg-who">江宁</span><span class="msg-body">您是想要内地的还是香港的呢</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:04:44</span><span class="msg-who">客户</span><span class="msg-body">内地没好的产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:05:08</span><span class="msg-who">江宁</span><span class="msg-body">内地的产品收益确实有点低了，相比的话，香港的要好不少呢</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#15 2026-04-16 — 彭先生</div>
+<div class="dialog-meta">加好友日: 2024-12-12 | 双向沉默: 从未双向沟通 | 当日方向变化: 10 次</div>
+<div class="msg msg-planner"><span class="msg-time">13:53:26</span><span class="msg-who">江宁</span><span class="msg-body">彭先生，您好，您是在后台咨询储蓄险的产品的是吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:53:42</span><span class="msg-who">客户</span><span class="msg-body">嗯</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:12</span><span class="msg-who">江宁</span><span class="msg-body">这个产品也是香港的保险产品是香港万通保险的富饶万家</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:20</span><span class="msg-who">江宁</span><span class="msg-body">您最近是又开始了解香港的产品了吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:54:45</span><span class="msg-who">客户</span><span class="msg-body">不是写的啊里的吗</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:58</span><span class="msg-who">江宁</span><span class="msg-body">什么</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:55:18</span><span class="msg-who">客户</span><span class="msg-body">阿里</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:55:27</span><span class="msg-who">江宁</span><span class="msg-body">万通保险就是马云旗下的云峰基金控股的，香港万通保险实际控制人就是马云</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:56:15</span><span class="msg-who">客户</span><span class="msg-body">必须去香港买？</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:56:57</span><span class="msg-who">江宁</span><span class="msg-body">是的，香港的产品都是要去香港购买的</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:58:03</span><span class="msg-who">客户</span><span class="msg-body">那算了吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:58:16</span><span class="msg-who">江宁</span><span class="msg-body">哦，好的</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#16 2026-04-16 — 雪天转晴</div>
+<div class="dialog-meta">加好友日: 2026-01-28 | 双向沉默: 28 天 | 当日方向变化: 3 次 | 1对1 消息: 8 条</div>
+<div class="msg msg-customer"><span class="msg-time">13:12:05</span><span class="msg-who">客户</span><span class="msg-body">2026太保新年金：存完即领，派息3.3%</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:12:13</span><span class="msg-who">客户</span><span class="msg-body">这个是什么产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:14:14</span><span class="msg-who">江宁</span><span class="msg-body">太保的年金险，鑫相伴，也是香港太平洋的保险产品，1年交1年给年金的产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:14:28</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:32:25</span><span class="msg-who">江宁</span><span class="msg-body">您是对于这个年金险产品比较感兴趣的是吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:52:06</span><span class="msg-who">客户</span><span class="msg-body">要去香港买吗</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:52:40</span><span class="msg-who">江宁</span><span class="msg-body">是的，要去香港购买的，这个也是属于香港的保险产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:52:46</span><span class="msg-who">江宁</span><span class="msg-body">都是要去香港的购买的</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#17 2026-04-17 — 阿蜜叠娃瑟</div>
+<div class="dialog-meta">加好友日: 2025-11-18 | 双向沉默: 30 天 | 当日方向变化: 8 次 | 1对1 消息: 9 条</div>
+<div class="msg msg-planner"><span class="msg-time">16:00:23</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，您最近还忙不忙啊？</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:05:47</span><span class="msg-who">客户</span><span class="msg-body">挺忙的，港险的事儿，可能要延后了</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:08:44</span><span class="msg-who">江宁</span><span class="msg-body">一直抽不出来时间去研究港险的事情吗？</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:13:24</span><span class="msg-who">客户</span><span class="msg-body">多个原因吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:14:07</span><span class="msg-who">江宁</span><span class="msg-body">嗯，那您这块的话就是短时间内，就是之前您是说资金没到，大概要7月份资金到，那目前的话就是资金到了的话，您还会考虑吗？还是说短时间内就不看这个事情了。</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:15:07</span><span class="msg-who">客户</span><span class="msg-body">今年应该不买港险了</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:16:52</span><span class="msg-who">江宁</span><span class="msg-body">哦，主要是因为哪方面的原因？是时间上抽不出来，还是资金这块儿暂时空不出来吗？</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:18:00</span><span class="msg-who">客户</span><span class="msg-body">谢谢你[合十][玫瑰]</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:18:12</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯，不客气</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#18 2026-04-17 — 湘妹子</div>
+<div class="dialog-meta">加好友日: 2024-08-29 | 双向沉默: 从未双向沟通 | 当日方向变化: 4 次</div>
+<div class="msg msg-planner"><span class="msg-time">15:38:18</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，之前您买过增额寿险产品，马上7月样子增额寿险产品利率又要进一步下调了，如果手上资金宽裕的话，在补充一点</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:38:28</span><span class="msg-who">江宁</span><span class="msg-body">如果有需要的话，可以和我说</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:38:51</span><span class="msg-who">客户</span><span class="msg-body">现在补充的，按照什么利率</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:40:09</span><span class="msg-who">江宁</span><span class="msg-body">现在产品是1.75%的保底利率+分红收益，可以达到3.5~4%样子</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:40:24</span><span class="msg-who">客户</span><span class="msg-body">啥份工哦</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:40:32</span><span class="msg-who">客户</span><span class="msg-body">比利率搞一杯</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:41:13</span><span class="msg-who">江宁</span><span class="msg-body">那是啊，就是因为保底利率低了，保险公司才能把资金投入到利润比较高的产品项目里面去</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:41:25</span><span class="msg-who">江宁</span><span class="msg-body">现在保底利率也是国家规定的最高上线</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:41:39</span><span class="msg-who">江宁</span><span class="msg-body">就是1.75%的保底利率这个是国家监管规定的利率</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#19 2026-04-20 — 刘女士</div>
+<div class="dialog-meta">加好友日: 2024-11-28 | 双向沉默: 从未双向沟通 | 当日方向变化: 12 次</div>
+<div class="msg msg-planner"><span class="msg-time">11:46:21</span><span class="msg-who">江宁</span><span class="msg-body">您好，我看了一下当时投保的这个情况，您父亲当时是以购买前已经购买做过心脏支架手术的对吧？而且是有高血压的对吧？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:46:27</span><span class="msg-who">江宁</span><span class="msg-body">那他现在住院是因为什么原因需要住院呢？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:46:33</span><span class="msg-who">江宁</span><span class="msg-body">还是因为高血压的原因吗？还是说是什么其他的疾病？</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:47:16</span><span class="msg-who">客户</span><span class="msg-body">嗯 因为高血压</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:48:05</span><span class="msg-who">江宁</span><span class="msg-body">嗯，那这个情况的话，这次住院是不能赔的。因为当时在投保的时候，他就是有明确说的就是高血压伴有的并发症是不能够赔付的。因为你在投保前已经有高血压的这个情况，但是如果是因为别的原因导致住院的话，是可以赔付的。</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:48:20</span><span class="msg-who">客户</span><span class="msg-body">哦哦</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:48:22</span><span class="msg-who">客户</span><span class="msg-body">懂了</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:48:25</span><span class="msg-who">江宁</span><span class="msg-body">因为我看了一下当时的那个投保时候跟您沟通的您父亲的这个情况。</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:49:02</span><span class="msg-who">江宁</span><span class="msg-body">对当时在那个上面，它有一个免责条款，就是如果已经有这个既往病症的话，就是这几种情况有5种情况是不能配的。其中就包含着就是已经有冠心病啊，还有就是高血压并发症的这个情况。当时也是跟您说的就是您父亲之前就做过支架，但是，如果是高血压或者是心脏疾病，其他以外的问题是可以赔付的。但是，已经有了这种心脏问题的情况下，再住院就不好赔了。</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:49:12</span><span class="msg-who">客户</span><span class="msg-body">太久了，忘记了</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:49:43</span><span class="msg-who">客户</span><span class="msg-body">那其实就是目前市面上的绝大多数保险，都不会针对冠心病、心脏支架跟高血压这种，发生的住院进行赔付是吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:49:46</span><span class="msg-who">江宁</span><span class="msg-body">没事儿，没事儿，我也其实有点记不清了，所以我去翻了一下之前跟您的沟通记录。</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#20 2026-04-21 — 秋实</div>
+<div class="dialog-meta">加好友日: 2026-01-13 | 双向沉默: 26 天 | 当日方向变化: 10 次 | 1对1 消息: 15 条</div>
+<div class="msg msg-planner"><span class="msg-time">16:24:44</span><span class="msg-who">江宁</span><span class="msg-body">您好，我看您在后台留言，您这边是看了我们的视频，想了解一下中行的那个产品的是吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:31:57</span><span class="msg-who">客户</span><span class="msg-body">是的，麻烦张老师介绍一下</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:32:51</span><span class="msg-who">江宁</span><span class="msg-body">好的，</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:33:05</span><span class="msg-who">江宁</span><span class="msg-body">好的，这个产品是说的香港中银人寿的一款产品叫做月月出息，我来给您发一个产品的介绍给您看看</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:33:05</span><span class="msg-who">江宁</span><span class="msg-body">香港中银人寿月悦出息是一款美式分红、终身派息、快回本、本金增值的储蓄分红险，主打月月收息 + 短期缴费 + 快速回本 + 财富传承BOCHK。\n二、核心优势\n“2235” 快返模式（核心）\n2 年 / 5 年短缴：支持 2 年 / 5 年缴或趸缴（享折扣）。\n\n第 25 个月起终身派息：2 年缴第 25 个月、5 年缴第 6 年起，按月自动派息。\n\n3 年预期回本：2 年缴最快第 3 年，退保价值覆盖总保费。\n高比例派息：美元 / 港元每年派总保费 5%，人民币4%，终身派发。\n\n派息不损本金，双增值\n派息无需退保 / 部分退保，保证现金价值持续复利增长。\n叠加非保证终期红利，长期持有总回报可观\n\n多币种 + 灵活提领\n支持美元、港元、人民币，适配跨境配置。\n派息可自动入账，也可积存生息，灵活支配\n\n传承功能强\n无限次更换受保人，保单可拆分、世代传承。\n身故赔付可年金化领取，灵活分配遗产。</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:33:06</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[file]</span> [file]</span></div>
+<div class="msg msg-customer"><span class="msg-time">17:12:09</span><span class="msg-who">客户</span><span class="msg-body">还是要在香港开户购买产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:12:45</span><span class="msg-who">江宁</span><span class="msg-body">是的，需要在香港开户购买的产品</span></div>
+<div class="msg msg-customer"><span class="msg-time">21:00:55</span><span class="msg-who">客户</span><span class="msg-body">哦，还是麻烦</span></div>
+<div class="msg msg-planner"><span class="msg-time">21:01:15</span><span class="msg-who">江宁</span><span class="msg-body">您是短时间不能去香港，还是说您不想去香港开户，还是哪方面的顾虑呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">21:02:21</span><span class="msg-who">客户</span><span class="msg-body">不想去，太淘神了</span></div>
+<div class="msg msg-customer"><span class="msg-time">21:02:34</span><span class="msg-who">客户</span><span class="msg-body">谢谢你的解答</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#21 2026-04-21 — 坚持不懈</div>
+<div class="dialog-meta">加好友日: 2025-09-25 | 双向沉默: 从未双向沟通 | 当日方向变化: 10 次</div>
+<div class="msg msg-planner"><span class="msg-time">16:11:52</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，最近您爱人这边工作的情况怎么样了？之前说他这边今年会晋升，不知道目前情况如何呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:14:57</span><span class="msg-who">客户</span><span class="msg-body">还没完成晋升呢，得9月份，张老师，最近有好产品吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:16:34</span><span class="msg-who">江宁</span><span class="msg-body">最近陆陆续续有产品上，有产品上也有产品下，所以也想看看您这边的时间，这样好针对时间帮您留意产品</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:17:59</span><span class="msg-who">客户</span><span class="msg-body">我的需求没变，看看目前最好的产品哈</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:18:02</span><span class="msg-who">客户</span><span class="msg-body">张老师</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:18:04</span><span class="msg-who">客户</span><span class="msg-body">谢谢</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:18:23</span><span class="msg-who">江宁</span><span class="msg-body">就是还是兼顾现金流，想要稳健一些的产品对吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:19:01</span><span class="msg-who">客户</span><span class="msg-body">提领后收益高的</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:19:11</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯，那还是之前的需求</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:19:47</span><span class="msg-who">江宁</span><span class="msg-body">那目前还是永明的合适，如果有比永明领取更合适的产品，我在帮您关注着</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:22:13</span><span class="msg-who">客户</span><span class="msg-body">好的，张老师。六月份我老公这边提名，9月份晋升公式，大约国庆节后就没啥事了。</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:22:51</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯，那没问题的，中间我们这边保持联系，到时候有合适的产品我及时和您联系</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#22 2026-04-21 — jenny</div>
+<div class="dialog-meta">加好友日: 2023-11-08 | 双向沉默: 从未双向沟通 | 当日方向变化: 10 次</div>
+<div class="msg msg-planner"><span class="msg-time">13:45:14</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有和您联系，看到您在后台留言，想了解5%的储蓄险产品的是吧？</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:47:20</span><span class="msg-who">江宁</span><span class="msg-body">是想要了解那个中银的产品的对吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:11:21</span><span class="msg-who">客户</span><span class="msg-body">是的 请介绍一下</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:11:45</span><span class="msg-who">江宁</span><span class="msg-body">好的</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:12:08</span><span class="msg-who">江宁</span><span class="msg-body">好的，这个产品是说的香港中银人寿的一款产品叫做月月出息，我来给您发一个产品的介绍给您看看</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:12:09</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[file]</span> [file]</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:12:09</span><span class="msg-who">江宁</span><span class="msg-body">香港中银人寿月悦出息是一款美式分红、终身派息、快回本、本金增值的储蓄分红险，主打月月收息 + 短期缴费 + 快速回本 + 财富传承BOCHK。\n二、核心优势\n“2235” 快返模式（核心）\n2 年 / 5 年短缴：支持 2 年 / 5 年缴或趸缴（享折扣）。\n\n第 25 个月起终身派息：2 年缴第 25 个月、5 年缴第 6 年起，按月自动派息。\n\n3 年预期回本：2 年缴最快第 3 年，退保价值覆盖总保费。\n高比例派息：美元 / 港元每年派总保费 5%，人民币4%，终身派发。\n\n派息不损本金，双增值\n派息无需退保 / 部分退保，保证现金价值持续复利增长。\n叠加非保证终期红利，长期持有总回报可观\n\n多币种 + 灵活提领\n支持美元、港元、人民币，适配跨境配置。\n派息可自动入账，也可积存生息，灵活支配\n\n传承功能强\n无限次更换受保人，保单可拆分、世代传承。\n身故赔付可年金化领取，灵活分配遗产。</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:16:09</span><span class="msg-who">客户</span><span class="msg-body">稍等</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:16:46</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:40:54</span><span class="msg-who">江宁</span><span class="msg-body">您要是有时间，我可以给您具体的介绍一下，这样便于您做个了解</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:41:43</span><span class="msg-who">客户</span><span class="msg-body">我想问一下，去买香港保险的话，那个钱你们怎么过去，然后另外这一部分的收益受下crs的监控吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:42:58</span><span class="msg-who">江宁</span><span class="msg-body">这个具体看您有多少资金需要过去了，根据资金不同的话，也是有不同的方式过去。还有的话，就是收益的话是这样子的，就是它是有延迟申报的功能。因为你这个钱的话，保费投进去之后，他前10年左右，它都是基本上是低于本金的，就是也就是跟保费持平的。所以说，就算CS回传的话，它其实回传不了太多的东西，因为你前期现金价值很低，到之后的话，收益慢慢上来之后会回传过去。</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#23 2026-04-22 — 米粒</div>
+<div class="dialog-meta">加好友日: 2025-08-28 | 双向沉默: 从未双向沟通 | 当日方向变化: 34 次</div>
+<div class="msg msg-planner"><span class="msg-time">10:19:36</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，最近国内的产品又要继续下降了，不知道您这边还有没有计划在看看储蓄类的产品呢？或者是一些保障类型的产品，都可以帮您在推荐推荐</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:19:56</span><span class="msg-who">江宁</span><span class="msg-body">现在还有代替5年期定存的大额存单类的产品哦</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:20:57</span><span class="msg-who">客户</span><span class="msg-body">「张沁羽 高级规划师：现在还有代替5年期定存的大额存单类的产品哦」\n- - - - - - - - - - - - - - -\n多少呢</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:22:13</span><span class="msg-who">江宁</span><span class="msg-body">但是是香港的产品，大概5年下来，年化在4.17%左右，固定的</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:22:31</span><span class="msg-who">客户</span><span class="msg-body">5年就拿回来？</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:22:51</span><span class="msg-who">江宁</span><span class="msg-body">对</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:23:10</span><span class="msg-who">客户</span><span class="msg-body">多少起买</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:23:47</span><span class="msg-who">江宁</span><span class="msg-body">15000美金起投，大概10万吧，但是今天比较小的话，需要考虑一下来回的路费成本</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:28:37</span><span class="msg-who">客户</span><span class="msg-body">要去几次呢</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:29:10</span><span class="msg-who">江宁</span><span class="msg-body">就去一次就可以了，就是第一次去投保，然后开个卡，之后就不用去了，全程可以在线操作</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:58:07</span><span class="msg-who">江宁</span><span class="msg-body">不知道您是否感兴趣，要是感兴趣的话，可以给您做个产品计划书，您参考一下</span></div>
+<div class="msg msg-customer"><span class="msg-time">12:18:12</span><span class="msg-who">客户</span><span class="msg-body">这个产品是用美元买的？</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#24 2026-04-22 — 顾女士</div>
+<div class="dialog-meta">加好友日: 2024-08-08 | 双向沉默: 从未双向沟通 | 当日方向变化: 2 次</div>
+<div class="msg msg-planner"><span class="msg-time">09:52:50</span><span class="msg-who">江宁</span><span class="msg-body">顾女士，您之前买的产品是税优险，个人养老金金产品有买上吗?</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:53:03</span><span class="msg-who">江宁</span><span class="msg-body">个人养老金的产品也是可以抵税的</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:02:43</span><span class="msg-who">客户</span><span class="msg-body">这个有买过了</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:11:18</span><span class="msg-who">江宁</span><span class="msg-body">哦哦，好的，那没事，我就是想起来了问问看</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:11:30</span><span class="msg-who">江宁</span><span class="msg-body">后续如果有什么其他的产品需求也都可以和我说哈</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:11:55</span><span class="msg-who">江宁</span><span class="msg-body">周围人朋友或者同事如果有这方面需求，也可以帮忙推荐一下哈，谢谢</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#25 2026-04-23 — 顽主</div>
+<div class="dialog-meta">加好友日: 2025-04-21 | 双向沉默: 从未双向沟通 | 当日方向变化: 13 次</div>
+<div class="msg msg-planner"><span class="msg-time">11:38:36</span><span class="msg-who">江宁</span><span class="msg-body">张先生，在不？之前听说您去西双版纳旅游了，现在应该回来了吧？</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:39:09</span><span class="msg-who">客户</span><span class="msg-body">刚回来几天</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:39:46</span><span class="msg-who">江宁</span><span class="msg-body">哦哦哦，我和您说下，李女士的保单等5月份要续费了，您们到时候记着准备好资金续费哈</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:40:04</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[emotion]</span> [emotion]</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:40:32</span><span class="msg-who">江宁</span><span class="msg-body">是5月23号，到时候我们提前确认一下转账的卡号这些</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:40:58</span><span class="msg-who">客户</span><span class="msg-body">宏利是吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:41:05</span><span class="msg-who">江宁</span><span class="msg-body">网银的密码你们要在找下，别到时候忘了，锁了账号也是麻烦事情</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:41:09</span><span class="msg-who">江宁</span><span class="msg-body">是的，宏利的</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:41:54</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[voice]</span> [voice]</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:42:17</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[voice]</span> [voice]</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:43:14</span><span class="msg-who">江宁</span><span class="msg-body">是的，但是渣打服务还可以的，你要是中银的都打电话很难联系到客服的，有时间可以先试试看，密码是不是过期了</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:46:01</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[voice]</span> [voice]</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#26 2026-04-23 — tongxing</div>
+<div class="dialog-meta">加好友日: 2025-07-14 | 双向沉默: 从未双向沟通 | 当日方向变化: 4 次</div>
+<div class="msg msg-planner"><span class="msg-time">11:37:06</span><span class="msg-who">江宁</span><span class="msg-body">目前香港这边也有出这种固定收益的产品，代替大额存单的产品，1次缴费、2年回本，5年收益达到最大，有4.17%左右的收益，不知道您对于这种产品是否考虑呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:57:07</span><span class="msg-who">客户</span><span class="msg-body">有好的养老年金产品推荐</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:00:09</span><span class="msg-who">江宁</span><span class="msg-body">目前有养老年金可以帮您看看的</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:00:25</span><span class="msg-who">江宁</span><span class="msg-body">您是考虑国内的产品还是香港的产品呢？</span></div>
+<div class="msg msg-customer"><span class="msg-time">16:16:40</span><span class="msg-who">客户</span><span class="msg-body">想要香港的，但是又不了解香港的产品。鼓励产品同一点点，但收益现在很低。</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:17:30</span><span class="msg-who">江宁</span><span class="msg-body">确实，国内的产品目前的话收益率现在有点低。就是如果看过香港产品的话，你会觉得国内产品的收益比较低。然后，我是觉得就是如果你想要香港产品的话，那我这边可以帮你详细的介绍一下，这样子您有一个足够的了解，再去考虑香港的产品的话，就会更加放心一些。</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:17:48</span><span class="msg-who">江宁</span><span class="msg-body">或者就是不行的话，就是先帮你推荐就是香港的这种保证收益的产品。这样子，你看这个收益都是写在合同里面确定的，那可能了解起来也会更放心一些。</span></div>
+<div class="msg msg-planner"><span class="msg-time">19:34:27</span><span class="msg-who">江宁</span><span class="msg-body">您要是晚上有时间的话，可以跟您语音介绍一下，这样子的话你有个了解</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#27 2026-04-24 — 雪山</div>
+<div class="dialog-meta">加好友日: 2026-01-05 | 双向沉默: 35 天 | 当日方向变化: 2 次 | 1对1 消息: 4 条</div>
+<div class="msg msg-planner"><span class="msg-time">13:10:29</span><span class="msg-who">江宁</span><span class="msg-body">您之前资金是在股市上面暂时给套了吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:31:24</span><span class="msg-who">客户</span><span class="msg-body">对的</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:31:50</span><span class="msg-who">客户</span><span class="msg-body">目前还没有解套[流泪]</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:48:29</span><span class="msg-who">江宁</span><span class="msg-body">股票这种产品的风险还是挺高的，还是需要一定的技巧的，正常老百姓还是选择保险类的这种产品，慢慢增值比较好，也不需要一直关注着</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#28 2026-04-26 — 繁星</div>
+<div class="dialog-meta">加好友日: 2025-06-11 | 双向沉默: 从未双向沟通 | 当日方向变化: 5 次</div>
+<div class="msg msg-customer"><span class="msg-time">20:01:33</span><span class="msg-who">客户</span><span class="msg-body">是的老师，不好意思，才看到您发的微信。</span></div>
+<div class="msg msg-customer"><span class="msg-time">20:07:15</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[sphfeed]</span> [sphfeed]</span></div>
+<div class="msg msg-customer"><span class="msg-time">20:08:06</span><span class="msg-who">客户</span><span class="msg-body">想了解崔伟老师讲的这款国寿产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">20:32:01</span><span class="msg-who">江宁</span><span class="msg-body">嗯，这款产品是香港的保险产品，是中国人寿在香港销售的款港险产品，叫做傲龙盛世</span></div>
+<div class="msg msg-planner"><span class="msg-time">20:34:31</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[file]</span> [file]</span></div>
+<div class="msg msg-planner"><span class="msg-time">20:34:47</span><span class="msg-who">江宁</span><span class="msg-body">这个是产品的一个介绍文件，不知道您是否能看得懂。您可以先看一下，因为如果之前您没有接触过香港产品的话，有可能会看不懂</span></div>
+<div class="msg msg-planner"><span class="msg-time">20:34:55</span><span class="msg-who">江宁</span><span class="msg-body">如果看不懂的话，您跟我说，我到时候给您详细的讲解一下</span></div>
+<div class="msg msg-customer"><span class="msg-time">21:53:56</span><span class="msg-who">客户</span><span class="msg-body">必须去香港才能买吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">21:54:16</span><span class="msg-who">江宁</span><span class="msg-body">是的，要去香港签</span></div>
+<div class="msg msg-customer"><span class="msg-time">21:54:56</span><span class="msg-who">客户</span><span class="msg-body">哦，现在去不了香港</span></div>
+<div class="msg msg-planner"><span class="msg-time">22:10:57</span><span class="msg-who">江宁</span><span class="msg-body">我觉得是这样，就是咱们前期呢，肯定是一个先了解产品，就是你产品充分的了解了以后，你觉得产品合适再规划去香港的事情。如果你了解以后感觉这个产品都不合适，那其实也没有必要考虑去香港的行程，对吧</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#29 2026-04-28 — 拾光有你</div>
+<div class="dialog-meta">加好友日: 2023-11-16 | 双向沉默: 14 天 | 当日方向变化: 2 次 | 1对1 消息: 5 条</div>
+<div class="msg msg-customer"><span class="msg-time">10:13:28</span><span class="msg-who">客户</span><span class="msg-body">你好，再问一下啊，我那个保单不是明年2月份，不是两个年度了吗？如果现在复效的话，先复效一个年度的话，那后面是不是还可以再延期一年</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:13:34</span><span class="msg-who">客户</span><span class="msg-body">我一次性我怕拿两年度的钱不够</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:14:08</span><span class="msg-who">江宁</span><span class="msg-body">不可以，他附小的话，是要把你之前的两年的欠款都要补齐才行</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:14:13</span><span class="msg-who">江宁</span><span class="msg-body">他不能一年一年的去补</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:14:56</span><span class="msg-who">客户</span><span class="msg-body">明白了</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#30 2026-04-29 — 龚女士</div>
+<div class="dialog-meta">加好友日: 2025-10-24 | 双向沉默: 从未双向沟通 | 当日方向变化: 24 次</div>
+<div class="msg msg-customer"><span class="msg-time">17:49:52</span><span class="msg-who">客户</span><span class="msg-body">能把安盛2发我看看吗</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:50:10</span><span class="msg-who">江宁</span><span class="msg-body">是计划书还是产品手册？</span></div>
+<div class="msg msg-customer"><span class="msg-time">17:50:36</span><span class="msg-who">客户</span><span class="msg-body">对10岁</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:50:53</span><span class="msg-who">江宁</span><span class="msg-body">10岁男 几万几年交</span></div>
+<div class="msg msg-customer"><span class="msg-time">17:51:06</span><span class="msg-who">客户</span><span class="msg-body">二年吧</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:51:11</span><span class="msg-who">江宁</span><span class="msg-body">每年多少</span></div>
+<div class="msg msg-customer"><span class="msg-time">17:51:24</span><span class="msg-who">客户</span><span class="msg-body">15</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:51:47</span><span class="msg-who">江宁</span><span class="msg-body">15万美金2年交？</span></div>
+<div class="msg msg-customer"><span class="msg-time">17:51:57</span><span class="msg-who">客户</span><span class="msg-body">3 0</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:52:19</span><span class="msg-who">江宁</span><span class="msg-body">总共30是吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">17:52:27</span><span class="msg-who">客户</span><span class="msg-body">对</span></div>
+<div class="msg msg-planner"><span class="msg-time">17:52:46</span><span class="msg-who">江宁</span><span class="msg-body">好</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#31 2026-04-30 — 俞先生</div>
+<div class="dialog-meta">加好友日: 2025-07-03 | 双向沉默: 14 天 | 当日方向变化: 4 次 | 1对1 消息: 5 条</div>
+<div class="msg msg-planner"><span class="msg-time">15:15:31</span><span class="msg-who">江宁</span><span class="msg-body">俞先生后来您和您爱人这边有在详细的沟通一下香港的这个事情吗？我昨天才陪客户去渣打开户，渣打的投资账户什么的还是不错的，如果需要的话，可以考虑的</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:29:09</span><span class="msg-who">客户</span><span class="msg-body">暂时搁置了啊，如果有需要再和你说</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:32:39</span><span class="msg-who">江宁</span><span class="msg-body">哦，暂时这个事情就是先放一放了，是吧？哦，好的，那如果你后续有这方面的考虑的话，再跟我说</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:33:31</span><span class="msg-who">客户</span><span class="msg-body">👌🏻谢谢了</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:33:43</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#32 2026-04-30 — Grace</div>
+<div class="dialog-meta">加好友日: 2025-06-12 | 双向沉默: 从未双向沟通 | 当日方向变化: 6 次</div>
+<div class="msg msg-planner"><span class="msg-time">10:06:22</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，您后来身份证这边有更换过不？</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:19:12</span><span class="msg-who">客户</span><span class="msg-body">没有</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:19:39</span><span class="msg-who">江宁</span><span class="msg-body">那您到时候更换以后还去香港在买产品不？</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:19:59</span><span class="msg-who">客户</span><span class="msg-body">有可能吧</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:20:29</span><span class="msg-who">客户</span><span class="msg-body">还没想好</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:20:38</span><span class="msg-who">江宁</span><span class="msg-body">嗯嗯，那到时候如果需要的话还是提前帮您看产品</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:20:49</span><span class="msg-who">江宁</span><span class="msg-body">还有时间，慢慢考虑，不着急的事情</span></div>
+<div class="msg msg-customer"><span class="msg-time">10:21:08</span><span class="msg-who">客户</span><span class="msg-body">[OK]</span></div>
+<div class="msg msg-planner"><span class="msg-time">10:21:54</span><span class="msg-who">江宁</span><span class="msg-body">[胜利]</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#33 2026-04-30 — 怡然自得</div>
+<div class="dialog-meta">加好友日: 2025-08-20 | 双向沉默: 从未双向沟通 | 当日方向变化: 4 次</div>
+<div class="msg msg-planner"><span class="msg-time">10:29:00</span><span class="msg-who">江宁</span><span class="msg-body">您好，好久没有联系了，之前您说您要去复查身体的，后来您又去复查不？</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:43:42</span><span class="msg-who">客户</span><span class="msg-body">你好。还没有。我是想着去早了，到今年买保险时又过期了</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:43:58</span><span class="msg-who">客户</span><span class="msg-body">打算6、7月份去</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:44:11</span><span class="msg-who">江宁</span><span class="msg-body">好的，好的，那您到时候记得，你反正去了之后检查了结果之后，你到时候告诉我，我帮你看看合适的产品</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:58:46</span><span class="msg-who">客户</span><span class="msg-body">好的。谢谢</span></div>
+<div class="msg msg-planner"><span class="msg-time">16:00:40</span><span class="msg-who">江宁</span><span class="msg-body">不客气的</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#34 2026-05-03 — 何处觅我旧红妆</div>
+<div class="dialog-meta">加好友日: 2023-09-21 | 双向沉默: 从未双向沟通 | 当日方向变化: 5 次</div>
+<div class="msg msg-customer"><span class="msg-time">12:30:50</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[link]</span> [link]</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:31:08</span><span class="msg-who">江宁</span><span class="msg-body">你好，这个产品是周大福人寿刚出的一款产品，它是目前预期回本和保证回本最快的。然后，那个可以一次性交，然后也可以5年交一次性交的话，10年保证回本</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:31:17</span><span class="msg-who">江宁</span><span class="msg-body">然后20年的话可以达到预期6.5的复利收益</span></div>
+<div class="msg msg-customer"><span class="msg-time">18:27:21</span><span class="msg-who">客户</span><span class="msg-body">可以用人民币买吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">19:04:17</span><span class="msg-who">江宁</span><span class="msg-body">我看看哦</span></div>
+<div class="msg msg-planner"><span class="msg-time">19:42:23</span><span class="msg-who">江宁</span><span class="msg-body">投保的时候支持美元，但是后期可以变更成人民币保单</span></div>
+<div class="msg msg-customer"><span class="msg-time">19:51:42</span><span class="msg-who">客户</span><span class="msg-body">也就是说买的时候不允许用人民币购买</span></div>
+<div class="msg msg-planner"><span class="msg-time">20:55:39</span><span class="msg-who">江宁</span><span class="msg-body">对，买的时候它不支持人民币，买的时候是要用美元来买，然后之后的话可以把它进行货币转换</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#35 2026-05-06 — 两只蟹蟹</div>
+<div class="dialog-meta">加好友日: 2025-03-26 | 双向沉默: 27 天 | 当日方向变化: 8 次 | 1对1 消息: 13 条</div>
+<div class="msg msg-planner"><span class="msg-time">15:10:57</span><span class="msg-who">江宁</span><span class="msg-body">您好，在不？</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:11:09</span><span class="msg-who">客户</span><span class="msg-body">张老师，我在</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:12:08</span><span class="msg-who">江宁</span><span class="msg-body">之前和您说的，2000块的差旅报销的那个费用，和您说一下。这个钱给的没有那么快，要等保单过了犹豫期的次月才能给到您这边，所以我提前和您说下，</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:12:19</span><span class="msg-who">江宁</span><span class="msg-body">这个要等保险公司那边结算才行</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:12:27</span><span class="msg-who">客户</span><span class="msg-body">哦，没事的，理解</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:12:33</span><span class="msg-who">客户</span><span class="msg-body">不着急的</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:12:40</span><span class="msg-who">江宁</span><span class="msg-body">但是我们说好了，我肯定会帮您关注这个事情的，但是肯定要提前和你说下这个时间周期</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:18:36</span><span class="msg-who">客户</span><span class="msg-body">嗯，谢谢张老师[抱拳]</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:18:55</span><span class="msg-who">客户</span><span class="msg-body">这点信任还是有的[偷笑]毕竟咱们也接触一年多了</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:19:30</span><span class="msg-who">客户</span><span class="msg-body">而且我老公对你印象也很好，他的评价是专业，靠谱，认真</span></div>
+<div class="msg msg-planner"><span class="msg-time">15:20:56</span><span class="msg-who">江宁</span><span class="msg-body">感谢感谢哈，主要还是把事情做好[抱拳]</span></div>
+<div class="msg msg-customer"><span class="msg-time">15:21:21</span><span class="msg-who">客户</span><span class="msg-body">嗯，后续有机会，咱们再合作</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#36 2026-05-07 — 倾听冷暖</div>
+<div class="dialog-meta">加好友日: 2024-11-27 | 双向沉默: 28 天 | 当日方向变化: 40 次 | 1对1 消息: 67 条</div>
+<div class="msg msg-customer"><span class="msg-time">09:09:45</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:09:47</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:10:31</span><span class="msg-who">江宁</span><span class="msg-body">汇丰APP升级了是吧？</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:10:42</span><span class="msg-who">江宁</span><span class="msg-body">你是想问在哪边更新安装包吗</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:10:44</span><span class="msg-who">客户</span><span class="msg-body">小张我这个汇丰银行app进入不了，现在是这个界面</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:10:59</span><span class="msg-who">江宁</span><span class="msg-body">肯定是APP要更新了，我来看看</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:11:53</span><span class="msg-who">客户</span><span class="msg-body">我点开官网就是第二个图，第二个，还点不开</span></div>
+<div class="msg msg-customer"><span class="msg-time">09:13:04</span><span class="msg-who">客户</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:14:23</span><span class="msg-who">江宁</span><span class="msg-body">你下的APK应该不对</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:14:27</span><span class="msg-who">江宁</span><span class="msg-body">我来找下</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:20:18</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">09:20:26</span><span class="msg-who">江宁</span><span class="msg-body">你是扫这个二维码的吗</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#37 2026-05-08 — 帆哥</div>
+<div class="dialog-meta">加好友日: 2025-12-10 | 双向沉默: 17 天 | 当日方向变化: 38 次 | 1对1 消息: 55 条</div>
+<div class="msg msg-planner"><span class="msg-time">11:27:25</span><span class="msg-who">江宁</span><span class="msg-body">您好，您这边今天是否有时间可以一起沟通一下呢？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:27:46</span><span class="msg-who">江宁</span><span class="msg-body">也过了一个假期了，有些事情，咱们还要一起在沟通一下，确认一下？</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:29:12</span><span class="msg-who">客户</span><span class="msg-body">暂时走不开，最早都要下周才能确定大致时间</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:30:22</span><span class="msg-who">江宁</span><span class="msg-body">下周吗？好的，那到时候您这边有个大概时间了，我们在沟通一下，这样我好提前做保险公司和银行的预约，您这边还要办几个卡的话，那预约还是要提前的，这样好合理安排下时间</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:31:09</span><span class="msg-who">客户</span><span class="msg-body">对了，周末的话能签么？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:32:53</span><span class="msg-who">江宁</span><span class="msg-body">周末银行不开啊，保险公司可以签，但是银行不开门</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:33:11</span><span class="msg-who">客户</span><span class="msg-body">那就是说周末不行</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:33:30</span><span class="msg-who">江宁</span><span class="msg-body">是的，最好要带个周五或者周一，哪怕是半天都可以</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:34:01</span><span class="msg-who">客户</span><span class="msg-body">你的意思是周日到，周一办理？</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:34:24</span><span class="msg-who">客户</span><span class="msg-body">顺利的话，办理需要多久？</span></div>
+<div class="msg msg-planner"><span class="msg-time">11:34:24</span><span class="msg-who">江宁</span><span class="msg-body">是的，或者是周五到，周五把开户办完，周六签单也可以</span></div>
+<div class="msg msg-customer"><span class="msg-time">11:34:55</span><span class="msg-who">客户</span><span class="msg-body">先开户才能签单？</span></div>
+</div>
+
+<div class="card">
+<div class="case-h">#38 2026-05-08 — 宏亮青海特产</div>
+<div class="dialog-meta">加好友日: 2026-02-27 | 双向沉默: 45 天 | 当日方向变化: 2 次 | 1对1 消息: 6 条</div>
+<div class="msg msg-planner"><span class="msg-time">13:10:25</span><span class="msg-who">江宁</span><span class="msg-body">您之前存的存款是不是已经快要到期了？您最近有在看看怎么来规划您手上到的这批资金吗？</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:10:42</span><span class="msg-who">江宁</span><span class="msg-body">是否需要我们一起沟通一下，看看选择什么产品合适一些？</span></div>
+<div class="msg msg-customer"><span class="msg-time">13:48:27</span><span class="msg-who">客户</span><span class="msg-body">谢谢你 家里人不让理财 还是保守储蓄</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:49:34</span><span class="msg-who">江宁</span><span class="msg-body">他是这样子的，就你可以对比一下，就是你在银行的存款，比如说你现在的存款利息是多少？如果要是您这边比如说你不考虑这个香港产品，香港产品的话有点远，而且可能更不了解。比如说国内的产品，你也可以比较一下。如果是在你们青海当地的银行的存款，和我这边可以给你对比一下，比如说，保险公司的五年期的产品，你可以看看是哪个高，都是写在合同里面的，不会有风险的</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:49</span><span class="msg-who">江宁</span><span class="msg-body"><span class="msg-tag">[image]</span> [image]</span></div>
+<div class="msg msg-planner"><span class="msg-time">13:54:49</span><span class="msg-who">江宁</span><span class="msg-body">比如这个产品就比银行的存款要高一点点</span></div>
+</div></section>
+
+<footer class="text-center py-10 no-print border-t border-white/5 mt-12">
+<button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">打印 / 导出 PDF</button>
+<p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 团队学习参考 · 2026.05</p>
+</footer>
+
+</body>
+</html>
