@@ -99,24 +99,50 @@ PLATFORM_TAG_CLASSES = {
 
 
 # ── TikHub API 搜索 ──────────────────────────────────
+RETRY_ATTEMPTS = 3
+RETRY_BACKOFF = 2.0  # 秒；每次失败后等 backoff * attempt 再重试
+
+
+def _request_with_retry(method, url, **kwargs):
+    """对 TikHub 接口做带退避的重试。仅对 5xx / 4xx(非401/403) / 网络异常重试。"""
+    last_err = ""
+    for attempt in range(1, RETRY_ATTEMPTS + 1):
+        try:
+            resp = requests.request(method, url, timeout=30, **kwargs)
+            if resp.status_code == 200:
+                return resp
+            # 401/403 是 token 问题，重试无意义
+            if resp.status_code in (401, 403):
+                print(f"  API auth error {resp.status_code}: {resp.text[:300]}")
+                return None
+            last_err = f"HTTP {resp.status_code}: {resp.text[:300]}"
+        except Exception as e:
+            last_err = f"network: {e}"
+        if attempt < RETRY_ATTEMPTS:
+            wait = RETRY_BACKOFF * attempt
+            print(f"  [retry {attempt}/{RETRY_ATTEMPTS - 1}] {last_err[:120]} -> sleep {wait}s")
+            time.sleep(wait)
+    print(f"  API failed after {RETRY_ATTEMPTS} attempts: {last_err[:300]}")
+    return None
+
+
 def tikhub_get(path, params=None):
     url = f"{TIKHUB_BASE}{path}"
+    resp = _request_with_retry("GET", url, headers=HEADERS, params=params)
+    if resp is None:
+        return None
     try:
-        resp = requests.get(url, headers=HEADERS, params=params, timeout=30)
-        if resp.status_code == 200:
-            data = resp.json()
-            # 调试：打印响应结构的顶层 keys
-            if isinstance(data, dict):
-                print(f"    Response keys: {list(data.keys())}")
-                d = data.get("data")
-                if isinstance(d, dict):
-                    print(f"    data keys: {list(d.keys())[:10]}")
-            return data
-        print(f"  API error {resp.status_code}: {resp.text[:500]}")
-        return None
+        data = resp.json()
     except Exception as e:
-        print(f"  API request failed: {e}")
+        print(f"  JSON parse failed: {e}")
         return None
+    # 调试：打印响应结构的顶层 keys
+    if isinstance(data, dict):
+        print(f"    Response keys: {list(data.keys())}")
+        d = data.get("data")
+        if isinstance(d, dict):
+            print(f"    data keys: {list(d.keys())[:10]}")
+    return data
 
 
 def extract_items(data, list_keys):
@@ -265,19 +291,18 @@ def search_bilibili(keyword):
 def search_douyin(keyword):
     """搜索抖音（使用 POST /douyin/search/fetch_general_search_v2）"""
     url = f"{TIKHUB_BASE}/api/v1/douyin/search/fetch_general_search_v2"
+    resp = _request_with_retry("POST", url, headers=HEADERS, json={
+        "keyword": keyword,
+        "offset": 0,
+        "count": 15,
+        "sort_type": "0",
+    })
+    if resp is None:
+        return []
     try:
-        resp = requests.post(url, headers=HEADERS, json={
-            "keyword": keyword,
-            "offset": 0,
-            "count": 15,
-            "sort_type": "0",
-        }, timeout=30)
-        if resp.status_code != 200:
-            print(f"  API error {resp.status_code}: {resp.text[:300]}")
-            return []
         data = resp.json()
     except Exception as e:
-        print(f"  API request failed: {e}")
+        print(f"  JSON parse failed: {e}")
         return []
     raw_list = extract_items(data, ["data", "aweme_list", "items", "results"])
     items = []
