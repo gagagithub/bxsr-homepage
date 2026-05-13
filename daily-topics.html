@@ -47,8 +47,8 @@
 
     .topic-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: 1fr;
+      gap: 24px;
       align-items: start;
     }
 
@@ -63,48 +63,119 @@
       padding: 14px 20px;
       font-size: 1.05em;
       font-weight: 700;
-      text-align: center;
       letter-spacing: 1px;
       color: white;
     }
 
     .platform-section {
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-bottom: 1px solid #f0f0f0;
     }
     .platform-section:last-child { border-bottom: none; }
 
     .platform-name {
-      font-size: 0.75em;
+      font-size: 0.78em;
       font-weight: 700;
-      margin-bottom: 8px;
-      text-transform: uppercase;
+      margin-bottom: 10px;
       letter-spacing: 0.5px;
     }
+    .plat-count { color:#bbb; font-weight: 500; }
 
-    table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
-    td {
-      padding: 5px 6px;
-      border-bottom: 1px solid #f8f8f8;
-      vertical-align: top;
+    .item-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .item-card {
+      display: flex;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #fafbfd;
+      border-radius: 10px;
+      border-left: 3px solid transparent;
+      transition: background .15s;
     }
-    td.rank { color: #ccc; width: 22px; font-weight: 600; text-align: center; }
-    tr:nth-child(-n+3) td.rank { color: #f59e0b; }
-    tr:last-child td { border-bottom: none; }
+    .item-card:hover { background: #f3f5f9; }
+    .item-card.muted { opacity: 0.55; background: #f5f5f5; border-left-color:#ddd; }
+    .item-card.muted .tl { color: #888; }
 
+    .rank-col {
+      width: 22px;
+      color: #ccc;
+      font-weight: 700;
+      font-size: 0.9em;
+      flex-shrink: 0;
+    }
+    .content-col { flex: 1; min-width: 0; }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
     .tl {
       color: #1E2761;
       text-decoration: none;
-      font-weight: 500;
-      line-height: 1.4;
+      font-weight: 600;
+      font-size: 0.95em;
+      line-height: 1.35;
     }
     .tl:hover { color: #028090; text-decoration: underline; }
 
-    .stats {
-      display: block;
-      color: #aaa;
+    .biz-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .summary {
+      color: #555;
       font-size: 0.85em;
-      margin-top: 2px;
+      line-height: 1.5;
+      margin: 4px 0;
+    }
+
+    .hl-row { margin: 4px 0; display: flex; flex-wrap: wrap; gap: 4px; }
+    .hl-chip {
+      display: inline-block;
+      padding: 1px 7px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      font-size: 0.72em;
+      color: #6366F1;
+      font-weight: 500;
+    }
+
+    .angle {
+      margin: 6px 0 4px;
+      padding: 5px 10px;
+      background: #fff8e1;
+      border-radius: 6px;
+      font-size: 0.82em;
+      color: #92590a;
+      line-height: 1.45;
+    }
+    .item-card.muted .angle { display: none; }
+
+    .biz-reason {
+      margin: 4px 0;
+      font-size: 0.78em;
+      color: #9CA3AF;
+      font-style: italic;
+    }
+
+    .meta-row {
+      margin-top: 5px;
+      color: #aaa;
+      font-size: 0.78em;
+    }
+    .hot-score {
+      color: #F59E0B;
+      font-weight: 600;
     }
 
     .empty {
@@ -121,8 +192,23 @@
       padding: 20px;
     }
 
-    @media (max-width: 680px) {
-      .topic-grid { grid-template-columns: 1fr; }
+    .legend {
+      max-width: 1100px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      background: white;
+      border-radius: 10px;
+      font-size: 0.8em;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+    }
+    .legend b { color:#333; }
+
+    @media (min-width: 900px) {
+      .topic-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -136,68 +222,462 @@
   </div>
 </header>
 
+<div class="legend">
+  <span><b>业务相关度</b>:</span>
+  <span><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span> 直接对标</span>
+  <span><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span> 高优先</span>
+  <span><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span> 长线选题</span>
+  <span><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span> 涨粉/获客可用</span>
+  <span><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span> 不要做</span>
+  <span style="margin-left:auto;color:#aaa;">🔥 = 同平台百分位热度分(0-100) · 💡 = AI 再创作角度建议</span>
+</div>
+
 <main>
   <div class="topic-grid">
     
+    <div class="topic-card">
+      <div class="topic-header" style="background:#EC4899;">
+        🛡️ 香港保险/分红险
+      </div>
+      <div class="platform-section">
+      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(1)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1F1D7B5E9s" target="_blank" rel="noopener" class="tl">分红险到底靠不靠谱？适合哪些人去购买呢？</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
+        <div class="summary">探讨分红险的可靠性，分析适合购买的人群。</div>
+        <div class="hl-row"><span class="hl-chip">#分红险靠谱吗？</span> <span class="hl-chip">#适合哪三类人？</span> <span class="hl-chip">#避开分红险大坑</span></div>
+        <div class="angle">💡 对比内地与香港分红险实现率，突出港险长期收益优势</div>
+        
+        <div class="meta-row">▶ 1.0万 · ♥ 129 · 📅 2026-04-09 · <span class="hot-score">🔥 0</span></div>
+      </div>
+    </div></div>
+    </div><div class="platform-section">
+      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(2)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7618443160578018623/?region=US&amp;mid=7618443319898655498&amp;u_code=0&amp;did=MS4wLjABAAAAlStgfHuyQBLD2CjxZ2jwvXQiqtsh-Iw8JL1CrKcmLXzGtisS0UG31ckBa3UUSeWv&amp;iid=MS4wLjABAAAAe5jIt3fMEkEfbfvm_vIa5fjyiofRFg2ominh5nVGDxA0qj69tbR4DG1OcbhJRn8q&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=UrZoUikVqRPMqzd2t5DnrvUxSOtw3hdpkgztqoHptME-&amp;share_version=320900&amp;ts=1778654086&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">3.15曝光！香港保险集体“暴雷”，小心钱取不出来 #香港保险 #香港保险的优缺点 #香港保险和内地保险的区别 #香港保险怎么买 #港险</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">3.15曝光港险集体暴雷，钱取不出</div>
+        <div class="hl-row"><span class="hl-chip">#3.15曝光</span> <span class="hl-chip">#港险暴雷</span> <span class="hl-chip">#钱取不出</span></div>
+        <div class="angle">💡 不建议跟进，避免负面传播</div>
+        <div class="biz-reason">负面舆情攻击港险</div>
+        <div class="meta-row">♥ 671 · 📅 2026-03-18 · <span class="hot-score">🔥 44</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7606236782706871571/?region=US&amp;mid=7606236834758249279&amp;u_code=0&amp;did=MS4wLjABAAAAlStgfHuyQBLD2CjxZ2jwvXQiqtsh-Iw8JL1CrKcmLXzGtisS0UG31ckBa3UUSeWv&amp;iid=MS4wLjABAAAAe5jIt3fMEkEfbfvm_vIa5fjyiofRFg2ominh5nVGDxA0qj69tbR4DG1OcbhJRn8q&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=ZdNcGrf4PFYWLuPhfBL8EDhNMIiu_Zvwn_DUY9C6kM4-&amp;share_version=320900&amp;ts=1778654086&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">存款过120万，每年躺收8万4，立马躺平 #港险   #退休计划  #养老规划  #储蓄险  #分红型储蓄险</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
+        <div class="summary">存120万买港险，年躺收8.4万实现提前退休</div>
+        <div class="hl-row"><span class="hl-chip">#存款120万</span> <span class="hl-chip">#年躺收8.4万</span> <span class="hl-chip">#立即躺平</span></div>
+        <div class="angle">💡 拆解港险躺平方案的真实收益与实现条件</div>
+        
+        <div class="meta-row">♥ 419 · 📅 2026-02-13 · <span class="hot-score">🔥 19</span></div>
+      </div>
+    </div></div>
+    </div><div class="platform-section">
+      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(7)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/671f66b8000000001b0121ca" target="_blank" rel="noopener" class="tl">40岁女人，爱自己不妨从一份保险开始</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">鼓励40岁女性通过买保险来关爱自己，强调保障与养老规划。</div>
+        <div class="hl-row"><span class="hl-chip">#40岁女性必看</span> <span class="hl-chip">#保险是爱自己方式</span> <span class="hl-chip">#规划养老要趁早</span></div>
+        <div class="angle">💡 用港险储蓄计划为40+女性打造终身现金流，对比内地年金优势。</div>
+        
+        <div class="meta-row">♥ 396 · <span class="hot-score">🔥 39</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/675f9f520000000002015164" target="_blank" rel="noopener" class="tl">没听劝，最后还是在香港买了储蓄险</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
+        <div class="summary">当事人不信劝，执意在香港买了储蓄险，分享真实购买经历。</div>
+        <div class="hl-row"><span class="hl-chip">#逆反心理</span> <span class="hl-chip">#朋友劝别买偏要买</span> <span class="hl-chip">#香港储蓄险真实体验</span></div>
+        <div class="angle">💡 以第一人称改编买港险的心路历程，突出收益和国际化配置亮点。</div>
+        
+        <div class="meta-row">♥ 236 · <span class="hot-score">🔥 0</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/67de60d5000000001b03bddd" target="_blank" rel="noopener" class="tl">爆肝整理！香港保险储蓄险/避坑攻略详解</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
+        <div class="summary">作者熬夜整理香港储蓄险选购攻略，包含避坑指南和产品对比。</div>
+        <div class="hl-row"><span class="hl-chip">#爆肝整理</span> <span class="hl-chip">#避坑攻略</span> <span class="hl-chip">#手把手教你选</span></div>
+        <div class="angle">💡 制作《2025港险避坑手册》系列，植入保心上人顾问角色，引导私域咨询。</div>
+        
+        <div class="meta-row">♥ 250 · <span class="hot-score">🔥 3</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/68411825000000002100e1d1" target="_blank" rel="noopener" class="tl">我为什么不买分红险</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">作者明确表态不买分红险，可能列出种种理由进行劝阻。</div>
+        <div class="hl-row"><span class="hl-chip">#反向种草</span> <span class="hl-chip">#不买分红险理由</span> <span class="hl-chip">#争议热门话题</span></div>
+        <div class="angle">💡 不做直接改编，但可写回应文《反驳不买分红险的5个流行观点》。</div>
+        <div class="biz-reason">反向种草内容，与推广港险/分红险目标相悖。</div>
+        <div class="meta-row">♥ 556 · <span class="hot-score">🔥 53</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/691315600000000003012699" target="_blank" rel="noopener" class="tl">分红险，被问最多的10个问题！</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
+        <div class="summary">盘点关于分红险最常被问到的10个问题，进行系统解答。</div>
+        <div class="hl-row"><span class="hl-chip">#分红险Top10问答</span> <span class="hl-chip">#你最关心的都在这</span> <span class="hl-chip">#秒懂分红险</span></div>
+        <div class="angle">💡 将问题升级为《港险分红险必问10题》，用港险数据回答，凸显收益稳定性。</div>
+        
+        <div class="meta-row">♥ 548 · <span class="hot-score">🔥 50</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69eb5c4b000000003501e28d" target="_blank" rel="noopener" class="tl">90后爸妈：提前二十年为女儿规划这笔钱！</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">90后父母提前20年为女儿规划一笔长期资金，可能是教育金或婚嫁金。</div>
+        <div class="hl-row"><span class="hl-chip">#90后父母远见</span> <span class="hl-chip">#提前20年布局</span> <span class="hl-chip">#女儿的未来基金</span></div>
+        <div class="angle">💡 做内地教育金vs港险储蓄险收益对比表，打开港险超长期复利缺口。</div>
+        
+        <div class="meta-row">♥ 453 · 📅 2周前 · <span class="hot-score">🔥 45</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69eef9cb000000002301c5de" target="_blank" rel="noopener" class="tl">行情越差，越要守住能长大的底仓</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">市场行情不佳时，更需要守住那份能持续增值的底仓资产。</div>
+        <div class="hl-row"><span class="hl-chip">#市场下行焦虑</span> <span class="hl-chip">#底仓思维</span> <span class="hl-chip">#资产能长大</span></div>
+        <div class="angle">💡 用‘底仓’概念讲港险保本+分红的防御优势，截流股市撤退资金。</div>
+        
+        <div class="meta-row">♥ 355 · <span class="hot-score">🔥 34</span></div>
+      </div>
+    </div></div>
+    </div>
+    </div>
+    <div class="topic-card">
+      <div class="topic-header" style="background:#0EA5E9;">
+        🏛️ 内地保险/年金/增额寿
+      </div>
+      <div class="platform-section">
+      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(3)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1ijwczEEwc" target="_blank" rel="noopener" class="tl">刚续保险，看下新车出险一次保险要多少钱？怎么避坑买到假保险？</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">新车出险后保费计算及避免买到假保险的避坑方法</div>
+        <div class="hl-row"><span class="hl-chip">#车险出险价格</span> <span class="hl-chip">#如何避坑假保险</span> <span class="hl-chip">#续保注意事项</span></div>
+        
+        <div class="biz-reason">车险话题与高净值传承无关</div>
+        <div class="meta-row">▶ 1.7万 · ♥ 340 · 📅 2026-03-11 · <span class="hot-score">🔥 24</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/cheese/play/ss63732?query_from=0&amp;search_id=14290535988413055384&amp;search_query=%E5%95%86%E4%B8%9A%E5%85%BB%E8%80%81%E9%87%91" target="_blank" rel="noopener" class="tl">养老行业认知课</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">养老行业认知课程，讲解行业趋势与规划</div>
+        <div class="hl-row"><span class="hl-chip">#养老行业认知</span> <span class="hl-chip">#养老规划必修</span> <span class="hl-chip">#老龄化机遇</span></div>
+        <div class="angle">💡 对比内地养老规划与香港储蓄分红险优势</div>
+        
+        <div class="meta-row">▶ 1.2万 · <span class="hot-score">🔥 6</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1HKPSzTExf" target="_blank" rel="noopener" class="tl">郭凤莲：建议将农村养老金提高至每月500元</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">代表建议将农村养老金提高至每月500元</div>
+        <div class="hl-row"><span class="hl-chip">#农村养老金</span> <span class="hl-chip">#每月500元</span> <span class="hl-chip">#养老待遇建议</span></div>
+        
+        <div class="biz-reason">受众为农村老人，与高净值画像不匹配</div>
+        <div class="meta-row">▶ 1.6万 · ♥ 1059 · 📅 2026-03-09 · <span class="hot-score">🔥 12</span></div>
+      </div>
+    </div></div>
+    </div><div class="platform-section">
+      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(4)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7632625418856179828/?region=US&amp;mid=7549081629635578651&amp;u_code=0&amp;did=MS4wLjABAAAAsQqrmS2dVl3jhbBh0BVwp09ZAUEnAHNWDXbQ5GpA6nyBdg6VSnfj9oymRPXpFBTP&amp;iid=MS4wLjABAAAAlFGRwpEExHPtdapyEIqD_KbgQ4gKylOaGxgSc80LKI_vo9KsDUEFAmK5tuqmESW3&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=RrpEAYTVUlEXeAZIuv7HB_GkLUlSw1.4OzP6krAP5aA-&amp;share_version=320900&amp;ts=1778654139&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">保险理赔这数据是不是真的？#抖音ai创作 吐槽一下，人保每个平摊下来有1900、平安只有196、国寿有2500多。这个前三的差距也太大了</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">对比人保、平安、国寿的理赔额差异，人保均摊最高</div>
+        <div class="hl-row"><span class="hl-chip">#理赔数据差距大</span> <span class="hl-chip">#人保均摊1900</span> <span class="hl-chip">#平安仅196</span></div>
+        
+        <div class="biz-reason">内地理赔数据对比，与高净值港险无关</div>
+        <div class="meta-row">♥ 513 · 📅 2周前 · <span class="hot-score">🔥 37</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7610477721424301915/?region=US&amp;mid=7573040081814571839&amp;u_code=0&amp;did=MS4wLjABAAAAsQqrmS2dVl3jhbBh0BVwp09ZAUEnAHNWDXbQ5GpA6nyBdg6VSnfj9oymRPXpFBTP&amp;iid=MS4wLjABAAAAlFGRwpEExHPtdapyEIqD_KbgQ4gKylOaGxgSc80LKI_vo9KsDUEFAmK5tuqmESW3&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=VPl_1z1ngJvWgJO4gnAWPKYDVMlRLFeZCZpS2RBhDKA-&amp;share_version=320900&amp;ts=1778654139&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">车险水太深？！从业8年总结的省钱公式
+这样买立省30% 新手老司机都该收藏！
+#车险 #车险续保 #买车险避坑 #新手上路 #老司机必备</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">分享车险省钱公式，教车主如何买对车险立省30%</div>
+        <div class="hl-row"><span class="hl-chip">#车险省钱攻略</span> <span class="hl-chip">#从业8年公式</span> <span class="hl-chip">#立省30%</span></div>
+        
+        <div class="biz-reason">车险内容，与高端理财无关</div>
+        <div class="meta-row">♥ 486 · 📅 2026-02-25 · <span class="hot-score">🔥 30</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7637387285524377574/?region=US&amp;mid=7637387422208428863&amp;u_code=0&amp;did=MS4wLjABAAAAY8qqCeBk7lDF-cu7vQbF2i3UJdbYESudi13WxZougBjF5ZF3A4hPU8MDNqTrQ50A&amp;iid=MS4wLjABAAAAGeiaOvvhXvDlXDsyjYpxM2OvG19leU_h5Z5kQbZNiEjF991NoYoZ92r6QfZHPrPc&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=OXKan4bVyKHrKk7CCv6TnIQiA48kB_d.LYqHzQWtU7E-&amp;share_version=320900&amp;ts=1778654150&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">商业养老保险靠谱吗？#保险  #养老保险  #养老  从业十年的保险经纪人，告诉你商业养老保险是否靠谱？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">保险经纪人讲解商业养老保险是否靠谱</div>
+        <div class="hl-row"><span class="hl-chip">#养老靠不靠谱</span> <span class="hl-chip">#从业10年揭秘</span> <span class="hl-chip">#养老规划避坑</span></div>
+        <div class="angle">💡 港险vs内地养老年金对比，算收益差异凸显港险优势</div>
+        
+        <div class="meta-row">♥ 498 · 📅 5天前 · <span class="hot-score">🔥 33</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7623079029881445361/?region=US&amp;mid=7410251673464408081&amp;u_code=0&amp;did=MS4wLjABAAAAY8qqCeBk7lDF-cu7vQbF2i3UJdbYESudi13WxZougBjF5ZF3A4hPU8MDNqTrQ50A&amp;iid=MS4wLjABAAAAGeiaOvvhXvDlXDsyjYpxM2OvG19leU_h5Z5kQbZNiEjF991NoYoZ92r6QfZHPrPc&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=1lV5GKfPLPSEAdCCtTqUucTggEk0zWSXfml_R66B29g-&amp;share_version=320900&amp;ts=1778654150&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">中国银行旗下中银人寿2026新型养老金。中国银行出手了，旗下中银人寿推出一款新型养老金，仅需2年缴费，第3年起终身领5%利息，活多久领多久，每年交50万，交2年起，第25个月起每月到账4166元，每年到账5万元，第50年领走240万，账户还有278万，一张保单养活三代人，自己领不完还能传给孩子继续领！#香港保险#养老金#增额终身寿</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
+        <div class="summary">中银人寿新型养老金，第3年起终身领5%利息，一张保单养三代</div>
+        <div class="hl-row"><span class="hl-chip">#终身领5%利息</span> <span class="hl-chip">#第3年即可起领</span> <span class="hl-chip">#一张保单养三代</span></div>
+        <div class="angle">💡 拆解中银人寿养老金收益，对比传统港险，分析是否值得买</div>
+        
+        <div class="meta-row">♥ 1706 · 📅 2026-03-30 · <span class="hot-score">🔥 63</span></div>
+      </div>
+    </div></div>
+    </div><div class="platform-section">
+      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(5)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69da49a60000000023020890" target="_blank" rel="noopener" class="tl">香港与内地储蓄险的差异</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
+        <div class="summary">对比香港与内地储蓄险的收益、灵活性和功能差异。</div>
+        <div class="hl-row"><span class="hl-chip">#收益差距明显</span> <span class="hl-chip">#多币种配置</span> <span class="hl-chip">#传承功能差异</span></div>
+        <div class="angle">💡 用数据可视化展示港险长期复利碾压内地产品</div>
+        
+        <div class="meta-row">♥ 597 · 📅 2026-04-11 · <span class="hot-score">🔥 58</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/67ea8dbd000000001d00be73" target="_blank" rel="noopener" class="tl">增额终身寿险劝退！普通人别乱买增额终身寿</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">提醒普通人谨慎购买增额终身寿，可能隐藏陷阱。</div>
+        <div class="hl-row"><span class="hl-chip">#普通人别乱买</span> <span class="hl-chip">#增额寿陷阱</span> <span class="hl-chip">#不如选港险</span></div>
+        <div class="angle">💡 剖析增额寿流动性短板，对比港险灵活提领</div>
+        
+        <div class="meta-row">♥ 255 · <span class="hot-score">🔥 8</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69f05e2e0000000038034651" target="_blank" rel="noopener" class="tl">35+HR | 职场从无偏爱，安稳从来自己兜底</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">35岁HR分享职场不安，靠保险规划养老兜底。</div>
+        <div class="hl-row"><span class="hl-chip">#职场无偏爱</span> <span class="hl-chip">#养老靠自己</span> <span class="hl-chip">#保险兜底</span></div>
+        <div class="angle">💡 切入养老焦虑，演示港险退休提领方案</div>
+        
+        <div class="meta-row">♥ 274 · <span class="hot-score">🔥 16</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69e9d7540000000011023004" target="_blank" rel="noopener" class="tl">给女儿偷偷买了份增额寿…现在想想真明智</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">妈妈给女儿偷偷配置增额寿，庆幸明智之举。</div>
+        <div class="hl-row"><span class="hl-chip">#偷偷买增额寿</span> <span class="hl-chip">#女儿教育金</span> <span class="hl-chip">#复利增长</span></div>
+        <div class="angle">💡 分析增额寿真实IRR，对比港险分红实现率</div>
+        
+        <div class="meta-row">♥ 556 · <span class="hot-score">🔥 53</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6943f975000000001e021ecc" target="_blank" rel="noopener" class="tl">普通人体面养老需要多少钱？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">探讨普通人实现体面养老所需的资金储备。</div>
+        <div class="hl-row"><span class="hl-chip">#体面养老成本</span> <span class="hl-chip">#养老金缺口</span> <span class="hl-chip">#复利规划</span></div>
+        <div class="angle">💡 量化退休缺口，对比港险年金 vs 内地养老方案</div>
+        
+        <div class="meta-row">♥ 400 · <span class="hot-score">🔥 42</span></div>
+      </div>
+    </div></div>
+    </div>
+    </div>
     <div class="topic-card">
       <div class="topic-header" style="background:#F59E0B;">
         💰 存钱
       </div>
       <div class="platform-section">
-      <div class="platform-name" style="color:#00A1D6;">● B站</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.bilibili.com/video/BV19J5p6ZEDq" target="_blank" rel="noopener" class="tl">三十万买新能源的人要更有钱，普通家庭要学会存钱</a><span class="stats">▶ 9.5万 · ♥ 4000</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.bilibili.com/video/BV1dDNKzgEK1" target="_blank" rel="noopener" class="tl">【生存建议】多存钱、少花钱、不负债</a><span class="stats">▶ 6.2万 · ♥ 1730</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(3)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV19J5p6ZEDq" target="_blank" rel="noopener" class="tl">三十万买新能源的人要更有钱，普通家庭要学会存钱</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">提醒普通家庭克制消费冲动，多存钱以应对未来风险。</div>
+        <div class="hl-row"><span class="hl-chip">#30万新能源车是陷阱？</span> <span class="hl-chip">#普通家庭存钱重要性</span> <span class="hl-chip">#理性消费避免负债</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">普通家庭存钱建议，受众不匹配高净值客户</div>
+        <div class="meta-row">▶ 11.1万 · ♥ 4530 · 📅 昨天 · <span class="hot-score">🔥 71</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1dDNKzgEK1" target="_blank" rel="noopener" class="tl">【生存建议】多存钱、少花钱、不负债</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">建议多存钱、少花钱、不负债的生存指南。</div>
+        <div class="hl-row"><span class="hl-chip">#多存钱</span> <span class="hl-chip">#少花钱</span> <span class="hl-chip">#不负债</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">口号式建议，无具体方案，受众广泛不精准</div>
+        <div class="meta-row">▶ 6.2万 · ♥ 1730 · 📅 2026-03-08 · <span class="hot-score">🔥 59</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1pmduBqEaA" target="_blank" rel="noopener" class="tl">疯狂存钱罐！敲碎隐藏款轻松日入10万！</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">通过敲碎存钱罐获取隐藏款，声称可日入10万。</div>
+        <div class="hl-row"><span class="hl-chip">#疯狂存钱罐</span> <span class="hl-chip">#隐藏款日入10万</span> <span class="hl-chip">#博眼球内容</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">娱乐向内容，信息含量低，无关理财</div>
+        <div class="meta-row">▶ 12.0万 · ♥ 1539 · 📅 4天前 · <span class="hot-score">🔥 76</span></div>
+      </div>
+    </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#1A1A1A;">● 抖音</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.iesdouyin.com/share/note/7630478903878016869/?region=US&amp;mid=7496807126732376851&amp;u_code=0&amp;did=MS4wLjABAAAAab_iBuo5gCBzplpzGzlt-YMGfL1AZZD1We9sq75bwJOJS4di9CPoIpMZ0WWED6Hc&amp;iid=MS4wLjABAAAAw7_WVX2-s3CPI0lGCf9L-jjfseYtcNpMuNgWSQ8T5vdY9aVsMP-TIhr2zU12Ret_&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=KcD2i_YGvU5a3vMrgqQGzBG42EV1APhVXEzzGLojNVE-&amp;share_version=320900&amp;ts=1778638210&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">我用3张卡存钱法存了20W.如果你总是存不住钱
-不如试试这个3张卡存钱法
-我用它从月光到攒了20W
-生活都更有底气啦～
-...</a><span class="stats">♥ 2911</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.iesdouyin.com/share/note/7612528616010738874/?region=US&amp;mid=7611901355644472070&amp;u_code=0&amp;did=MS4wLjABAAAAab_iBuo5gCBzplpzGzlt-YMGfL1AZZD1We9sq75bwJOJS4di9CPoIpMZ0WWED6Hc&amp;iid=MS4wLjABAAAAw7_WVX2-s3CPI0lGCf9L-jjfseYtcNpMuNgWSQ8T5vdY9aVsMP-TIhr2zU12Ret_&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=uRApN1PLGtVfcvhpJQm02bY1VP_fFA4xaVMV3flNNnk-&amp;share_version=320900&amp;ts=1778638210&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">巴菲特三步存钱法，养成变富有的习惯😍#每天跟我涨知识 #金融常识 #存钱 #攒钱</a><span class="stats">♥ 337</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(5)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7613589200743995621/?region=US&amp;mid=7613589129183431443&amp;u_code=0&amp;did=MS4wLjABAAAAOunmkp8DY63dqmUO2KovR3QAUu4Nru2DKuRii5lRW0Ok1EE4gCtLA1YgLqCRcmt2&amp;iid=MS4wLjABAAAAU2bc6rzP1I5KFZdsYQqI2WmA4rqMyHmM_gzXQtlhGCz5hfqGQqlfzhy8epYRojdd&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=MUwxFiV4wnwZjpiihu4YOpC12xzQTQgzObS8N5jJ8P4-&amp;share_version=320900&amp;ts=1778654212&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">现金存钱 | 52周存钱打卡（2月）
+又来现金存钱啦
+#存钱 #攒钱 #省钱 #现金存钱 #存款</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">用52周存钱法进行现金打卡，记录2月存款进度</div>
+        <div class="hl-row"><span class="hl-chip">#52周存钱打卡</span> <span class="hl-chip">#现金存钱仪式感</span> <span class="hl-chip">#轻松攒钱方法</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">受众画像不匹配，普通青年存钱打卡，非高净值理财</div>
+        <div class="meta-row">♥ 389 · 📅 2026-03-05 · <span class="hot-score">🔥 11</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7623273057713731185/?region=US&amp;mid=6956582565809620999&amp;u_code=0&amp;did=MS4wLjABAAAAOunmkp8DY63dqmUO2KovR3QAUu4Nru2DKuRii5lRW0Ok1EE4gCtLA1YgLqCRcmt2&amp;iid=MS4wLjABAAAAU2bc6rzP1I5KFZdsYQqI2WmA4rqMyHmM_gzXQtlhGCz5hfqGQqlfzhy8epYRojdd&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=cZilebmEvK.DzjhHbPtomSqLhILRvhSPp7fBE3mYAs0-&amp;share_version=320900&amp;ts=1778654212&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">这样攒私房钱#存钱 #现金 #攒钱计划 #攒钱 #隐藏保险箱</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">分享一种隐藏保险箱攒私房钱的方法</div>
+        <div class="hl-row"><span class="hl-chip">#藏私房钱妙招</span> <span class="hl-chip">#隐藏保险箱</span> <span class="hl-chip">#攒钱计划</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">受众画像不匹配，小镇青年日常存钱，非高净值需求</div>
+        <div class="meta-row">♥ 457 · 📅 2026-03-31 · <span class="hot-score">🔥 26</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7630789456841184889/?region=US&amp;mid=7630789407045716790&amp;u_code=0&amp;did=MS4wLjABAAAAOunmkp8DY63dqmUO2KovR3QAUu4Nru2DKuRii5lRW0Ok1EE4gCtLA1YgLqCRcmt2&amp;iid=MS4wLjABAAAAU2bc6rzP1I5KFZdsYQqI2WmA4rqMyHmM_gzXQtlhGCz5hfqGQqlfzhy8epYRojdd&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=toYXZ1YqPw9fiLy0HvGAKi.Afw7SC5bFpkg9ds5GPHk-&amp;share_version=320900&amp;ts=1778654212&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">负债存钱法 #存钱 #365存钱 #攒钱 #现金 #储蓄</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">介绍在负债情况下还清债务并同时存钱的方法</div>
+        <div class="hl-row"><span class="hl-chip">#负债也能存钱</span> <span class="hl-chip">#365存钱法</span> <span class="hl-chip">#现金储蓄技巧</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">受众画像不匹配，低收入或负债人群存钱，非高净值</div>
+        <div class="meta-row">♥ 948 · 📅 3周前 · <span class="hot-score">🔥 56</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7623968396342587237/?region=US&amp;mid=7623425959521536794&amp;u_code=0&amp;did=MS4wLjABAAAAOunmkp8DY63dqmUO2KovR3QAUu4Nru2DKuRii5lRW0Ok1EE4gCtLA1YgLqCRcmt2&amp;iid=MS4wLjABAAAAU2bc6rzP1I5KFZdsYQqI2WmA4rqMyHmM_gzXQtlhGCz5hfqGQqlfzhy8epYRojdd&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=ftoaRPz9WqzFQgtPgUQlRp0EWGPjQ1NssXA8VVDUDNg-&amp;share_version=320900&amp;ts=1778654212&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">钱生钱的35种方方式。#治愈系存钱 #创意存钱方法 #创意存钱法</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">列举了35种钱生钱的创意存钱或理财方式</div>
+        <div class="hl-row"><span class="hl-chip">#35种赚钱方法</span> <span class="hl-chip">#治愈系存钱</span> <span class="hl-chip">#创意存钱法</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">面向大众的普通存钱技巧，无高净值理财内容</div>
+        <div class="meta-row">♥ 4422 · 📅 2026-04-02 · <span class="hot-score">🔥 81</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7612908888387984315/?region=US&amp;mid=7612908857924291378&amp;u_code=0&amp;did=MS4wLjABAAAAOunmkp8DY63dqmUO2KovR3QAUu4Nru2DKuRii5lRW0Ok1EE4gCtLA1YgLqCRcmt2&amp;iid=MS4wLjABAAAAU2bc6rzP1I5KFZdsYQqI2WmA4rqMyHmM_gzXQtlhGCz5hfqGQqlfzhy8epYRojdd&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=llgR8oXuA7GFbtDLb_uPtI.QxY_RF7wBJQ3YLfMfhd8-&amp;share_version=320900&amp;ts=1778654212&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">现金存钱 ｜ 蜡笔小新全能本打卡（2月）
+又来存钱啦
+春节假期已经结束啦
+又能工作赚钱啦
+2026年我的存款目标是15个[派对R]
+2026我们一起存钱吧
+#存钱 #存款 #现金存钱 #省钱 #攒钱</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">使用蜡笔小新全能本进行现金存钱打卡，目标2026年存15万</div>
+        <div class="hl-row"><span class="hl-chip">#蜡笔小新存钱本</span> <span class="hl-chip">#15万存款目标</span> <span class="hl-chip">#现金打卡仪式感</span></div>
+        <div class="angle">💡 无</div>
+        <div class="biz-reason">受众画像不匹配，普通上班族存钱目标，非高净值</div>
+        <div class="meta-row">♥ 7817 · 📅 2026-03-03 · <span class="hot-score">🔥 93</span></div>
+      </div>
+    </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.xiaohongshu.com/explore/68ea330a00000000040141b1" target="_blank" rel="noopener" class="tl">月薪2700｜在小县城的生活很安逸存了7</a><span class="stats">♥ 2390</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.xiaohongshu.com/explore/6698dfea000000000a004f48" target="_blank" rel="noopener" class="tl">26歲已存43w｜能存下錢是因為我堅持這6件事</a><span class="stats">♥ 1272</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69e0c8c8000000001f005b8d" target="_blank" rel="noopener" class="tl">40岁才想存钱，目标存到100万，可能吗？</a><span class="stats">♥ 1034</span></td>
-          </tr><tr>
-            <td class="rank">4</td>
-            <td><a href="https://www.xiaohongshu.com/explore/699d6d9c000000000d008653" target="_blank" rel="noopener" class="tl">小县城月薪2700的日常｜存款越多退路就越多</a><span class="stats">♥ 1490</span></td>
-          </tr><tr>
-            <td class="rank">5</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69e34933000000001a0267b4" target="_blank" rel="noopener" class="tl">小县城月薪2.5K|存钱的意义是为了好好生活</a><span class="stats">♥ 307</span></td>
-          </tr><tr>
-            <td class="rank">6</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69e23e60000000001d019502" target="_blank" rel="noopener" class="tl">发3月工资了，实际到手4027块，我直接存了</a><span class="stats">♥ 2.5万</span></td>
-          </tr><tr>
-            <td class="rank">7</td>
-            <td><a href="https://www.xiaohongshu.com/explore/6953cdf30000000022033b7a" target="_blank" rel="noopener" class="tl">高中生存钱日记39</a><span class="stats">♥ 1.3万</span></td>
-          </tr><tr>
-            <td class="rank">8</td>
-            <td><a href="https://www.xiaohongshu.com/explore/68681f8e000000001203c04b" target="_blank" rel="noopener" class="tl">大家怎么攒到钱的</a><span class="stats">♥ 2.3万</span></td>
-          </tr><tr>
-            <td class="rank">9</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69cb1ebf000000001e00d731" target="_blank" rel="noopener" class="tl">存钱的20件小事</a><span class="stats">♥ 1619</span></td>
-          </tr><tr>
-            <td class="rank">10</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69c7c47d000000001a021b2e" target="_blank" rel="noopener" class="tl">05年大三，靠自己悄悄存了16w至今家长未知</a><span class="stats">♥ 562</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(9)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/68ea330a00000000040141b1" target="_blank" rel="noopener" class="tl">月薪2700｜在小县城的生活很安逸存了7</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">月薪2700小县城安逸存钱记录</div>
+        <div class="hl-row"><span class="hl-chip">#月薪2700</span> <span class="hl-chip">#小县城生活</span> <span class="hl-chip">#安逸存钱</span></div>
+        <div class="angle">💡 不建议</div>
+        <div class="biz-reason">受众月薪2700不匹配高净值</div>
+        <div class="meta-row">♥ 2391 · <span class="hot-score">🔥 84</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6953cdf30000000022033b7a" target="_blank" rel="noopener" class="tl">高中生存钱日记39</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">高中生每日存钱日记第39期</div>
+        <div class="hl-row"><span class="hl-chip">#高中生</span> <span class="hl-chip">#存钱日记</span> <span class="hl-chip">#学生省钱</span></div>
+        <div class="angle">💡 不建议</div>
+        <div class="biz-reason">学生群体不满足客户画像</div>
+        <div class="meta-row">♥ 1.3万 · <span class="hot-score">🔥 92</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/689af065000000001b03fa0a" target="_blank" rel="noopener" class="tl">就做好两件事：存钱、存人。</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">人生只需专注存钱和积累人脉两件事</div>
+        <div class="hl-row"><span class="hl-chip">#存钱</span> <span class="hl-chip">#存人</span> <span class="hl-chip">#人生哲理</span></div>
+        <div class="angle">💡 从存钱存人切入保险金信托与教育金规划</div>
+        
+        <div class="meta-row">♥ 2973 · <span class="hot-score">🔥 87</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/68be70e3000000001d005fa9" target="_blank" rel="noopener" class="tl">家人们谁懂！现金存钱带来的快乐 今天去银行存了2w现金！把厚厚的一沓人民币亲手存进账户，这种满足感真的太真实了！ 现在干</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">存2万现金带来真实满足感</div>
+        <div class="hl-row"><span class="hl-chip">#现金存钱</span> <span class="hl-chip">#2万元</span> <span class="hl-chip">#银行储蓄</span></div>
+        <div class="angle">💡 不建议</div>
+        <div class="biz-reason">小额存钱不匹配高净值客群</div>
+        <div class="meta-row">♥ 282 · <span class="hot-score">🔥 24</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69f22bae000000001e00d477" target="_blank" rel="noopener" class="tl">无痛存钱法</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">介绍轻松无痛的存钱方法</div>
+        <div class="hl-row"><span class="hl-chip">#无痛存钱</span> <span class="hl-chip">#轻松方法</span> <span class="hl-chip">#存钱技巧</span></div>
+        <div class="angle">💡 对比无痛存钱法，突出香港储蓄险强制储蓄优势</div>
+        
+        <div class="meta-row">♥ 1046 · 📅 1周前 · <span class="hot-score">🔥 74</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69e23e60000000001d019502" target="_blank" rel="noopener" class="tl">发3月工资了，实际到手4027块，我直接存了</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">月薪4027元直接储蓄记录</div>
+        <div class="hl-row"><span class="hl-chip">#到手4027</span> <span class="hl-chip">#直接存钱</span> <span class="hl-chip">#低薪族</span></div>
+        <div class="angle">💡 不建议</div>
+        <div class="biz-reason">月薪4027不匹配高净值客户</div>
+        <div class="meta-row">♥ 2.5万 · <span class="hot-score">🔥 100</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/687997120000000023004780" target="_blank" rel="noopener" class="tl">打开存钱箱，盘点一下有多少</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">打开存钱罐盘点零钱储蓄</div>
+        <div class="hl-row"><span class="hl-chip">#存钱箱</span> <span class="hl-chip">#盘点现金</span> <span class="hl-chip">#零钱积累</span></div>
+        <div class="angle">💡 不建议</div>
+        <div class="biz-reason">存钱罐盘点受众偏年轻低收入</div>
+        <div class="meta-row">♥ 1.8万 · <span class="hot-score">🔥 95</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">8</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/699fe6510000000022030c21" target="_blank" rel="noopener" class="tl">存钱目标你完成了吗？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">检查年度存钱目标完成进度</div>
+        <div class="hl-row"><span class="hl-chip">#存钱目标</span> <span class="hl-chip">#进度检查</span> <span class="hl-chip">#财务规划</span></div>
+        <div class="angle">💡 用存钱目标引导养老储蓄目标，推荐分红险</div>
+        
+        <div class="meta-row">♥ 344 · <span class="hot-score">🔥 32</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">9</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69f1b8d4000000003701d5d9" target="_blank" rel="noopener" class="tl">报复性存钱，用蕞短的时间暴力省钱</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">短时间内极速省钱方法</div>
+        <div class="hl-row"><span class="hl-chip">#报复性存钱</span> <span class="hl-chip">#暴力省钱</span> <span class="hl-chip">#快速有效</span></div>
+        <div class="angle">💡 从报复性存钱谈如何用保险锁定长期收益</div>
+        
+        <div class="meta-row">♥ 1808 · <span class="hot-score">🔥 79</span></div>
+      </div>
+    </div></div>
     </div>
     </div>
     <div class="topic-card">
@@ -205,139 +685,330 @@
         🏦 存款/定存/国债
       </div>
       <div class="platform-section">
-      <div class="platform-name" style="color:#00A1D6;">● B站</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.bilibili.com/video/BV1JbRpBPEzf" target="_blank" rel="noopener" class="tl">如果人均存款20万，那这个社会就乱套了</a><span class="stats">▶ 4.6万 · ♥ 713</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.bilibili.com/video/BV1R85b6LEYz" target="_blank" rel="noopener" class="tl">卖掉房子担心被借钱，大鹏哥想把钱存定期，手里有存款心里才踏实</a><span class="stats">▶ 1.4万 · ♥ 450</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.bilibili.com/video/BV17iQKBCEib" target="_blank" rel="noopener" class="tl">第838期|不吹不黑，存款10万算什么水平❓看完我不再焦虑了❗</a><span class="stats">▶ 3.5万 · ♥ 374</span></td>
-          </tr><tr>
-            <td class="rank">4</td>
-            <td><a href="https://www.bilibili.com/video/BV1UyDzBpEeo" target="_blank" rel="noopener" class="tl">这才是正确的定投补仓方法。看完这个，你就会定投补仓了。</a><span class="stats">▶ 8.8万 · ♥ 1700</span></td>
-          </tr><tr>
-            <td class="rank">5</td>
-            <td><a href="https://www.bilibili.com/video/BV1mYRZB7E9s" target="_blank" rel="noopener" class="tl">（第616天）每天定投纳斯达克、沪深300、黄金，收益情况披露</a><span class="stats">▶ 1.9万 · ♥ 398</span></td>
-          </tr><tr>
-            <td class="rank">6</td>
-            <td><a href="https://www.bilibili.com/video/BV1B8DDBaEAU" target="_blank" rel="noopener" class="tl">【深度】红利低波怎么定投？</a><span class="stats">▶ 1.6万 · ♥ 293</span></td>
-          </tr><tr>
-            <td class="rank">7</td>
-            <td><a href="https://www.bilibili.com/video/BV1c7APzuErD" target="_blank" rel="noopener" class="tl">【深度】红利低波定投原理，人人10%年化率？颠覆认知！</a><span class="stats">▶ 4.5万 · ♥ 1277</span></td>
-          </tr><tr>
-            <td class="rank">8</td>
-            <td><a href="https://www.bilibili.com/video/BV1QSojB3EiW" target="_blank" rel="noopener" class="tl">财政部今天启动超长期特别国债发行 国家向你“借钱”，普通人怎么“搭车”？</a><span class="stats">▶ 67.0万 · ♥ 1.7万</span></td>
-          </tr></tbody></table>
-    </div><div class="platform-section">
-      <div class="platform-name" style="color:#1A1A1A;">● 抖音</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7614935996484298186/?region=US&amp;mid=7614935871480924938&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=7_KMQqaJ_y8vQ5OukSPDG8R0qn_XD47HI6ncudF0Xco-&amp;share_version=320900&amp;ts=1778638231&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">2026年去银行存钱，记好这五个不要做四个要做#存钱 #银行存款 #存款 #银行存钱 #银行</a><span class="stats">♥ 24.2万</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7631786978484243755/?region=US&amp;mid=7631787014437800740&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=8wVzdUqC0dZe6zUee8Z4unz4xGHeSmxbO0SzEgX1FsA-&amp;share_version=320900&amp;ts=1778638231&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">存款三十万的概念 #认知  #思维  #内容过于真实  #老百姓关心的话题  #金融</a><span class="stats">♥ 5815</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7618427866094636351/?region=US&amp;mid=7618427804870707995&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=E6vskNZNN6ZruuU6V1UilqmktOgtyJoswZaGuH6ly40-&amp;share_version=320900&amp;ts=1778638231&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">200万存香港。一年利息可顶普通人半年工资 </a><span class="stats">♥ 4143</span></td>
-          </tr><tr>
-            <td class="rank">4</td>
-            <td><a href="https://www.iesdouyin.com/share/note/7627141768212206298/?region=US&amp;mid=7604442152533379867&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=JC1omk82rlCW4_xQFgWsmg5JA5qMePHq0IskC35srJc-&amp;share_version=320900&amp;ts=1778638231&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">2026存款等级表！你在第几层？#每日分享#上热门</a><span class="stats">♥ 283</span></td>
-          </tr><tr>
-            <td class="rank">5</td>
-            <td><a href="https://www.iesdouyin.com/share/note/7615157815309379919/?region=US&amp;mid=7598010257508223026&amp;u_code=0&amp;did=MS4wLjABAAAArVTGL923HmkIXHsfselXvtcv0X6LNiFd0Pw98tO-4I6eZl06IURyk7ndsIFQO2wq&amp;iid=MS4wLjABAAAAzM5vDx_aINq9hTOee4dX_cgj8tOkbv_BtyaULAv3Y_KcRH95rcluBNHueQUY1859&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=US7yQhnvHnrFKraxLm8utGYXzxtJWLPu1ro6jdUFdA8-&amp;share_version=320900&amp;ts=1778638235&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">2026年各银行存款利率分享。每日分享，三年定期2.5%，50元起存#存款 #存钱 #利率下调 #每日分享 #热门</a><span class="stats">♥ 1151</span></td>
-          </tr><tr>
-            <td class="rank">6</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7632676228390094585/?region=US&amp;mid=7632676164225616676&amp;u_code=0&amp;did=MS4wLjABAAAApICZngqDDOrYVCtk7_WCfRnEb8dD8R0AExLxI5g0oc3tX-JW8mBq08q7cdZhe-fN&amp;iid=MS4wLjABAAAAsHFldt7-EIN6Hg1sRr_BRNVHicS4_aC_e6Cwuvy7pdblSga4Xf4ZoolExAia2Liv&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=nzP_KNQjCFD8A9D00kPnMw9EsennCAN.vzbxAsOslog-&amp;share_version=320900&amp;ts=1778638238&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">超长期国债千万别乱买，跟普通国债根本不是一回事！#国债 #超长期国债#国债交易#普通人理财#财经知识</a><span class="stats">♥ 221</span></td>
-          </tr><tr>
-            <td class="rank">7</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7635966227122261291/?region=US&amp;mid=7635966287113374483&amp;u_code=0&amp;did=MS4wLjABAAAApICZngqDDOrYVCtk7_WCfRnEb8dD8R0AExLxI5g0oc3tX-JW8mBq08q7cdZhe-fN&amp;iid=MS4wLjABAAAAsHFldt7-EIN6Hg1sRr_BRNVHicS4_aC_e6Cwuvy7pdblSga4Xf4ZoolExAia2Liv&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=ShWzP2DOPj6QbmmsLItMPnHJ.O9O.xqRV6k8cLv3lGU-&amp;share_version=320900&amp;ts=1778638238&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">普通老百姓怎么买国债？#国债 #存钱 #干货分享 #定期存款 #老百姓关心的话题</a><span class="stats">♥ 408</span></td>
-          </tr><tr>
-            <td class="rank">8</td>
-            <td><a href="https://www.iesdouyin.com/share/note/7623915038303472498/?region=US&amp;mid=7623094840758520627&amp;u_code=0&amp;did=MS4wLjABAAAApICZngqDDOrYVCtk7_WCfRnEb8dD8R0AExLxI5g0oc3tX-JW8mBq08q7cdZhe-fN&amp;iid=MS4wLjABAAAAsHFldt7-EIN6Hg1sRr_BRNVHicS4_aC_e6Cwuvy7pdblSga4Xf4ZoolExAia2Liv&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=Afo7CcZ6FBOVpjlPBnDB7yqJuH0xBUyRuOLOjs542b8-&amp;share_version=320900&amp;ts=1778638238&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">5年期国债到底有多火？8:30开售，基本三五分钟就抢光，发行首日买不着，第二天更没戏，能抢到就是赚到。
- 
-为啥大家都疯...</a><span class="stats">♥ 580</span></td>
-          </tr></tbody></table>
-    </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.xiaohongshu.com/explore/6a01861c00000000350255c6" target="_blank" rel="noopener" class="tl">100万存款的家庭，算是有钱人吗？</a><span class="stats">♥ 919</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69cc9eec000000002202b1cc" target="_blank" rel="noopener" class="tl">🔥 一图看懂 | 钱生钱的35种方式</a><span class="stats">♥ 5557</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.xiaohongshu.com/explore/66d46080000000001f03bfdf" target="_blank" rel="noopener" class="tl">关于01年存款32w正常吗</a><span class="stats">♥ 637</span></td>
-          </tr><tr>
-            <td class="rank">4</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69d9a565000000001a03456c" target="_blank" rel="noopener" class="tl">兢兢业业打工3年，现在存款有5万块了，余额宝下面的理财要怎么玩呢#理财小白 #定</a><span class="stats">♥ 739</span></td>
-          </tr><tr>
-            <td class="rank">5</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69f1ec07000000003601c859" target="_blank" rel="noopener" class="tl">01年普通女生存了10万怎么理财？</a><span class="stats">♥ 590</span></td>
-          </tr><tr>
-            <td class="rank">6</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69fedf6b0000000035033270" target="_blank" rel="noopener" class="tl">🎉5月FD 定期来了</a><span class="stats">♥ 456</span></td>
-          </tr><tr>
-            <td class="rank">7</td>
-            <td><a href="https://www.xiaohongshu.com/explore/6a000055000000003501d487" target="_blank" rel="noopener" class="tl">新鲜出炉的国债 终于抢到了 一大早去了好几个营业厅星期天没上班，早上10点好不容易才抢到五年的，现在利率太低了 只有买国</a><span class="stats">♥ 205</span></td>
-          </tr><tr>
-            <td class="rank">8</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69e8bb360000000021010afa" target="_blank" rel="noopener" class="tl">大额存单是定期存款吗？安不安全？值得存吗？</a><span class="stats">♥ 262</span></td>
-          </tr><tr>
-            <td class="rank">9</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69cf1e330000000023013aec" target="_blank" rel="noopener" class="tl">一发工资又定存3500</a><span class="stats">♥ 626</span></td>
-          </tr><tr>
-            <td class="rank">10</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69e223c7000000001a032543" target="_blank" rel="noopener" class="tl">柜台存的定期，能被别人转走吗？</a><span class="stats">♥ 659</span></td>
-          </tr></tbody></table>
-    </div>
-    </div>
-    <div class="topic-card">
-      <div class="topic-header" style="background:#EC4899;">
-        🛡️ 香港保险/分红险
+      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(9)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1JbRpBPEzf" target="_blank" rel="noopener" class="tl">如果人均存款20万，那这个社会就乱套了</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">讨论人均存款20万对社会的影响，分析存款焦虑。</div>
+        <div class="hl-row"><span class="hl-chip">#人均存款20万</span> <span class="hl-chip">#社会乱套了</span> <span class="hl-chip">#存款焦虑</span></div>
+        <div class="angle">💡 存款焦虑下，如何用港险实现稳定增值？</div>
+        
+        <div class="meta-row">▶ 4.7万 · ♥ 720 · 📅 1周前 · <span class="hot-score">🔥 53</span></div>
       </div>
-      <div class="platform-section">
-      <div class="platform-name" style="color:#00A1D6;">● B站</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.bilibili.com/video/BV1F1D7B5E9s" target="_blank" rel="noopener" class="tl">分红险到底靠不靠谱？适合哪些人去购买呢？</a><span class="stats">▶ 1.0万 · ♥ 128</span></td>
-          </tr></tbody></table>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1R85b6LEYz" target="_blank" rel="noopener" class="tl">卖掉房子担心被借钱，大鹏哥想把钱存定期，手里有存款心里才踏实</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">卖房后担心被借钱，选择存定期求踏实。</div>
+        <div class="hl-row"><span class="hl-chip">#卖房存定期</span> <span class="hl-chip">#怕被借钱</span> <span class="hl-chip">#底气来自存款</span></div>
+        <div class="angle">💡 卖房存定期？对比港险分红险，收益更高更灵活</div>
+        
+        <div class="meta-row">▶ 1.6万 · ♥ 481 · 📅 今天 · <span class="hot-score">🔥 18</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1SUdKBuEGL" target="_blank" rel="noopener" class="tl">14万亿巨额放水+50万亿存款到期，微观体感寒冷，钱到底去哪了？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">14万亿放水和50万亿存款到期，钱去哪了，微观经济寒冷。</div>
+        <div class="hl-row"><span class="hl-chip">#14万亿放水</span> <span class="hl-chip">#存款搬家</span> <span class="hl-chip">#钱去哪了</span></div>
+        <div class="angle">💡 大放水下存款缩水，用港险保单对冲风险</div>
+        
+        <div class="meta-row">▶ 38.9万 · ♥ 1.8万 · 📅 4天前 · <span class="hot-score">🔥 88</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV17iQKBCEib" target="_blank" rel="noopener" class="tl">第838期|不吹不黑，存款10万算什么水平❓看完我不再焦虑了❗</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">客观分析存款10万在社会中的水平，缓解焦虑。</div>
+        <div class="hl-row"><span class="hl-chip">#存款10万</span> <span class="hl-chip">#什么水平</span> <span class="hl-chip">#不再焦虑</span></div>
+        <div class="angle">💡 不适用</div>
+        <div class="biz-reason">低存款受众与高净值画像不匹配</div>
+        <div class="meta-row">▶ 3.5万 · ♥ 375 · 📅 2026-04-11 · <span class="hot-score">🔥 41</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1iA5x6TEcq" target="_blank" rel="noopener" class="tl">不同存款拒绝无用酒局</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">不同存款数额的人如何拒绝无用酒局，幽默演绎。</div>
+        <div class="hl-row"><span class="hl-chip">#存款多少</span> <span class="hl-chip">#拒绝酒局</span> <span class="hl-chip">#幽默段子</span></div>
+        <div class="angle">💡 不适用</div>
+        <div class="biz-reason">娱乐内容，信息含量低</div>
+        <div class="meta-row">▶ 97.8万 · ♥ 2.5万 · 📅 2天前 · <span class="hot-score">🔥 100</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1UyDzBpEeo" target="_blank" rel="noopener" class="tl">这才是正确的定投补仓方法。看完这个，你就会定投补仓了。</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">讲解正确的基金定投补仓方法。</div>
+        <div class="hl-row"><span class="hl-chip">#定投补仓</span> <span class="hl-chip">#正确方法</span> <span class="hl-chip">#投资技巧</span></div>
+        <div class="angle">💡 定投思维迁移到港险分期缴费，锁定复利</div>
+        
+        <div class="meta-row">▶ 8.8万 · ♥ 1704 · 📅 2026-04-08 · <span class="hot-score">🔥 65</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1c7APzuErD" target="_blank" rel="noopener" class="tl">【深度】红利低波定投原理，人人10%年化率？颠覆认知！</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">解析红利低波定投原理，宣传可达10%年化收益。</div>
+        <div class="hl-row"><span class="hl-chip">#红利低波</span> <span class="hl-chip">#定投原理</span> <span class="hl-chip">#10%年化</span></div>
+        <div class="angle">💡 红利低波定投 vs 港险分红险，风险收益对比</div>
+        
+        <div class="meta-row">▶ 4.5万 · ♥ 1278 · 📅 2026-03-21 · <span class="hot-score">🔥 47</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">8</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1mYRZB7E9s" target="_blank" rel="noopener" class="tl">（第616天）每天定投纳斯达克、沪深300、黄金，收益情况披露</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">每日定投纳斯达克等组合，披露616天收益。</div>
+        <div class="hl-row"><span class="hl-chip">#定投实证</span> <span class="hl-chip">#纳斯达克</span> <span class="hl-chip">#收益披露</span></div>
+        <div class="angle">💡 定投美股实盘对比港险美元保单，长期谁更牛？</div>
+        
+        <div class="meta-row">▶ 2.0万 · ♥ 406 · 📅 3天前 · <span class="hot-score">🔥 29</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">9</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1QSojB3EiW" target="_blank" rel="noopener" class="tl">财政部今天启动超长期特别国债发行 国家向你“借钱”，普通人怎么“搭车”？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">财政部发行超长期特别国债，普通人如何投资。</div>
+        <div class="hl-row"><span class="hl-chip">#超长期国债</span> <span class="hl-chip">#国家借钱</span> <span class="hl-chip">#普通人搭车</span></div>
+        <div class="angle">💡 国债 vs 港险分红险，哪个养老更靠谱？</div>
+        
+        <div class="meta-row">▶ 67.3万 · ♥ 1.8万 · 📅 2周前 · <span class="hot-score">🔥 94</span></div>
+      </div>
+    </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#1A1A1A;">● 抖音</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7618443160578018623/?region=US&amp;mid=7618443319898655498&amp;u_code=0&amp;did=MS4wLjABAAAAU46OMuqSNi4sdtXx0iirIagZev01DvepCOJ585o8P6mlleuMgz3SKxZI9_HpRjT0&amp;iid=MS4wLjABAAAAhrw5IkqdfBsb_Bn9smsBdcmSa-eE0EMJLg7tqYR5q1B4_TkfR84IJU7_ZR7J-3N7&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=UrZoUikVqRPMqzd2t5DnrvUxSOtw3hdpkgztqoHptME-&amp;share_version=320900&amp;ts=1778638258&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">3.15曝光！香港保险集体“暴雷”，小心钱取不出来 #香港保险 #香港保险的优缺点 #香港保险和内地保险的区别 #香港保...</a><span class="stats">♥ 668</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7634575654087888174/?region=US&amp;mid=7634575801295719218&amp;u_code=0&amp;did=MS4wLjABAAAAU46OMuqSNi4sdtXx0iirIagZev01DvepCOJ585o8P6mlleuMgz3SKxZI9_HpRjT0&amp;iid=MS4wLjABAAAAhrw5IkqdfBsb_Bn9smsBdcmSa-eE0EMJLg7tqYR5q1B4_TkfR84IJU7_ZR7J-3N7&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=ZeDTBAEgRODipGGWux_Dp1R2ZZRxT6M.cMDdgKddok4-&amp;share_version=320900&amp;ts=1778638258&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">“567提领”？内行人听到提领密码就摇头，而90%的港险小白，还在为它买单。#香港保险#友邦#567骗局#资产规划#提领...</a><span class="stats">♥ 765</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7619311206277774811/?region=US&amp;mid=7553544962089175067&amp;u_code=0&amp;did=MS4wLjABAAAA9WoR38RVXUGrFcmMkq3d8N8krmbmFypEZh3cLvxmeRPWXuOWkhIv7fBzmINnNgY3&amp;iid=MS4wLjABAAAAznC8APjba0ArJtMLvSTO8CulNMNyLikUqmqW0aYK57b4CxFKJJbvHj4BQaBAinXv&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=KZzxfsQdMr37nlnUbQFaFDPNYVrxvRqWHiW9Mw9zWl8-&amp;share_version=320900&amp;ts=1778638262&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">“分红险”就是深度绑定“国家队”，个人财富，最终还是要长在国家发展的根基上#保险 #分红险 #国家战略 #新质生产力 #...</a><span class="stats">♥ 812</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(10)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7622921395659729574/?region=US&amp;mid=7622921281486228224&amp;u_code=0&amp;did=MS4wLjABAAAAPIpeCVkhYgPGrTO2uW3fMCui5tI4iCWAO96u3lmC3cq_-eGEVZOEEnGGQcjAipAz&amp;iid=MS4wLjABAAAA63_UvVyFkx_ggSmIl4JuqLi5cGpkXmgccoererp1PlPGFz2jeWHZEme5pVA4G93I&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=niq5aTJfBoneJR4gBftXH1.BD8ABklY_a5kubVDfklk-&amp;share_version=320900&amp;ts=1778654243&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">10万块钱，怎么存收益高？#存款 #干货分享 #金融知识分享</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 7105 · 📅 2026-03-30 · <span class="hot-score">🔥 89</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7631786978484243755/?region=US&amp;mid=7631787014437800740&amp;u_code=0&amp;did=MS4wLjABAAAAPIpeCVkhYgPGrTO2uW3fMCui5tI4iCWAO96u3lmC3cq_-eGEVZOEEnGGQcjAipAz&amp;iid=MS4wLjABAAAA63_UvVyFkx_ggSmIl4JuqLi5cGpkXmgccoererp1PlPGFz2jeWHZEme5pVA4G93I&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=8wVzdUqC0dZe6zUee8Z4unz4xGHeSmxbO0SzEgX1FsA-&amp;share_version=320900&amp;ts=1778654243&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">存款三十万的概念 #认知  #思维  #内容过于真实  #老百姓关心的话题  #金融</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 5839 · 📅 2周前 · <span class="hot-score">🔥 85</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7618427866094636351/?region=US&amp;mid=7618427804870707995&amp;u_code=0&amp;did=MS4wLjABAAAAPIpeCVkhYgPGrTO2uW3fMCui5tI4iCWAO96u3lmC3cq_-eGEVZOEEnGGQcjAipAz&amp;iid=MS4wLjABAAAA63_UvVyFkx_ggSmIl4JuqLi5cGpkXmgccoererp1PlPGFz2jeWHZEme5pVA4G93I&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=E6vskNZNN6ZruuU6V1UilqmktOgtyJoswZaGuH6ly40-&amp;share_version=320900&amp;ts=1778654243&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">200万存香港。一年利息可顶普通人半年工资 </a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 4146 · 📅 2026-03-18 · <span class="hot-score">🔥 78</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7627141768212206298/?region=US&amp;mid=7604442152533379867&amp;u_code=0&amp;did=MS4wLjABAAAAPIpeCVkhYgPGrTO2uW3fMCui5tI4iCWAO96u3lmC3cq_-eGEVZOEEnGGQcjAipAz&amp;iid=MS4wLjABAAAA63_UvVyFkx_ggSmIl4JuqLi5cGpkXmgccoererp1PlPGFz2jeWHZEme5pVA4G93I&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=JC1omk82rlCW4_xQFgWsmg5JA5qMePHq0IskC35srJc-&amp;share_version=320900&amp;ts=1778654243&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">2026存款等级表！你在第几层？#每日分享#上热门</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 286 · 📅 2026-04-10 · <span class="hot-score">🔥 4</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7633095460400982516/?region=US&amp;mid=7632427188431637298&amp;u_code=0&amp;did=MS4wLjABAAAAPIpeCVkhYgPGrTO2uW3fMCui5tI4iCWAO96u3lmC3cq_-eGEVZOEEnGGQcjAipAz&amp;iid=MS4wLjABAAAA63_UvVyFkx_ggSmIl4JuqLi5cGpkXmgccoererp1PlPGFz2jeWHZEme5pVA4G93I&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=YgV_CBIVz_5pYsGqqyaBtkZz80fZuBrgIASgzRRs55w-&amp;share_version=320900&amp;ts=1778654243&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">2026年
+我的存款目标是6W
+你们的目标是多少？
+一起来定个目标吧#存钱 #攒钱 #热门 #强制储蓄</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 231 · 📅 1周前 · <span class="hot-score">🔥 0</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7620682467121356187/?region=US&amp;mid=7613154411350657843&amp;u_code=0&amp;did=MS4wLjABAAAAPIpeCVkhYgPGrTO2uW3fMCui5tI4iCWAO96u3lmC3cq_-eGEVZOEEnGGQcjAipAz&amp;iid=MS4wLjABAAAA63_UvVyFkx_ggSmIl4JuqLi5cGpkXmgccoererp1PlPGFz2jeWHZEme5pVA4G93I&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=cOMThIg52djWpYHrqgwNmk_HZuL8o0Ebg3e_f0nren4-&amp;share_version=320900&amp;ts=1778654243&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">赚钱。存多少钱才能躺平</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 445 · 📅 2026-03-24 · <span class="hot-score">🔥 22</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7625809796268741558/?region=US&amp;mid=7332396140988631041&amp;u_code=0&amp;did=MS4wLjABAAAA7ZOBqb2kYkL-fDsMfj5edsnk0EEw5GFM3duXfxMeyRX6-izqHjJIRNuNYBlTxCaV&amp;iid=MS4wLjABAAAAlGpspU7FEaHWovp1TaslM8W-ZXx0obp5xFMdinh4HLCap9qHbQ4z7LyY76QQGc5l&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=VPC9qbQJ_.gEhf8f1ll666_nNiAfRYxCOPFY_lEXVzk-&amp;share_version=320900&amp;ts=1778654246&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">#定期存款怎么存 #创作者中心 #创作灵感</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 1092 · 📅 2026-04-07 · <span class="hot-score">🔥 59</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">8</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7635966227122261291/?region=US&amp;mid=7635966287113374483&amp;u_code=0&amp;did=MS4wLjABAAAAVcUHXBX-GcRbN5qZBMxCSVF5mcDwLi57dyViDUFy7ik&amp;iid=MS4wLjABAAAAsMP9yi3q4bDBU6DKvzOd1jtl9dewrMI4onrnNPvTDmE&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=ShWzP2DOPj6QbmmsLItMPnHJ.O9O.xqRV6k8cLv3lGU-&amp;share_version=320900&amp;ts=1778654250&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">普通老百姓怎么买国债？#国债 #存钱 #干货分享 #定期存款 #老百姓关心的话题</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 416 · 📅 1周前 · <span class="hot-score">🔥 15</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">9</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7634106831832419619/?region=US&amp;mid=7634106941094005558&amp;u_code=0&amp;did=MS4wLjABAAAAVcUHXBX-GcRbN5qZBMxCSVF5mcDwLi57dyViDUFy7ik&amp;iid=MS4wLjABAAAAsMP9yi3q4bDBU6DKvzOd1jtl9dewrMI4onrnNPvTDmE&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=D9qNGUVy.ye1o7AFPMAsxRgaUNjwpkH.bACmOMsCDQY-&amp;share_version=320900&amp;ts=1778654250&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">超长期特别国债火了？别瞎冲，本金真会亏！#理财 #避坑 #资产配置 #超长期特别国债 #30年国债</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 723 · 📅 1周前 · <span class="hot-score">🔥 52</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">10</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7623915038303472498/?region=US&amp;mid=7623094840758520627&amp;u_code=0&amp;did=MS4wLjABAAAAVcUHXBX-GcRbN5qZBMxCSVF5mcDwLi57dyViDUFy7ik&amp;iid=MS4wLjABAAAAsMP9yi3q4bDBU6DKvzOd1jtl9dewrMI4onrnNPvTDmE&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=Afo7CcZ6FBOVpjlPBnDB7yqJuH0xBUyRuOLOjs542b8-&amp;share_version=320900&amp;ts=1778654250&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">5年期国债到底有多火？8:30开售，基本三五分钟就抢光，发行首日买不着，第二天更没戏，能抢到就是赚到。
+ 
+为啥大家都疯抢？核心就是：利率下行、能锁定高收益。
+
+现在5年期国债利率1.7%，3年期1.63%，别看只差一点点，放在长期里差距很明显。而且现在利率一直在降，谁也说不准3年到期后利率会跌到多少，买5年期直接锁定1.7%，心里踏实。
+ 
+对比银行就更明显了：四大行的3年、5年期定存，利率比国债低0.3%~0.4%；就算是城商行、农商行，顶多3年期利率高一点，但这些银行要么没有5年期，要么5年期和3年期利率倒挂，想找个稳妥又高一点的，也就只有国债了。
+ 
+再看对比去年，去年4月电子式5年期还2.0%，3年期1.93%，今年直接降了0.3％。10万块一年少300元，5年就是1500元，早买早锁定，晚买就吃亏。
+ 
+有人担心：买5年，中途用钱取出来不就亏了？
+其实完全不用怕。
+
+第一，买之前就规划好，只拿长期不用的钱买，别把短期要用的钱砸进去。短期钱放逆回购、放活钱理财就行，别跟国债凑一起。
+
+第二，真要提前取，国债是分档计息，满半年就有利息，满半年不满1年：按“0.35%”计息；满1年不满2年：按“0.40%”计息；满2年不满3年：按“1.12%”计息；满3年不满4年：按“1.52%”计息；满4年不满5年：按“1.63%”计息。
+
+反观银行定期，提前取全按活期0.05%算，跟白放一样，以后甚至可能零利率，这么一比，国债安全又划算。
+ 
+第三，想灵活也有办法，一年有9个月都发国债，我每期都买，金额不用大，坚持滚存。五年下来，每个月都有到期的，到期本息再加钱继续买，慢慢就形成月月有回款的现金流。剩下3个月配点定存，一年12个月都有到期钱，既吃高利息，又不缺流动性。
+ 
+真想抢五年期国债，其实也有技巧。我买国债这14年也攒了不少经验和抢购方法，愿意无偿分享给大家。
+
+觉得有用，点赞、收藏和关注，也可以进我抖音粉丝群，或评论区留言，有问必答。#存钱 #国债 #储蓄国债 #存款利率 #存钱妙招</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 580 · 📅 2026-04-02 · <span class="hot-score">🔥 41</span></div>
+      </div>
+    </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69df1d94000000001a0351f1" target="_blank" rel="noopener" class="tl">关于香港保险的所有问题都在这里啦❗️</a><span class="stats">♥ 505</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.xiaohongshu.com/explore/68bfe840000000001d038bdd" target="_blank" rel="noopener" class="tl">💼26岁在港｜资产配置小攻略（个人经验分享版</a><span class="stats">♥ 810</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69da49a60000000023020890" target="_blank" rel="noopener" class="tl">香港与内地储蓄险的差异</a><span class="stats">♥ 597</span></td>
-          </tr><tr>
-            <td class="rank">4</td>
-            <td><a href="https://www.xiaohongshu.com/explore/698021c5000000000a02816d" target="_blank" rel="noopener" class="tl">2025前三季度香港保险公司排名出炉！来看最新数据 最近不少朋友在关注香港保险的最新排名，我在香港保监局官网找了最新前三</a><span class="stats">♥ 401</span></td>
-          </tr><tr>
-            <td class="rank">5</td>
-            <td><a href="https://www.xiaohongshu.com/explore/691315600000000003012699" target="_blank" rel="noopener" class="tl">分红险，被问最多的10个问题！</a><span class="stats">♥ 548</span></td>
-          </tr><tr>
-            <td class="rank">6</td>
-            <td><a href="https://www.xiaohongshu.com/explore/68411825000000002100e1d1" target="_blank" rel="noopener" class="tl">我为什么不买分红险</a><span class="stats">♥ 556</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(10)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6839ab0f000000002002bd41" target="_blank" rel="noopener" class="tl">DAY187｜30岁单身女生，30岁存300w达成✅</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 625 · <span class="hot-score">🔥 63</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/66d46080000000001f03bfdf" target="_blank" rel="noopener" class="tl">关于01年存款32w正常吗</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 637 · <span class="hot-score">🔥 66</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/67d29ce1000000000b0157b0" target="_blank" rel="noopener" class="tl">武汉100个存三年</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 267 · <span class="hot-score">🔥 13</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/685166b70000000012001f08" target="_blank" rel="noopener" class="tl">99年男生👨丨月入6k存钱打卡第66天</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 817 · <span class="hot-score">🔥 71</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/684ce5c10000000021000848" target="_blank" rel="noopener" class="tl">五万算有存款了吗？能一直放在支付宝里面吗</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 299 · <span class="hot-score">🔥 29</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/67e9fd0e000000001d01d390" target="_blank" rel="noopener" class="tl">98年大家的存款有多少了</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 253 · <span class="hot-score">🔥 5</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69e8bb360000000021010afa" target="_blank" rel="noopener" class="tl">大额存单是定期存款吗？安不安全？值得存吗？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 263 · <span class="hot-score">🔥 11</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">8</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69f0892c00000000350330a3" target="_blank" rel="noopener" class="tl">4% 利率当时不觉得多</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 597 · 📅 2天前 · <span class="hot-score">🔥 58</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">9</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69e223c7000000001a032543" target="_blank" rel="noopener" class="tl">柜台存的定期，能被别人转走吗？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 660 · 📅 3周前 · <span class="hot-score">🔥 68</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">10</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69fecbd6000000000f03ac00" target="_blank" rel="noopener" class="tl">🇲🇾【5月最新 FD 利率更新📊】</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 276 · <span class="hot-score">🔥 21</span></div>
+      </div>
+    </div></div>
     </div>
     </div>
     <div class="topic-card">
@@ -345,62 +1016,190 @@
         🏡 养老
       </div>
       <div class="platform-section">
-      <div class="platform-name" style="color:#00A1D6;">● B站</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.bilibili.com/video/BV1HxRpBKE3F" target="_blank" rel="noopener" class="tl">盘点国内五大养老休闲游戏</a><span class="stats">▶ 1.6万 · ♥ 94</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.bilibili.com/video/BV1YaAszEEXx" target="_blank" rel="noopener" class="tl">养老选址终极指南，中国十大最适合养老的城市，月薪 3000 也能住得舒心</a><span class="stats">▶ 27.8万 · ♥ 1102</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(2)</span></div>
+      <div class="item-list"><div class="item-card muted">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV1YaAszEEXx" target="_blank" rel="noopener" class="tl">养老选址终极指南，中国十大最适合养老的城市，月薪 3000 也能住得舒心</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">推荐中国十大低生活成本养老城市，月薪3000也能舒适生活。</div>
+        <div class="hl-row"><span class="hl-chip">#月薪3000也能养老</span> <span class="hl-chip">#十大养老城市排名</span> <span class="hl-chip">#低成本舒适生活</span></div>
+        
+        <div class="biz-reason">受众月薪3000，与高净值画像严重不匹配</div>
+        <div class="meta-row">▶ 27.8万 · ♥ 1103 · 📅 2026-03-21 · <span class="hot-score">🔥 82</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.bilibili.com/video/BV18DAhz8E9z" target="_blank" rel="noopener" class="tl">【我的世界】&amp;quot;太卷了！2026必玩的科技魔法爽服！&amp;quot;工业/神秘/MEK/拔刀剑/暮色/刮刮乐/活动丰富/超多玩法/双端互通/养老 —— MC大型模组生存服务器</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">宣传《我的世界》大型模组生存服务器，主打养老玩法。</div>
+        <div class="hl-row"><span class="hl-chip">#2026必玩科技魔法服</span> <span class="hl-chip">#双端互通养老服务器</span> <span class="hl-chip">#超多模组活动丰富</span></div>
+        
+        <div class="biz-reason">游戏广告，与养老金融无关</div>
+        <div class="meta-row">▶ 2.4万 · ♥ 1219 · 📅 2026-02-28 · <span class="hot-score">🔥 35</span></div>
+      </div>
+    </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#1A1A1A;">● 抖音</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7632592444589485477/?region=US&amp;mid=7553857083997784083&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=JJj5trFC.4.EN4wQhmbOwLQ5QiEFvz9Lu6w84H0LR_o-&amp;share_version=320900&amp;ts=1778638276&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">养老到底谁来承担 “养老不能靠国家”这句话你不爱听，但你得听#保险 #养老 #年金 #社保 #微易保险经纪</a><span class="stats">♥ 1146</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7610739369896365339/?region=US&amp;mid=7610739395557198634&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=BOhiC.UmjPFJxvoZqVchWV1AAKBcS3_wRYRVDJ6OXoo-&amp;share_version=320900&amp;ts=1778638276&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">为了老伴能多活40年，我做了一个疯狂的决定 #退休 #养老生活 #养老 #幸福 #退休生活</a><span class="stats">♥ 5.0万</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.iesdouyin.com/share/video/7610966773626367400/?region=US&amp;mid=7610966755636267795&amp;u_code=0&amp;did=MS4wLjABAAAABpWIPj71dnfZYrNJd_YApazD4xwJ9tE93-X4dUJv_W_oACeA5dw3ivylHc5F1fv1&amp;iid=MS4wLjABAAAAHv7EW5kCH22xGSlpjjBkEuzkFZYk_cFjhkXVXAr95-SEoKPSEK7MGhAefnCHQ48y&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=RhUISj00at9N1.8qvMZSOPelYscxt3KWNUK4LiQzI.Y-&amp;share_version=320900&amp;ts=1778638276&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">养老院采访：养老是靠子女，靠老伴，还是靠存款。#银湖暖夕阳 #金东区社会福利中心 #金华养老院 #清醒发言</a><span class="stats">♥ 1.5万</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(7)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7638824724772118500/?region=US&amp;mid=7638824697223908132&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=EWDCFKJWvUvENC8gQfznHAODIMzCO3ZFi0TKKtmlc9M-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">大谷旅居养老，丹东新开中高端养老中心 </a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">丹东新开中高端旅居养老中心介绍</div>
+        <div class="hl-row"><span class="hl-chip">#中高端养老社区</span> <span class="hl-chip">#旅居新选择</span> <span class="hl-chip">#丹东品质养老</span></div>
+        <div class="angle">💡 从高端社区费用切入，谈分红险如何提前锁资源</div>
+        
+        <div class="meta-row">♥ 1789 · 📅 昨天 · <span class="hot-score">🔥 67</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7616161084408183716/?region=US&amp;mid=7616161049493982006&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=b_nd0VMz5ZdF23WAxhCB62jO2MXTah18SCf8D7YJjbE-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">从你失能的那一刻，养老就结束了#真实生活分享计划 #老年生活 #失能老人 #健康 #活在当下</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">失能意味着养老生活终结，强调健康重要</div>
+        <div class="hl-row"><span class="hl-chip">#失能打击</span> <span class="hl-chip">#养老结束</span> <span class="hl-chip">#健康警醒</span></div>
+        <div class="angle">💡 借失能风险谈养老现金流，对比港险灵活提取应对</div>
+        
+        <div class="meta-row">♥ 8494 · 📅 2026-03-12 · <span class="hot-score">🔥 96</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7610739369896365339/?region=US&amp;mid=7610739395557198634&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=BOhiC.UmjPFJxvoZqVchWV1AAKBcS3_wRYRVDJ6OXoo-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">为了老伴能多活40年，我做了一个疯狂的决定 #退休 #养老生活 #养老 #幸福 #退休生活</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">为了让老伴多活40年，做了一个疯狂决定</div>
+        <div class="hl-row"><span class="hl-chip">#老伴长寿</span> <span class="hl-chip">#疯狂决定</span> <span class="hl-chip">#幸福退休</span></div>
+        <div class="angle">💡 从为爱人规划切入，展示分红险如何保障长久现金流</div>
+        
+        <div class="meta-row">♥ 5.0万 · 📅 2026-02-25 · <span class="hot-score">🔥 100</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7635230054839254705/?region=US&amp;mid=7634712122064227118&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=jxRv4bwdO0cnzE6g.l5.nHpNK2Swxg8HlmPHJKGhwZY-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">我想体面的养个老都实力不允许</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">感叹经济实力不足，无法体面养老</div>
+        <div class="hl-row"><span class="hl-chip">#体面养老难</span> <span class="hl-chip">#实力不允许</span> <span class="hl-chip">#养老焦虑</span></div>
+        <div class="angle">💡 拆解体面养老成本，用分红险方案实现体面退休</div>
+        
+        <div class="meta-row">♥ 328 · 📅 1周前 · <span class="hot-score">🔥 7</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7628124136476691634/?region=US&amp;mid=7628124125814328090&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=m2MDlZk9HOJAVZ80Ij5NLXVyTqPzbSz2h_SjdUkxBYw-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">养老性价比最高、花小💰办大事的，一定是去大城市养老，而不是乡下！#养老 #退休 #财富规划  #干货 #虹书房</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">养老性价比最高是去大城市，而不是乡下</div>
+        <div class="hl-row"><span class="hl-chip">#大城市养老</span> <span class="hl-chip">#性价比最高</span> <span class="hl-chip">#花小钱办大事</span></div>
+        <div class="angle">💡 分析大城市养老成本，引出分红险稳定现金流方案</div>
+        
+        <div class="meta-row">♥ 2044 · 📅 4周前 · <span class="hot-score">🔥 70</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7630756757955266036/?region=US&amp;mid=7630756858051234610&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=28UXfjL2bFVxuW87c7tZGmWOxYMzycVyI9tl.AySaRY-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">#养老#老年生活</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">仅带话题标签，无实质内容</div>
+        
+        
+        <div class="biz-reason">信息含量极低</div>
+        <div class="meta-row">♥ 676 · 📅 3周前 · <span class="hot-score">🔥 48</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7626306258627158867/?region=US&amp;mid=7626306209372588810&amp;u_code=0&amp;did=MS4wLjABAAAACJVGdFVcSPw1NOO8uH_eUt-ZIH1a4S4qboo_NW-zF9ODn6Zx3dAkZsiKsH-i81pU&amp;iid=MS4wLjABAAAAzJE6RHW3y9tCzGxX11NcM08GoNoCweBW_wWkfeGChSGsLTy_VFWI8uDx3PdqnOLf&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=xGgRDzZJerA2eV136C0HDWy5HwpzdLdzdyDDs3zkUUY-&amp;share_version=320900&amp;ts=1778654286&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">解读养老#赡养老人 #关爱老人 #养老 #养老院日常 #养老金</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">综合解读养老相关概念</div>
+        <div class="hl-row"><span class="hl-chip">#养老解读</span> <span class="hl-chip">#赡养关爱</span> <span class="hl-chip">#养老金</span></div>
+        <div class="angle">💡 借养老解读引出个人准备缺位，对比港险优势</div>
+        
+        <div class="meta-row">♥ 3237 · 📅 2026-04-08 · <span class="hot-score">🔥 74</span></div>
+      </div>
+    </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书</div>
-      <table><tbody><tr>
-            <td class="rank">1</td>
-            <td><a href="https://www.xiaohongshu.com/explore/67b5f3d5000000002602c944" target="_blank" rel="noopener" class="tl">🕯其实没有人教老人怎么老去</a><span class="stats">♥ 1482</span></td>
-          </tr><tr>
-            <td class="rank">2</td>
-            <td><a href="https://www.xiaohongshu.com/explore/6709e3f8000000001b0120bd" target="_blank" rel="noopener" class="tl">年轻人已经开始焦虑养老</a><span class="stats">♥ 275</span></td>
-          </tr><tr>
-            <td class="rank">3</td>
-            <td><a href="https://www.xiaohongshu.com/explore/673de8840000000007032c31" target="_blank" rel="noopener" class="tl">养老赛道：一个人就能做的5个小生意！</a><span class="stats">♥ 2339</span></td>
-          </tr><tr>
-            <td class="rank">4</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69d04eee00000000220249e3" target="_blank" rel="noopener" class="tl">55岁，遵守3条退休准则，越活越快乐</a><span class="stats">♥ 283</span></td>
-          </tr><tr>
-            <td class="rank">5</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69b2708a000000002203ab51" target="_blank" rel="noopener" class="tl">聪明的人 已经发现养老赛道不对劲了...</a><span class="stats">♥ 394</span></td>
-          </tr><tr>
-            <td class="rank">6</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69df0ecf0000000022028d30" target="_blank" rel="noopener" class="tl">60 vs 90后不同的经济常识：养老要靠谁？</a><span class="stats">♥ 4600</span></td>
-          </tr><tr>
-            <td class="rank">7</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69ba512a000000002200c2ba" target="_blank" rel="noopener" class="tl">适老卫生间改造指南 | 让老人居家更安全</a><span class="stats">♥ 2.0万</span></td>
-          </tr><tr>
-            <td class="rank">8</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69efff99000000001f00427b" target="_blank" rel="noopener" class="tl">退休后富养自己的9件事</a><span class="stats">♥ 751</span></td>
-          </tr><tr>
-            <td class="rank">9</td>
-            <td><a href="https://www.xiaohongshu.com/explore/69b3f532000000002200c75e" target="_blank" rel="noopener" class="tl">70、80、90后：存多少钱才能体面养老</a><span class="stats">♥ 507</span></td>
-          </tr></tbody></table>
+      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(8)</span></div>
+      <div class="item-list"><div class="item-card">
+      <div class="rank-col">1</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/67b5f3d5000000002602c944" target="_blank" rel="noopener" class="tl">🕯其实没有人教老人怎么老去</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">探讨社会缺乏对老人如何面对衰老的引导，引发养老焦虑。</div>
+        <div class="hl-row"><span class="hl-chip">#衰老无助感</span> <span class="hl-chip">#养老盲区</span> <span class="hl-chip">#如何体面老去</span></div>
+        <div class="angle">💡 从情感关怀切入，引出科学的养老财务准备</div>
+        
+        <div class="meta-row">♥ 1482 · <span class="hot-score">🔥 76</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">2</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69b2708a000000002203ab51" target="_blank" rel="noopener" class="tl">聪明的人 已经发现养老赛道不对劲了...</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">暗示养老赛道存在不为人知的问题或机遇。</div>
+        <div class="hl-row"><span class="hl-chip">#养老赛道不对劲</span> <span class="hl-chip">#聪明人发现</span> <span class="hl-chip">#提前警觉</span></div>
+        <div class="angle">💡 揭秘养老常见误区，对比香港分红险优势</div>
+        
+        <div class="meta-row">♥ 394 · <span class="hot-score">🔥 37</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6709e3f8000000001b0120bd" target="_blank" rel="noopener" class="tl">年轻人已经开始焦虑养老</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">年轻人已开始为未来养老感到焦虑和担忧。</div>
+        <div class="hl-row"><span class="hl-chip">#年轻人养老焦虑</span> <span class="hl-chip">#提前焦虑</span> <span class="hl-chip">#90后养老</span></div>
+        <div class="angle">💡 年轻人的养老焦虑如何通过复利储蓄化解</div>
+        
+        <div class="meta-row">♥ 275 · <span class="hot-score">🔥 18</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">4</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69df0ecf0000000022028d30" target="_blank" rel="noopener" class="tl">60 vs 90后不同的经济常识：养老要靠谁？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">对比60后与90后的经济观念差异，探讨养老依靠对象变化。</div>
+        <div class="hl-row"><span class="hl-chip">#代际养老观差异</span> <span class="hl-chip">#60后 vs 90后</span> <span class="hl-chip">#养老靠谁</span></div>
+        <div class="angle">💡 不同世代的养老方案对比，推荐个人养老账户</div>
+        
+        <div class="meta-row">♥ 4603 · <span class="hot-score">🔥 89</span></div>
+      </div>
+    </div><div class="item-card muted">
+      <div class="rank-col">5</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69ba512a000000002200c2ba" target="_blank" rel="noopener" class="tl">适老卫生间改造指南 | 让老人居家更安全</a><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span></div>
+        <div class="summary">提供卫生间适老化改造的实用建议，提升老人居家安全。</div>
+        <div class="hl-row"><span class="hl-chip">#适老卫生间改造</span> <span class="hl-chip">#居家安全</span> <span class="hl-chip">#护老实用指南</span></div>
+        
+        <div class="biz-reason">具体家务改造与保险无直接关联</div>
+        <div class="meta-row">♥ 2.0万 · <span class="hot-score">🔥 97</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">6</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69d04eee00000000220249e3" target="_blank" rel="noopener" class="tl">55岁，遵守3条退休准则，越活越快乐</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">分享55岁后遵守3条准则让退休生活更快乐。</div>
+        <div class="hl-row"><span class="hl-chip">#55岁退休准则</span> <span class="hl-chip">#越活越快乐</span> <span class="hl-chip">#退休智慧</span></div>
+        <div class="angle">💡 从退休快乐三准则看养老金的重要性</div>
+        
+        <div class="meta-row">♥ 283 · <span class="hot-score">🔥 26</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">7</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/68833655000000002201dd99" target="_blank" rel="noopener" class="tl">探访武汉高端养老社区</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">实地探访武汉高端养老社区，展示环境与服务。</div>
+        <div class="hl-row"><span class="hl-chip">#高端养老社区</span> <span class="hl-chip">#实地探访</span> <span class="hl-chip">#养老新选择</span></div>
+        <div class="angle">💡 探访高端社区，算清住得起需要多少养老金</div>
+        
+        <div class="meta-row">♥ 2034 · <span class="hot-score">🔥 82</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">8</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/69e96a4c000000001a02f4e1" target="_blank" rel="noopener" class="tl">✨退休后10大完美生活标准</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">列出退休后10项生活标准，定义完美老年生活。</div>
+        <div class="hl-row"><span class="hl-chip">#退休完美标准</span> <span class="hl-chip">#十大生活准则</span> <span class="hl-chip">#理想老年</span></div>
+        <div class="angle">💡 拆解完美退休标准，量化资金需求方案</div>
+        
+        <div class="meta-row">♥ 504 · <span class="hot-score">🔥 47</span></div>
+      </div>
+    </div></div>
     </div>
     </div>
   </div>
 </main>
 
-<footer>🔄 每日自动更新 · TikHub API</footer>
+<footer>🔄 每日自动更新 · TikHub 搜索 + DeepSeek 选题分析</footer>
 
 </body>
 </html>
