@@ -1,4 +1,4 @@
-name: 每日热门话题 - TikHub 自动采集
+name: 每日热门话题 - TikHub 采集 + DeepSeek 选题分析
 
 on:
   schedule:
@@ -29,6 +29,7 @@ jobs:
       - name: Generate daily topics report
         env:
           TIKHUB_API_KEY: ${{ secrets.TIKHUB_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: python scripts/generate-daily-topics.py
 
       - name: Commit and push

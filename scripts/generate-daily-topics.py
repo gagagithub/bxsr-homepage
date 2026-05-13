@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-每日热门话题 - TikHub 版自动生成脚本
-每天由 GitHub Actions 调用，通过 TikHub API 搜索各平台热门内容，
-生成分类热门话题 HTML 报告。
-
-平台/关键词映射：
-  存钱         → 西瓜视频、B站
-  存款/定存/国债 → 西瓜视频
-  香港保险/分红险 → 抖音、小红书
-  养老         → 西瓜视频
+每日热门话题 - TikHub + DeepSeek enrich
+每天由 GitHub Actions 调用：
+  1) 通过 TikHub API 搜各平台 → 拉到候选条目
+  2) 跨主题/跨平台去重 → 留下不重复的选题池
+  3) 调 DeepSeek 给每条产出：摘要 / 爆点 / 业务相关度 / 再创作角度
+  4) 按平台百分位归一化热度
+  5) 渲染成 HTML 报告供编辑选题
 """
 
 import os
+import re
 import json
 import time
+import bisect
 import requests
 from datetime import datetime, timezone, timedelta
 
@@ -26,8 +26,12 @@ DATE_CN = TODAY.strftime("%Y年%-m月%-d日")
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DETAIL_FILE = os.path.join(PROJECT_ROOT, "daily-topics.html")
 
-TIKHUB_API_KEY = os.environ["TIKHUB_API_KEY"]
+TIKHUB_API_KEY = os.environ.get("TIKHUB_API_KEY", "")
 TIKHUB_BASE = "https://api.tikhub.io"
+
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
+DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
+DEEPSEEK_MODEL = "deepseek-v4-pro"
 
 # 3个月前的时间戳，用于过滤太旧的内容
 THREE_MONTHS_AGO = int((TODAY - timedelta(days=90)).timestamp())
@@ -43,6 +47,18 @@ ALL_PLATFORMS = ["xigua", "bilibili", "douyin", "xiaohongshu"]
 
 TOPICS = [
     {
+        "name": "香港保险/分红险",
+        "icon": "🛡️",
+        "color": "#EC4899",
+        "keywords": ["香港保险", "分红险"],
+    },
+    {
+        "name": "内地保险/年金/增额寿",
+        "icon": "🏛️",
+        "color": "#0EA5E9",
+        "keywords": ["内地保险", "快返年金", "增额终身寿险", "商业养老金"],
+    },
+    {
         "name": "存钱",
         "icon": "💰",
         "color": "#F59E0B",
@@ -53,12 +69,6 @@ TOPICS = [
         "icon": "🏦",
         "color": "#6366F1",
         "keywords": ["存款", "定存", "国债"],
-    },
-    {
-        "name": "香港保险/分红险",
-        "icon": "🛡️",
-        "color": "#EC4899",
-        "keywords": ["香港保险", "分红险"],
     },
     {
         "name": "养老",
@@ -444,6 +454,243 @@ def collect_all_data():
     return results
 
 
+# ── 后处理：去重 / 归一化 / LLM enrich ──────────────────
+
+def _normalize_title(title):
+    """去掉标点/空白/常见装饰字符后取前 30 字, 作为去重 key。"""
+    t = re.sub(r"[^\w一-鿿]+", "", title or "")
+    return t.lower()[:30]
+
+
+def _heat_value(item):
+    """跨平台可比的粗热度: max(play, like*5)。
+    抖音/小红书没 play 只有 like, 乘 5 让量级接近 B 站 play。"""
+    return max(item.get("play", 0) or 0, (item.get("like", 0) or 0) * 5)
+
+
+def dedupe_across_topics(data):
+    """全局按标准化标题去重: 同一条只保留热度最高的位置。"""
+    seen = {}  # norm -> (topic_idx, platform_key, item_idx, heat)
+    for ti, topic in enumerate(data):
+        for plat, items in topic["platforms"].items():
+            for ii, item in enumerate(items):
+                norm = _normalize_title(item["title"])
+                if not norm:
+                    continue
+                heat = _heat_value(item)
+                if norm in seen:
+                    prev = seen[norm]
+                    if heat > prev[3]:
+                        data[prev[0]]["platforms"][prev[1]][prev[2]]["_drop"] = True
+                        seen[norm] = (ti, plat, ii, heat)
+                    else:
+                        item["_drop"] = True
+                else:
+                    seen[norm] = (ti, plat, ii, heat)
+
+    removed = 0
+    for topic in data:
+        for plat in topic["platforms"]:
+            before = len(topic["platforms"][plat])
+            topic["platforms"][plat] = [i for i in topic["platforms"][plat] if not i.get("_drop")]
+            removed += before - len(topic["platforms"][plat])
+    print(f"  Dedupe: removed {removed} duplicates across topics/platforms")
+
+
+def normalize_heat(data):
+    """每个平台内, 按热度百分位算出 hotness_score 0-100。"""
+    by_plat = {p: [] for p in ALL_PLATFORMS}
+    for topic in data:
+        for plat, items in topic["platforms"].items():
+            for item in items:
+                by_plat[plat].append(_heat_value(item))
+    sorted_by_plat = {p: sorted(v) for p, v in by_plat.items() if v}
+    for topic in data:
+        for plat, items in topic["platforms"].items():
+            arr = sorted_by_plat.get(plat, [])
+            if not arr:
+                continue
+            n = max(len(arr) - 1, 1)
+            for item in items:
+                rank = bisect.bisect_left(arr, _heat_value(item))
+                item["hotness_score"] = int(round(rank / n * 100))
+
+
+def fetch_top_comments(data, max_items_per_platform=8):
+    """Best-effort 抓评论区。当前 TikHub 评论 endpoint 不稳定,
+    仅做占位 (item['comments']=[]); 后续可按平台补实现。"""
+    for topic in data:
+        for plat, items in topic["platforms"].items():
+            for item in items:
+                if "comments" not in item:
+                    item["comments"] = []
+
+
+# ── DeepSeek LLM enrich ───────────────────────────────
+
+ENRICH_KEYS = ("summary", "highlights", "biz_relevance", "biz_reason", "creation_angle")
+BIZ_RELEVANCE_VALUES = ("港险", "分红险", "养老", "通用获客", "不建议")
+
+
+def _empty_enrich():
+    return {
+        "summary": "",
+        "highlights": [],
+        "biz_relevance": "通用获客",
+        "biz_reason": "",
+        "creation_angle": "",
+    }
+
+
+def _call_deepseek_batch(topic_name, platform_key, items):
+    """对单个 (topic, platform) 批次调用 DeepSeek, 返回与 items 同长度的 enrich 列表。"""
+    if not DEEPSEEK_API_KEY:
+        return [_empty_enrich() for _ in items]
+
+    platform_name = PLATFORM_NAMES.get(platform_key, platform_key)
+    inputs = []
+    for i, item in enumerate(items, 1):
+        cmts = item.get("comments") or []
+        cmt_str = " ｜ ".join(cmts[:3]) if cmts else ""
+        inputs.append({
+            "id": i,
+            "title": item.get("title", ""),
+            "热度": _heat_value(item),
+            "评论摘录": cmt_str,
+        })
+
+    sys_msg = (
+        "你是保心上人公司（专注高端香港保险 + 分红险 + 养老规划）的内容选题分析助手, "
+        "为短视频/小红书内容编辑判断每条热门内容是否适合再创作。"
+        "你的输出必须是合法的 JSON。"
+    )
+    user_msg = f"""平台: {platform_name}
+搜索主题: {topic_name}
+
+保心上人的客户画像:
+- 30-55 岁, 家庭年收入 50 万 +, 已有家庭/资产, 关心高净值传承
+- 关心: 香港储蓄分红险、保险金信托、海外资产配置、养老规划
+- 不匹配: 月薪 2000-5000 的学生/小镇青年存钱攒钱内容
+
+请对下面这一批候选内容, 输出一个 JSON 对象 `{{"results": [...]}}`,
+results 数组长度必须等于输入条目数, 每条包含:
+  - id: 输入序号
+  - summary: <=40 字, 一句话还原内容讲了什么(标题截断/不全时合理推测)
+  - highlights: 3 条数组, 每条 <=10 字, 能勾住观众的钩子点
+  - biz_relevance: 必须是 ["港险","分红险","养老","通用获客","不建议"] 之一
+  - biz_reason: <=20 字, 简述判断理由
+  - creation_angle: <=30 字, 给保心上人编辑的具体再创作角度建议
+
+判定 "不建议" 的典型情况:
+  1) 负面舆情(如 "3.15 曝光香港保险""分红险暴雷")
+  2) 受众画像不匹配(月薪 2700 / 高中生存钱 / 小县城日常)
+  3) 反向种草("我为什么不买分红险")
+  4) 信息含量极低(只有口号没有内容)
+
+内地保险/增额终身寿/快返年金/商业养老金 这类话题的判定原则:
+  - 它们是港险/分红险的竞品, 高净值客户也常被销售这些产品
+  - 大部分情况应判 "通用获客", biz_reason 写 "内地竞品对标素材, 可做港险 vs 内地对比"
+  - creation_angle 倾向于: "做港险 vs 内地增额寿/年金的对比测评" / "拆解内地产品话术陷阱, 引出港险方案"
+  - 只有当内容是单纯吹捧内地产品 + 攻击港险, 或受众画像明显不匹配, 才判 "不建议"
+
+输入条目:
+{json.dumps(inputs, ensure_ascii=False, indent=2)}
+"""
+
+    body = {
+        "model": DEEPSEEK_MODEL,
+        "messages": [
+            {"role": "system", "content": sys_msg},
+            {"role": "user", "content": user_msg},
+        ],
+        "temperature": 0.3,
+        "response_format": {"type": "json_object"},
+        "max_tokens": 3000,
+    }
+
+    last_err = ""
+    for attempt in range(1, 3):
+        try:
+            resp = requests.post(
+                DEEPSEEK_URL,
+                headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+                         "Content-Type": "application/json"},
+                json=body, timeout=90,
+            )
+            if resp.status_code != 200:
+                last_err = f"HTTP {resp.status_code}: {resp.text[:300]}"
+                if resp.status_code in (401, 403):
+                    print(f"    DeepSeek auth error, abort: {last_err}")
+                    return [_empty_enrich() for _ in items]
+                time.sleep(2)
+                continue
+            content = resp.json()["choices"][0]["message"]["content"]
+            parsed = json.loads(content)
+            arr = None
+            if isinstance(parsed, dict):
+                if isinstance(parsed.get("results"), list):
+                    arr = parsed["results"]
+                else:
+                    for v in parsed.values():
+                        if isinstance(v, list):
+                            arr = v
+                            break
+            elif isinstance(parsed, list):
+                arr = parsed
+            if not isinstance(arr, list):
+                last_err = f"no list in response: {content[:200]}"
+                continue
+            by_id = {d.get("id"): d for d in arr if isinstance(d, dict)}
+            result = []
+            for i in range(1, len(items) + 1):
+                d = by_id.get(i) or (arr[i - 1] if i - 1 < len(arr) and isinstance(arr[i - 1], dict) else None)
+                if d:
+                    biz = d.get("biz_relevance", "通用获客")
+                    if biz not in BIZ_RELEVANCE_VALUES:
+                        biz = "通用获客"
+                    hl = d.get("highlights") or []
+                    if not isinstance(hl, list):
+                        hl = [str(hl)]
+                    hl = [str(x) for x in hl][:3]
+                    result.append({
+                        "summary": str(d.get("summary", ""))[:80],
+                        "highlights": hl,
+                        "biz_relevance": biz,
+                        "biz_reason": str(d.get("biz_reason", ""))[:40],
+                        "creation_angle": str(d.get("creation_angle", ""))[:60],
+                    })
+                else:
+                    result.append(_empty_enrich())
+            return result
+        except Exception as e:
+            last_err = f"{e}"
+            time.sleep(2)
+    print(f"    DeepSeek enrich failed for {topic_name}/{platform_key}: {last_err[:200]}")
+    return [_empty_enrich() for _ in items]
+
+
+def enrich_with_llm(data):
+    if not DEEPSEEK_API_KEY:
+        print("  DEEPSEEK_API_KEY not set — skipping LLM enrich (cards will show titles only)")
+        for topic in data:
+            for plat, items in topic["platforms"].items():
+                for item in items:
+                    item.update(_empty_enrich())
+        return
+    total = 0
+    for topic in data:
+        for plat, items in topic["platforms"].items():
+            if not items:
+                continue
+            print(f"  Enriching {topic['name']} / {PLATFORM_NAMES[plat]} ({len(items)} items)")
+            enriched = _call_deepseek_batch(topic["name"], plat, items)
+            for item, enr in zip(items, enriched):
+                item.update(enr)
+            total += len(items)
+            time.sleep(0.5)
+    print(f"  Enriched {total} items via DeepSeek")
+
+
 # ── HTML 生成 ─────────────────────────────────────────
 def esc(text):
     return (str(text)
@@ -464,39 +711,110 @@ def format_count(n):
     return str(n)
 
 
+def format_pubdate(ts):
+    """Unix 时间戳 -> 相对时间 / 短日期。空/0 返回空串。"""
+    if not ts:
+        return ""
+    try:
+        ts = int(ts)
+    except (TypeError, ValueError):
+        return ""
+    if ts <= 0:
+        return ""
+    try:
+        dt = datetime.fromtimestamp(ts, BEIJING_TZ)
+    except (OSError, OverflowError, ValueError):
+        return ""
+    delta_days = (TODAY - dt).days
+    if delta_days < 0:
+        return dt.strftime("%m-%d")
+    if delta_days == 0:
+        return "今天"
+    if delta_days == 1:
+        return "昨天"
+    if delta_days < 7:
+        return f"{delta_days}天前"
+    if delta_days < 30:
+        return f"{delta_days // 7}周前"
+    return dt.strftime("%Y-%m-%d")
+
+
+BIZ_BADGE_COLOR = {
+    "港险":     ("#EC4899", "#fff"),
+    "分红险":   ("#8B5CF6", "#fff"),
+    "养老":     ("#10B981", "#fff"),
+    "通用获客": ("#3B82F6", "#fff"),
+    "不建议":   ("#E5E7EB", "#6B7280"),
+}
+
+
+def build_item_card(item, rank):
+    """单条候选项卡片 (HTML)。包含: rank / 标题(链)/ 摘要 / 爆点chips /
+    再创作角度 / 业务相关度 badge / 热度分 + 平台数据 + 发布时间。
+    biz_relevance='不建议' 时整卡灰化降级。"""
+    url = (item.get("url") or "").strip()
+    title = esc(item.get("title") or "")
+    title_html = (
+        f'<a href="{esc(url)}" target="_blank" rel="noopener" class="tl">{title}</a>'
+        if url else f'<span class="tl">{title}</span>'
+    )
+
+    biz = item.get("biz_relevance") or "通用获客"
+    bg, fg = BIZ_BADGE_COLOR.get(biz, BIZ_BADGE_COLOR["通用获客"])
+    biz_badge = f'<span class="biz-badge" style="background:{bg};color:{fg};">{esc(biz)}</span>'
+
+    summary = esc(item.get("summary") or "")
+    summary_html = f'<div class="summary">{summary}</div>' if summary else ""
+
+    hls = item.get("highlights") or []
+    if hls:
+        chips = " ".join(f'<span class="hl-chip">#{esc(h)}</span>' for h in hls if h)
+        highlights_html = f'<div class="hl-row">{chips}</div>' if chips else ""
+    else:
+        highlights_html = ""
+
+    angle = esc(item.get("creation_angle") or "")
+    angle_html = f'<div class="angle">💡 {angle}</div>' if angle else ""
+
+    biz_reason = esc(item.get("biz_reason") or "")
+    reason_html = f'<div class="biz-reason">{biz_reason}</div>' if biz == "不建议" and biz_reason else ""
+
+    stats = []
+    play_str = format_count(item.get("play", 0))
+    like_str = format_count(item.get("like", 0))
+    if play_str:
+        stats.append(f"▶ {play_str}")
+    if like_str:
+        stats.append(f"♥ {like_str}")
+    pub = format_pubdate(item.get("create_time", 0))
+    if pub:
+        stats.append(f"📅 {pub}")
+    hot = item.get("hotness_score")
+    if isinstance(hot, int):
+        stats.append(f'<span class="hot-score">🔥 {hot}</span>')
+    stats_html = " · ".join(stats)
+
+    extra_cls = " muted" if biz == "不建议" else ""
+    return f"""<div class="item-card{extra_cls}">
+      <div class="rank-col">{rank}</div>
+      <div class="content-col">
+        <div class="title-row">{title_html}{biz_badge}</div>
+        {summary_html}
+        {highlights_html}
+        {angle_html}
+        {reason_html}
+        <div class="meta-row">{stats_html}</div>
+      </div>
+    </div>"""
+
+
 def build_platform_section(platform_key, items):
     dot_color = PLATFORM_COLORS.get(platform_key, "#888")
     platform_name = PLATFORM_NAMES.get(platform_key, platform_key)
-    rows = ""
-    for i, item in enumerate(items[:10], 1):
-        url = item.get("url", "").strip()
-        title = esc(item["title"])
-        if len(title) > 60:
-            title = title[:60] + "..."
-        title_html = (
-            f'<a href="{esc(url)}" target="_blank" rel="noopener" class="tl">{title}</a>'
-            if url else title
-        )
-        stats = []
-        play_str = format_count(item.get("play", 0))
-        like_str = format_count(item.get("like", 0))
-        comment_str = format_count(item.get("comment", 0))
-        if play_str:
-            stats.append(f"▶ {play_str}")
-        if like_str:
-            stats.append(f"♥ {like_str}")
-        if comment_str:
-            stats.append(f"💬 {comment_str}")
-        stats_html = f'<span class="stats">{" · ".join(stats)}</span>' if stats else ""
-
-        rows += f"""<tr>
-            <td class="rank">{i}</td>
-            <td>{title_html}{stats_html}</td>
-          </tr>"""
-
+    cards = "".join(build_item_card(item, i) for i, item in enumerate(items[:10], 1))
     return f"""<div class="platform-section">
-      <div class="platform-name" style="color:{dot_color};">● {platform_name}</div>
-      <table><tbody>{rows}</tbody></table>
+      <div class="platform-name" style="color:{dot_color};">● {platform_name} <span class="plat-count">({len(items[:10])})</span></div>
+      <div class="item-list">{cards}</div>
     </div>"""
 
 
@@ -575,8 +893,8 @@ def generate_detail_page(data):
 
     .topic-grid {{
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: 1fr;
+      gap: 24px;
       align-items: start;
     }}
 
@@ -591,48 +909,119 @@ def generate_detail_page(data):
       padding: 14px 20px;
       font-size: 1.05em;
       font-weight: 700;
-      text-align: center;
       letter-spacing: 1px;
       color: white;
     }}
 
     .platform-section {{
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-bottom: 1px solid #f0f0f0;
     }}
     .platform-section:last-child {{ border-bottom: none; }}
 
     .platform-name {{
-      font-size: 0.75em;
+      font-size: 0.78em;
       font-weight: 700;
-      margin-bottom: 8px;
-      text-transform: uppercase;
+      margin-bottom: 10px;
       letter-spacing: 0.5px;
     }}
+    .plat-count {{ color:#bbb; font-weight: 500; }}
 
-    table {{ width: 100%; border-collapse: collapse; font-size: 0.82em; }}
-    td {{
-      padding: 5px 6px;
-      border-bottom: 1px solid #f8f8f8;
-      vertical-align: top;
+    .item-list {{ display: flex; flex-direction: column; gap: 10px; }}
+
+    .item-card {{
+      display: flex;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #fafbfd;
+      border-radius: 10px;
+      border-left: 3px solid transparent;
+      transition: background .15s;
     }}
-    td.rank {{ color: #ccc; width: 22px; font-weight: 600; text-align: center; }}
-    tr:nth-child(-n+3) td.rank {{ color: #f59e0b; }}
-    tr:last-child td {{ border-bottom: none; }}
+    .item-card:hover {{ background: #f3f5f9; }}
+    .item-card.muted {{ opacity: 0.55; background: #f5f5f5; border-left-color:#ddd; }}
+    .item-card.muted .tl {{ color: #888; }}
 
+    .rank-col {{
+      width: 22px;
+      color: #ccc;
+      font-weight: 700;
+      font-size: 0.9em;
+      flex-shrink: 0;
+    }}
+    .content-col {{ flex: 1; min-width: 0; }}
+
+    .title-row {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }}
     .tl {{
       color: #1E2761;
       text-decoration: none;
-      font-weight: 500;
-      line-height: 1.4;
+      font-weight: 600;
+      font-size: 0.95em;
+      line-height: 1.35;
     }}
     .tl:hover {{ color: #028090; text-decoration: underline; }}
 
-    .stats {{
-      display: block;
-      color: #aaa;
+    .biz-badge {{
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }}
+
+    .summary {{
+      color: #555;
       font-size: 0.85em;
-      margin-top: 2px;
+      line-height: 1.5;
+      margin: 4px 0;
+    }}
+
+    .hl-row {{ margin: 4px 0; display: flex; flex-wrap: wrap; gap: 4px; }}
+    .hl-chip {{
+      display: inline-block;
+      padding: 1px 7px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      font-size: 0.72em;
+      color: #6366F1;
+      font-weight: 500;
+    }}
+
+    .angle {{
+      margin: 6px 0 4px;
+      padding: 5px 10px;
+      background: #fff8e1;
+      border-radius: 6px;
+      font-size: 0.82em;
+      color: #92590a;
+      line-height: 1.45;
+    }}
+    .item-card.muted .angle {{ display: none; }}
+
+    .biz-reason {{
+      margin: 4px 0;
+      font-size: 0.78em;
+      color: #9CA3AF;
+      font-style: italic;
+    }}
+
+    .meta-row {{
+      margin-top: 5px;
+      color: #aaa;
+      font-size: 0.78em;
+    }}
+    .hot-score {{
+      color: #F59E0B;
+      font-weight: 600;
     }}
 
     .empty {{
@@ -649,8 +1038,23 @@ def generate_detail_page(data):
       padding: 20px;
     }}
 
-    @media (max-width: 680px) {{
-      .topic-grid {{ grid-template-columns: 1fr; }}
+    .legend {{
+      max-width: 1100px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      background: white;
+      border-radius: 10px;
+      font-size: 0.8em;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+    }}
+    .legend b {{ color:#333; }}
+
+    @media (min-width: 900px) {{
+      .topic-grid {{ grid-template-columns: 1fr 1fr; }}
     }}
   </style>
 </head>
@@ -664,13 +1068,23 @@ def generate_detail_page(data):
   </div>
 </header>
 
+<div class="legend">
+  <span><b>业务相关度</b>:</span>
+  <span><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span> 直接对标</span>
+  <span><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span> 高优先</span>
+  <span><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span> 长线选题</span>
+  <span><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span> 涨粉/获客可用</span>
+  <span><span class="biz-badge" style="background:#E5E7EB;color:#6B7280;">不建议</span> 不要做</span>
+  <span style="margin-left:auto;color:#aaa;">🔥 = 同平台百分位热度分(0-100) · 💡 = AI 再创作角度建议</span>
+</div>
+
 <main>
   <div class="topic-grid">
     {topic_cards}
   </div>
 </main>
 
-<footer>🔄 每日自动更新 · TikHub API</footer>
+<footer>🔄 每日自动更新 · TikHub 搜索 + DeepSeek 选题分析</footer>
 
 </body>
 </html>"""
@@ -679,17 +1093,35 @@ def generate_detail_page(data):
 # ── 主流程 ────────────────────────────────────────────
 def main():
     print(f"=== 每日热门话题生成 · {DATE_STR} ===")
+    if not TIKHUB_API_KEY:
+        raise SystemExit("TIKHUB_API_KEY env var is required")
 
     print("Step 1: Searching via TikHub API...")
     data = collect_all_data()
-
     total = sum(len(items) for t in data for items in t["platforms"].values())
-    print(f"  Total results: {total}")
+    print(f"  Collected {total} raw items")
 
     if total == 0:
         print("  WARNING: No results collected. Check API key and endpoints.")
+        # 仍然写一个空页面, 避免 Netlify 上残留旧数据
+        html = generate_detail_page(data)
+        with open(DETAIL_FILE, "w", encoding="utf-8") as f:
+            f.write(html)
+        return
 
-    print("Step 2: Generating detail page...")
+    print("Step 2: Dedupe across topics/platforms...")
+    dedupe_across_topics(data)
+
+    print("Step 3: Normalize heat scores...")
+    normalize_heat(data)
+
+    print("Step 4: Fetch top comments (best-effort)...")
+    fetch_top_comments(data)
+
+    print("Step 5: Enrich with DeepSeek...")
+    enrich_with_llm(data)
+
+    print("Step 6: Generate detail page...")
     html = generate_detail_page(data)
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
