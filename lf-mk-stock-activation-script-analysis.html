@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保心上人 - 林付贤 / 马康挺 存量激活话术分析（5/11-5/16）</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+:root {
+  --gold-primary: #D4AF37;
+  --gold-light: #F5E6AD;
+  --black-bg: #0d0d0d;
+  --black-card: #1a1a1a;
+  --danger: #ff4d4f;
+  --success: #52c41a;
+  --planner-color: #5DADE2;
+  --customer-color: #E59866;
+  --lf-color: #ff9966;
+  --mk-color: #66ccff;
+}
+body {
+  background-color: var(--black-bg);
+  color: #e0e0e0;
+  font-family: 'Noto Sans SC', sans-serif;
+  line-height: 1.7;
+}
+.gold-text { color: var(--gold-primary); }
+.gold-gradient-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-header {
+  border-left: 4px solid var(--gold-primary);
+  padding-left: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.h3 {
+  border-left: 3px solid var(--gold-primary);
+  padding-left: 0.75rem;
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+.card {
+  background: var(--black-card);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  color: var(--gold-primary);
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem;
+}
+.numeric { font-family: 'JetBrains Mono', monospace; text-align: right; }
+.callout {
+  background: rgba(212, 175, 55, 0.05);
+  border-left: 4px solid var(--gold-primary);
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+.callout-red {
+  background: rgba(255, 77, 79, 0.06);
+  border-left-color: #ff4d4f;
+}
+.callout-red .callout-title { color: #ff4d4f; }
+.callout-orange {
+  background: rgba(255, 165, 0, 0.06);
+  border-left-color: #ffa500;
+}
+.callout-orange .callout-title { color: #ffa500; }
+.callout-green {
+  background: rgba(82, 196, 26, 0.06);
+  border-left-color: #52c41a;
+}
+.callout-green .callout-title { color: #52c41a; }
+.callout-title { font-weight: 700; color: var(--gold-primary); margin-bottom: 4px; }
+.case-block {
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--planner-color);
+  padding: 14px 18px;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.case-title {
+  font-weight: 700;
+  color: var(--planner-color);
+  margin-bottom: 10px;
+  font-size: 1.0rem;
+}
+.case-quote {
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-style: italic;
+  color: #ccc;
+  font-size: 0.92rem;
+}
+.case-note {
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.tag-success { background: rgba(82,196,26,0.12); color: #52c41a; border: 1px solid rgba(82,196,26,0.3); }
+.tag-danger { background: rgba(255,77,79,0.12); color: #ff4d4f; border: 1px solid rgba(255,77,79,0.3); }
+.tag-warn { background: rgba(255,165,0,0.12); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
+.tag-info { background: rgba(93,173,226,0.12); color: #5DADE2; border: 1px solid rgba(93,173,226,0.3); }
+.tag-lf { background: rgba(255,153,102,0.12); color: var(--lf-color); border: 1px solid rgba(255,153,102,0.3); }
+.tag-mk { background: rgba(102,204,255,0.12); color: var(--mk-color); border: 1px solid rgba(102,204,255,0.3); }
+.toc-item {
+  display: block;
+  padding: 8px 12px;
+  color: #aaa;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.toc-item:hover {
+  color: var(--gold-primary);
+  background: rgba(212,175,55,0.05);
+}
+.lf-section .case-title { color: var(--lf-color); }
+.lf-section .case-block { border-left-color: var(--lf-color); }
+.mk-section .case-title { color: var(--mk-color); }
+.mk-section .case-block { border-left-color: var(--mk-color); }
+@media print {
+  .no-print { display: none; }
+  body { background: white; color: black; }
+  .card { background: white; border: 1px solid #ddd; box-shadow: none; page-break-inside: avoid; }
+  .gold-gradient-text { color: #b8860b; -webkit-text-fill-color: initial; }
+  .msg-body, .case-quote { color: #333; }
+}
+</style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+<!-- 顶栏 -->
+<header class="flex justify-between items-center mb-12 no-print">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+    <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+  </div>
+  <div class="text-right text-xs md:text-sm text-gray-500">内部资料 · 团队学习</div>
+</header>
+
+<!-- 标题区 -->
+<div class="text-center mb-16">
+  <h1 class="text-3xl md:text-4xl font-bold gold-gradient-text mb-3">林付贤 / 马康挺 存量激活话术分析</h1>
+  <p class="text-gray-400 text-sm md:text-base">— 本周激活率双双跃升，做对了什么？还能怎么提高？—</p>
+  <p class="text-gray-500 text-xs mt-4">数据范围：2026.05.11 - 05.16</p>
+  <p class="text-red-400 text-xs mt-2 font-bold">★ 内部仅限团队学习使用，请勿外传 ★</p>
+</div>
+
+<!-- 目录 -->
+<div class="card no-print mb-12 bg-gradient-to-br from-[#1a1a1a] to-[#252525]">
+  <p class="text-xs text-gray-500 uppercase tracking-widest mb-3 font-bold">目录</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+    <a href="#sec-1" class="toc-item">一、核心结论（一页速读）</a>
+    <a href="#sec-2" class="toc-item">二、本周数据 vs 历史对比</a>
+    <a href="#sec-3" class="toc-item">三、林付贤本周做对了什么（4 大打法）</a>
+    <a href="#sec-4" class="toc-item">四、马康挺本周做对了什么（4 大打法）</a>
+    <a href="#sec-5" class="toc-item">五、共同的改进空间</a>
+    <a href="#sec-6" class="toc-item">六、给两人的下周可复制清单</a>
+  </div>
+</div>
+
+<!-- 一、核心结论 -->
+<section class="mb-12" id="sec-1">
+  <h2 class="section-header gold-gradient-text">一、核心结论（一页速读）</h2>
+  <div class="card">
+    <ol class="space-y-3 text-sm leading-relaxed list-decimal pl-5">
+      <li><strong class="text-white">本周激活率双双跃升。</strong>林付贤 19% → <span class="tag tag-success">32%</span>（连续三周向上：4 月 2% → 5 月 19% → 本周 32%），马康挺 11% → <span class="tag tag-success">24%</span>（突破连续两周低位）。</li>
+      <li>共同改进点：<strong class="gold-text">开场不再是"在吗""你好"</strong>。本周 14 个激活客户里，<strong class="text-white">12 个</strong>开场带"上次/之前/你说"等个人化记忆点（vs 江宁分析里付贤历史 1.5%、康挺 10.6%），这是结构性突破。</li>
+      <li>付贤的两条主路：<span class="tag tag-lf">个人化记忆点 + 时效钩子</span>（华哥、多才多艺、夏导）+ <span class="tag tag-lf">服务请求转销售</span>（hy燕子的差旅报销 → 顺势讲利率下调）。</li>
+      <li>康挺的两条主路：<span class="tag tag-mk">个人化记忆点 + 新产品名</span>（潘总"安盛盛利 2 年交"、金女士"你说想做代理"）+ <span class="tag tag-mk">客户拒绝后持续追问</span>（仁钦卓玛 / 陈女士两段反弹）。</li>
+      <li>两人共同短板：<strong class="text-orange-400">方案制作率 / 讲解率 0%</strong>。激活做到了，但漏斗下游"约电话 / 讲解方案 / 邀约见面"几乎没跑通。这是下周必须突破的卡点。</li>
+      <li>付贤特有问题：<strong class="text-red-400">5 月 1 日"五一假期"群发后遗症未清。</strong>本周 8 个激活里 3 个客户的"上次对话"都是同一条群发文案，激活回复明显冷淡（[抱拳]、"你想说什么意思"、"对"）。</li>
+      <li>康挺特有问题：<strong class="text-orange-400">"信息倾倒"倾向</strong>，岁月静好案例一次连发 200+ 字的产品介绍，命中江宁分析里的失败模式。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 二、本周数据 vs 历史对比 -->
+<section class="mb-12" id="sec-2">
+  <h2 class="section-header gold-gradient-text">二、本周数据 vs 历史对比</h2>
+  <h3 class="h3">2.1 三人激活率近 3 周轨迹</h3>
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>规划师</th><th class="numeric">4 月</th><th class="numeric">5/4-5/9</th><th class="numeric">本周 5/11-5/16</th><th>本周趋势</th></tr></thead>
+      <tbody>
+        <tr><td><strong>江宁</strong></td><td class="numeric">41%</td><td class="numeric">33%</td><td class="numeric">45%</td><td><span class="tag tag-success">↑ 反弹回归高位</span></td></tr>
+        <tr><td><strong>林付贤</strong></td><td class="numeric"><span class="tag tag-danger">2%</span></td><td class="numeric">19%</td><td class="numeric"><span class="tag tag-success">32%</span></td><td><span class="tag tag-success">↑ 连续三周向上</span></td></tr>
+        <tr><td><strong>马康挺</strong></td><td class="numeric">21%</td><td class="numeric">11%</td><td class="numeric"><span class="tag tag-success">24%</span></td><td><span class="tag tag-success">↑ 突破低位</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-green">
+      <div class="callout-title">▎ 关键观察</div>
+      付贤从 4 月 2% 到本周 32%，是 16 倍的提升。康挺也从两周连续低位反弹。两人激活率本周已经接近江宁的水平区间。
+    </div>
+  </div>
+  <h3 class="h3">2.2 本周 14 个激活客户的开场类型分布</h3>
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>开场类型</th><th class="numeric">付贤 (8)</th><th class="numeric">康挺 (6)</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>个人化记忆点 + 时效钩子<br><span class="text-xs text-gray-500">（"之前/上次..." + "新产品/利率下调"）</span></td>
+          <td class="numeric">5</td>
+          <td class="numeric">4</td>
+          <td class="text-xs text-gray-400">区先生、夏导、华哥、多才多艺、朱老板（付贤）；陈女士、金女士、刘阿姨、潘总（康挺）</td>
+        </tr>
+        <tr>
+          <td>客户主动来询 → 立刻接住</td>
+          <td class="numeric">2</td>
+          <td class="numeric">2</td>
+          <td class="text-xs text-gray-400">老虎（后台留言）、大爱无疆（直接拒绝→反弹）；岁月静好（后台留言）、吴先生（主动咨询）</td>
+        </tr>
+        <tr>
+          <td>服务请求转销售</td>
+          <td class="numeric">1</td>
+          <td class="numeric">0</td>
+          <td class="text-xs text-gray-400">hy燕子（差旅报销 → 香港卡激活 + 利率下调）</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <div class="callout-title">▎ 关键差异</div>
+      与江宁分析里历史模式（付贤 1.5% 带记忆点、康挺 10.6%）相比，本周两人都把"个人化记忆点"做到了 5/8 + 4/6（60%+），这是激活率跃升的核心原因。
+    </div>
+  </div>
+</section>
+
+<!-- 三、林付贤打法 -->
+<section class="mb-12 lf-section" id="sec-3">
+  <h2 class="section-header gold-gradient-text">三、林付贤本周做对了什么（4 大打法）</h2>
+
+  <h3 class="h3">打法 1：开场带"上次产品类型 + 新产品/时效钩子"</h3>
+  <p class="text-sm text-gray-300 mb-3">这是付贤本周用得最多的开场结构（5/8 案例），与江宁打法 2 完全同款。</p>
+
+  <div class="case-block">
+    <div class="case-title">案例 A：华哥（沉默 12 天后激活）</div>
+    <p class="text-sm text-gray-300 mb-2">付贤开场连发：</p>
+    <div class="case-quote">"华哥，在不，之前我们沟通过香港储蓄险的"</div>
+    <div class="case-quote">"图中的保险公司有没有比较熟悉的。"</div>
+    <div class="case-quote">"现在也有一些新产品上线啦。"</div>
+    <p class="text-sm text-gray-300">客户回"你想说什么意思"略冷，付贤承接："上面我整理出来的关于保险公司的介绍，你自己有没有比较看好哪家公司的产品" + 立刻给具体新品："现在有一款周大福的产品和太平洋的新品上线，两款产品都是非常顶尖的，之前你这边也有了解过的，要不要近期了解一下？" 客户立刻松口"可以呀"。</p>
+    <div class="case-note">钩子拆解：① 历史关系（"之前沟通过"）② 具体品类（"香港储蓄险"）③ 新产品时效 ④ 客户冷反应后用"反问 + 具体品牌"二段强化。</div>
+  </div>
+
+  <div class="case-block">
+    <div class="case-title">案例 B：多才多艺铅笔（沉默 0 天但断点）</div>
+    <p class="text-sm text-gray-300 mb-2">付贤开场：</p>
+    <div class="case-quote">"下个月，也就是 6 月底，国内的产品进一步会迎来定价利率的下调喔。你这边准备上车不。"</div>
+    <p class="text-sm text-gray-300">客户立刻"可以阿，说说利息"，付贤反问年龄 + 一次性预算金额，迅速进入方案演示。</p>
+    <div class="case-note">时效钩子三件套：① 具体到月份（"6 月底"）② 政策动作（"定价利率下调"）③ 直接行动诱导（"准备上车不"），高效实用。</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">▎ 要点</div>
+    "新产品 / 利率变化"是付贤做得最稳的钩子。要继续保持，每周开场前先看一眼"本周有什么新动态"作为统一弹药。
+  </div>
+
+  <h3 class="h3">打法 2：客户拒绝后的二段反弹（不死缠也不放手）</h3>
+  <p class="text-sm text-gray-300 mb-3">这是江宁打法 4 的复刻，付贤本周开始稳定使用。</p>
+
+  <div class="case-block">
+    <div class="case-title">案例：大爱无疆（客户主动拒绝）</div>
+    <p class="text-sm text-gray-300 mb-2">客户开口："下午好" + "近段时间不想考虑港险了"。付贤反弹：</p>
+    <div class="case-quote">"啊？确定不考虑了么"</div>
+    <div class="case-quote">"是对哪方面不太满意呢"</div>
+    <p class="text-sm text-gray-300 mb-2">客户回"说不来，暂时不考虑"。付贤继续："恩恩，好的，明白。家里人不太同意是吧。" + 留接口："也可以一步一步先了解的，等后期想要考虑了就可以直接上车的。现在毕竟配置香港储蓄险也是一个趋势的哈"。</p>
+    <div class="case-note">三步：① 先反问"确定吗" ② 追问"哪方面不满意" ③ 不死缠 + 留接口 + 给个软理由（"配置香港储蓄险是趋势"）。</div>
+  </div>
+
+  <h3 class="h3">打法 3：服务请求转销售</h3>
+  <p class="text-sm text-gray-300 mb-3">江宁打法 3 的应用，付贤抓得很准。</p>
+
+  <div class="case-block">
+    <div class="case-title">案例：hy燕子（差旅报销 → 香港卡 + 利率下调）</div>
+    <p class="text-sm text-gray-300 mb-2">客户来要钱（差旅 3200 报销）。付贤先回应服务："3200 我都提交上去的哈，放心的"。然后顺势：</p>
+    <div class="case-quote">"我这两天催一下哈，到了我直接转给你，你现在把你香港银行卡发我，今天不到的话，下周也会到。我直接转你"</div>
+    <p class="text-sm text-gray-300 mb-2">客户问"近期有去香港吗"，付贤立刻把对话从"报销"切到"业务"：</p>
+    <div class="case-quote">"去的呢，最近非常忙，马上后面还会降利率。6.5% 要降到 6% 了"</div>
+    <div class="case-note">两步切换：① 服务接住（钱到位） ② 借香港卡话题自然过渡到"利率下调"，把售后变成销售触点。</div>
+  </div>
+
+  <h3 class="h3">打法 4：保单到期通知 → 客户关心 → 关系延展</h3>
+
+  <div class="case-block">
+    <div class="case-title">案例：朱老板（保单续期通知激活）</div>
+    <p class="text-sm text-gray-300 mb-2">付贤发标准保单续期通知。客户回："行 我在等等 美元到 6.6 更好"。付贤抓住机会切到关心：</p>
+    <div class="case-quote">"朱老板，最近忙不忙呀"</div>
+    <p class="text-sm text-gray-300 mb-2">客户："最近还行 做了个手术养着呢"。付贤立刻："咋做手术了？什么情况"。客户："哦 没事 小手术"。付贤："恩，那就行。多保重"。</p>
+    <div class="case-note">业务通知 + 真诚关心，强化人格信任。这种"业务窗口顺便问候"的小动作能维护长期关系。</div>
+  </div>
+
+  <h3 class="h3">⚠ 同一周仍有的瑕疵：群发后遗症</h3>
+  <div class="callout callout-red">
+    <div class="callout-title">▎ 警示</div>
+    本周 8 个激活里有 <strong>3 个</strong>客户（区松邦、华哥、老虎）的"上次对话"都是 2026-04-30 13:50-13:51 那条群发：<em>"其实 5 天假对我们来说还是值得期待一下的..."</em>。这条群发当时被发给 2000+ 客户。
+    <p class="mt-2 text-sm">三个激活客户的回复都明显冷淡（[抱拳]、"你想说什么意思"、"对"），是激活但不温暖。下周必须把这种"广播板"模板从对话历史清出去——所有触达全部 1对1 个性化，不要再发统一文案。</p>
+  </div>
+</section>
+
+<!-- 四、马康挺打法 -->
+<section class="mb-12 mk-section" id="sec-4">
+  <h2 class="section-header gold-gradient-text">四、马康挺本周做对了什么（4 大打法）</h2>
+
+  <h3 class="h3">打法 1：开场带"客户上次说过的事 + 软追问"</h3>
+  <p class="text-sm text-gray-300 mb-3">康挺历史短板是"开场过短（首句平均 7.9 字）"，本周这个问题大幅改善。</p>
+
+  <div class="case-block">
+    <div class="case-title">案例 A：金女士（"你说想做代理"）</div>
+    <p class="text-sm text-gray-300 mb-2">康挺开场：</p>
+    <div class="case-quote">"金女士 下午好，你说想做代理，但后面一直没有深入沟通咨询下产品呢。还有考虑合作吗？"</div>
+    <div class="case-quote">"需要在发些产品资料给你看看吗？"</div>
+    <p class="text-sm text-gray-300 mb-2">客户简短回"忙一下下"，康挺持续追问，没有客套结束：</p>
+    <div class="case-quote">"是最近比较忙吗？看看是否在沟通下产品计划呢"</div>
+    <div class="case-quote">"那边有客户咨询合作吗？"</div>
+    <p class="text-sm text-gray-300">客户回"我做"，康挺接"你是自己买保险？考虑香港的？"</p>
+    <div class="case-note">三步：① 用"你说想做代理"精准记忆点切入 ② 客户冷反应不放弃 ③ 用具体二选一反问追到真实意向。</div>
+  </div>
+
+  <div class="case-block">
+    <div class="case-title">案例 B：潘总（"安盛盛利 2 年交"具体新品）</div>
+    <p class="text-sm text-gray-300 mb-2">康挺开场：</p>
+    <div class="case-quote">"潘总 你好，你港险后来配置了吗？安盛盛利 2 年交新产品出来有看到吗？"</div>
+    <div class="case-quote">"如没有配置的话，看看是否沟通下的"</div>
+    <p class="text-sm text-gray-300">客户发语音回应。</p>
+    <div class="case-note">钩子三件套：① 关系标签（"潘总"）② 历史问题（"港险后来配置了吗"）③ 具体新品名（"安盛盛利 2 年交"），全部精准。</div>
+  </div>
+
+  <h3 class="h3">打法 2：客户拒绝后的两段反弹</h3>
+
+  <div class="case-block">
+    <div class="case-title">案例：陈女士（家庭事 + 拒绝 → 切到中意产品 → 切到香港）</div>
+    <p class="text-sm text-gray-300 mb-2">康挺开场："陈女士 你好 你家里事有处理好吗？关于保险理财规划看看是否要在深入沟通下的"。客户："你好！暂时不需要了，谢谢你！"</p>
+    <p class="text-sm text-gray-300 mb-2">康挺第一段反弹（不放手 + 留接口）：</p>
+    <div class="case-quote">"我们保险涉及很全呢，后期不管哪种保险考虑，都可以帮你测评比较的"</div>
+    <div class="case-quote">"欢迎随时在来聊聊[抱拳]"</div>
+    <p class="text-sm text-gray-300 mb-2">客户主动透露："不好意思，我前段时间才买了中意的保险了" + "香港那边的保险保费是不是起投都很高？"</p>
+    <p class="text-sm text-gray-300 mb-2">康挺第二段反弹（直接给数据 + 反问）：</p>
+    <div class="case-quote">"国内保险我们一直是主推且卖的很好呢，你考虑国内也可以给你分析的-中意 中英 陆家嘴等等呢"</div>
+    <div class="case-quote">"香港不高呢 5 年交 年交 1 万美金就好了"</div>
+    <div class="case-quote">"你中意买多少保费的啊？"</div>
+    <p class="text-sm text-gray-300">客户拒绝去香港"时间和金钱成本超出预算"。康挺保留余地："如去成本都是我们报销的" + "后面有考虑，可以再聊聊的"。</p>
+    <div class="case-note">两段反弹的关键：被拒后不收工 → 留接口 → 客户透露真实情况 → 用数据反问 → 客户再拒后再留口。</div>
+  </div>
+
+  <h3 class="h3">打法 3：客户主动来询时的"专业内容输出"</h3>
+
+  <div class="case-block">
+    <div class="case-title">案例：吴先生（主动咨询固收 vs 分红）</div>
+    <p class="text-sm text-gray-300 mb-2">客户主动："你好，我准备配一部分固收，一部分分红型？请你把固收第一梯队名称发给我..."</p>
+    <p class="text-sm text-gray-300 mb-2">康挺先澄清需求："你是要纯固收？不带分红的产品？"。客户："纯固收，和分红都有想法"。康挺给出专业判断 + 推荐：</p>
+    <div class="case-quote">"国内纯固收太低了，现在产品预定利率保监会要求都是 2% 以下的。分红产品起码保证 1.75% + 分红，稍微分点红就是远超纯固收了。我们不太推荐国内固收产品"</div>
+    <div class="case-quote">"你要是考虑固收，可以考虑香港的。"</div>
+    <p class="text-sm text-gray-300 mb-2">紧接着给出两线对比：</p>
+    <div class="case-quote">"这是国内 2 家头部收益的分红增额寿：1：复星保证 1.75% + 分红 演示 4.25%；2：中意 保证 1.5% + 分红 演示 4.25%"</div>
+    <div class="case-quote">"这是国内 2 家热卖的快返分红年金：1：中意 保证 1.75% + 分红 演示 3.9%；2：太保 保证 1.75% + 分红 演示 3.75%"</div>
+    <div class="case-note">先澄清需求 → 用专业判断纠偏（固收太低）→ 给具体产品 + 数字对比，是销售顾问该有的姿态。</div>
+  </div>
+
+  <h3 class="h3">打法 4：客户疑虑时的"概念澄清 + 替代方案"</h3>
+
+  <div class="case-block">
+    <div class="case-title">案例：刘女士（杠杆寿误解 + 腿疾不能去香港）</div>
+    <p class="text-sm text-gray-300 mb-2">客户后台留言。康挺主动："你看的是这篇文章对吧？" + "我们也做寿险，这款产品不是杠杆寿。这是养老年金"。</p>
+    <p class="text-sm text-gray-300 mb-2">客户怀疑保司："大家人寿是内地小公司吧？"。康挺立刻给出公司背书：</p>
+    <div class="case-quote">"行业内很有名的，以前叫安邦保险，现在中国保险基金控股的"</div>
+    <p class="text-sm text-gray-300 mb-2">客户提障碍："没法去香港，腿疾"。康挺立刻给替代："那聊聊国内保险也行呢，投保也方便"。</p>
+    <div class="case-note">三步：① 澄清概念误解（"不是杠杆寿"）② 用品牌历史化解信任（"以前叫安邦保险"）③ 障碍立刻给替代（腿疾 → 国内保险）。</div>
+  </div>
+
+  <h3 class="h3">⚠ 同一案例的瑕疵：信息倾倒</h3>
+  <div class="callout callout-orange">
+    <div class="callout-title">▎ 警示</div>
+    上面"刘女士"案例后半段，康挺一次连发了两条 <strong>200+ 字</strong>的产品介绍长文：
+    <div class="case-quote text-xs">"六个维度展示硬实力：1️⃣ 高保底 1.75% 预定利率... 2️⃣ 利益高支持年金红利双交清增额... 3️⃣ 高现价现金价值..."</div>
+    <p class="text-sm">这是江宁分析里典型的"信息倾倒"失败模式。客户更愿意看条理清晰的"先 1 句结论 + 后续 2-3 个要点"，而不是一次塞 200 字。下周如果发产品介绍，建议拆成 3-4 条短句逐条发。</p>
+  </div>
+</section>
+
+<!-- 五、共同的改进空间 -->
+<section class="mb-12" id="sec-5">
+  <h2 class="section-header gold-gradient-text">五、共同的改进空间</h2>
+
+  <h3 class="h3">1. 方案制作率 / 讲解率 0% — 漏斗下游断层</h3>
+  <div class="card">
+    <p class="text-sm text-gray-300 mb-3">本周后台数据：</p>
+    <table class="data-table mb-3">
+      <thead><tr><th>规划师</th><th class="numeric">新发</th><th class="numeric">好友添加率</th><th class="numeric">方案制作率</th><th class="numeric">方案讲解率</th></tr></thead>
+      <tbody>
+        <tr><td>林付贤</td><td class="numeric">14</td><td class="numeric">36%</td><td class="numeric">40%</td><td class="numeric"><span class="tag tag-danger">0%</span></td></tr>
+        <tr><td>马康挺</td><td class="numeric">17</td><td class="numeric">41%</td><td class="numeric"><span class="tag tag-danger">0%</span></td><td class="numeric"><span class="tag tag-danger">0%</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-red">
+      <div class="callout-title">▎ 关键问题</div>
+      激活做到了（点燃对话），但漏斗下游"约电话 / 讲解方案 / 邀约见面"几乎没跑通。本周 14 个激活客户里，有清晰下一步行动召唤的只有 2-3 个（夏导邀约见面、多才多艺进入方案演示）。
+    </div>
+    <p class="text-sm text-gray-300 mt-3"><strong class="text-white">建议：</strong>本周已激活的客户里，付贤至少挑 2 个、康挺至少挑 2 个，下周一开始<strong class="gold-text">主动追"约方案讲解电话"</strong>，把激活转成讲解。</p>
+  </div>
+
+  <h3 class="h3">2. 行动召唤过于模糊</h3>
+  <div class="card">
+    <p class="text-sm text-gray-300 mb-3">本周两人都频繁出现"看看是否..."、"再聊聊..."、"随时联系" 这类无锚定的召唤。</p>
+    <table class="data-table">
+      <thead><tr><th>模糊召唤</th><th>建议改写</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="text-sm text-gray-400">"看看是否还需要在沟通下的"</td>
+          <td class="text-sm text-green-400">"明天上午 10 点方便我打个电话给你 5 分钟介绍下吗？"</td>
+        </tr>
+        <tr>
+          <td class="text-sm text-gray-400">"随时可以在聊聊合作"</td>
+          <td class="text-sm text-green-400">"周三下午我把这款产品的方案做完发你，你看完我们约 15 分钟聊？"</td>
+        </tr>
+        <tr>
+          <td class="text-sm text-gray-400">"后期不管哪种保险考虑，都可以帮你测评"</td>
+          <td class="text-sm text-green-400">"你下周方便给我 10 分钟，我把中意 + 复星 + 太保三家放一起对比给你看？"</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <div class="callout-title">▎ 要点</div>
+      召唤句必须带<strong>具体时间 + 具体动作 + 具体时长</strong>。"看看是否..."不算召唤。
+    </div>
+  </div>
+
+  <h3 class="h3">3. 客户多问题时的回应节奏</h3>
+  <div class="card">
+    <p class="text-sm text-gray-300 mb-2">付贤"老虎"案例：客户连发"有没有人民币固定年金保单？""有没有人民币固定储蓄险保单"，付贤间隔 20 多分钟才回，且只回了一句"又要人民币保单，又要固定的，这个是没有的"——客户回"谢谢"，对话冷却。</p>
+    <p class="text-sm text-gray-300"><strong class="text-white">建议：</strong>客户连发多个问题时：① 当场回应一句先承接（"好的，我来给你一一对应"），不要让客户等待 20+ 分钟 ② 不要简单否定（"没有"），而是给替代方案（"人民币固定收益没有，但港币高保证 + 分红的产品您要不要看一下？"）。</p>
+  </div>
+</section>
+
+<!-- 六、给两人的下周可复制清单 -->
+<section class="mb-12" id="sec-6">
+  <h2 class="section-header gold-gradient-text">六、给两人的下周可复制清单</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- 林付贤 -->
+    <div class="card border-l-4" style="border-left-color: var(--lf-color);">
+      <h3 class="text-lg font-bold mb-4" style="color: var(--lf-color);">林付贤 · 下周清单</h3>
+      <ol class="space-y-3 text-sm leading-relaxed list-decimal pl-5 text-gray-300">
+        <li><strong class="text-white">继续保持</strong>"个人化记忆点 + 时效钩子"开场（华哥、多才多艺案例）。每周开工前先看一眼"本周有什么新动态/利率变化"作为统一弹药。</li>
+        <li><strong class="text-white">彻底清掉群发模板</strong>。本周 3 个激活客户的"上次对话"还是 4/30 那条 5 天假群发，下周开始全部 1对1 个性化触达。</li>
+        <li><strong class="text-white">把本周激活的 2 个客户推到方案讲解</strong>。多才多艺已经问"说说利息"、夏导主动来要资料，这两个最该追到"约电话讲解方案"。</li>
+        <li><strong class="text-white">客户多问题时不要让对话停留 20+ 分钟</strong>。当场回应一句承接，不要简单"没有"。</li>
+        <li><strong class="text-white">召唤句换成"具体时间 + 具体动作"</strong>。下周新发量翻倍但讲解 0，必须把承接质量跟上。</li>
+      </ol>
+    </div>
+
+    <!-- 马康挺 -->
+    <div class="card border-l-4" style="border-left-color: var(--mk-color);">
+      <h3 class="text-lg font-bold mb-4" style="color: var(--mk-color);">马康挺 · 下周清单</h3>
+      <ol class="space-y-3 text-sm leading-relaxed list-decimal pl-5 text-gray-300">
+        <li><strong class="text-white">继续保持</strong>"客户上次说过的事 + 具体新品名"开场（金女士、潘总案例）。这是康挺历史最大短板（首句 7.9 字）的突破。</li>
+        <li><strong class="text-white">"客户拒绝后两段反弹"打法已经稳定</strong>（陈女士、金女士），继续按这个节奏走，注意每段反弹之间留呼吸空间，不要连发太密。</li>
+        <li><strong class="text-white">改"信息倾倒"为"3-4 条短句拆解"</strong>。刘女士那种 200+ 字的产品介绍要拆成"先 1 句结论 + 后续 2-3 个要点"。</li>
+        <li><strong class="text-white">方案制作率从 12% → 0% 是退步</strong>。上周已经做到 12%，下周必须重新打开漏斗下游，把本周 17 个新发里至少 2 个推到"做方案"。</li>
+        <li><strong class="text-white">召唤句锚定时间</strong>。"看看是否再聊聊"换成"周三下午我把方案发你 + 约 15 分钟"。</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="callout callout-green mt-6">
+    <div class="callout-title">▎ 团队层面建议</div>
+    本周两人激活率双双跃升至 30% 区间，已基本接近江宁的水平。下周如果能把<strong>方案讲解率从 0% 推到 10%+</strong>，就完成了"激活 → 转化"的完整漏斗闭环。这是接下来 2-3 周最值得投入的工作。
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="text-center py-10 no-print border-t border-white/5">
+  <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">预览并打印</button>
+  <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 内部学习参考 · 2026.05.11-05.16</p>
+</footer>
+
+</body>
+</html>
