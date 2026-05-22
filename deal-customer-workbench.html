@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成交客户工作台 · 林付贤 · 保心上人</title>
+<style>
+:root {
+  --bg: #0a1224;
+  --bg-card: #131d35;
+  --bg-elev: #1a2541;
+  --line: rgba(255,255,255,.08);
+  --txt-1: #fff;
+  --txt-2: #b9c5d6;
+  --txt-3: #6b7a92;
+  --gold: #ffd166;
+  --cyan: #00d4ff;
+  --green: #10b981;
+  --brand-orange: #ff6b35;
+  --red: #ef4444;
+  --purple: #a78bfa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg);
+  color: var(--txt-1);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.container { max-width: 1440px; margin: 0 auto; padding: 24px 32px; }
+
+/* ============ TOP BAR ============ */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 32px;
+  background: linear-gradient(90deg, rgba(255,107,53,.10), rgba(255,209,102,.04));
+  border-bottom: 1px solid var(--line);
+}
+
+/* ============ VIEW SWITCHER ============ */
+.view-switcher {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 32px;
+  background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+}
+.view-switcher-label {
+  font-size: 11px; color: var(--txt-3);
+  letter-spacing: 1.5px; font-weight: 700;
+  margin-right: 8px; white-space: nowrap;
+}
+.view-btn {
+  padding: 8px 16px;
+  font-size: 13px; font-weight: 700; letter-spacing: 1px;
+  color: var(--txt-2);
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.view-btn:hover {
+  border-color: rgba(255,209,102,.4); color: #fff;
+}
+.view-btn.active {
+  background: linear-gradient(90deg, rgba(255,107,53,.2), rgba(255,209,102,.15));
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.view-btn .count {
+  font-size: 10px; color: var(--txt-3);
+  background: rgba(255,255,255,.05);
+  padding: 1px 7px; border-radius: 999px;
+  font-weight: 800;
+}
+.view-btn.active .count {
+  background: var(--gold); color: #0a1224;
+}
+.view-btn.zombie {
+  border-color: rgba(167,139,250,.25);
+}
+.view-btn.zombie.active {
+  background: linear-gradient(90deg, rgba(167,139,250,.2), rgba(239,68,68,.1));
+  border-color: var(--purple); color: var(--purple);
+}
+.view-btn.zombie.active .count { background: var(--purple); }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.topbar-logo {
+  font-size: 14px; font-weight: 800; letter-spacing: 2px;
+  color: var(--brand-orange);
+}
+.topbar-crumb { font-size: 12px; color: var(--txt-3); letter-spacing: 1.2px; }
+.topbar-crumb b { color: var(--gold); letter-spacing: 1.5px; }
+.topbar-user { font-size: 13px; color: var(--txt-2); }
+.topbar-user b { color: #fff; }
+
+/* ============ HERO ============ */
+.hero {
+  background: linear-gradient(135deg, rgba(255,107,53,.08) 0%, rgba(0,212,255,.05) 100%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.hero-head {
+  display: flex; justify-content: space-between; align-items: end;
+  margin-bottom: 22px;
+}
+.hero-title {
+  font-size: 22px; font-weight: 800; letter-spacing: 1.5px;
+}
+.hero-title b { color: var(--gold); }
+.hero-subtitle { font-size: 12px; color: var(--txt-3); letter-spacing: 1.5px; margin-top: 4px; }
+.hero-health {
+  text-align: right; font-size: 11px; color: var(--txt-3); letter-spacing: 1.5px;
+}
+.hero-health-val {
+  font-size: 32px; font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-orange), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+.stat {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px;
+  position: relative;
+}
+.stat-label {
+  font-size: 10.5px; color: var(--txt-3);
+  letter-spacing: 1.5px; font-weight: 700;
+  margin-bottom: 6px;
+}
+.stat-val {
+  font-size: 28px; font-weight: 900; letter-spacing: -.5px;
+  line-height: 1.1; margin-bottom: 4px;
+}
+.stat-val .unit { font-size: 13px; font-weight: 700; color: var(--txt-3); margin-left: 4px; }
+.stat-foot { font-size: 11px; color: var(--txt-3); }
+.stat-foot.warn { color: var(--brand-orange); }
+.stat-foot.good { color: var(--green); }
+
+/* ============ SECTION ============ */
+.section { margin-bottom: 28px; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-size: 15px; font-weight: 800; letter-spacing: 1.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--brand-orange), var(--gold));
+  color: #0a1224; border-radius: 999px;
+  font-size: 12px; font-weight: 900;
+}
+.section-hint { font-size: 11px; color: var(--txt-3); letter-spacing: 1.2px; }
+
+/* ============ 第 1 层 · 今日待办 ============ */
+.todo-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+}
+.todo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 16px 14px;
+  position: relative;
+  transition: transform .15s, border-color .15s;
+}
+.todo-card:hover { transform: translateY(-2px); border-color: rgba(255,209,102,.3); }
+.todo-card.t-birthday { border-left: 3px solid var(--purple); }
+.todo-card.t-renewal { border-left: 3px solid var(--brand-orange); }
+.todo-card.t-bigdeal { border-left: 3px solid var(--gold); }
+.todo-card.t-wake { border-left: 3px solid var(--red); }
+.todo-card.t-cross { border-left: 3px solid var(--cyan); }
+
+.todo-icon { font-size: 20px; margin-bottom: 8px; }
+.todo-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+  padding: 2px 8px; border-radius: 999px;
+  margin-bottom: 8px;
+}
+.todo-card.t-birthday .todo-tag { background: rgba(167,139,250,.15); color: var(--purple); }
+.todo-card.t-renewal .todo-tag { background: rgba(255,107,53,.15); color: var(--brand-orange); }
+.todo-card.t-bigdeal .todo-tag { background: rgba(255,209,102,.15); color: var(--gold); }
+.todo-card.t-wake .todo-tag { background: rgba(239,68,68,.15); color: var(--red); }
+.todo-card.t-cross .todo-tag { background: rgba(0,212,255,.15); color: var(--cyan); }
+
+.todo-customer {
+  font-size: 15px; font-weight: 800; margin-bottom: 4px;
+  color: #fff;
+}
+.todo-level {
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  display: inline-block; padding: 1px 7px; border-radius: 3px;
+  margin-left: 6px; vertical-align: 2px;
+}
+.lv-L4 { background: rgba(255,209,102,.18); color: var(--gold); }
+.lv-L3 { background: rgba(255,107,53,.18); color: var(--brand-orange); }
+.lv-L2 { background: rgba(16,185,129,.18); color: var(--green); }
+.lv-L1 { background: rgba(0,212,255,.18); color: var(--cyan); }
+.lv-L0 { background: rgba(107,122,146,.18); color: var(--txt-3); }
+
+.todo-desc {
+  font-size: 12px; color: var(--txt-2);
+  margin-bottom: 12px; line-height: 1.5;
+  min-height: 34px;
+}
+.todo-meta {
+  font-size: 11px; color: var(--txt-3);
+  display: flex; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.todo-action {
+  display: block; width: 100%;
+  background: linear-gradient(90deg, var(--brand-orange), var(--gold));
+  color: #0a1224; font-weight: 800; font-size: 12px; letter-spacing: 1.2px;
+  border: 0; border-radius: 8px;
+  padding: 8px 0; cursor: pointer;
+}
+.todo-action.secondary {
+  background: transparent; color: var(--cyan);
+  border: 1px solid rgba(0,212,255,.4);
+}
+
+/* ============ 第 2 层 · 分级地图 ============ */
+.map-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+.map-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 80px 200px 100px;
+  gap: 14px; align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background .15s;
+}
+.map-row:hover { background: rgba(255,255,255,.02); }
+.map-row:last-child { border-bottom: 0; }
+.map-tier {
+  font-size: 13px; font-weight: 800; letter-spacing: 1px;
+}
+.map-tier-desc { font-size: 11px; color: var(--txt-3); font-weight: 600; }
+.map-bar-wrap {
+  height: 28px;
+  border-radius: 6px;
+  position: relative;
+}
+.map-bar-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,.03);
+  border-radius: 6px;
+  z-index: 0;
+}
+.map-bar {
+  height: 100%;
+  border-radius: 6px;
+  position: relative; z-index: 1;
+}
+.map-bar-label {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px; font-weight: 700; color: #fff;
+  white-space: nowrap;
+  z-index: 2;
+  text-shadow: 0 1px 4px rgba(0,0,0,.6);
+}
+.map-cnt {
+  font-size: 18px; font-weight: 900; text-align: right;
+}
+.map-cnt .unit { font-size: 11px; font-weight: 700; color: var(--txt-3); margin-left: 3px; }
+.map-warn { font-size: 11px; color: var(--brand-orange); }
+.map-warn.zombie { color: var(--purple); }
+.map-cta {
+  font-size: 11px; color: var(--cyan); text-align: right; font-weight: 700;
+}
+
+/* ============ 第 3 层 · 明细 Tab ============ */
+.tab-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,.02);
+}
+.tab {
+  padding: 14px 22px;
+  font-size: 13px; font-weight: 700; letter-spacing: 1px;
+  color: var(--txt-3); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+.tab:hover { color: #fff; }
+.tab .tab-cnt {
+  display: inline-block; margin-left: 6px;
+  background: rgba(255,209,102,.1);
+  color: var(--gold);
+  font-size: 10px; padding: 1px 7px; border-radius: 999px;
+  font-weight: 800; letter-spacing: 0;
+}
+.tab.active .tab-cnt { background: var(--gold); color: #0a1224; }
+
+table.detail {
+  width: 100%; border-collapse: collapse;
+  font-size: 12.5px;
+}
+table.detail th {
+  background: rgba(255,255,255,.02);
+  font-size: 10.5px; font-weight: 800;
+  letter-spacing: 1.5px; color: var(--txt-3);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+table.detail td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--txt-2);
+}
+table.detail tr:hover td { background: rgba(255,255,255,.02); }
+table.detail tr:last-child td { border-bottom: 0; }
+
+.cust-name { color: #fff; font-weight: 700; }
+.danger-cell { color: var(--red); font-weight: 700; }
+.warn-cell { color: var(--brand-orange); font-weight: 700; }
+.good-cell { color: var(--green); font-weight: 700; }
+.muted { color: var(--txt-3); }
+
+.action-btn {
+  background: transparent; color: var(--cyan);
+  border: 1px solid rgba(0,212,255,.35);
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  padding: 5px 10px; border-radius: 6px; cursor: pointer;
+}
+.action-btn:hover { background: rgba(0,212,255,.08); }
+.action-btn + .action-btn { margin-left: 6px; }
+.action-btn.danger { color: var(--red); border-color: rgba(239,68,68,.35); }
+.action-btn.gold { color: var(--gold); border-color: rgba(255,209,102,.35); }
+
+.zombie-flag {
+  display: inline-block;
+  background: rgba(167,139,250,.15); color: var(--purple);
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 4px;
+  margin-left: 6px;
+}
+
+/* ============ 第 3 层 · L4 SOP 流水线 ============ */
+.sop-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px 24px;
+}
+.sop-pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.sop-col {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+.sop-col-head {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.sop-col-step {
+  font-size: 10px;
+  color: var(--txt-3);
+  letter-spacing: 1.8px;
+  font-weight: 800;
+}
+.sop-col-name {
+  font-size: 14px;
+  font-weight: 800;
+  margin-top: 4px;
+  letter-spacing: .5px;
+}
+.sop-col-cnt {
+  font-size: 11px;
+  color: var(--txt-3);
+  margin-top: 4px;
+}
+.sop-col-body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.sop-card-mini {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  position: relative;
+}
+.sop-card-mini.flash {
+  border-color: rgba(255,107,53,.5);
+  box-shadow: 0 0 0 1px rgba(255,107,53,.2);
+}
+.sop-card-mini .c-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+.sop-card-mini .c-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(255,209,102,.18);
+  color: var(--gold);
+}
+.sop-card-mini .c-pr {
+  font-size: 10px;
+  color: var(--red);
+  font-weight: 800;
+}
+.sop-card-mini .c-meta {
+  color: var(--txt-3);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.sop-card-mini .c-risk {
+  font-size: 10px;
+  margin-top: 4px;
+  color: var(--brand-orange);
+  font-weight: 700;
+}
+.sop-col-more {
+  text-align: center;
+  color: var(--txt-3);
+  font-size: 11px;
+  padding: 6px 0;
+  font-weight: 700;
+}
+.sop-col-cap {
+  text-align: center;
+  color: var(--purple);
+  font-size: 11px;
+  padding: 6px;
+  font-weight: 700;
+  background: rgba(167,139,250,.06);
+  border-radius: 4px;
+  margin-top: auto;
+}
+
+/* SOP 详情卡 */
+.sop-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.sop-detail {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 14px 12px;
+  border-top: 3px solid var(--gold);
+}
+.sop-detail.s1 { border-top-color: var(--cyan); }
+.sop-detail.s2 { border-top-color: var(--brand-orange); }
+.sop-detail.s3 { border-top-color: var(--gold); }
+.sop-detail.s4 { border-top-color: var(--green); }
+
+/* Step 3 内部子区 */
+.sop-substage {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(255,255,255,.06);
+}
+.sop-substage:first-child {
+  margin-top: 0; padding-top: 0; border-top: 0;
+}
+.sop-substage-label {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.sop-substage-label.normal {
+  background: rgba(0,212,255,.12);
+  color: var(--cyan);
+}
+.sop-substage-label.boost {
+  background: rgba(167,139,250,.15);
+  color: var(--purple);
+}
+.sop-substage-cap {
+  font-size: 9px;
+  color: var(--purple);
+  margin-left: 6px;
+  font-weight: 700;
+}
+.sop-card-mini .c-mode {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: 1px;
+}
+.sop-card-mini .c-mode.normal {
+  background: rgba(0,212,255,.1);
+  color: var(--cyan);
+}
+.sop-card-mini .c-mode.boost {
+  background: rgba(167,139,250,.15);
+  color: var(--purple);
+}
+.sop-detail-step {
+  font-size: 10px;
+  color: var(--txt-3);
+  letter-spacing: 1.8px;
+  font-weight: 800;
+}
+.sop-detail-title {
+  font-size: 15px;
+  font-weight: 900;
+  margin: 6px 0 12px;
+  letter-spacing: .5px;
+}
+.sop-detail-title small {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--txt-3);
+  margin-left: 4px;
+  letter-spacing: 1px;
+}
+.sop-row { margin-bottom: 8px; }
+.sop-row-label {
+  font-size: 10px;
+  color: var(--txt-3);
+  letter-spacing: 1.5px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.sop-row-val {
+  font-size: 12px;
+  color: var(--txt-2);
+  line-height: 1.55;
+}
+.sop-row-val.goal {
+  color: var(--gold);
+  font-weight: 700;
+}
+.sop-row-val.goal.green { color: var(--green); }
+.sop-detail-foot {
+  font-size: 10.5px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  color: var(--txt-3);
+  line-height: 1.55;
+}
+.sop-detail-foot.warn { color: var(--brand-orange); }
+
+/* 方成的旅程 */
+.fang-journey {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-top: 24px;
+}
+.fang-journey-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.fang-journey-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.fang-journey-sub {
+  font-size: 11px;
+  color: var(--txt-3);
+  margin-top: 4px;
+}
+.fang-risks {
+  text-align: right;
+}
+.fang-risks > div {
+  font-size: 11px;
+  color: var(--brand-orange);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.fang-step {
+  display: grid;
+  grid-template-columns: 120px 140px 1fr;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+  align-items: center;
+}
+.fang-step:last-child { border-bottom: 0; }
+.fang-step.now {
+  background: linear-gradient(90deg, rgba(255,107,53,.08), transparent);
+  margin: 0 -22px;
+  padding: 12px 22px;
+}
+.fang-date {
+  font-size: 12px;
+  color: var(--txt-3);
+  font-weight: 700;
+}
+.fang-step.done .fang-date { color: var(--green); }
+.fang-step.now .fang-date {
+  color: var(--brand-orange);
+  font-weight: 900;
+}
+.fang-step-name {
+  font-size: 13px;
+  font-weight: 800;
+}
+.fang-step.done .fang-step-name { color: var(--green); }
+.fang-step.now .fang-step-name { color: var(--brand-orange); }
+.fang-step-status {
+  font-size: 10px;
+  color: var(--txt-3);
+  margin-left: 6px;
+  padding: 1px 7px;
+  background: rgba(255,255,255,.04);
+  border-radius: 999px;
+  vertical-align: 1px;
+}
+.fang-step.done .fang-step-status {
+  color: var(--green);
+  background: rgba(16,185,129,.12);
+}
+.fang-step.now .fang-step-status {
+  color: var(--brand-orange);
+  background: rgba(255,107,53,.14);
+}
+.fang-step.warn .fang-step-status {
+  color: var(--brand-orange);
+}
+.fang-step-desc {
+  font-size: 12px;
+  color: var(--txt-2);
+  line-height: 1.55;
+}
+
+/* ============ FOOTER NOTE ============ */
+.proto-note {
+  margin-top: 32px;
+  padding: 16px 20px;
+  background: rgba(255,209,102,.05);
+  border-left: 3px solid var(--gold);
+  border-radius: 8px;
+  font-size: 12px; color: var(--txt-2); line-height: 1.7;
+}
+.proto-note b { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">保心上人 v2</div>
+    <div class="topbar-crumb">客户档案 / <b>成交客户工作台</b></div>
+  </div>
+  <div class="topbar-user">崔伟 · 管理员 <b>▾</b></div>
+</div>
+
+<!-- ============ VIEW SWITCHER(管理员才有) ============ -->
+<div class="view-switcher">
+  <span class="view-switcher-label">⊳ 视角切换</span>
+  <div class="view-btn active" data-view="all">🏢 全公司汇总 <span class="count">467</span></div>
+  <div class="view-btn" data-view="jiangning">👤 江宁 <span class="count">157</span></div>
+  <div class="view-btn" data-view="linfuxian">👤 林付贤 <span class="count">149</span></div>
+  <div class="view-btn" data-view="lihao">👤 李颢 <span class="count">54</span></div>
+  <div class="view-btn" data-view="makangting">👤 马康挺 <span class="count">17</span></div>
+  <div class="view-btn zombie" data-view="zombie">👻 挂尸客户(原规划师已离职) <span class="count">90</span></div>
+</div>
+
+<div class="container">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-head">
+      <div>
+        <div class="hero-title" data-bind="title">👋 林付贤,你今天有 <b>5 件事</b>要做</div>
+        <div class="hero-subtitle" data-bind="subtitle">资深规划师 · 在管 149 户成交客户 · 历史累计应交保费 <b style="color:var(--gold);">7,057 万</b></div>
+      </div>
+      <div class="hero-health">
+        <span data-bind="healthLabel">客户健康度 ·</span>
+        <div class="hero-health-val" data-bind="health">62 / 100</div>
+        <div data-bind="healthDesc" style="color:var(--brand-orange);">⚠ 中等(行业平均 75)</div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-label" data-bind="stat1Label">⊳ 在管成交客户</div>
+        <div class="stat-val" data-bind="stat1Val">149<span class="unit">户</span></div>
+        <div class="stat-foot" data-bind="stat1Foot">同比 +12 户(去年 137)</div>
+      </div>
+      <div class="stat" style="border-color:rgba(255,209,102,.3);">
+        <div class="stat-label" style="color:var(--gold);">⊳ 历史累计应交保费</div>
+        <div class="stat-val" style="color:var(--gold);" data-bind="stat2Val">7,057<span class="unit">万</span></div>
+        <div class="stat-foot good" data-bind="stat2Foot">Top 4 户(L4)撑起 1,633 万 · 23%</div>
+      </div>
+      <div class="stat" style="border-color:rgba(255,107,53,.4);">
+        <div class="stat-label" style="color:var(--brand-orange);" data-bind="stat3Label">⊳ 长期未联系</div>
+        <div class="stat-val" style="color:var(--brand-orange);" data-bind="stat3Val">20<span class="unit">户真实失联 + 67 数据待补</span></div>
+        <div class="stat-foot warn" data-bind="stat3Foot">⚠ 老接口口径 = 46.3% 一年未联系</div>
+      </div>
+      <div class="stat" style="border-color:rgba(239,68,68,.4);">
+        <div class="stat-label" style="color:var(--red);" data-bind="stat4Label">⊳ 30 天内续期</div>
+        <div class="stat-val" style="color:var(--red);" data-bind="stat4Val">12<span class="unit">户</span></div>
+        <div class="stat-foot warn" data-bind="stat4Foot">合计保费 187 万,不能掉</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 第 1 层 · 今日待办 ============ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <span class="num">1</span>
+        ⚡ 今日待办 · 系统主动推送的 5 件事
+      </div>
+      <div class="section-hint">每天早上 8:00 自动刷新 · 也可手动 [换一批]</div>
+    </div>
+
+    <div class="todo-grid" data-bind="todoGrid">
+
+      <!-- 生日 -->
+      <div class="todo-card t-birthday">
+        <div class="todo-tag">🎂 生日 3 天内</div>
+        <div class="todo-customer">梅子广州 <span class="todo-level lv-L3">L3</span></div>
+        <div class="todo-desc">5 月 24 日生日 · 大富翁 3.0 总应交 100 万 · 89 天没联系</div>
+        <div class="todo-meta">
+          <span>📞 上次联系 89 天前</span>
+          <span style="color:var(--brand-orange);">L3 高净值</span>
+        </div>
+        <button class="todo-action">发送祝福话术 ▸</button>
+      </div>
+
+      <!-- 续期 -->
+      <div class="todo-card t-renewal">
+        <div class="todo-tag">🔥 续期 30 天内</div>
+        <div class="todo-customer">李建伟 <span class="todo-level lv-L3">L3</span></div>
+        <div class="todo-desc">大富翁 3.0 · 总应交 100 万 · 年缴 10 万 · 6 月 8 日扣款</div>
+        <div class="todo-meta">
+          <span>📞 上次联系 43 天前</span>
+          <span style="color:var(--red);">未确认续期</span>
+        </div>
+        <button class="todo-action">续期提醒话术 ▸</button>
+      </div>
+
+      <!-- 大单跟进 -->
+      <div class="todo-card t-bigdeal">
+        <div class="todo-tag">💎 大单跟进</div>
+        <div class="todo-customer">方成 <span class="todo-level lv-L4">L4</span></div>
+        <div class="todo-desc">三张大单累计 <b style="color:var(--gold);">687 万</b> · Top 1 客户 32 天无动作</div>
+        <div class="todo-meta">
+          <span>📞 上次联系 32 天前</span>
+          <span style="color:var(--gold);">Top 1 超高净值</span>
+        </div>
+        <button class="todo-action">推荐打电话 ▸</button>
+      </div>
+
+      <!-- 半年没碰 -->
+      <div class="todo-card t-wake">
+        <div class="todo-tag">💔 半年未联系</div>
+        <div class="todo-customer">AmandaLiu1 <span class="todo-level lv-L4">L4</span></div>
+        <div class="todo-desc">恒大万年禧 <b style="color:var(--gold);">500 万</b> · 213 天没联系,Top 2 客户在变冷</div>
+        <div class="todo-meta">
+          <span>📞 上次联系 213 天前</span>
+          <span style="color:var(--red);">急需破冰</span>
+        </div>
+        <button class="todo-action">破冰话术 ▸</button>
+      </div>
+
+      <!-- 加保机会 -->
+      <div class="todo-card t-cross">
+        <div class="todo-tag">➕ 加保机会</div>
+        <div class="todo-customer">lc5811 <span class="todo-level lv-L3">L3</span></div>
+        <div class="todo-desc">傲珑创富 总应交 175 万 · 配偶 41 岁尚未配置重疾,3 个产品匹配</div>
+        <div class="todo-meta">
+          <span>📞 上次联系 18 天前</span>
+          <span style="color:var(--cyan);">AI 推荐</span>
+        </div>
+        <button class="todo-action">看加保方案 ▸</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 第 2 层 · 分级地图 ============ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <span class="num">2</span>
+        📊 我的客户分级地图
+      </div>
+      <div class="section-hint">点击任意一行 · 直接进入对应分级的明细</div>
+    </div>
+
+    <div class="map-card">
+
+      <div class="map-row">
+        <div>
+          <div class="map-tier" style="color:var(--gold);">🌟 L4 超高净值</div>
+          <div class="map-tier-desc">累计应交 200 万+</div>
+        </div>
+        <div class="map-bar-wrap">
+          <div class="map-bar" data-bind="L4Bar" style="width:8%;background:linear-gradient(90deg,var(--gold),rgba(255,209,102,.4));"></div>
+          <span class="map-bar-label" data-bind="L4Label">4 户 · 1,633 万</span>
+        </div>
+        <div class="map-cnt" style="color:var(--gold);"><span data-bind="L4Cnt">4</span><span class="unit">户</span></div>
+        <div class="map-warn" data-bind="L4Warn">⚠ 3 户 1 年没联系</div>
+        <div class="map-cta" data-bind="L4Cta">看 4 户明细 ▸</div>
+      </div>
+
+      <div class="map-row">
+        <div>
+          <div class="map-tier" style="color:var(--brand-orange);">💎 L3 高净值</div>
+          <div class="map-tier-desc">累计应交 50 - 200 万</div>
+        </div>
+        <div class="map-bar-wrap">
+          <div class="map-bar" data-bind="L3Bar" style="width:34%;background:linear-gradient(90deg,var(--brand-orange),rgba(255,107,53,.4));"></div>
+          <span class="map-bar-label" data-bind="L3Label">42 户 · 3,377 万</span>
+        </div>
+        <div class="map-cnt" style="color:var(--brand-orange);"><span data-bind="L3Cnt">42</span><span class="unit">户</span></div>
+        <div class="map-warn" data-bind="L3Warn">⚠ 14 户 1 年没联系</div>
+        <div class="map-cta" data-bind="L3Cta">看 42 户明细 ▸</div>
+      </div>
+
+      <div class="map-row">
+        <div>
+          <div class="map-tier" style="color:var(--green);">🟢 L2 优质</div>
+          <div class="map-tier-desc">累计应交 20 - 50 万</div>
+        </div>
+        <div class="map-bar-wrap">
+          <div class="map-bar" data-bind="L2Bar" style="width:42%;background:linear-gradient(90deg,var(--green),rgba(16,185,129,.4));"></div>
+          <span class="map-bar-label" data-bind="L2Label">51 户 · 1,561 万</span>
+        </div>
+        <div class="map-cnt" style="color:var(--green);"><span data-bind="L2Cnt">51</span><span class="unit">户</span></div>
+        <div class="map-warn" data-bind="L2Warn">⚠ 23 户 1 年没联系</div>
+        <div class="map-cta" data-bind="L2Cta">看 51 户明细 ▸</div>
+      </div>
+
+      <div class="map-row">
+        <div>
+          <div class="map-tier" style="color:var(--cyan);">🟠 L1 标准</div>
+          <div class="map-tier-desc">累计应交 5 - 20 万</div>
+        </div>
+        <div class="map-bar-wrap">
+          <div class="map-bar" data-bind="L1Bar" style="width:34%;background:linear-gradient(90deg,var(--cyan),rgba(0,212,255,.4));"></div>
+          <span class="map-bar-label" data-bind="L1Label">42 户 · 460 万</span>
+        </div>
+        <div class="map-cnt" style="color:var(--cyan);"><span data-bind="L1Cnt">42</span><span class="unit">户</span></div>
+        <div class="map-warn" data-bind="L1Warn">⚠ 23 户 1 年没联系</div>
+        <div class="map-cta" data-bind="L1Cta">看 42 户明细 ▸</div>
+      </div>
+
+      <div class="map-row">
+        <div>
+          <div class="map-tier" style="color:var(--txt-2);">🔵 L0 入门</div>
+          <div class="map-tier-desc">累计应交 &lt;5 万</div>
+        </div>
+        <div class="map-bar-wrap">
+          <div class="map-bar" data-bind="L0Bar" style="width:8%;background:linear-gradient(90deg,#6b7a92,rgba(107,122,146,.3));"></div>
+          <span class="map-bar-label" data-bind="L0Label">10 户 · 27 万</span>
+        </div>
+        <div class="map-cnt" style="color:var(--txt-2);"><span data-bind="L0Cnt">10</span><span class="unit">户</span></div>
+        <div class="map-warn zombie" data-bind="L0Warn">7 户疑似数据不全</div>
+        <div class="map-cta" data-bind="L0Cta">看 10 户明细 ▸</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 第 3 层 · L4 客户 SOP 流水线 ============ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <span class="num">3</span>
+        🎯 L4 客户 SOP 流水线 · 4 Step 状态机
+      </div>
+      <div class="section-hint">客户卡片在 4 列间流转 · 终极目标:做新方案 · Step 3 大招"保单整理"有 5 户载量上限 · <span style="color:var(--cyan);">当前显示全公司 14 户 L4 · 视角切换暂未联动 SOP 段</span></div>
+    </div>
+
+    <div class="sop-wrap">
+
+      <!-- ===== Swimlane: 4 列看板 ===== -->
+      <div class="sop-pipeline">
+
+        <!-- Step 1 电话激活 -->
+        <div class="sop-col">
+          <div class="sop-col-head">
+            <div class="sop-col-step">STEP 1</div>
+            <div class="sop-col-name">📞 电话激活</div>
+            <div class="sop-col-cnt">8 户 · 待打第 1 通</div>
+          </div>
+          <div class="sop-col-body">
+            <div class="sop-card-mini">
+              <div class="c-name">田军 <span class="c-tag">L4</span></div>
+              <div class="c-meta">726 万 · 张苏源(挂尸)</div>
+              <div class="c-risk">🚩 挂尸优先</div>
+            </div>
+            <div class="sop-card-mini">
+              <div class="c-name">苗苗 <span class="c-tag">L4</span></div>
+              <div class="c-meta">615 万 · 冀晓丹(离职)</div>
+              <div class="c-risk">🚩 挂尸优先</div>
+            </div>
+            <div class="sop-card-mini">
+              <div class="c-name">皮(止语) <span class="c-tag">L4</span></div>
+              <div class="c-meta">240 万 · 林付贤</div>
+              <div class="c-risk">⚠ 离职风险</div>
+            </div>
+            <div class="sop-card-mini">
+              <div class="c-name">严杰 <span class="c-tag">L4</span></div>
+              <div class="c-meta">205 万 · 林付贤</div>
+              <div class="c-risk">⚠ 离职风险</div>
+            </div>
+            <div class="sop-col-more">+ 4 户...</div>
+          </div>
+        </div>
+
+        <!-- Step 2 邮寄礼物 -->
+        <div class="sop-col">
+          <div class="sop-col-head">
+            <div class="sop-col-step">STEP 2</div>
+            <div class="sop-col-name">🎁 邮寄礼物</div>
+            <div class="sop-col-cnt">1 户 · 礼物送达中</div>
+          </div>
+          <div class="sop-col-body">
+            <div class="sop-card-mini flash">
+              <div class="c-name">方成 <span class="c-tag">L4</span><span class="c-pr">🔴 今日</span></div>
+              <div class="c-meta">687.5 万 · 林付贤</div>
+              <div class="c-meta" style="margin-top:4px;">📦 5/23 寄端午礼物</div>
+              <div class="c-risk">⚠ 经纪人邻居 + 离职风险</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 价值输出 (内部分两子区) -->
+        <div class="sop-col">
+          <div class="sop-col-head">
+            <div class="sop-col-step">STEP 3</div>
+            <div class="sop-col-name">📋 价值输出</div>
+            <div class="sop-col-cnt">4 户 · 1 月观察 → 升级大招</div>
+          </div>
+          <div class="sop-col-body">
+
+            <!-- 子区 1: 资料发布期 (常规) -->
+            <div class="sop-substage">
+              <div class="sop-substage-label normal">📨 资料发布期 · 0-30 天</div>
+              <div class="sop-card-mini">
+                <div class="c-name">AmandaLiu1 <span class="c-tag">L4</span><span class="c-mode normal">发资料</span></div>
+                <div class="c-meta">500 万 · 林付贤</div>
+                <div class="c-meta" style="margin-top:4px;">观察 12 天 · 未索取</div>
+              </div>
+              <div class="sop-card-mini">
+                <div class="c-name">牙膏 <span class="c-tag">L4</span><span class="c-mode normal">发资料</span></div>
+                <div class="c-meta">450 万 · 江宁</div>
+                <div class="c-meta" style="margin-top:4px;">观察 18 天 · 未索取</div>
+              </div>
+              <div class="sop-card-mini">
+                <div class="c-name">旭日带业 <span class="c-tag">L4</span><span class="c-mode normal">发资料</span></div>
+                <div class="c-meta">314 万 · 江宁</div>
+                <div class="c-meta" style="margin-top:4px;">观察 25 天 · 未索取</div>
+                <div class="c-risk">⏰ 5 天后可升级保单整理</div>
+              </div>
+            </div>
+
+            <!-- 子区 2: 保单整理 (大招) -->
+            <div class="sop-substage">
+              <div class="sop-substage-label boost">🔧 保单整理 · 终极大招<span class="sop-substage-cap">1 / 5 载量</span></div>
+              <div class="sop-card-mini">
+                <div class="c-name">向往神鹰 <span class="c-tag">L4</span><span class="c-mode boost">保单整理</span></div>
+                <div class="c-meta">443 万 · 马康挺</div>
+                <div class="c-meta" style="margin-top:4px;">家庭保障地图制作中</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Step 4 方案提报 -->
+        <div class="sop-col">
+          <div class="sop-col-head">
+            <div class="sop-col-step">STEP 4</div>
+            <div class="sop-col-name">💼 方案提报</div>
+            <div class="sop-col-cnt">1 户 · 方案已交付</div>
+          </div>
+          <div class="sop-col-body">
+            <div class="sop-card-mini">
+              <div class="c-name">青山水自流 <span class="c-tag">L4</span></div>
+              <div class="c-meta">300 万 · 江宁</div>
+              <div class="c-meta" style="margin-top:4px;">📑 5/15 已交付方案</div>
+              <div class="c-meta" style="margin-top:2px;">来源: Step 3 客户索取</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== 4 Step 的"动作 / 钩子 / 目标"详解 ===== -->
+      <div class="sop-details">
+
+        <div class="sop-detail s1">
+          <div class="sop-detail-step">STEP 1</div>
+          <div class="sop-detail-title">📞 电话激活</div>
+          <div class="sop-row">
+            <div class="sop-row-label">动作</div>
+            <div class="sop-row-val">打 1 通电话</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">钩子</div>
+            <div class="sop-row-val">① 节假日礼物<br>② 保单整理<br>③ 保单收益整理</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">目标</div>
+            <div class="sop-row-val goal">加上微信(创始人侧)</div>
+          </div>
+        </div>
+
+        <div class="sop-detail s2">
+          <div class="sop-detail-step">STEP 2</div>
+          <div class="sop-detail-title">🎁 邮寄礼物</div>
+          <div class="sop-row">
+            <div class="sop-row-label">动作</div>
+            <div class="sop-row-val">寄一份节日礼物 / 心意</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">钩子</div>
+            <div class="sop-row-val">节日(端午/中秋/年节) + 收件地址索要</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">目标</div>
+            <div class="sop-row-val goal">客户签收 + 借此完成微信通过</div>
+          </div>
+        </div>
+
+        <div class="sop-detail s3">
+          <div class="sop-detail-step">STEP 3</div>
+          <div class="sop-detail-title">📋 价值输出<small>含 30 天升级机制</small></div>
+
+          <div class="sop-row">
+            <div class="sop-row-label">动作 · 常规</div>
+            <div class="sop-row-val"><span class="c-mode normal" style="margin-right:4px;">发资料</span>遇到好产品, 精炼价值点, 发给客户</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">钩子 · 常规</div>
+            <div class="sop-row-val">产品资料</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">目标 · 常规</div>
+            <div class="sop-row-val goal">引导客户主动索取详细资料 = 暴露需求</div>
+          </div>
+
+          <div class="sop-detail-foot" style="border-top-color:var(--purple);padding-top:10px;margin-top:12px;">
+            <b style="color:var(--purple);">🔧 30 天升级大招: 保单整理</b><br>
+            <span style="color:var(--txt-2);font-size:11px;line-height:1.55;">
+              <b>动作:</b> 收全家保单 → 做家庭保障地图 → 出漏洞分析报告<br>
+              <b>钩子:</b> "我看了下您家保障结构, 想跟您过一下整体"<br>
+              <b>目标:</b> 找漏洞 → 让客户自己看到需求<br>
+              <b style="color:var(--brand-orange);">⚠ 重投入</b> 3-5 小时/户, 同时在押上限 5 户
+            </span>
+          </div>
+
+          <div class="sop-detail-foot">
+            <b style="color:var(--green);">→ 退出 Step 3 的两条路径:</b><br>
+            ✅ 客户索取 → Step 4<br>
+            🔧 触发保单整理大招 → 找到漏洞 → Step 4
+          </div>
+        </div>
+
+        <div class="sop-detail s4">
+          <div class="sop-detail-step">STEP 4</div>
+          <div class="sop-detail-title">💼 方案提报</div>
+          <div class="sop-row">
+            <div class="sop-row-label">动作</div>
+            <div class="sop-row-val">出 PPT / 对比表 / 上门讲解</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">钩子</div>
+            <div class="sop-row-val">已识别的需求 / 漏洞 + 匹配产品</div>
+          </div>
+          <div class="sop-row">
+            <div class="sop-row-label">目标</div>
+            <div class="sop-row-val goal green">客户接受新方案 → 新成交 = 新业绩</div>
+          </div>
+          <div class="sop-detail-foot">
+            <b>来源 2 条路径:</b><br>
+            • 客户在 Step 3 主动索取资料<br>
+            • Step 3 升级保单整理找到漏洞
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== 方成案例 ===== -->
+      <div class="fang-journey">
+        <div class="fang-journey-head">
+          <div>
+            <div class="fang-journey-title">🌟 案例: 方成 L4 · 累计 687.5 万</div>
+            <div class="fang-journey-sub">2022-11 入档 · 林付贤主管 → 创始人接管中(因 7 月可能离职)</div>
+          </div>
+          <div class="fang-risks">
+            <div>⚠ 经纪人邻居型 · 毛利薄</div>
+            <div>⚠ 离职风险 · 关系迁移期</div>
+          </div>
+        </div>
+
+        <div class="fang-step done">
+          <div class="fang-date">2026-05-22</div>
+          <div>
+            <span class="fang-step-name">Step 1 电话激活</span>
+            <span class="fang-step-status">✓ 已完成</span>
+          </div>
+          <div class="fang-step-desc">📞 端午 + 1 周年双钩子 · 通话 5 分钟 · 客户同意让付贤推创始人微信</div>
+        </div>
+
+        <div class="fang-step now">
+          <div class="fang-date">2026-05-23</div>
+          <div>
+            <span class="fang-step-name">Step 2 邮寄礼物</span>
+            <span class="fang-step-status">🔴 进行中</span>
+          </div>
+          <div class="fang-step-desc">🎁 寄端午礼物(云片糕) · 借收件地址自然加创始人微信</div>
+        </div>
+
+        <div class="fang-step">
+          <div class="fang-date">5/26 - 6/26</div>
+          <div>
+            <span class="fang-step-name">Step 3 价值输出</span>
+            <span class="fang-step-status">📨 资料发布期</span>
+          </div>
+          <div class="fang-step-desc">📋 发港险盛利 1 周年现价 / 增多多新年度现价 / 内地利率走势分析 · 等客户主动索取</div>
+        </div>
+
+        <div class="fang-step warn">
+          <div class="fang-date">6/26+</div>
+          <div>
+            <span class="fang-step-name">Step 3 升级大招</span>
+            <span class="fang-step-status" style="background:rgba(167,139,250,.14);color:var(--purple);">🔧 保单整理</span>
+          </div>
+          <div class="fang-step-desc">若 30 天无反应 → 启动保单整理大招 · 主动梳理 3 张单 + 探询家人保单 · <b style="color:var(--brand-orange);">借此深化信任,完成关系迁移</b></div>
+        </div>
+
+        <div class="fang-step warn">
+          <div class="fang-date">7 月+</div>
+          <div>
+            <span class="fang-step-name">Step 4 方案提报</span>
+            <span class="fang-step-status" style="color:var(--brand-orange);background:rgba(255,107,53,.14);">🚫 战略不进</span>
+          </div>
+          <div class="fang-step-desc">💼 经纪人邻居型 · 战略目标是<b style="color:var(--brand-orange);">关系迁移而非新单</b>(老婆懂行,新方案易被拿去比价) · 完成 Step 3 保单整理大招后,<b>停在这里不强推 Step 4</b></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 第 4 层 · 明细 Tab ============ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <span class="num">4</span>
+        📋 客户明细 · 按动作场景切换视图
+      </div>
+      <div class="section-hint">默认按"未联系天数"排序 · 可点列头切换</div>
+    </div>
+
+    <div class="tab-card">
+      <div class="tabs">
+        <div class="tab">全部 <span class="tab-cnt">149</span></div>
+        <div class="tab active">即将续期 <span class="tab-cnt">12</span></div>
+        <div class="tab">真实失联 <span class="tab-cnt">20</span></div>
+        <div class="tab">加保机会 <span class="tab-cnt">23</span></div>
+        <div class="tab">转介绍机会 <span class="tab-cnt">15</span></div>
+        <div class="tab">数据待补 <span class="tab-cnt">67</span></div>
+      </div>
+
+      <table class="detail">
+        <thead>
+          <tr>
+            <th style="width:60px;">分级</th>
+            <th style="width:150px;">客户姓名</th>
+            <th>已购产品</th>
+            <th style="width:110px;">累计保费</th>
+            <th style="width:110px;">续期日</th>
+            <th style="width:110px;">最近联系</th>
+            <th style="width:160px;">下一步建议</th>
+            <th style="width:170px;">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><span class="todo-level lv-L4">L4</span></td>
+            <td class="cust-name">方成</td>
+            <td>盛利儲蓄計劃 + 增多多3号 + 国联益利多</td>
+            <td><b style="color:var(--gold);">687 万</b></td>
+            <td class="warn-cell">2026-05-28(7 天)</td>
+            <td class="warn-cell">32 天前</td>
+            <td>续期 + Top 1 大单双触发</td>
+            <td>
+              <button class="action-btn gold">续期跟进</button>
+              <button class="action-btn">沟通</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="todo-level lv-L4">L4</span></td>
+            <td class="cust-name">AmandaLiu1 <span class="zombie-flag">213 天未联系</span></td>
+            <td>恒大万年禧两全</td>
+            <td><b style="color:var(--gold);">500 万</b></td>
+            <td class="warn-cell">2026-06-14(24 天)</td>
+            <td class="danger-cell">213 天前</td>
+            <td>Top 2 客户 · 必须先破冰再谈续期</td>
+            <td>
+              <button class="action-btn danger">破冰话术</button>
+              <button class="action-btn">沟通</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="todo-level lv-L4">L4</span></td>
+            <td class="cust-name">三0614皮</td>
+            <td>增多多3号 + 弘康金玉满堂</td>
+            <td><b style="color:var(--gold);">240 万</b></td>
+            <td class="warn-cell">2026-06-09(19 天)</td>
+            <td class="warn-cell">56 天前</td>
+            <td>L4 客户长期无动作 · 优先打电话</td>
+            <td>
+              <button class="action-btn gold">续期跟进</button>
+              <button class="action-btn">沟通</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="todo-level lv-L3">L3</span></td>
+            <td class="cust-name">lc5811</td>
+            <td>傲珑创富</td>
+            <td>175 万</td>
+            <td class="warn-cell">2026-06-12(22 天)</td>
+            <td class="good-cell">18 天前</td>
+            <td>配偶可加保(AI 已匹配 3 款)</td>
+            <td>
+              <button class="action-btn gold">续期跟进</button>
+              <button class="action-btn">加保推荐</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="todo-level lv-L3">L3</span></td>
+            <td class="cust-name">李建伟</td>
+            <td>大富翁 3.0</td>
+            <td>100 万</td>
+            <td class="warn-cell">2026-06-08(18 天)</td>
+            <td class="warn-cell">43 天前</td>
+            <td>1 张大单 · 可推家庭重疾</td>
+            <td>
+              <button class="action-btn gold">续期跟进</button>
+              <button class="action-btn">加保推荐</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="todo-level lv-L3">L3</span></td>
+            <td class="cust-name">梅子广州79年</td>
+            <td>大富翁 3.0</td>
+            <td>100 万</td>
+            <td class="warn-cell">2026-06-15(25 天)</td>
+            <td class="warn-cell">89 天前</td>
+            <td>生日前 3 天 · 先祝福再聊续期</td>
+            <td>
+              <button class="action-btn gold">发祝福</button>
+              <button class="action-btn">续期跟进</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="todo-level lv-L3">L3</span></td>
+            <td class="cust-name">郭欣</td>
+            <td>盛世金账户</td>
+            <td>68 万</td>
+            <td>2026-06-19(29 天)</td>
+            <td class="warn-cell">43 天前</td>
+            <td>L3 加保潜力大 · 推年金</td>
+            <td>
+              <button class="action-btn">续期跟进</button>
+              <button class="action-btn">加保推荐</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ 原型说明 ============ -->
+  <div class="proto-note">
+    <b>📌 原型说明:</b>
+    这是"成交客户库"页面的<b>未来形态</b>原型 —— 从"统计报表"升级为"工作台 + SOP 流水线"。
+    数据基于林付贤的真实 149 户成交客户(2026-05-19 快照)+ 方成案例真实开发流程。<br/>
+    关键变化:<b>① 系统主动推送 5 件事</b>(不再让规划师自己看大表判断)·
+    <b>② 客户分级地图</b>(L0-L4 一目了然,知道精力该投在哪)·
+    <b>③ L4 客户 SOP 流水线</b>(4 Step 状态机:电话激活 → 邮寄礼物 → 价值输出 → 方案提报,终极目标做新方案)·
+    <b>④ 明细表多 Tab 切换</b>(全部/即将续期/长时未联系/加保机会/转介绍机会)·
+    <b>⑤ 每行都有"下一步建议"</b>(规划师不用思考,直接动手)·
+    <b>⑥ 客户健康度评分</b>(综合指标,一眼看出自己存量经营做得怎么样)。<br/><br/>
+
+    <b>📐 SOP 设计原则:</b>
+    <b>每个 Step 都用"动作 + 钩子 + 目标"三层结构描述</b> —— 动作=要做的事,钩子=为什么客户会接受这件事,目标=达成后进入下一 Step 的钥匙。
+    <b>Step 3 价值输出</b> 内部有两种动作模式:
+    <span style="color:var(--cyan);font-weight:700;">常规模式 = 发产品资料</span>(轻投入,等客户主动索取);
+    <span style="color:var(--purple);font-weight:700;">大招模式 = 保单整理</span>(30 天无反应触发的"终极激活铲" — 主动梳理客户全家保单出漏洞分析报告,让客户自己看到需求)。
+    保单整理重投入(每户 3-5 小时), 同时在押上限 5 户。
+    <b>退出 Step 3 进 Step 4 的 2 条路径:</b> ① 客户主动索取资料 ② 保单整理找到漏洞。<br/><br/>
+
+    <b>🌟 方成案例:</b> 这套 4 Step SOP 在方成身上的真实演绎 —— L4 客户(687.5 万)+ 经纪人邻居型(老婆懂行,毛利薄)+ 离职风险(付贤 7 月走)。
+    创始人级介入,5 周内完成关系从原规划师到创始人的迁移,战略上 <b style="color:var(--brand-orange);">停在 Step 3 保单整理大招完成不进 Step 4</b>(保关系而非挖新单 — 保单整理本身就是关系迁移的最深一层信任建立)。
+    这种"针对客户特性给不同终态"的能力,是这套 SOP 看板的核心价值 —— <b>不是每个客户都要走完 1 → 4,有的客户在 Step 3 大招完成就是最优解</b>。
+  </div>
+
+</div>
+
+<script>
+// ============ 多视角数据 ============
+const VIEW_DATA = {
+  all: {
+    title: '🏢 全公司汇总 · <b>467 户</b>成交客户 · <b>234</b> 件待办',
+    subtitle: '12 位规划师(在职 4 + 离职 8)· 累计应交保费 <b style="color:var(--gold);">2.01 亿</b>',
+    health: '58 / 100', healthDesc: '⚠ 偏低(挂尸 + 失联占 50%)',
+    stat1Label: '⊳ 全公司成交客户', stat1Val: '467<span class="unit">户</span>', stat1Foot: '在职 377 + 挂尸 90',
+    stat2Val: '2.01<span class="unit">亿</span>', stat2Foot: 'Top 14 户(L4)撑起 27% 保费',
+    stat3Label: '⊳ 1 年未联系', stat3Val: '234<span class="unit">户 · 50%</span>', stat3Foot: '⚠ 含挂尸 84 + 在职 150',
+    stat4Label: '⊳ 挂尸客户(原规划师离职)', stat4Val: '90<span class="unit">户 · 4,384 万</span>', stat4Foot: '⚠ 占总保费 22%,无人维护',
+    levels: {
+      L4: {bar:14, cnt:14, label:'14 户 · 5,467 万', warn:'⚠ 9 户 1 年没联系',  cta:'看 14 户明细 ▸'},
+      L3: {bar:24, cnt:112,label:'112 户 · 8,920 万',warn:'⚠ 54 户 1 年没联系',cta:'看 112 户明细 ▸'},
+      L2: {bar:28, cnt:130,label:'130 户 · 3,869 万',warn:'⚠ 78 户 1 年没联系',cta:'看 130 户明细 ▸'},
+      L1: {bar:36, cnt:168,label:'168 户 · 1,753 万',warn:'⚠ 93 户 1 年没联系',cta:'看 168 户明细 ▸'},
+      L0: {bar:10, cnt:43, label:'43 户 · 114 万',   warn:'7 户疑似数据不全',  cta:'看 43 户明细 ▸'},
+    }
+  },
+  jiangning: {
+    title: '👤 江宁 · 在管 <b>157 户</b>成交客户',
+    subtitle: '资深规划师 · 累计应交保费 <b style="color:var(--gold);">5,889 万</b> · 1 年未联系 40.5%',
+    health: '65 / 100', healthDesc: '⚠ 中等(行业平均 75)',
+    stat1Val: '157<span class="unit">户</span>', stat1Foot: '全公司 #1',
+    stat2Val: '5,889<span class="unit">万</span>', stat2Foot: 'Top 5 户(L4)撑起 1,650 万 · 28%',
+    stat3Label: '⊳ 1 年未联系', stat3Val: '64<span class="unit">户 · 40.5%</span>', stat3Foot: '⚠ 急需唤醒',
+    stat4Label: '⊳ 30 天内续期', stat4Val: '10<span class="unit">户</span>', stat4Foot: '合计 165 万,不能掉',
+    levels: {
+      L4: {bar:8,  cnt:5,  label:'5 户 · 1,650 万',  warn:'⚠ 2 户 1 年没联系', cta:'看 5 户明细 ▸'},
+      L3: {bar:24, cnt:31, label:'31 户 · 2,352 万', warn:'⚠ 13 户 1 年没联系',cta:'看 31 户明细 ▸'},
+      L2: {bar:28, cnt:39, label:'39 户 · 1,160 万', warn:'⚠ 21 户 1 年没联系',cta:'看 39 户明细 ▸'},
+      L1: {bar:50, cnt:68, label:'68 户 · 688 万',   warn:'⚠ 24 户 1 年没联系',cta:'看 68 户明细 ▸'},
+      L0: {bar:12, cnt:14, label:'14 户 · 39 万',    warn:'4 户疑似数据不全',  cta:'看 14 户明细 ▸'},
+    }
+  },
+  linfuxian: {
+    title: '👤 林付贤 · 在管 <b>149 户</b>成交客户',
+    subtitle: '资深规划师 · 累计应交保费 <b style="color:var(--gold);">7,057 万</b> · 1 年未联系 46.3%',
+    health: '62 / 100', healthDesc: '⚠ 中等(行业平均 75)',
+    stat1Val: '149<span class="unit">户</span>', stat1Foot: '全公司 #2 · 但 ARPU 最高',
+    stat2Val: '7,057<span class="unit">万</span>', stat2Foot: 'Top 4 户(L4)撑起 1,633 万 · 23%',
+    stat3Label: '⊳ 1 年未联系', stat3Val: '70<span class="unit">户 · 46.3%</span>', stat3Foot: '⚠ 失联率最高',
+    stat4Label: '⊳ 30 天内续期', stat4Val: '12<span class="unit">户</span>', stat4Foot: '合计 187 万,不能掉',
+    levels: {
+      L4: {bar:8,  cnt:4,  label:'4 户 · 1,633 万', warn:'⚠ 3 户 1 年没联系', cta:'看 4 户明细 ▸'},
+      L3: {bar:34, cnt:42, label:'42 户 · 3,377 万',warn:'⚠ 14 户 1 年没联系',cta:'看 42 户明细 ▸'},
+      L2: {bar:42, cnt:51, label:'51 户 · 1,561 万',warn:'⚠ 23 户 1 年没联系',cta:'看 51 户明细 ▸'},
+      L1: {bar:34, cnt:42, label:'42 户 · 460 万',  warn:'⚠ 23 户 1 年没联系',cta:'看 42 户明细 ▸'},
+      L0: {bar:8,  cnt:10, label:'10 户 · 27 万',   warn:'7 户疑似数据不全',  cta:'看 10 户明细 ▸'},
+    }
+  },
+  lihao: {
+    title: '👤 李颢 · 在管 <b>54 户</b>成交客户',
+    subtitle: '规划师 · 累计应交保费 <b style="color:var(--gold);">1,142 万</b> · 1 年未联系 27.3%',
+    health: '74 / 100', healthDesc: '✓ 良好(失联率最低)',
+    stat1Val: '54<span class="unit">户</span>', stat1Foot: '全公司 #3',
+    stat2Val: '1,142<span class="unit">万</span>', stat2Foot: 'L2/L3 为主,均衡型',
+    stat3Label: '⊳ 1 年未联系', stat3Val: '15<span class="unit">户 · 27.3%</span>', stat3Foot: '✓ 维护节奏最好',
+    stat4Label: '⊳ 30 天内续期', stat4Val: '5<span class="unit">户</span>', stat4Foot: '合计 38 万',
+    levels: {
+      L4: {bar:0,  cnt:0,  label:'0 户',           warn:'—',                cta:'—'},
+      L3: {bar:14, cnt:4,  label:'4 户 · 360 万',   warn:'⚠ 1 户 1 年没联系', cta:'看 4 户明细 ▸'},
+      L2: {bar:42, cnt:19, label:'19 户 · 540 万',  warn:'⚠ 5 户 1 年没联系', cta:'看 19 户明细 ▸'},
+      L1: {bar:42, cnt:20, label:'20 户 · 211 万',  warn:'⚠ 6 户 1 年没联系', cta:'看 20 户明细 ▸'},
+      L0: {bar:22, cnt:11, label:'11 户 · 31 万',   warn:'3 户疑似数据不全',  cta:'看 11 户明细 ▸'},
+    }
+  },
+  makangting: {
+    title: '👤 马康挺 · 在管 <b>17 户</b>成交客户',
+    subtitle: '规划师 · 累计应交保费 <b style="color:var(--gold);">1,651 万</b> · 1 年未联系 5.9%',
+    health: '88 / 100', healthDesc: '✓ 优秀(精品客户 · L3 集中)',
+    stat1Val: '17<span class="unit">户</span>', stat1Foot: '客户少但 ARPU 最高(97 万/户)',
+    stat2Val: '1,651<span class="unit">万</span>', stat2Foot: 'L3-L4 占 88%,典型高客经营',
+    stat3Label: '⊳ 1 年未联系', stat3Val: '1<span class="unit">户 · 5.9%</span>', stat3Foot: '✓ 维护到位',
+    stat4Label: '⊳ 30 天内续期', stat4Val: '3<span class="unit">户</span>', stat4Foot: '合计 480 万 · 大单密集',
+    levels: {
+      L4: {bar:7,  cnt:1,  label:'1 户 · 443 万', warn:'—',  cta:'看 1 户明细 ▸'},
+      L3: {bar:90, cnt:14, label:'14 户 · 1,196 万',warn:'—', cta:'看 14 户明细 ▸'},
+      L2: {bar:0,  cnt:0,  label:'0 户',          warn:'—',  cta:'—'},
+      L1: {bar:5,  cnt:1,  label:'1 户 · 10.5 万',warn:'—',  cta:'看 1 户明细 ▸'},
+      L0: {bar:5,  cnt:1,  label:'1 户 · 1.3 万', warn:'1 户疑似数据不全',cta:'看 1 户明细 ▸'},
+    }
+  },
+  zombie: {
+    title: '👻 挂尸客户 · <b>90 户</b>挂在已离职规划师名下',
+    subtitle: '8 位已离职规划师 · 累计应交保费 <b style="color:var(--purple);">4,384 万</b> · 93% 1 年没联系',
+    health: '12 / 100', healthDesc: '🚨 严重 · 全部需立即重新分配',
+    stat1Label: '⊳ 挂尸客户总数', stat1Val: '90<span class="unit">户</span>', stat1Foot: '8 位离职规划师名下',
+    stat2Val: '4,384<span class="unit">万</span>', stat2Foot: '占全公司保费 22%,无人维护',
+    stat3Label: '⊳ 1 年未联系', stat3Val: '84<span class="unit">户 · 93%</span>', stat3Foot: '🚨 几乎全员失联',
+    stat4Label: '⊳ 需立即重新分配', stat4Val: '90<span class="unit">户 · 全部</span>', stat4Foot: '建议本月内分配给在职规划师',
+    levels: {
+      L4: {bar:5,  cnt:3,  label:'3 户 · 张苏源/夏浦洋/赵海乔', warn:'🚨 1 户(张苏源 1,034万)挂着', cta:'立即分配 ▸'},
+      L3: {bar:20, cnt:18, label:'18 户 · 主要在赵海乔/冀晓丹', warn:'🚨 全部 90+ 天没联系', cta:'立即分配 ▸'},
+      L2: {bar:28, cnt:29, label:'29 户 · 8 位离职规划师名下',  warn:'🚨 27 户 1 年没联系',  cta:'立即分配 ▸'},
+      L1: {bar:30, cnt:31, label:'31 户 · 多为赵海乔/时丹丹',  warn:'🚨 全部 1 年没联系',   cta:'立即分配 ▸'},
+      L0: {bar:8,  cnt:9,  label:'9 户 · 小单客户',           warn:'优先级低,可暂缓',     cta:'看 9 户明细 ▸'},
+    }
+  }
+};
+
+// ============ 切换逻辑 ============
+function applyView(viewKey) {
+  const data = VIEW_DATA[viewKey];
+  if (!data) return;
+
+  // 更新所有 data-bind 标记的元素
+  const updates = {
+    title: data.title,
+    subtitle: data.subtitle,
+    healthLabel: viewKey === 'zombie' ? '挂尸危险度 ·' : '客户健康度 ·',
+    health: data.health,
+    healthDesc: data.healthDesc,
+    stat1Label: data.stat1Label || '⊳ 在管成交客户',
+    stat1Val: data.stat1Val,
+    stat1Foot: data.stat1Foot,
+    stat2Val: data.stat2Val,
+    stat2Foot: data.stat2Foot,
+    stat3Label: data.stat3Label,
+    stat3Val: data.stat3Val,
+    stat3Foot: data.stat3Foot,
+    stat4Label: data.stat4Label,
+    stat4Val: data.stat4Val,
+    stat4Foot: data.stat4Foot,
+  };
+
+  // 各层级
+  ['L4','L3','L2','L1','L0'].forEach(lv => {
+    const ld = data.levels[lv];
+    if (!ld) return;
+    updates[lv+'Label'] = ld.label;
+    updates[lv+'Cnt'] = ld.cnt;
+    updates[lv+'Warn'] = ld.warn;
+    updates[lv+'Cta'] = ld.cta;
+  });
+
+  Object.entries(updates).forEach(([k, v]) => {
+    const el = document.querySelector(`[data-bind="${k}"]`);
+    if (el && v !== undefined) el.innerHTML = v;
+  });
+
+  // 各层级 bar 宽度
+  ['L4','L3','L2','L1','L0'].forEach(lv => {
+    const ld = data.levels[lv];
+    if (!ld) return;
+    const bar = document.querySelector(`[data-bind="${lv}Bar"]`);
+    if (bar) bar.style.width = ld.bar + '%';
+  });
+
+  // 健康度颜色
+  const healthVal = document.querySelector('[data-bind="health"]');
+  if (healthVal) {
+    const score = parseInt(data.health);
+    if (score >= 80) healthVal.style.background = 'linear-gradient(135deg, var(--green), var(--cyan))';
+    else if (score >= 60) healthVal.style.background = 'linear-gradient(135deg, var(--brand-orange), var(--gold))';
+    else healthVal.style.background = 'linear-gradient(135deg, var(--red), var(--purple))';
+    healthVal.style.webkitBackgroundClip = 'text';
+    healthVal.style.webkitTextFillColor = 'transparent';
+  }
+}
+
+// 切换按钮事件
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-btn').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    applyView(btn.dataset.view);
+  });
+});
+
+// 默认展示全公司汇总
+applyView('all');
+
+// ============ 原有交互 ============
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+document.querySelectorAll('.todo-action, .action-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    btn.style.opacity = '.6';
+    setTimeout(() => btn.style.opacity = '1', 200);
+  });
+});
+document.querySelectorAll('.map-row').forEach(r => {
+  r.addEventListener('click', () => {
+    r.style.background = 'rgba(255,209,102,.04)';
+    setTimeout(() => r.style.background = '', 300);
+  });
+});
+</script>
+
+</body>
+</html>
