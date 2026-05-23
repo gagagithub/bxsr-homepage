@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>630 P2 公海库 · 保心上人</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-soft: #F9E79F;
+            --emerald: #34D399;
+            --emerald-deep: #047857;
+            --crimson: #EF4444;
+            --cyan: #22D3EE;
+            --bg: #0A0A0A;
+            --card: #161616;
+        }
+        body {
+            background: var(--bg);
+            color: #E5E5E5;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+        .gold-text { background: linear-gradient(to right, #D4AF37, #F9E79F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .emerald-text { background: linear-gradient(to right, #34D399, #A7F3D0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .crimson-text { background: linear-gradient(to right, #FCA5A5, #EF4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cyan-text { background: linear-gradient(to right, #67E8F9, #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* 档位徽章 */
+        .tier-s { background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.05)); border-color: rgba(212,175,55,0.5); }
+        .tier-a { background: linear-gradient(135deg, rgba(52,211,153,0.15), rgba(52,211,153,0.04)); border-color: rgba(52,211,153,0.45); }
+        .tier-b { background: linear-gradient(135deg, rgba(34,211,238,0.12), rgba(34,211,238,0.03)); border-color: rgba(34,211,238,0.35); }
+        .tier-c { background: linear-gradient(135deg, rgba(156,163,175,0.08), rgba(156,163,175,0.02)); border-color: rgba(156,163,175,0.25); }
+        .tier-x { background: linear-gradient(135deg, rgba(239,68,68,0.10), rgba(239,68,68,0.02)); border-color: rgba(239,68,68,0.30); }
+
+        .badge-s { background: rgba(212,175,55,0.18); color: #F9E79F; border: 1px solid rgba(212,175,55,0.5); }
+        .badge-a { background: rgba(52,211,153,0.15); color: #6EE7B7; border: 1px solid rgba(52,211,153,0.45); }
+        .badge-b { background: rgba(34,211,238,0.12); color: #67E8F9; border: 1px solid rgba(34,211,238,0.4); }
+        .badge-c { background: rgba(156,163,175,0.08); color: #9CA3AF; border: 1px solid rgba(156,163,175,0.3); }
+        .badge-x { background: rgba(239,68,68,0.12); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.4); }
+
+        /* 卡片 hover */
+        .customer-card { transition: all 0.3s ease; }
+        .customer-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .customer-card.tier-s:hover { box-shadow: 0 10px 40px rgba(212,175,55,0.2); }
+        .customer-card.tier-a:hover { box-shadow: 0 10px 40px rgba(52,211,153,0.18); }
+
+        /* 卡片消失动画（被别人捞走 / 自己捞了） */
+        .card-vanishing { opacity: 0; transform: scale(0.9); pointer-events: none; transition: all 0.5s ease; }
+
+        /* tab 选中 */
+        .tab-active { background: rgba(212,175,55,0.15); border-color: var(--gold) !important; color: var(--gold-soft) !important; }
+
+        /* 筛选 select */
+        select, input[type=text] {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #E5E5E5;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+        }
+        select:focus, input[type=text]:focus { border-color: var(--emerald); }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 4px; }
+
+        /* 闪烁动画 */
+        @keyframes pulseSoft { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+
+        /* 模拟 toast */
+        #toast {
+            position: fixed; top: 24px; right: 24px; padding: 14px 20px;
+            background: rgba(52,211,153,0.95); color: #052e16; font-weight: 600;
+            border-radius: 10px; z-index: 9999; opacity: 0; transform: translateX(100px);
+            transition: all 0.3s ease;
+        }
+        #toast.show { opacity: 1; transform: translateX(0); }
+        #toast.alert { background: rgba(239,68,68,0.95); color: #fff; }
+
+        /* 确认弹窗 */
+        .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display:none; align-items:center; justify-content:center; }
+        .modal-mask.show { display: flex; }
+        .modal { background: var(--card); padding: 30px; border-radius: 16px; max-width: 420px; border: 1px solid rgba(212,175,55,0.3); }
+    </style>
+</head>
+<body class="pb-20">
+
+<!-- 顶部 Hero -->
+<header class="max-w-[1400px] mx-auto px-6 pt-10">
+    <div class="bg-gradient-to-br from-[#0a1f15] via-[#0A0A0A] to-[#1a1306] rounded-[2rem] p-8 border border-emerald-700/30 relative overflow-hidden">
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px]"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-amber-700/10 rounded-full blur-[100px]"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-3xl">📦</span>
+                    <span class="text-[10px] text-emerald-300 tracking-[0.3em] font-bold border border-emerald-700/40 px-3 py-1 rounded-full">630 SUNSET P2 SEAPOOL</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold emerald-text mb-2">630 P2 公海库</h1>
+                <p class="text-gray-400 text-sm">3,293 户已盘点 · <span class="text-emerald-400 font-bold">72% 与 6 月主打天然对齐</span> · 公海捞回成交 <span class="text-gold font-bold" style="color:#F9E79F">25%</span> 特奖</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div class="bg-black/40 px-5 py-3 rounded-xl border border-emerald-700/20 text-center min-w-[110px]">
+                    <p class="text-[10px] text-emerald-300 tracking-widest mb-1">我今日已捞</p>
+                    <p class="text-3xl font-bold emerald-text" id="todayPicked">3</p>
+                </div>
+                <div class="bg-black/40 px-5 py-3 rounded-xl border border-emerald-700/20 text-center">
+                    <p class="text-[10px] text-emerald-300 tracking-widest mb-1">本月捞回</p>
+                    <p class="text-3xl font-bold text-white">12</p>
+                </div>
+                <div class="bg-black/40 px-5 py-3 rounded-xl border border-gold/20 text-center" style="border-color:rgba(212,175,55,0.25)">
+                    <p class="text-[10px] tracking-widest mb-1" style="color:#F9E79F">本月公海保费</p>
+                    <p class="text-3xl font-bold gold-text">12.5万</p>
+                </div>
+                <div class="bg-black/40 px-5 py-3 rounded-xl border border-gold/20 text-center" style="border-color:rgba(212,175,55,0.25)">
+                    <p class="text-[10px] tracking-widest mb-1" style="color:#F9E79F">公海排名</p>
+                    <p class="text-3xl font-bold gold-text">#5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- 今日精选 -->
+<section class="max-w-[1400px] mx-auto px-6 mt-10">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">⭐</span>
+            <h2 class="text-2xl font-bold text-white">今日精选</h2>
+            <span class="text-[10px] text-gold tracking-widest border border-gold/30 px-2 py-0.5 rounded-full" style="color:#F9E79F;border-color:rgba(212,175,55,0.3)">10 户</span>
+        </div>
+        <p class="text-xs text-gray-500 pulse-soft">⏱ 离重置 7h 23m</p>
+    </div>
+    <p class="text-xs text-gray-500 mb-5">每日 0 点从 S 档随机抽 10 户置顶 · 防止头部客户被反复曝光，让冷门高潜客户被发现</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3" id="dailyPicksGrid">
+        <!-- daily picks 由 JS 渲染 -->
+    </div>
+</section>
+
+<!-- Tab + 筛选 + 卡片 -->
+<section class="max-w-[1400px] mx-auto px-6 mt-12">
+
+    <!-- Tab -->
+    <div class="flex flex-wrap gap-2 mb-6 border-b border-white/5 pb-4">
+        <button class="tab-btn tab-active px-5 py-2.5 rounded-lg border border-white/10 text-sm font-bold transition" data-tier="S">
+            🔴 S 档 <span class="text-xs opacity-70 ml-1">233</span>
+        </button>
+        <button class="tab-btn px-5 py-2.5 rounded-lg border border-white/10 text-sm font-bold text-gray-400 hover:text-white transition" data-tier="A">
+            🟠 A 档 <span class="text-xs opacity-70 ml-1">1,143</span>
+        </button>
+        <button class="tab-btn px-5 py-2.5 rounded-lg border border-white/10 text-sm font-bold text-gray-400 hover:text-white transition" data-tier="B">
+            🟡 B 档 <span class="text-xs opacity-70 ml-1">1,086</span>
+        </button>
+        <button class="tab-btn px-5 py-2.5 rounded-lg border border-white/10 text-sm font-bold text-gray-400 hover:text-white transition" data-tier="C">
+            ⚪ C 档 <span class="text-xs opacity-70 ml-1">163</span>
+        </button>
+        <button class="tab-btn px-5 py-2.5 rounded-lg border border-white/10 text-sm font-bold text-gray-500 hover:text-white transition" data-tier="X">
+            ⚫ X 档 <span class="text-xs opacity-70 ml-1">744</span> <span class="text-[9px] text-gray-600 ml-1">(默认折叠)</span>
+        </button>
+        <button class="tab-btn px-5 py-2.5 rounded-lg border border-white/10 text-sm font-bold text-gray-400 hover:text-white transition ml-auto" data-tier="ALL">
+            全部 <span class="text-xs opacity-70 ml-1">3,293</span>
+        </button>
+    </div>
+
+    <!-- 筛选条 -->
+    <div class="bg-[#161616] rounded-2xl p-4 mb-6 border border-white/5">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="text-[10px] text-gray-500 tracking-widest mr-2">筛选</span>
+            <select id="filterAppeal">
+                <option value="">第一诉求（全部）</option>
+                <option value="增额终身寿险">增额终身寿险</option>
+                <option value="商业养老金">商业养老金</option>
+                <option value="港险">港险</option>
+                <option value="年金险">年金险</option>
+                <option value="储蓄险">储蓄险</option>
+            </select>
+            <select id="filterBudget">
+                <option value="">年缴预算（全部）</option>
+                <option value="100w+">≥100 万</option>
+                <option value="30-100w">30-100 万</option>
+                <option value="10-30w">10-30 万</option>
+                <option value="5-10w">5-10 万</option>
+                <option value="lt5w">&lt; 5 万 / 未填</option>
+            </select>
+            <select id="filterProvince">
+                <option value="">省份（全部）</option>
+                <option value="北京">北京</option>
+                <option value="上海">上海</option>
+                <option value="广东">广东</option>
+                <option value="江苏">江苏</option>
+                <option value="山东">山东</option>
+                <option value="浙江">浙江</option>
+                <option value="四川">四川</option>
+            </select>
+            <select id="filterAge">
+                <option value="">年龄段（全部）</option>
+                <option value="lt30">≤30</option>
+                <option value="30-40">31-40</option>
+                <option value="40-50">41-50</option>
+                <option value="50-60">51-60</option>
+                <option value="60+">60+</option>
+            </select>
+            <select id="filterGender">
+                <option value="">性别（全部）</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+            <input type="text" id="filterKeyword" placeholder="搜索 姓名/微信/手机/ID" style="width: 200px;">
+
+            <span class="ml-auto text-[10px] text-gray-500 tracking-widest mr-2">排序</span>
+            <select id="sortBy">
+                <option value="budget">预算 高→低</option>
+                <option value="explainnum">已讲次数 多→少</option>
+                <option value="years">入库年数 长→短</option>
+                <option value="random">随机</option>
+            </select>
+        </div>
+        <div class="mt-3 pt-3 border-t border-white/5 flex justify-between items-center text-xs text-gray-500">
+            <span>当前结果: <span id="resultCount" class="text-white font-bold">233</span> 户</span>
+            <span class="text-gray-600">30 秒自动刷新检测被捞客户</span>
+        </div>
+    </div>
+
+    <!-- 客户卡片网格 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="customerGrid">
+        <!-- 由 JS 渲染 -->
+    </div>
+
+    <!-- 分页 -->
+    <div class="flex items-center justify-center gap-2 mt-10 text-sm">
+        <button class="px-3 py-1.5 border border-white/10 rounded text-gray-500">«</button>
+        <button class="px-3 py-1.5 border border-gold/50 rounded gold-text font-bold" style="color:#F9E79F">1</button>
+        <button class="px-3 py-1.5 border border-white/10 rounded text-gray-400 hover:text-white">2</button>
+        <button class="px-3 py-1.5 border border-white/10 rounded text-gray-400 hover:text-white">3</button>
+        <span class="text-gray-600 mx-1">···</span>
+        <button class="px-3 py-1.5 border border-white/10 rounded text-gray-400 hover:text-white">8</button>
+        <button class="px-3 py-1.5 border border-white/10 rounded text-gray-400 hover:text-white">»</button>
+        <span class="text-gray-500 ml-4 text-xs">每页 30 户</span>
+    </div>
+
+</section>
+
+<!-- Toast 容器 -->
+<div id="toast"></div>
+
+<!-- 捞回确认弹窗 -->
+<div id="confirmModal" class="modal-mask">
+    <div class="modal">
+        <div class="text-2xl mb-3">🎯</div>
+        <h3 class="text-xl font-bold text-white mb-2">确认捞回这位客户？</h3>
+        <p class="text-gray-400 text-sm mb-4" id="confirmText">客户: 一一女士 (S 档 · 50万年缴 · 增额寿)</p>
+        <div class="bg-emerald-950/40 border border-emerald-700/30 rounded-lg p-3 mb-5 text-xs text-emerald-200">
+            <p class="mb-1">捞回后客户立即归你所有 (issea=0)。</p>
+            <p>⚠ 7 天内若无聊天往来，将自动放回公海。</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="closeConfirm()" class="flex-1 py-2.5 border border-white/10 rounded-lg text-gray-300 hover:bg-white/5">取消</button>
+            <button onclick="doRetrieve()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-bold">立即捞回</button>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center mt-20 pb-10 text-xs text-gray-600">
+    <p>保心上人 · 内部系统 · 仅供规划师使用</p>
+    <p class="mt-1">数据快照: 2026-05-23 12:30 · 自动 30 秒刷新</p>
+</footer>
+
+<script>
+// ============== 假数据 ==============
+const sampleCustomers = [
+    // ========== S 档 10 户 ==========
+    { id: 4101, tier:'S', name:'一一', gender:'女', age:42, province:'上海', appeal:'增额终身寿险', budget:500000, budgetText:'50万', explainnum:6, lastConnect:'2025-05-07', channel:'公众号', years:3.7, leftStaff:['郭锐','张俊'], match6:'朱雀(25%)' },
+    { id: 4205, tier:'S', name:'张先生', gender:'男', age:38, province:'北京', appeal:'增额终身寿险', budget:1000000, budgetText:'100万', explainnum:5, lastConnect:'2025-05-12', channel:'抖音', years:2.4, leftStaff:[], match6:'朱雀(25%)' },
+    { id: 4318, tier:'S', name:'李女士', gender:'女', age:51, province:'广东', appeal:'商业养老金', budget:300000, budgetText:'30万', explainnum:8, lastConnect:'2025-04-28', channel:'公众号', years:4.1, leftStaff:['王芳'], match6:'乐享鑫年(20%)' },
+    { id: 4422, tier:'S', name:'王先生', gender:'男', age:45, province:'江苏', appeal:'港险', budget:200000, budgetText:'20万', explainnum:4, lastConnect:'2025-05-10', channel:'视频号', years:1.8, leftStaff:[], match6:'星河尊享2(15%)' },
+    { id: 4567, tier:'S', name:'陈女士', gender:'女', age:35, province:'浙江', appeal:'增额终身寿险', budget:150000, budgetText:'15万', explainnum:3, lastConnect:'2025-05-15', channel:'头条', years:2.2, leftStaff:[], match6:'增多多9号(20%)' },
+    { id: 4689, tier:'S', name:'赵先生', gender:'男', age:52, province:'山东', appeal:'商业养老金', budget:500000, budgetText:'50万', explainnum:6, lastConnect:'2025-05-03', channel:'公众号', years:3.5, leftStaff:[], match6:'大家慧选2026(20%)' },
+    { id: 4712, tier:'S', name:'刘女士', gender:'女', age:48, province:'四川', appeal:'增额终身寿险', budget:300000, budgetText:'30万', explainnum:5, lastConnect:'2025-05-09', channel:'公众号', years:3.0, leftStaff:['陈强'], match6:'一生中意臻享版(20%)' },
+    { id: 4825, tier:'S', name:'周先生', gender:'男', age:40, province:'湖北', appeal:'增额终身寿险', budget:200000, budgetText:'20万', explainnum:4, lastConnect:'2025-05-11', channel:'抖音', years:2.7, leftStaff:[], match6:'朱雀(25%)' },
+    { id: 4901, tier:'S', name:'吴女士', gender:'女', age:46, province:'河南', appeal:'储蓄险', budget:120000, budgetText:'12万', explainnum:2, lastConnect:'2025-05-14', channel:'快手', years:1.5, leftStaff:[], match6:'增额寿主打' },
+    { id: 4999, tier:'S', name:'郑先生', gender:'男', age:55, province:'辽宁', appeal:'商业养老金', budget:800000, budgetText:'80万', explainnum:7, lastConnect:'2025-04-30', channel:'百家号', years:4.3, leftStaff:[], match6:'乐享鑫年(20%)' },
+
+    // ========== A 档 10 户 ==========
+    { id: 5102, tier:'A', name:'孙女士', gender:'女', age:34, province:'广东', appeal:'增额终身寿险', budget:150000, budgetText:'15万', explainnum:0, lastConnect:null, channel:'公众号', years:2.8, leftStaff:[], match6:'增多多9号(20%)' },
+    { id: 5208, tier:'A', name:'马先生', gender:'男', age:41, province:'江苏', appeal:'增额终身寿险', budget:300000, budgetText:'30万', explainnum:1, lastConnect:'2024-11-20', channel:'抖音', years:2.5, leftStaff:[], match6:'朱雀(25%)' },
+    { id: 5315, tier:'A', name:'胡女士', gender:'女', age:50, province:'上海', appeal:'商业养老金', budget:500000, budgetText:'50万', explainnum:0, lastConnect:null, channel:'公众号', years:3.2, leftStaff:['张俊'], match6:'大家慧选2026(20%)' },
+    { id: 5421, tier:'A', name:'林先生', gender:'男', age:36, province:'北京', appeal:'增额终身寿险', budget:200000, budgetText:'20万', explainnum:1, lastConnect:'2024-12-08', channel:'视频号', years:2.0, leftStaff:[], match6:'一生中意臻享版(20%)' },
+    { id: 5530, tier:'A', name:'郭女士', gender:'女', age:44, province:'浙江', appeal:'增额终身寿险', budget:100000, budgetText:'10万', explainnum:0, lastConnect:null, channel:'头条', years:2.9, leftStaff:[], match6:'增多多9号(20%)' },
+    { id: 5648, tier:'A', name:'何先生', gender:'男', age:47, province:'山东', appeal:'港险', budget:300000, budgetText:'30万', explainnum:1, lastConnect:'2025-01-15', channel:'公众号', years:2.3, leftStaff:[], match6:'盛利2(15%)' },
+    { id: 5759, tier:'A', name:'高女士', gender:'女', age:39, province:'四川', appeal:'增额终身寿险', budget:120000, budgetText:'12万', explainnum:0, lastConnect:null, channel:'抖音', years:2.1, leftStaff:[], match6:'朱雀(25%)' },
+    { id: 5870, tier:'A', name:'罗先生', gender:'男', age:53, province:'湖南', appeal:'商业养老金', budget:200000, budgetText:'20万', explainnum:0, lastConnect:null, channel:'公众号', years:3.6, leftStaff:[], match6:'乐享鑫年(20%)' },
+    { id: 5912, tier:'A', name:'徐女士', gender:'女', age:43, province:'河北', appeal:'增额终身寿险', budget:100000, budgetText:'10万', explainnum:1, lastConnect:'2024-10-25', channel:'快手', years:2.7, leftStaff:[], match6:'增多多9号(20%)' },
+    { id: 5988, tier:'A', name:'潘先生', gender:'男', age:48, province:'安徽', appeal:'储蓄险', budget:150000, budgetText:'15万', explainnum:0, lastConnect:null, channel:'视频号', years:2.4, leftStaff:[], match6:'增额寿主打' },
+
+    // ========== B 档 6 户 ==========
+    { id: 6101, tier:'B', name:'冯女士', gender:'女', age:null, province:'江苏', appeal:'增额终身寿险', budget:null, budgetText:'未填', explainnum:0, lastConnect:null, channel:'抖音', years:3.1, leftStaff:[], match6:'增额寿方向对' },
+    { id: 6202, tier:'B', name:'蒋先生', gender:'男', age:null, province:'未知', appeal:'商业养老金', budget:50000, budgetText:'5万', explainnum:0, lastConnect:null, channel:'公众号', years:3.4, leftStaff:[], match6:'养老金方向对' },
+    { id: 6303, tier:'B', name:'沈女士', gender:'女', age:35, province:'上海', appeal:'增额终身寿险', budget:null, budgetText:'未填', explainnum:0, lastConnect:null, channel:'头条', years:2.8, leftStaff:[], match6:'增额寿方向对' },
+    { id: 6404, tier:'B', name:'韩先生', gender:'男', age:null, province:'广东', appeal:'年金险', budget:30000, budgetText:'3万', explainnum:0, lastConnect:null, channel:'抖音', years:2.5, leftStaff:[], match6:'年金主打' },
+    { id: 6505, tier:'B', name:'谢女士', gender:'女', age:null, province:'北京', appeal:'增额终身寿险', budget:null, budgetText:'未填', explainnum:0, lastConnect:null, channel:'视频号', years:3.6, leftStaff:[], match6:'增额寿方向对' },
+    { id: 6606, tier:'B', name:'唐先生', gender:'男', age:42, province:'浙江', appeal:'商业养老金', budget:80000, budgetText:'8万', explainnum:0, lastConnect:null, channel:'公众号', years:2.2, leftStaff:[], match6:'养老金方向对' },
+
+    // ========== C 档 3 户 ==========
+    { id: 7101, tier:'C', name:'曹先生', gender:'男', age:null, province:'未知', appeal:'其他险种', budget:null, budgetText:'未填', explainnum:0, lastConnect:null, channel:'抖音', years:3.0, leftStaff:[], match6:'不匹配' },
+    { id: 7202, tier:'C', name:'魏女士', gender:'女', age:null, province:'北京', appeal:'未知需求', budget:null, budgetText:'未填', explainnum:0, lastConnect:null, channel:'公众号', years:3.3, leftStaff:[], match6:'不匹配' },
+    { id: 7303, tier:'C', name:'许先生', gender:'男', age:30, province:'广东', appeal:'定期寿险', budget:5000, budgetText:'5千', explainnum:0, lastConnect:null, channel:'头条', years:2.7, leftStaff:[], match6:'不匹配' },
+
+    // ========== X 档 2 户 ==========
+    { id: 8101, tier:'X', name:'邓先生', gender:'男', age:27, province:'江苏', appeal:'重疾险', budget:3000, budgetText:'3千', explainnum:0, lastConnect:null, channel:'抖音', years:2.9, leftStaff:[], match6:'重疾险 · 6月不开发' },
+    { id: 8202, tier:'X', name:'萧女士', gender:'女', age:null, province:'未知', appeal:'重疾险', budget:null, budgetText:'未填', explainnum:1, lastConnect:'2024-08-15', channel:'视频号', years:3.4, leftStaff:[], match6:'重疾险 · 6月不开发' },
+];
+
+// 今日精选 5 户（demo 只展 5 不展 10）
+const dailyPicks = sampleCustomers.filter(c => c.tier === 'S').slice(0, 5);
+
+// ============== 渲染 ==============
+const grid = document.getElementById('customerGrid');
+const dailyGrid = document.getElementById('dailyPicksGrid');
+
+function tierColor(tier) {
+    return { S:'gold-text', A:'emerald-text', B:'cyan-text', C:'text-gray-300', X:'crimson-text' }[tier];
+}
+
+function cardHTML(c, compact = false) {
+    const tierClass = `tier-${c.tier.toLowerCase()}`;
+    const badgeClass = `badge-${c.tier.toLowerCase()}`;
+    const tierLabel = {S:'🔴 S档·必处理', A:'🟠 A档·本月触达', B:'🟡 B档·话术唤醒', C:'⚪ C档·暂不安排', X:'⚫ X档·重疾隔离'}[c.tier];
+    const leftStaffWarn = c.leftStaff.length > 0
+      ? `<p class="text-[10px] text-red-300 mt-2">⚠ 历史含离职员工: ${c.leftStaff.join(' / ')}</p>`
+      : '';
+    const lastConnectText = c.lastConnect ? `最近 ${c.lastConnect}` : '从未沟通';
+    const explainText = c.explainnum > 0 ? `已讲方案 ${c.explainnum} 次` : '未讲过方案';
+
+    return `
+    <div class="customer-card ${tierClass} rounded-2xl border p-5 relative" data-id="${c.id}">
+        <div class="flex justify-between items-start mb-3">
+            <span class="${badgeClass} text-[10px] px-2 py-1 rounded-full font-bold">${tierLabel}</span>
+            <div class="text-right">
+                <p class="text-2xl font-bold ${tierColor(c.tier)}">${c.budgetText}</p>
+                <p class="text-[10px] text-gray-500">${c.budget ? '年缴预算' : ''}</p>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-base font-bold text-white">${c.name.length === 1 ? c.name + (c.gender==='男'?'先生':'女士') : c.name}</span>
+                <span class="text-xs text-gray-400">${c.gender || '?'} ${c.age || '?'}</span>
+                <span class="text-xs text-gray-500">· 📍 ${c.province}</span>
+            </div>
+            <p class="text-[11px] text-gray-600">ID ${c.id}</p>
+        </div>
+
+        <div class="mb-3 pb-3 border-b border-white/5">
+            <p class="text-sm font-bold ${tierColor(c.tier)} mb-1">💎 ${c.appeal}</p>
+            <p class="text-[11px] text-emerald-300">⚡ ${c.match6}</p>
+        </div>
+
+        <div class="space-y-1 text-xs mb-4">
+            <p class="text-gray-400">📞 ${explainText}<span class="text-gray-600"> · ${lastConnectText}</span></p>
+            <p class="text-gray-400">📱 ${c.channel}<span class="text-gray-600"> · 入库 ${c.years} 年</span></p>
+            ${leftStaffWarn}
+        </div>
+
+        <div class="flex gap-2">
+            <button onclick="viewDetail(${c.id})" class="flex-1 py-2 text-xs border border-white/10 rounded-lg text-gray-300 hover:bg-white/5 transition">📖 查看档案</button>
+            <button onclick="askRetrieve(${c.id})" class="flex-1 py-2 text-xs bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 rounded-lg text-white font-bold transition">🎯 立即捞回</button>
+        </div>
+    </div>`;
+}
+
+function renderGrid(tier) {
+    let list;
+    if (tier === 'ALL') list = sampleCustomers;
+    else list = sampleCustomers.filter(c => c.tier === tier);
+
+    // 按预算降序
+    list = [...list].sort((a, b) => (b.budget || 0) - (a.budget || 0));
+
+    document.getElementById('resultCount').textContent = ({
+        S: 233, A: 1143, B: 1086, C: 163, X: 744, ALL: 3293
+    }[tier] || list.length);
+
+    grid.innerHTML = list.map(c => cardHTML(c)).join('');
+}
+
+function renderDailyPicks() {
+    dailyGrid.innerHTML = dailyPicks.map(c => `
+        <div class="customer-card tier-s rounded-xl border p-4 text-xs">
+            <div class="flex justify-between items-start mb-2">
+                <span class="badge-s text-[9px] px-2 py-0.5 rounded-full font-bold">⭐ 精选</span>
+                <p class="text-lg font-bold gold-text">${c.budgetText}</p>
+            </div>
+            <p class="font-bold text-white mb-0.5">${c.name + (c.gender==='男'?'先生':'女士')}</p>
+            <p class="text-gray-500 text-[10px] mb-2">${c.gender} ${c.age} · ${c.province}</p>
+            <p class="gold-text text-[11px] mb-1">${c.appeal}</p>
+            <p class="text-gray-500 text-[10px] mb-3">📞 ${c.explainnum} 次方案</p>
+            <button onclick="askRetrieve(${c.id})" class="w-full py-1.5 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg text-white text-[11px] font-bold">🎯 立即捞回</button>
+        </div>
+    `).join('');
+}
+
+// ============== 交互 ==============
+let pendingRetrieveId = null;
+
+function askRetrieve(id) {
+    const c = sampleCustomers.find(x => x.id === id);
+    if (!c) return;
+    pendingRetrieveId = id;
+    const displayName = c.name.length === 1 ? c.name + (c.gender==='男'?'先生':'女士') : c.name;
+    document.getElementById('confirmText').textContent =
+        `客户: ${displayName} (${c.tier} 档 · ${c.budgetText}年缴 · ${c.appeal})`;
+    document.getElementById('confirmModal').classList.add('show');
+}
+
+function closeConfirm() {
+    document.getElementById('confirmModal').classList.remove('show');
+    pendingRetrieveId = null;
+}
+
+function doRetrieve() {
+    if (!pendingRetrieveId) return;
+    const id = pendingRetrieveId;
+    closeConfirm();
+
+    // 卡片渐隐
+    const cards = document.querySelectorAll(`[data-id="${id}"]`);
+    cards.forEach(card => card.classList.add('card-vanishing'));
+    setTimeout(() => cards.forEach(c => c.remove()), 500);
+
+    // 今日已捞 +1
+    const cnt = document.getElementById('todayPicked');
+    cnt.textContent = parseInt(cnt.textContent) + 1;
+
+    showToast('🎯 已捞回 · 客户已归你所有');
+}
+
+function viewDetail(id) {
+    showToast(`📖 跳转至客户档案 (ID ${id})...`, false, 1500);
+    // 真实场景: window.parent.location.href = '#/planner/customerImage?cid=' + id;
+}
+
+function showToast(text, isAlert = false, duration = 2200) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.className = isAlert ? 'show alert' : 'show';
+    setTimeout(() => t.className = isAlert ? 'alert' : '', duration);
+}
+
+// 模拟"其他规划师捞走了"
+function simulatePeerSnatch() {
+    const allCards = document.querySelectorAll('#customerGrid .customer-card');
+    if (allCards.length < 3) return;
+    const target = allCards[Math.floor(Math.random() * Math.min(5, allCards.length))];
+    if (target) {
+        const peers = ['李规划师', '王规划师', '赵规划师', '马规划师'];
+        const peer = peers[Math.floor(Math.random() * peers.length)];
+        target.classList.add('card-vanishing');
+        setTimeout(() => target.remove(), 500);
+        showToast(`⚡ "${peer}" 抢先捞走了一位客户`, true, 2500);
+    }
+}
+
+// Tab 切换
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+        btn.classList.add('tab-active');
+        renderGrid(btn.dataset.tier);
+    });
+});
+
+// 初始化
+renderDailyPicks();
+renderGrid('S');
+
+// 每 30 秒模拟一次"被抢"（用户能感受到紧迫感）
+setInterval(simulatePeerSnatch, 30000);
+</script>
+
+</body>
+</html>

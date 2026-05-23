@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保心上人 - 6月业务战略与奖励计划</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-secondary: #F9E79F;
+            --black-bg: #0A0A0A;
+            --black-card: #161616;
+            --emerald-primary: #34D399;
+            --emerald-deep: #047857;
+            --crimson-primary: #EF4444;
+            --crimson-deep: #7F1D1D;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: #E5E5E5;
+            font-family: 'Inter', 'Noto Serif SC', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, #D4AF37, #F9E79F, #AA8439);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .emerald-text {
+            background: linear-gradient(to right, #34D399, #A7F3D0, #047857);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .crimson-text {
+            background: linear-gradient(to right, #FCA5A5, #EF4444, #7F1D1D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .king-text {
+            background: linear-gradient(to right, #FCA5A5, #F9E79F, #D4AF37, #FCA5A5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8439 100%);
+        }
+
+        .emerald-gradient-bg {
+            background: linear-gradient(135deg, #34D399 0%, #047857 100%);
+        }
+
+        .crimson-gradient-bg {
+            background: linear-gradient(135deg, #EF4444 0%, #7F1D1D 100%);
+        }
+
+        .section-animate {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlowEmerald {
+            0%, 100% { box-shadow: 0 0 30px rgba(52, 211, 153, 0.2); }
+            50% { box-shadow: 0 0 50px rgba(52, 211, 153, 0.45); }
+        }
+
+        @keyframes pulseGlowKing {
+            0%, 100% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), 0 0 60px rgba(239, 68, 68, 0.15); }
+            50% { box-shadow: 0 0 60px rgba(212, 175, 55, 0.5), 0 0 100px rgba(239, 68, 68, 0.3); }
+        }
+
+        .emerald-glow { animation: pulseGlowEmerald 3s ease-in-out infinite; }
+        .king-glow { animation: pulseGlowKing 4s ease-in-out infinite; }
+
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .card-glow:hover {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-primary);
+            transition: all 0.4s ease;
+        }
+
+        .crimson-card-glow:hover {
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+            border-color: var(--crimson-primary);
+            transition: all 0.4s ease;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 3px 4px 3px 0;
+        }
+
+        .chip-gold { background: rgba(212,175,55,0.1); color: #F9E79F; border: 1px solid rgba(212,175,55,0.3); }
+        .chip-red { background: rgba(239,68,68,0.1); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3); }
+        .chip-emerald { background: rgba(52,211,153,0.1); color: #A7F3D0; border: 1px solid rgba(52,211,153,0.3); }
+        .chip-channel { background: rgba(255,255,255,0.05); color: #9CA3AF; border: 1px solid rgba(255,255,255,0.1); }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--black-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 10px; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 glass-nav px-8 py-5 flex justify-between items-center">
+        <div class="text-2xl font-bold gold-text tracking-tighter">保心上人</div>
+        <div class="hidden md:flex space-x-6 text-xs uppercase tracking-[0.2em] font-medium">
+            <a href="#overview" class="hover:text-[#D4AF37] transition">概览</a>
+            <a href="#summary" class="hover:text-[#D4AF37] transition">一览表</a>
+            <a href="#king" class="hover:text-[#F9E79F] transition">下架王</a>
+            <a href="#sunset" class="hover:text-[#EF4444] transition">630 下架</a>
+            <a href="#hk" class="hover:text-[#D4AF37] transition">港险主打</a>
+            <a href="#sea" class="hover:text-[#34D399] transition">公海特奖</a>
+            <a href="#persona" class="hover:text-[#34D399] transition">客户画像</a>
+            <a href="#rewards" class="hover:text-[#D4AF37] transition">达标激励</a>
+        </div>
+        <div class="text-[10px] border border-gold-primary/50 px-2 py-1 text-gold-primary">INTERNAL USE ONLY</div>
+    </nav>
+
+    <!-- 封面 -->
+    <header id="overview" class="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold-primary rounded-full blur-[150px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-900 rounded-full blur-[150px]"></div>
+        </div>
+
+        <div class="section-animate z-10">
+            <h2 class="text-gold-primary tracking-[0.8em] mb-6 text-sm md:text-base font-light">JUNE · PERFORMANCE & STRATEGY REPORT</h2>
+            <h1 class="text-5xl md:text-8xl font-bold gold-text mb-10 leading-tight">6月主打产品策略</h1>
+            <div class="h-[1px] w-32 gold-gradient-bg mx-auto mb-10"></div>
+            <p class="text-gray-400 max-w-3xl text-lg leading-relaxed mx-auto">
+                聚焦下架王 · 港险主打 · 630 下架冲刺 · 公海深度开发，<br>
+                以更高激励驱动团队在 6 月完成业绩跨越式增长。
+            </p>
+            <div class="mt-12 flex flex-wrap justify-center gap-3 text-xs">
+                <div class="border border-gold-primary/60 rounded-full px-5 py-2 king-text font-bold">👑 朱雀 下架王 25%</div>
+                <div class="border border-crimson-primary/40 rounded-full px-5 py-2 text-red-400">6/30 下架 20%</div>
+                <div class="border border-gold-primary/40 rounded-full px-5 py-2 text-gold-primary">港险主打 15%</div>
+                <div class="border border-emerald-primary/40 rounded-full px-5 py-2 text-emerald-400">公海特奖 25%</div>
+                <div class="border border-gold-primary/40 rounded-full px-5 py-2 text-gold-primary">4 档达标奖</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 0. 汇总一览表 -->
+    <section id="summary" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="text-center mb-12">
+            <h2 class="text-5xl font-bold mb-4 gold-text">6 月奖励一览表</h2>
+            <div class="h-1 w-20 gold-gradient-bg mx-auto mb-6"></div>
+            <p class="text-gray-500 tracking-widest text-sm">JUNE REWARD MATRIX · AT A GLANCE</p>
+        </div>
+
+        <div class="overflow-x-auto rounded-[2rem] border border-gold-primary/20 bg-gradient-to-br from-[#161616] to-[#0A0A0A] shadow-2xl">
+            <table class="w-full text-left" style="min-width: 900px;">
+                <thead>
+                    <tr class="bg-gradient-to-r from-gold-primary/15 via-gold-primary/5 to-transparent border-b border-gold-primary/20">
+                        <th class="px-6 py-6 text-gold-primary font-bold uppercase tracking-widest text-sm">产品 · 公司</th>
+                        <th class="px-6 py-6 text-gold-primary font-bold uppercase tracking-widest text-sm">渠道</th>
+                        <th class="px-6 py-6 text-gold-primary font-bold uppercase tracking-widest text-sm">折标</th>
+                        <th class="px-6 py-6 text-gold-primary font-bold uppercase tracking-widest text-sm text-center">规划师</th>
+                        <th class="px-6 py-6 text-gold-primary font-bold uppercase tracking-widest text-sm text-center">内容编辑</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+
+                    <!-- 下架王 -->
+                    <tr class="bg-gradient-to-r from-amber-900/25 to-transparent">
+                        <td colspan="5" class="px-6 py-4">
+                            <span class="king-text font-bold text-xl">👑 6 月下架王</span>
+                            <span class="ml-3 inline-block bg-red-950/40 text-red-300 px-2 py-0.5 rounded-full text-xs border border-red-900/40 align-middle">6/30 全网下架</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">星海赢家朱雀版</div>
+                            <div class="text-gray-500 text-sm mt-1">内地终身寿险</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">齐欣</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-gold">趸交 6%</span>
+                            <span class="chip chip-gold">3 年 21%</span>
+                            <span class="chip chip-gold">5 年 42%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold king-text">25%</span></td>
+                        <td class="px-6 py-6 text-center text-gray-500 text-lg">—</td>
+                    </tr>
+
+                    <!-- 630 下架主打 -->
+                    <tr class="bg-gradient-to-r from-red-900/20 to-transparent">
+                        <td colspan="5" class="px-6 py-4">
+                            <span class="crimson-text font-bold text-xl">🔴 630 下架主打</span>
+                            <span class="ml-3 text-gray-400 text-sm">规划师 20% · 编辑 5% · 6/30 全网下架</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">快享福</div>
+                            <div class="text-gray-500 text-sm mt-1">新华人寿 · 快返年金</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">齐欣</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-red">趸交 4%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold crimson-text">20%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">5%</span></td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">意值有</div>
+                            <div class="text-gray-500 text-sm mt-1">中意人寿 · 快返年金</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">牛保</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-red">趸交 5%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold crimson-text">20%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">5%</span></td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">增多多 9 号</div>
+                            <div class="text-gray-500 text-sm mt-1">新华人寿 · 增额寿</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">牛保</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-red">趸交 3%</span>
+                            <span class="chip chip-red">3 年 14%</span>
+                            <span class="chip chip-red">5 年 22%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold crimson-text">20%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">5%</span></td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">一生中意臻享版</div>
+                            <div class="text-gray-500 text-sm mt-1">中意人寿 · 增额寿</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">凤栖</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-red">趸交 4%</span>
+                            <span class="chip chip-red">3 年 16%</span>
+                            <span class="chip chip-red">5 年 32%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold crimson-text">20%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">5%</span></td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">大家慧选 2026</div>
+                            <div class="text-gray-500 text-sm mt-1">大家养老 · 养老金</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">齐欣</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-red">趸交 4%</span>
+                            <span class="chip chip-red">3 年 11%</span>
+                            <span class="chip chip-red">5 年 16%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold crimson-text">20%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">5%</span></td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">乐享鑫年</div>
+                            <div class="text-gray-500 text-sm mt-1">中邮人寿 · 养老金</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">齐欣</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-red">趸交 4%</span>
+                            <span class="chip chip-red">3 年 17%</span>
+                            <span class="chip chip-red">5 年 26%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold crimson-text">20%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">5%</span></td>
+                    </tr>
+
+                    <!-- 港险主打 -->
+                    <tr class="bg-gradient-to-r from-yellow-900/15 to-transparent">
+                        <td colspan="5" class="px-6 py-4">
+                            <span class="gold-text font-bold text-xl">🥇 港险主打</span>
+                            <span class="ml-3 text-gray-400 text-sm">规划师 15% · 编辑 3%</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">星河尊享 2</div>
+                            <div class="text-gray-500 text-sm mt-1">永明金融</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">云保</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-gold">2 年 21%</span>
+                            <span class="chip chip-gold">5 年 55%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold gold-text">15%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">3%</span></td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">盛利 2</div>
+                            <div class="text-gray-500 text-sm mt-1">安盛保险</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-300 text-lg">唯思</td>
+                        <td class="px-6 py-6">
+                            <span class="chip chip-gold">2 年 21%</span>
+                        </td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold gold-text">15%</span></td>
+                        <td class="px-6 py-6 text-center"><span class="text-xl font-bold text-gray-300">3%</span></td>
+                    </tr>
+
+                    <!-- 公海特奖 -->
+                    <tr class="bg-gradient-to-r from-emerald-900/25 to-transparent">
+                        <td colspan="5" class="px-6 py-4">
+                            <span class="emerald-text font-bold text-xl">💎 公海特别奖励</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-6 py-6">
+                            <div class="font-bold text-xl">P2 公海捞回成交</div>
+                            <div class="text-gray-500 text-sm mt-1">3,293 户 · 方案讲解状态</div>
+                        </td>
+                        <td class="px-6 py-6 text-gray-500 text-lg">—</td>
+                        <td class="px-6 py-6 text-gray-400">不限产品 · 按原产品折标</td>
+                        <td class="px-6 py-6 text-center"><span class="text-3xl font-bold emerald-text">25%</span></td>
+                        <td class="px-6 py-6 text-center text-gray-500 text-lg">—</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <p class="text-center text-gray-600 mt-6 text-xs">注：以上为奖励比例汇总，详细策略说明请见各板块。</p>
+    </section>
+
+    <!-- 1. 6 月下架王 · 朱雀 -->
+    <section id="king" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="flex items-center mb-12">
+            <div class="w-12 h-[2px] gold-gradient-bg mr-4"></div>
+            <h2 class="text-3xl font-bold">1. 6 月下架王 <span class="king-text font-normal text-lg ml-4">The Sunset King</span></h2>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#2a1a0a] via-[#1a0a0a] to-[#2a1a0a] p-12 md:p-16 rounded-[3rem] border-2 border-gold-primary/40 relative overflow-hidden king-glow">
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-gold-primary/10 rounded-full blur-[100px]"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-red-900/20 rounded-full blur-[100px]"></div>
+            <div class="absolute right-6 top-6">
+                <div class="inline-flex items-center bg-red-950/60 border border-red-700/60 rounded-full px-4 py-1.5 text-red-300 text-xs">
+                    <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+                    6 月 30 日全网下架
+                </div>
+            </div>
+
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="text-7xl mb-4">👑</div>
+                    <span class="inline-block bg-red-950/40 text-red-300 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest border border-red-900/40 mb-4">内地分红增额寿 · 终身寿险</span>
+                    <h3 class="text-4xl md:text-5xl font-bold king-text leading-tight mb-4">星海赢家<br>朱雀版</h3>
+                    <p class="text-gray-400 mb-6 text-sm">6 月最高激励产品 · 全平台佣金顶档</p>
+
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">渠道</p>
+                            <span class="chip chip-channel">齐欣</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 mt-4">折标比例</p>
+                            <span class="chip chip-gold">趸交 6%</span>
+                            <span class="chip chip-gold">3 年 21%</span>
+                            <span class="chip chip-gold">5 年 42%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-[10px] text-gold-primary uppercase tracking-[0.3em] mb-4">规划师佣金</p>
+                    <div class="text-8xl md:text-9xl font-bold king-text leading-none">25%</div>
+                    <div class="h-[1px] w-32 gold-gradient-bg mx-auto my-8"></div>
+                    <p class="text-gray-400 text-sm">与公海特奖并列<span class="text-gold-primary font-bold">最高</span>佣金档</p>
+                    <div class="mt-6 inline-flex items-center bg-gold-primary/10 border border-gold-primary/40 rounded-full px-4 py-2 text-gold-primary text-xs">
+                        <span class="mr-2">↑</span>
+                        相比港险主打 +10 个点 · 相比下架 +5 个点
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 630 下架主打 -->
+    <section id="sunset" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="flex items-center mb-6">
+            <div class="w-12 h-[2px] crimson-gradient-bg mr-4"></div>
+            <h2 class="text-3xl font-bold">2. 630 下架主打 <span class="crimson-text font-normal text-lg ml-4">Sunset Sprint</span></h2>
+        </div>
+        <div class="mb-10 flex flex-wrap items-center gap-4">
+            <div class="inline-flex items-center bg-red-950/30 border border-red-900/40 rounded-full px-4 py-2 text-red-300 text-sm">
+                <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+                6 月 30 日全网下架
+            </div>
+            <p class="text-gray-500 text-sm">规划师佣金 <span class="text-red-400 font-bold">20%</span> · 内容编辑奖励 <span class="text-red-400 font-bold">5%</span></p>
+        </div>
+
+        <!-- 类型 1：快返年金 -->
+        <h3 class="text-lg text-gray-400 mb-4 tracking-widest"><span class="text-red-400">▸</span> 快返年金</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+
+            <div class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-7 rounded-[2rem] border border-red-900/20 group crimson-card-glow">
+                <h4 class="text-xl font-bold mb-1">快享福</h4>
+                <p class="text-gray-500 text-xs mb-4">新华人寿 · 快返年金</p>
+                <div class="mb-3">
+                    <span class="chip chip-channel">渠道 · 齐欣</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">折标</p>
+                    <span class="chip chip-red">趸交 4%</span>
+                </div>
+                <div class="border-t border-white/5 pt-3 flex justify-between items-center text-sm">
+                    <span class="text-gray-400">规划师 20% · 编辑 5%</span>
+                    <span class="text-xl font-bold crimson-text">20%</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-7 rounded-[2rem] border border-red-900/20 group crimson-card-glow">
+                <h4 class="text-xl font-bold mb-1">意值有</h4>
+                <p class="text-gray-500 text-xs mb-4">中意人寿 · 快返年金</p>
+                <div class="mb-3">
+                    <span class="chip chip-channel">渠道 · 牛保</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">折标</p>
+                    <span class="chip chip-red">趸交 5%</span>
+                </div>
+                <div class="border-t border-white/5 pt-3 flex justify-between items-center text-sm">
+                    <span class="text-gray-400">规划师 20% · 编辑 5%</span>
+                    <span class="text-xl font-bold crimson-text">20%</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 类型 2：增额寿 -->
+        <h3 class="text-lg text-gray-400 mb-4 tracking-widest"><span class="text-red-400">▸</span> 增额寿</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+
+            <div class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-7 rounded-[2rem] border border-red-900/20 group crimson-card-glow">
+                <h4 class="text-xl font-bold mb-1">增多多 9 号</h4>
+                <p class="text-gray-500 text-xs mb-4">新华人寿 · 增额寿</p>
+                <div class="mb-3">
+                    <span class="chip chip-channel">渠道 · 牛保</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">折标</p>
+                    <span class="chip chip-red">趸交 3%</span>
+                    <span class="chip chip-red">3 年 14%</span>
+                    <span class="chip chip-red">5 年 22%</span>
+                </div>
+                <div class="border-t border-white/5 pt-3 flex justify-between items-center text-sm">
+                    <span class="text-gray-400">规划师 20% · 编辑 5%</span>
+                    <span class="text-xl font-bold crimson-text">20%</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-7 rounded-[2rem] border border-red-900/20 group crimson-card-glow">
+                <h4 class="text-xl font-bold mb-1">一生中意臻享版</h4>
+                <p class="text-gray-500 text-xs mb-4">中意人寿 · 增额寿</p>
+                <div class="mb-3">
+                    <span class="chip chip-channel">渠道 · 凤栖</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">折标</p>
+                    <span class="chip chip-red">趸交 4%</span>
+                    <span class="chip chip-red">3 年 16%</span>
+                    <span class="chip chip-red">5 年 32%</span>
+                </div>
+                <div class="border-t border-white/5 pt-3 flex justify-between items-center text-sm">
+                    <span class="text-gray-400">规划师 20% · 编辑 5%</span>
+                    <span class="text-xl font-bold crimson-text">20%</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 类型 3：养老金 -->
+        <h3 class="text-lg text-gray-400 mb-4 tracking-widest"><span class="text-red-400">▸</span> 养老金</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-7 rounded-[2rem] border border-red-900/20 group crimson-card-glow">
+                <h4 class="text-xl font-bold mb-1">大家慧选 2026</h4>
+                <p class="text-gray-500 text-xs mb-4">大家养老 · 养老金</p>
+                <div class="mb-3">
+                    <span class="chip chip-channel">渠道 · 齐欣</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">折标</p>
+                    <span class="chip chip-red">趸交 4%</span>
+                    <span class="chip chip-red">3 年 11%</span>
+                    <span class="chip chip-red">5 年 16%</span>
+                </div>
+                <div class="border-t border-white/5 pt-3 flex justify-between items-center text-sm">
+                    <span class="text-gray-400">规划师 20% · 编辑 5%</span>
+                    <span class="text-xl font-bold crimson-text">20%</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-7 rounded-[2rem] border border-red-900/20 group crimson-card-glow">
+                <h4 class="text-xl font-bold mb-1">乐享鑫年</h4>
+                <p class="text-gray-500 text-xs mb-4">中邮人寿 · 养老金</p>
+                <div class="mb-3">
+                    <span class="chip chip-channel">渠道 · 齐欣</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">折标</p>
+                    <span class="chip chip-red">趸交 4%</span>
+                    <span class="chip chip-red">3 年 17%</span>
+                    <span class="chip chip-red">5 年 26%</span>
+                </div>
+                <div class="border-t border-white/5 pt-3 flex justify-between items-center text-sm">
+                    <span class="text-gray-400">规划师 20% · 编辑 5%</span>
+                    <span class="text-xl font-bold crimson-text">20%</span>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="text-center text-gray-600 mt-10 text-xs">注：6 月 30 日 24:00 后所有下架产品停止承保，奖励以承保成功时间为准。</p>
+    </section>
+
+    <!-- 3. 港险主打 -->
+    <section id="hk" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="flex items-center mb-6">
+            <div class="w-12 h-[2px] gold-gradient-bg mr-4"></div>
+            <h2 class="text-3xl font-bold">3. 港险主打 <span class="gold-text font-normal text-lg ml-4">HK Premium</span></h2>
+        </div>
+        <p class="text-gray-500 mb-10 text-sm">规划师佣金 <span class="text-gold-primary font-bold">15%</span> · 内容编辑奖励 <span class="text-gold-primary font-bold">3%</span></p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- 永明 -->
+            <div class="bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] p-10 rounded-[2.5rem] border border-white/5 relative overflow-hidden group card-glow">
+                <div class="absolute -right-8 -top-8 text-white/5 text-7xl font-bold italic group-hover:text-gold-primary/10 transition duration-700">SUNLIFE</div>
+                <div class="mb-6">
+                    <span class="bg-gold-primary/20 text-gold-primary px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest border border-gold-primary/30">香港分红险 · 永明金融</span>
+                    <h3 class="text-3xl font-bold mt-5 mb-2">星河尊享 2</h3>
+                    <p class="text-gray-500 text-sm">家族财富传承首选方案</p>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">渠道</p>
+                        <span class="chip chip-channel">云保</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 mt-4">折标比例</p>
+                        <span class="chip chip-gold">2 年 21%</span>
+                        <span class="chip chip-gold">5 年 55%</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-white/5 pt-5 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">规划师佣金</span>
+                        <span class="text-2xl font-bold gold-text">15%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">内容编辑奖励</span>
+                        <span class="text-lg font-bold text-gray-300">3%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 安盛 -->
+            <div class="bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] p-10 rounded-[2.5rem] border border-white/5 relative overflow-hidden group card-glow">
+                <div class="absolute -right-8 -top-8 text-white/5 text-7xl font-bold italic group-hover:text-gold-primary/10 transition duration-700">AXA</div>
+                <div class="mb-6">
+                    <span class="bg-blue-950/40 text-blue-300 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest border border-blue-900/40">香港分红险 · 安盛保险</span>
+                    <h3 class="text-3xl font-bold mt-5 mb-2">盛利 2</h3>
+                    <p class="text-gray-500 text-sm">稳健分红 · 长期复利与灵活提取</p>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">渠道</p>
+                        <span class="chip chip-channel">唯思</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 mt-4">折标比例</p>
+                        <span class="chip chip-gold">2 年 21%</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-white/5 pt-5 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">规划师佣金</span>
+                        <span class="text-2xl font-bold gold-text">15%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">内容编辑奖励</span>
+                        <span class="text-lg font-bold text-gray-300">3%</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4. 公海特别奖励 -->
+    <section id="sea" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="flex items-center mb-12">
+            <div class="w-12 h-[2px] emerald-gradient-bg mr-4"></div>
+            <h2 class="text-3xl font-bold">4. 公海特别奖励 <span class="emerald-text font-normal text-lg ml-4">Deep-Sea Premium</span></h2>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#0a1f15] via-[#0A0A0A] to-[#0a1f15] p-12 md:p-16 rounded-[3rem] border border-emerald-900/30 relative overflow-hidden emerald-glow">
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px]"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-emerald-700/10 rounded-full blur-[100px]"></div>
+
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="inline-block bg-emerald-950/60 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest border border-emerald-700/40">P2 · 方案讲解状态</span>
+                    <h3 class="text-4xl md:text-5xl font-bold mt-6 mb-4 emerald-text leading-tight">深度开发<br>沉睡的高意向客户</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        P2 公海现有 <span class="text-emerald-400 font-bold">3,293 户</span>已聊到「方案讲解」阶段的存量客户。
+                        他们是公海里最成熟、最具成交潜力的一档。
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-start"><span class="text-emerald-400 mr-3">◆</span>客户档案 → 公海库 · P2 表内自由捞取</li>
+                        <li class="flex items-start"><span class="text-emerald-400 mr-3">◆</span>不限主打产品，任意保单成交均按公海特奖结算</li>
+                        <li class="flex items-start"><span class="text-emerald-400 mr-3">◆</span>捞回即归属，先到先得，不设持有上限</li>
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-[10px] text-emerald-300 uppercase tracking-[0.3em] mb-4">规划师佣金</p>
+                    <div class="text-8xl md:text-9xl font-bold emerald-text leading-none">25%</div>
+                    <div class="h-[1px] w-32 emerald-gradient-bg mx-auto my-8"></div>
+                    <p class="text-gray-400 text-sm">公海捞回成交 · 与下架王并列<span class="text-emerald-400 font-bold">最高</span>佣金档</p>
+                    <div class="mt-6 inline-flex items-center bg-emerald-950/40 border border-emerald-700/40 rounded-full px-4 py-2 text-emerald-300 text-xs">
+                        <span class="mr-2">↑</span>
+                        相比港险主打 +10 个点 · 相比下架 +5 个点
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-gray-600 mt-8 text-xs">注：公海捞回操作通过「客户档案 → 公海库」入口，成交归属以系统 retrieveTime 记录为准。</p>
+    </section>
+
+    <!-- 5. P2 公海客户画像（5 档） -->
+    <section id="persona" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="flex items-center mb-6">
+            <div class="w-12 h-[2px] emerald-gradient-bg mr-4"></div>
+            <h2 class="text-3xl font-bold">5. 公海客户画像 <span class="emerald-text font-normal text-lg ml-4">Five Tiers, One Goldmine</span></h2>
+        </div>
+        <p class="text-gray-400 mb-2 max-w-4xl text-sm leading-relaxed">
+            深度盘点 3,293 户 P2 公海，发现 <span class="text-emerald-400 font-bold">72% 客户第一诉求与 6 月主打天然对齐</span>——增额寿、养老金、港险、年金险、储蓄险。
+        </p>
+        <p class="text-gray-500 mb-10 max-w-4xl text-xs leading-relaxed">
+            按「预算 × 触达深度 × 诉求匹配」分为 5 档，规划师可按优先级捞回。仅 S+A 两档客户已填报年缴预算合计 <span class="text-emerald-400 font-bold">约 3.2 亿元</span>。
+        </p>
+
+        <!-- 5 档数字横排 -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-14">
+
+            <a href="#tier-s" class="bg-gradient-to-br from-[#2a2210] to-[#0A0A0A] p-5 rounded-2xl border-2 border-gold-primary/50 text-center card-glow group">
+                <div class="text-2xl mb-1">🔴</div>
+                <div class="text-[10px] text-gold-primary tracking-[0.2em] mb-2 font-bold">S · 必处理</div>
+                <div class="text-4xl font-bold king-text">233</div>
+                <div class="text-[10px] text-gray-500 mt-1">高净值已触达</div>
+            </a>
+
+            <a href="#tier-a" class="bg-gradient-to-br from-[#0a1f15] to-[#0A0A0A] p-5 rounded-2xl border-2 border-emerald-primary/50 text-center card-glow group">
+                <div class="text-2xl mb-1">🟠</div>
+                <div class="text-[10px] text-emerald-300 tracking-[0.2em] mb-2 font-bold">A · 本月触达</div>
+                <div class="text-4xl font-bold emerald-text">1,143</div>
+                <div class="text-[10px] text-gray-500 mt-1">高预算未挖矿</div>
+            </a>
+
+            <a href="#tier-b" class="bg-gradient-to-br from-[#0a1a1f] to-[#0A0A0A] p-5 rounded-2xl border-2 border-cyan-700/40 text-center card-glow group">
+                <div class="text-2xl mb-1">🟡</div>
+                <div class="text-[10px] text-cyan-300 tracking-[0.2em] mb-2 font-bold">B · 话术唤醒</div>
+                <div class="text-4xl font-bold text-cyan-300">1,086</div>
+                <div class="text-[10px] text-gray-500 mt-1">信息缺失待唤醒</div>
+            </a>
+
+            <a href="#tier-c" class="bg-gradient-to-br from-[#161616] to-[#0A0A0A] p-5 rounded-2xl border border-white/10 text-center card-glow group">
+                <div class="text-2xl mb-1">⚪</div>
+                <div class="text-[10px] text-gray-400 tracking-[0.2em] mb-2 font-bold">C · 暂不安排</div>
+                <div class="text-4xl font-bold text-gray-400">163</div>
+                <div class="text-[10px] text-gray-600 mt-1">诉求不匹配</div>
+            </a>
+
+            <a href="#tier-x" class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-5 rounded-2xl border-2 border-crimson-primary/40 text-center card-glow group">
+                <div class="text-2xl mb-1">⚫</div>
+                <div class="text-[10px] text-red-400 tracking-[0.2em] mb-2 font-bold">X · 重疾隔离</div>
+                <div class="text-4xl font-bold crimson-text">744</div>
+                <div class="text-[10px] text-gray-500 mt-1">不进 6 月主打</div>
+            </a>
+
+        </div>
+
+        <!-- ────────── S 档详情 ────────── -->
+        <div id="tier-s" class="bg-gradient-to-br from-[#2a2210] via-[#1a0a0a] to-[#2a2210] p-10 md:p-12 rounded-[2.5rem] border-2 border-gold-primary/40 mb-8 relative overflow-hidden king-glow">
+            <div class="absolute -right-20 -top-20 w-80 h-80 bg-gold-primary/10 rounded-full blur-[100px]"></div>
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-3xl">🔴</span>
+                        <span class="text-[10px] text-gold-primary tracking-[0.3em] font-bold border border-gold-primary/40 px-3 py-1 rounded-full">TIER S · 必处理</span>
+                    </div>
+                    <h3 class="text-4xl font-bold king-text mb-3">高净值已触达 · 临门一脚</h3>
+                    <p class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">
+                        被规划师反复讲过 2 次以上方案（其中 <span class="text-gold-primary font-bold">55% 已讲过 4 次以上</span>）的高预算客户。他们真有兴趣，只是上次卡在异议没解开——价格疑虑、家人意见、对比中。这群人差临门一脚，<span class="text-gold-primary font-bold">不能让他们继续在公海冷下去</span>。
+                    </p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">主诉求</p>
+                            <p class="text-sm font-bold text-gold-primary">增额寿 58%</p>
+                            <p class="text-[10px] text-gray-400">养老 27% · 港险 9%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">主流年龄</p>
+                            <p class="text-sm font-bold text-gold-primary">30-50 岁</p>
+                            <p class="text-[10px] text-gray-400">画像完整度 98%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">年缴预算</p>
+                            <p class="text-sm font-bold text-gold-primary">10-30 万 58%</p>
+                            <p class="text-[10px] text-gray-400">百万级 14%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">讲方案次数</p>
+                            <p class="text-sm font-bold text-gold-primary">2 次起步</p>
+                            <p class="text-[10px] text-gray-400">30% 讲过 6+ 次</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center border-l border-gold-primary/20 md:pl-8">
+                    <p class="text-[10px] text-gold-primary tracking-[0.3em] mb-3">户数</p>
+                    <div class="text-6xl md:text-7xl font-bold king-text leading-none">233</div>
+                    <div class="h-[1px] w-20 gold-gradient-bg mx-auto my-5"></div>
+                    <p class="text-[10px] text-gold-primary tracking-[0.3em] mb-3">预算合计</p>
+                    <div class="text-3xl font-bold text-white">≈ 8,600 万</div>
+                    <p class="text-[10px] text-gray-500 mt-2">客户已填报年缴预算</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ────────── A 档详情 ────────── -->
+        <div id="tier-a" class="bg-gradient-to-br from-[#0a1f15] via-[#0a1612] to-[#0a1f15] p-10 md:p-12 rounded-[2.5rem] border-2 border-emerald-primary/40 mb-8 relative overflow-hidden emerald-glow">
+            <div class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px]"></div>
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-3xl">🟠</span>
+                        <span class="text-[10px] text-emerald-300 tracking-[0.3em] font-bold border border-emerald-500/40 px-3 py-1 rounded-full">TIER A · 本月触达</span>
+                    </div>
+                    <h3 class="text-4xl font-bold emerald-text mb-3">高预算 · 未真讲过 · 最大金矿</h3>
+                    <p class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">
+                        30-50 岁主流买险人群，<span class="text-emerald-400 font-bold">预算大都 10 万年缴以上</span>，第一诉求 71% 是增额寿。但他们里面 <span class="text-emerald-400 font-bold">48% 规划师从来没真讲过方案</span>——分到客户后忙别的去了，或者轻聊一两句就放公海。这是 6 月最大的可挖金矿：<span class="text-emerald-300 font-bold">既匹配主打又有预算，机会都还没碰过</span>。
+                    </p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">主诉求</p>
+                            <p class="text-sm font-bold text-emerald-300">增额寿 71%</p>
+                            <p class="text-[10px] text-gray-400">养老 23% · 港险 3%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">主流年龄</p>
+                            <p class="text-sm font-bold text-emerald-300">30-50 岁</p>
+                            <p class="text-[10px] text-gray-400">画像完整度 94%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">年缴预算</p>
+                            <p class="text-sm font-bold text-emerald-300">10-30 万 44%</p>
+                            <p class="text-[10px] text-gray-400">30+ 万 20%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">触达深度</p>
+                            <p class="text-sm font-bold text-emerald-300">48% 未真讲</p>
+                            <p class="text-[10px] text-gray-400">34% 仅讲 1 次</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center border-l border-emerald-700/30 md:pl-8">
+                    <p class="text-[10px] text-emerald-300 tracking-[0.3em] mb-3">户数</p>
+                    <div class="text-6xl md:text-7xl font-bold emerald-text leading-none">1,143</div>
+                    <div class="h-[1px] w-20 emerald-gradient-bg mx-auto my-5"></div>
+                    <p class="text-[10px] text-emerald-300 tracking-[0.3em] mb-3">预算合计</p>
+                    <div class="text-3xl font-bold text-white">≈ 2.4 亿</div>
+                    <p class="text-[10px] text-gray-500 mt-2">客户已填报年缴预算</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ────────── B 档详情 ────────── -->
+        <div id="tier-b" class="bg-gradient-to-br from-[#0a1a1f] via-[#0a1418] to-[#0a1a1f] p-10 md:p-12 rounded-[2.5rem] border-2 border-cyan-700/40 mb-8 relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-3xl">🟡</span>
+                        <span class="text-[10px] text-cyan-300 tracking-[0.3em] font-bold border border-cyan-700/40 px-3 py-1 rounded-full">TIER B · 话术批量唤醒</span>
+                    </div>
+                    <h3 class="text-4xl font-bold text-cyan-300 mb-3">未挖矿层 · 信息缺失但方向对</h3>
+                    <p class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">
+                        诉求方向是对的（<span class="text-cyan-300 font-bold">增额寿 72% + 养老金 18%</span>），但客户画像信息严重缺失：年龄 55% 没填、预算 44% 没填。<span class="text-cyan-300 font-bold">100% 规划师从来没真聊过</span>——客户从公众号 / 抖音进来留了表，规划师都没开过一次有效沟通就放公海了。<span class="text-cyan-400 font-bold">预算可能其实不低，只是没问</span>。
+                    </p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">主诉求</p>
+                            <p class="text-sm font-bold text-cyan-300">增额寿 72%</p>
+                            <p class="text-[10px] text-gray-400">养老 18% · 年金 8%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">画像完整度</p>
+                            <p class="text-sm font-bold text-cyan-300">45%</p>
+                            <p class="text-[10px] text-gray-400">年龄/预算半数缺</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">触达深度</p>
+                            <p class="text-sm font-bold text-cyan-300">0 次</p>
+                            <p class="text-[10px] text-gray-400">从未讲过方案</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">建议玩法</p>
+                            <p class="text-sm font-bold text-cyan-300">话术批量推</p>
+                            <p class="text-[10px] text-gray-400">朋友圈 + 回信筛漏</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center border-l border-cyan-700/30 md:pl-8">
+                    <p class="text-[10px] text-cyan-300 tracking-[0.3em] mb-3">户数</p>
+                    <div class="text-6xl md:text-7xl font-bold text-cyan-300 leading-none">1,086</div>
+                    <div class="h-[1px] w-20 bg-cyan-500/40 mx-auto my-5"></div>
+                    <p class="text-[10px] text-cyan-300 tracking-[0.3em] mb-3">隐藏价值</p>
+                    <div class="text-3xl font-bold text-white">待激活</div>
+                    <p class="text-[10px] text-gray-500 mt-2">问清预算可能转 A 档</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ────────── C 档详情 ────────── -->
+        <div id="tier-c" class="bg-gradient-to-br from-[#161616] to-[#0A0A0A] p-8 rounded-[2rem] border border-white/10 mb-8 relative overflow-hidden">
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-2xl">⚪</span>
+                        <span class="text-[10px] text-gray-400 tracking-[0.3em] font-bold border border-white/10 px-3 py-1 rounded-full">TIER C · 暂不安排</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-300 mb-3">低质量线索池</h3>
+                    <p class="text-gray-500 leading-relaxed text-sm">
+                        诉求填的是「其他/未知/定期寿/小孩险/意外险」91%——大多是表单填得模糊或诉求小众。<span class="text-gray-400">年龄 80% 没填、预算几乎全部缺失</span>。6 月主打没有它们要的产品，<span class="text-gray-400 font-bold">不该浪费规划师精力</span>。月底如果 S/A 档消化完了再扫一遍。
+                    </p>
+                </div>
+                <div class="text-center md:border-l border-white/10 md:pl-6">
+                    <p class="text-[10px] text-gray-500 tracking-[0.3em] mb-2">户数</p>
+                    <div class="text-5xl font-bold text-gray-300">163</div>
+                    <p class="text-[10px] text-gray-600 mt-3">月底再看</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────────── X 档详情 ────────── -->
+        <div id="tier-x" class="bg-gradient-to-br from-[#1A0A0A] to-[#0A0A0A] p-8 rounded-[2rem] border border-red-900/30 mb-12 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-64 h-64 bg-red-900/10 rounded-full blur-[80px]"></div>
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-2xl">⚫</span>
+                        <span class="text-[10px] text-red-400 tracking-[0.3em] font-bold border border-red-900/40 px-3 py-1 rounded-full">TIER X · 重疾隔离</span>
+                    </div>
+                    <h3 class="text-2xl font-bold crimson-text mb-3">重疾险诉求 · 不进 6 月主打</h3>
+                    <p class="text-gray-500 leading-relaxed text-sm">
+                        100% 第一诉求是重疾险。这类客户普遍年轻（<span class="text-red-300 font-bold">30 岁以下占主流</span>）+ 预算极低或缺失（<span class="text-red-300 font-bold">61% 没填、30% 年缴 &lt; 1 万</span>）。6 月主打全是高客单价储蓄 / 年金，<span class="text-red-300 font-bold">对他们完全不匹配</span>。等未来上重疾主打产品时再单独开 lane。
+                    </p>
+                </div>
+                <div class="text-center md:border-l border-red-900/30 md:pl-6">
+                    <p class="text-[10px] text-red-400 tracking-[0.3em] mb-2">户数</p>
+                    <div class="text-5xl font-bold crimson-text">744</div>
+                    <p class="text-[10px] text-gray-600 mt-3">6 月不开发</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 行动召唤 -->
+        <div class="text-center mt-16 mb-4">
+            <div class="inline-block">
+                <p class="text-[10px] text-emerald-400 tracking-[0.4em] mb-3">CALL TO ACTION</p>
+                <p class="text-2xl md:text-3xl font-bold gold-text mb-2">2,462 户在公海等你</p>
+                <p class="text-gray-400 text-sm">S 档 233 + A 档 1,143 + B 档 1,086 — 都与 6 月主打天然对齐</p>
+                <div class="mt-6 inline-flex items-center bg-emerald-950/40 border border-emerald-700/40 rounded-full px-5 py-2 text-emerald-300 text-xs">
+                    <span class="mr-2">💎</span>
+                    捞回即归属 · 不限主打 · 全部按 <span class="text-emerald-400 font-bold mx-1">25%</span> 公海特奖结算
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-gray-600 mt-10 text-xs">
+            注：分档基于客户档案的「第一诉求 × K7 预算 × 方案讲解次数」三维统计（2026-05-23 实测，数据可能随客户档案更新略有浮动）。
+        </p>
+
+    </section>
+
+    <!-- 6. 达标奖 -->
+    <section id="rewards" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-bold mb-4">达标奖励计划</h2>
+            <div class="h-1 w-20 gold-gradient-bg mx-auto mb-6"></div>
+            <p class="text-gray-500 tracking-widest">PERFORMANCE INCENTIVE PLAN</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+
+            <div class="bg-gradient-to-b from-[#1A1A1A] to-transparent p-8 rounded-[2.5rem] border border-white/5 relative group card-glow text-center">
+                <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-black rounded-full border-2 border-white/20 flex items-center justify-center text-xl group-hover:border-gold-primary transition-all">🥉</div>
+                <h3 class="text-sm text-gray-400 mb-6 mt-3 tracking-widest">第一梯队</h3>
+                <div class="mb-8">
+                    <p class="text-[10px] text-gray-500 uppercase mb-2">业绩目标（标保）</p>
+                    <div class="text-4xl font-bold text-white">50,000</div>
+                </div>
+                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                <div>
+                    <p class="text-[10px] text-gold-primary uppercase mb-2 font-bold">额外奖金</p>
+                    <div class="text-3xl font-bold gold-text">+ HKD 2,000</div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-b from-[#1A1A1A] to-transparent p-8 rounded-[2.5rem] border border-white/5 relative group card-glow text-center">
+                <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-black rounded-full border-2 border-white/20 flex items-center justify-center text-xl group-hover:border-gold-primary transition-all">🥈</div>
+                <h3 class="text-sm text-gray-400 mb-6 mt-3 tracking-widest">第二梯队</h3>
+                <div class="mb-8">
+                    <p class="text-[10px] text-gray-500 uppercase mb-2">业绩目标（标保）</p>
+                    <div class="text-4xl font-bold text-white">100,000</div>
+                </div>
+                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                <div>
+                    <p class="text-[10px] text-gold-primary uppercase mb-2 font-bold">额外奖金</p>
+                    <div class="text-3xl font-bold gold-text">+ HKD 5,000</div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-b from-[#222] to-transparent p-8 rounded-[2.5rem] border border-gold-primary/30 relative group card-glow text-center">
+                <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-black rounded-full border-2 border-gold-primary flex items-center justify-center text-xl shadow-[0_0_15px_rgba(212,175,55,0.3)]">🥇</div>
+                <h3 class="text-sm text-gold-primary mb-6 mt-3 tracking-widest font-bold">卓越贡献</h3>
+                <div class="mb-8">
+                    <p class="text-[10px] text-gray-500 uppercase mb-2">业绩目标（标保）</p>
+                    <div class="text-4xl font-bold text-white">200,000</div>
+                </div>
+                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-gold-primary/30 to-transparent mb-6"></div>
+                <div>
+                    <p class="text-[10px] text-gold-primary uppercase mb-2 font-bold">额外奖金</p>
+                    <div class="text-3xl font-bold gold-text">+ HKD 8,000</div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-b from-[#2a2210] to-transparent p-8 rounded-[2.5rem] border-2 border-gold-primary/60 relative group card-glow text-center transform lg:scale-105 shadow-[0_0_25px_rgba(212,175,55,0.2)]">
+                <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-black rounded-full border-2 border-gold-primary flex items-center justify-center text-xl shadow-[0_0_25px_rgba(212,175,55,0.6)]">👑</div>
+                <h3 class="text-sm text-gold-primary mb-6 mt-3 tracking-widest font-bold">王者梯队</h3>
+                <div class="mb-8">
+                    <p class="text-[10px] text-gray-500 uppercase mb-2">业绩目标（标保）</p>
+                    <div class="text-4xl font-bold text-white">500,000</div>
+                </div>
+                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-gold-primary/40 to-transparent mb-6"></div>
+                <div>
+                    <p class="text-[10px] text-gold-primary uppercase mb-2 font-bold">额外奖金</p>
+                    <div class="text-3xl font-bold gold-text">+ HKD 20,000</div>
+                </div>
+                <div class="mt-6 inline-block px-3 py-1 bg-gold-primary/10 text-gold-primary text-[10px] rounded-full">高难度·高回报</div>
+            </div>
+
+        </div>
+
+        <p class="text-center text-gray-600 mt-16 text-sm">注：标保统计以公司系统最终核算为准，所有规划师均可参与，4 档奖金按最高达标档发放（不叠加）。</p>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-16 border-t border-white/5 mt-20 opacity-50">
+        <div class="text-2xl font-bold gold-text mb-4">保心上人</div>
+        <p class="text-gray-600 text-[10px] tracking-[0.5em] mb-4">CONFIDENTIAL & PROPRIETARY</p>
+        <p class="text-gray-700 text-xs">© 2026 保心上人公司 · 6 月奖励计划 · 内部材料 严禁翻印</p>
+    </footer>
+
+    <script>
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('section-animate');
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
