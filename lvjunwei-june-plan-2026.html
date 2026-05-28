@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吕军伟 · 6月规划师试岗工作计划</title>
+<style>
+  :root{
+    --cream:#faf6ef; --card:#ffffff; --ink:#2c2620; --ink2:#6b5f4f;
+    --brown:#8a5a2b; --brown2:#a67c52; --gold:#c8a24a; --goldsoft:#f2e6c9;
+    --line:#e7ddcc; --green:#3f8f5b; --greenbg:#e7f3ea; --amber:#c9871f;
+    --amberbg:#fbf0d8; --red:#c0473b; --redbg:#fae7e4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--cream); color:var(--ink); line-height:1.7;
+    -webkit-font-smoothing:antialiased; padding:0 0 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+
+  /* Header */
+  header{
+    background:linear-gradient(135deg,#2c2620 0%,#4a3a28 60%,#6b4a25 100%);
+    color:#fff;padding:34px 0 30px;margin-bottom:24px;
+    border-bottom:4px solid var(--gold);
+  }
+  header .wrap{display:block}
+  .tag{display:inline-block;font-size:12px;letter-spacing:2px;color:var(--gold);
+    border:1px solid rgba(200,162,74,.5);border-radius:20px;padding:3px 12px;margin-bottom:14px}
+  header h1{font-size:26px;font-weight:800;letter-spacing:1px;margin-bottom:6px}
+  header h1 b{color:var(--gold)}
+  .subtitle{font-size:14px;color:#e9ddc7;opacity:.92}
+  .countdown{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .cd-pill{background:rgba(255,255,255,.08);border:1px solid rgba(200,162,74,.4);
+    border-radius:10px;padding:8px 14px;font-size:13px;color:#f0e6cf}
+  .cd-pill b{color:var(--gold);font-size:16px}
+
+  /* Section title */
+  .sec-title{font-size:15px;font-weight:800;color:var(--brown);
+    letter-spacing:1px;margin:30px 0 12px;display:flex;align-items:center;gap:8px}
+  .sec-title::before{content:"";width:5px;height:18px;background:var(--gold);border-radius:3px}
+
+  /* Principle callout */
+  .principle{background:var(--goldsoft);border:1px solid #e6d29b;border-radius:14px;
+    padding:16px 18px;margin-bottom:6px}
+  .principle .lead{font-size:15px;font-weight:700;color:#7a531f;margin-bottom:10px}
+  .principle ul{list-style:none;display:grid;gap:8px}
+  .principle li{font-size:13.5px;color:#5f4a26;padding-left:22px;position:relative}
+  .principle li::before{content:"●";color:var(--gold);position:absolute;left:4px;top:0;font-size:11px}
+  .keyclients{background:#fff;border:2px solid var(--gold);border-radius:12px;padding:12px 16px 14px;margin:11px 0;box-shadow:0 3px 12px rgba(138,90,43,.12)}
+  .kc-head{font-size:12.5px;font-weight:800;color:var(--brown);margin-bottom:9px;letter-spacing:.5px}
+  .keyclients li{color:var(--ink)}
+  .keyclients li b{color:var(--brown)}
+  .ctag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--brown);background:#fff;border:1px solid #e0cfa6;border-radius:5px;padding:1px 7px;margin-right:7px;vertical-align:middle}
+
+  /* Phase cards */
+  .phase{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+  .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--brown2)}
+  .phase.p0::before{background:#b9ab92}
+  .phase.p1::before{background:var(--brown2)}
+  .phase.p2::before{background:var(--brown)}
+  .phase.p3::before{background:var(--gold)}
+  .phase.p4::before{background:linear-gradient(var(--gold),var(--red))}
+  .ph-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .ph-badge{font-size:11px;font-weight:800;color:#fff;background:var(--brown);
+    border-radius:6px;padding:2px 9px;letter-spacing:1px}
+  .phase.p4 .ph-badge{background:var(--red)}
+  .ph-name{font-size:17px;font-weight:800;color:var(--ink)}
+  .ph-date{font-size:12.5px;color:var(--ink2);margin-left:auto;font-weight:600}
+  .ph-main{font-size:13.5px;color:var(--ink2);margin:8px 0 14px;border-left:2px solid var(--goldsoft);padding-left:10px}
+  .ph-main b{color:var(--brown)}
+  .ph-list{list-style:none;display:grid;gap:7px;margin-bottom:14px}
+  .ph-list li{font-size:13.5px;color:var(--ink);padding-left:20px;position:relative}
+  .ph-list li::before{content:"✓";color:var(--green);font-weight:800;position:absolute;left:0;top:0}
+  /* goal chips */
+  .goals{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#fbf7ef;border:1px solid var(--line);border-radius:9px;padding:7px 11px;
+    font-size:12.5px;color:var(--ink2);font-weight:600}
+  .chip b{color:var(--brown);font-size:14px;margin-left:3px}
+  .chip.hot{background:var(--redbg);border-color:#eccfc9}
+  .chip.hot b{color:var(--red)}
+
+  /* Funnel table */
+  table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13px}
+  th,td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--line)}
+  th{background:#f3ebdc;color:var(--brown);font-weight:800;font-size:12px}
+  td:first-child,th:first-child{text-align:left;padding-left:14px;font-weight:700}
+  tr:last-child td{border-bottom:none}
+  .tcum td{background:#fcf9f3}
+  .num{font-weight:800;color:var(--brown)}
+  .bbgoal{background:linear-gradient(135deg,#fff,#fbf0d8);border:2px solid var(--gold);border-radius:12px;padding:14px 18px;margin-top:10px;font-size:14.5px;color:var(--brown);font-weight:800}
+  .bbgoal b{color:var(--red);font-size:19px;margin:0 2px}
+  .bbgoal .sub{display:block;font-size:12px;color:var(--ink2);font-weight:500;margin-top:5px}
+
+  /* Mechanism */
+  .mech{display:grid;gap:10px}
+  .mech .row{background:var(--card);border:1px solid var(--line);border-radius:11px;
+    padding:12px 15px;font-size:13.5px}
+  .mech .row b{color:var(--brown)}
+
+  /* Criteria */
+  .crit{border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+  .crit .crow{padding:14px 16px;border-bottom:1px solid var(--line)}
+  .crit .crow:last-child{border-bottom:none}
+  .crit .ctop{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .badge{font-size:11px;font-weight:800;padding:2px 9px;border-radius:6px;letter-spacing:.5px}
+  .b-red{background:var(--redbg);color:var(--red)}
+  .b-amber{background:var(--amberbg);color:var(--amber)}
+  .b-green{background:var(--greenbg);color:var(--green)}
+  .crit .clabel{font-weight:800;font-size:14px}
+  .crit .cdesc{font-size:13px;color:var(--ink2)}
+  .crit .cval{font-size:13px;color:var(--ink);margin-top:3px;font-weight:600}
+
+  .verdict{background:#2c2620;color:#f0e6cf;border-radius:12px;padding:16px 18px;
+    font-size:13.5px;line-height:1.8;margin-top:12px}
+  .verdict b{color:var(--gold)}
+
+  .footer-note{text-align:center;font-size:12px;color:var(--ink2);margin-top:28px;
+    padding-top:18px;border-top:1px dashed var(--line)}
+  .encourage{background:var(--greenbg);border:1px solid #c4e2cd;border-radius:14px;
+    padding:16px 18px;margin-top:24px;font-size:14px;color:#2f6b46;font-weight:600;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="tag">6 月 · 规划师试岗冲刺</span>
+    <h1><b>吕军伟</b> 的 6 月作战计划</h1>
+    <div class="subtitle">主攻方向:P2公海开发 + 老客户服务 · 主打产品:630 主打分红险(月底下架)</div>
+    <div class="countdown">
+      <div class="cd-pill">冲刺周期 <b>本周 → 6/30</b></div>
+      <div class="cd-pill">下架收口 <b>6 月底</b></div>
+      <div class="cd-pill">7月判定 <b>定岗</b></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 核心原则 -->
+  <div class="sec-title">这个月怎么打 · 一句话先记住</div>
+  <div class="principle">
+    <div class="lead">6 月不是定生死的大考,是「练手 + 借东风 + 建信心」的窗口。把动作做扎实,结果自然来。</div>
+    <ul>
+      <li><span class="ctag">黄金窗口</span><b>借东风:</b>下架是全年最好卖的时候,客户被"再不买就没了"推着走,大胆促成</li>
+    </ul>
+    <div class="keyclients">
+      <div class="kc-head">🎯 主打客户群 · 2 类重点客户</div>
+      <ul>
+        <li><b>打暖客:</b>主攻诉求明确、前期沟通充分的 P2 公海客户</li>
+        <li><b>重服务:</b>服务已成交客户,为他们做保单整理或其他增值服务,顺势二开</li>
+      </ul>
+    </div>
+    <ul>
+      <li><span class="ctag">主打产品</span><b>聚焦内地分红险:</b>产品简单、正适合主攻;港险太复杂,这个月不碰</li>
+      <li><span class="ctag">外力协助</span><b>有大单喊人:</b>遇到大额客户,第一时间拉崔总 / 江宁一起促成</li>
+      <li><span class="ctag">全力以赴</span><b>全力专注:</b>6 月短视频暂停,所有精力放在客户开发上,不脚踏两只船</li>
+    </ul>
+  </div>
+
+  <!-- 阶段卡片 -->
+  <div class="sec-title">分阶段作战安排</div>
+
+  <div class="phase p0">
+    <div class="ph-head">
+      <span class="ph-badge">阶段 0</span>
+      <span class="ph-name">速成备战</span>
+      <span class="ph-date">5/28 周四 – 5/31 周日</span>
+    </div>
+    <div class="ph-main"><b>主线:</b>上膛——把产品、话术、工具、名单全部准备好,6/1 一开打就能跑。</div>
+    <ul class="ph-list">
+      <li>产品速成:吃透 630主打产品 分红险 + 下架逻辑 + 炒停售为什么是机会</li>
+      <li>流程话术:破冰 → 加微信 → 约电话/会议 → 出方案 → 促成 → 异议处理,全程背熟</li>
+      <li>工具上手:保单管理、公海捞客、企业微信加好友、腾讯会议、出方案</li>
+      <li>配弹药:收藏 90 个 P2 公海意向客户,收集30个 已成交用户</li>
+      <li>弹药库:领取停售逼单话术 + 常见异议应答(太贵/再想想/比价)+ 成功案例,反复演练</li>
+      <li>上岗考核:产品 + 话术过江宁/崔总一次,过关才开打</li>
+    </ul>
+    <div class="goals">
+      <span class="chip">暖客清单<b>90户</b></span>
+      <span class="chip">已成交用户<b>30户</b></span>
+      <span class="chip">企业微信<b>个人资料照片，简介，资格申请等</b></span>
+    </div>
+  </div>
+
+  <div class="phase p1">
+    <div class="ph-head">
+      <span class="ph-badge">第 1 周</span>
+      <span class="ph-name">建立联系 · 起量</span>
+      <span class="ph-date">6/1 – 6/7</span>
+    </div>
+    <div class="ph-main"><b>主线:</b>把暖客盘活——触达、加微信、破冰。节奏:上午集中打电话/加微信,下午跟进约电话/会议,晚 5 分钟报数复盘。</div>
+    <div class="goals">
+      <span class="chip">日有效触达<b>≥20</b></span>
+      <span class="chip">每日添加微信<b>≥2~3个</b></span>
+      <span class="chip">约到首批电话沟通<b>≥2~3个</b></span>
+    </div>
+  </div>
+
+  <div class="phase p2">
+    <div class="ph-head">
+      <span class="ph-badge">第 2 周</span>
+      <span class="ph-name">深聊 · 建管道</span>
+      <span class="ph-date">6/8 – 6/14</span>
+    </div>
+    <div class="ph-main"><b>主线:</b>把微信好友转成电话深聊 / 腾讯会议沟通,该出方案就出方案,把意向客户筛出来。</div>
+    <div class="goals">
+      <span class="chip">本周深聊/会议<b>≥5</b></span>
+      <span class="chip">新客方案<b>≥5</b></span>
+      <span class="chip">保单整理<b>≥12</b></span>
+      <span class="chip">保单讲解<b>≥8</b></span>
+      <span class="chip">锁定意向<b>≥3</b></span>
+      <span class="chip">累计加微信<b>≥26</b></span>
+    </div>
+  </div>
+
+  <div class="phase p3">
+    <div class="ph-head">
+      <span class="ph-badge">第 3 周</span>
+      <span class="ph-name">促成 · 停售预热</span>
+      <span class="ph-date">6/15 – 6/21</span>
+    </div>
+    <div class="ph-main"><b>主线:</b>对意向客户用"下架倒计时"话术促成;大额客户拉崔总一起助攻。把犹豫客户排进下周"最后一推"名单。</div>
+    <div class="goals">
+      <span class="chip">深聊/会议累计<b>≥12</b></span>
+      <span class="chip">意向累计<b>≥6</b></span>
+      <span class="chip">启动签单<b>≥1–2</b></span>
+    </div>
+  </div>
+
+  <div class="phase p4">
+    <div class="ph-head">
+      <span class="ph-badge">第 4 周</span>
+      <span class="ph-name">停售冲刺 · 收口</span>
+      <span class="ph-date">6/22 – 6/30</span>
+    </div>
+    <div class="ph-main"><b>主线:</b>下架最后窗口,集中逼单(正当地),所有意向客户最后一轮促成。没成的转入 7 月跟进或留档。6/30 收口,7/1 大复盘。</div>
+    <div class="goals">
+      <span class="chip hot">累计成交<b>≥5–8单</b></span>
+      <span class="chip hot">月度标保<b>≥5万</b></span>
+      <span class="chip">意向收口<b>全覆盖</b></span>
+      <span class="chip">7/1<b>复盘</b></span>
+    </div>
+  </div>
+
+  <!-- 漏斗累计 -->
+  <div class="sec-title">漏斗累计目标(逐周递进)</div>
+  <table>
+    <tr><th>环节</th><th>第1周</th><th>第2周</th><th>第3周</th><th>月底</th></tr>
+    <tr><td>加微信</td><td class="num">12</td><td class="num">26</td><td class="num">40</td><td class="num">60+</td></tr>
+    <tr><td>电话/会议</td><td class="num">3</td><td class="num">8</td><td class="num">12</td><td class="num">15+</td></tr>
+    <tr><td>新客方案</td><td class="num">—</td><td class="num">5</td><td class="num">8</td><td class="num">10+</td></tr>
+    <tr><td>保单整理</td><td class="num">5</td><td class="num">12</td><td class="num">22</td><td class="num">30</td></tr>
+    <tr><td>保单讲解</td><td class="num">—</td><td class="num">8</td><td class="num">16</td><td class="num">25</td></tr>
+    <tr><td>锁定意向</td><td class="num">—</td><td class="num">3</td><td class="num">6</td><td class="num">6+</td></tr>
+    <tr class="tcum"><td>新客成交</td><td class="num">—</td><td class="num">—</td><td class="num">1–2</td><td class="num">2–3</td></tr>
+    <tr class="tcum"><td>老客二开</td><td class="num">—</td><td class="num">1</td><td class="num">2–3</td><td class="num">3–5</td></tr>
+  </table>
+
+  <div class="bbgoal">💰 月度标保目标 · 底线 <b>5 万</b> · 目标 <b>8 万</b> · 冲刺 <b>10 万+</b>
+    <span class="sub">测算:件均 ~1 万(对标江宁内地件均 1.5 万、新手保守取 1 万)× 成交 5–8 单</span>
+  </div>
+
+  <!-- 机制 -->
+  <div class="sec-title">每天 / 每周固定动作</div>
+  <div class="mech">
+    <div class="row"><b>每日</b> · 晨会报昨日数(触达 / 加微信 / 电话会议 / 保单整理) + 晚上 5 分钟复盘</div>
+    <div class="row"><b>每周五</b> · 周复盘:漏斗各环节数据 + 话术卡点 + 下周微调</div>
+    <div class="row"><b>每周 ≥1 次</b> · 跟老规划师带教(听电话或旁听腾讯会议)</div>
+    <div class="row"><b>老客服务</b> · 每周推进 ~8 户已成交客户保单整理 + 会议讲解,顺势二开</div>
+    <div class="row"><b>大单兜底</b> · 凡大额客户,崔总 / 江宁一起跟,既助攻也保单</div>
+    <div class="row"><b>6/14 中期校准</b> · 前两周数据明显掉队(加不上微信 / 约不到电话)就换名单、换打法,不等月底</div>
+    <div class="row"><b>即时激励</b> · 出首单 / 达成周目标 → 即时奖励 + 当众认可,趁热建信心</div>
+    <div class="row"><b>数据台账</b> · 每日填漏斗打卡表(单独 Excel),月底复盘有据可依</div>
+  </div>
+
+  <!-- 月底判定 -->
+  <div class="sec-title">月底怎么判 · 标准先说清</div>
+  <div class="crit">
+    <div class="crow">
+      <div class="ctop"><span class="badge b-red">底线</span><span class="clabel">过程动作(你能控的)</span></div>
+      <div class="cval">加微信 ≥60 · 电话/会议 ≥15 · 新客方案 ≥10 · 保单整理 ≥30 · 保单讲解 ≥25 · 意向 ≥6</div>
+      <div class="cdesc">连动作都做不出来 = 暂不适合销售,7 月回文案编辑</div>
+    </div>
+    <div class="crow">
+      <div class="ctop"><span class="badge b-amber">结果</span><span class="clabel">成交(打折看,有下架东风)</span></div>
+      <div class="cval">累计成交 ≥5–8 单(新客 2–3 + 老客二开 3–5)· 标保 ≥5 万(目标 8 万)</div>
+      <div class="cdesc">过程达标 + 出单 = 7 月转正规划师</div>
+    </div>
+    <div class="crow">
+      <div class="ctop"><span class="badge b-green">软性</span><span class="clabel">客户反馈 + 老手评估</span></div>
+      <div class="cval">客户愿意跟你聊 · 老规划师认可"有销售感觉"</div>
+      <div class="cdesc">过程达标但颗粒无收 = 听老手诊断差在哪,再定缓冲或回编辑</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <b>判定逻辑:</b>过程是底线——动作做不出来说明不是这块料;<b>过程达标 + 出单 / 强意向</b> → 7 月转正规划师;过程达标但零成交零意向 → 老规划师诊断后再定。<br>
+    记住:<b>这个月看你的动作,比看你借东风出的那个成交额更重要。</b>
+  </div>
+
+  <div class="encourage">
+    🔥 全力一个月,把火点着。下架这波是天时,机会就在脚下——稳扎稳打,该出手时大胆出手。
+  </div>
+
+  <div class="footer-note">
+    保心上人 · 6 月规划师试岗计划 · 制定于 2026-05-27<br>
+    目标数字将按实际分配的暖客名单量校准
+  </div>
+
+</div>
+
+</body>
+</html>
