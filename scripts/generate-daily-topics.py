@@ -347,7 +347,7 @@ def search_douyin(keyword):
         create_time = aweme.get("create_time", 0)
         if desc:
             items.append({"title": desc, "url": share_url, "play": play, "like": like,
-                          "create_time": create_time})
+                          "create_time": create_time, "cid": aweme.get("aweme_id", "")})
     return items
 
 
@@ -413,7 +413,7 @@ def search_xiaohongshu(keyword):
         create_time = note.get("time", 0) or note.get("last_update_time", 0)
         if title:
             items.append({"title": title, "url": url, "play": 0, "like": like,
-                          "create_time": create_time})
+                          "create_time": create_time, "cid": note_id})
     return items
 
 
@@ -540,14 +540,58 @@ def normalize_heat(data):
                 item["hotness_score"] = int(round(rank / n * 100))
 
 
-def fetch_top_comments(data, max_items_per_platform=8):
-    """Best-effort 抓评论区。当前 TikHub 评论 endpoint 不稳定,
-    仅做占位 (item['comments']=[]); 后续可按平台补实现。"""
+def _extract_comment_texts(resp, max_n=8):
+    """从评论接口响应里提取前 max_n 条评论文本(抖音 text / 小红书 content)。"""
+    cs = _find_list((resp or {}).get("data"), ("text", "content")) or []
+    out = []
+    for c in cs:
+        if not isinstance(c, dict):
+            continue
+        txt = (c.get("text") or c.get("content") or "").strip()
+        if txt and len(txt) >= 3:        # 跳过纯表情/极短
+            out.append(txt[:60])
+        if len(out) >= max_n:
+            break
+    return out
+
+
+def fetch_top_comments(data, max_items_per_platform=3):
+    """对抖音/小红书每个话题的前 N 条爆款抓真实评论 → item['comments']。
+    只抓头部几条(控成本); 评论喂给 DeepSeek 提炼"受众真实诉求"。"""
     for topic in data:
         for plat, items in topic["platforms"].items():
             for item in items:
-                if "comments" not in item:
-                    item["comments"] = []
+                item.setdefault("comments", [])
+    if not TIKHUB_API_KEY:
+        return
+    fetched = 0
+    for topic in data:
+        for plat, items in topic["platforms"].items():
+            if plat not in ("douyin", "xiaohongshu"):
+                continue
+            done = 0
+            for item in items:
+                if done >= max_items_per_platform:
+                    break
+                cid = item.get("cid")
+                if not cid:
+                    continue
+                try:
+                    if plat == "douyin":
+                        resp = tikhub_get("/api/v1/douyin/web/fetch_video_comments",
+                                          {"aweme_id": cid, "count": 12})
+                    else:
+                        resp = tikhub_get("/api/v1/xiaohongshu/app_v2/get_note_comments",
+                                          {"note_id": cid})
+                    cmts = _extract_comment_texts(resp)
+                    if cmts:
+                        item["comments"] = cmts
+                        fetched += 1
+                    done += 1
+                except Exception as e:
+                    print(f"  comments {plat}/{str(cid)[:10]} failed: {e}")
+                time.sleep(0.3)
+    print(f"  Fetched real comments for {fetched} items (抖音+小红书)")
 
 
 # ── DeepSeek LLM enrich ───────────────────────────────
@@ -869,11 +913,14 @@ def build_item_card(item, rank):
 
 
 def build_platform_section(platform_key, items):
+    items = [it for it in items if it.get("biz_relevance") != "不建议"]  # 不建议项不显示
+    if not items:
+        return ""
     dot_color = PLATFORM_COLORS.get(platform_key, "#888")
     platform_name = PLATFORM_NAMES.get(platform_key, platform_key)
-    cards = "".join(build_item_card(item, i) for i, item in enumerate(items[:10], 1))
+    cards = "".join(build_item_card(item, i) for i, item in enumerate(items[:3], 1))
     return f"""<div class="platform-section">
-      <div class="platform-name" style="color:{dot_color};">● {platform_name} <span class="plat-count">({len(items[:10])})</span></div>
+      <div class="platform-name" style="color:{dot_color};">● {platform_name} <span class="plat-count">(精选 {len(items[:3])} / 共 {len(items)})</span></div>
       <div class="item-list">{cards}</div>
     </div>"""
 
@@ -986,13 +1033,40 @@ def render_monitor_section(monitor):
             topcell = f'{tl}{like_badge}'
         else:
             topcell = '<span style="color:#bbb;">—（接口未取到，稍后重试）</span>'
-        rows += (f'<tr><td>{esc(m["name"])}</td><td style="color:#888;">{pn}</td>'
+        rows += (f'<tr><td style="white-space:nowrap;">{esc(m["name"])}</td>'
+                 f'<td style="color:#888;white-space:nowrap;">{pn}</td>'
                  f'<td style="text-align:center;font-weight:700;">{m.get("recent7", 0)}</td>'
                  f'<td>{topcell}</td></tr>')
     return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向</div>'
             f'<table class="monitor-table"><thead><tr>'
             f'<th>对标账号</th><th>平台</th><th>近7天发布</th><th>本批最高赞作品</th>'
             f'</tr></thead><tbody>{rows}</tbody></table></div>')
+
+
+def pick_featured(data, n=6):
+    """全局精选: 排除『不建议』, 业务相关度优先(港险/分红险/养老) + 热度, 取 top n。"""
+    cands = []
+    for topic in data:
+        for plat, items in topic.get("platforms", {}).items():
+            for it in items:
+                if it.get("biz_relevance") == "不建议" or not it.get("title"):
+                    continue
+                cands.append((topic["name"], plat, it))
+    pri = {"港险": 3, "分红险": 3, "养老": 2, "通用获客": 1}
+    cands.sort(key=lambda x: (pri.get(x[2].get("biz_relevance"), 0), x[2].get("hotness_score", 0) or 0), reverse=True)
+    return cands[:n]
+
+
+def render_featured_section(featured):
+    if not featured:
+        return ""
+    cards = ""
+    for i, (tname, plat, it) in enumerate(featured, 1):
+        pn = PLATFORM_NAMES.get(plat, plat)
+        src = f'<div class="feat-src">{esc(pn)} · {esc(tname)}</div>'
+        cards += f'<div class="feat-wrap">{src}{build_item_card(it, i)}</div>'
+    return (f'<div class="featured-section"><div class="featured-title">⭐ 今日精选 · 建议优先做</div>'
+            f'<div class="item-list">{cards}</div></div>')
 
 
 def synthesize_insight(data):
@@ -1035,7 +1109,8 @@ def generate_detail_page(data, insight="", monitor_html=""):
     insight_html = ""
     if insight:
         insight_html = f'<div class="insight-banner"><span class="ib-label">🔥 今日风向</span>{esc(insight)}</div>'
-    topic_cards = insight_html + monitor_html
+    featured_html = render_featured_section(pick_featured(data, 6))
+    topic_cards = insight_html + monitor_html + featured_html
     for topic in data:
         sections = ""
         for platform_key, items in topic["platforms"].items():
@@ -1248,6 +1323,12 @@ def generate_detail_page(data, insight="", monitor_html=""):
     .monitor-table th {{ text-align:left; color:#888; font-weight:600; padding:7px 12px; border-bottom:1px solid #eef0f6; font-size:0.92em; }}
     .monitor-table td {{ padding:9px 12px; border-bottom:1px solid #f5f6fa; }}
     .monitor-table tr:hover td {{ background:#fafbff; }}
+
+    /* 今日精选 */
+    .featured-section {{ background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }}
+    .featured-title {{ font-weight:800; color:#b45309; font-size:1.05em; margin-bottom:10px; }}
+    .feat-wrap {{ margin-bottom:4px; }}
+    .feat-src {{ font-size:0.74em; color:#92590a; font-weight:700; padding:0 0 2px 34px; }}
 
     .biz-reason {{
       margin: 4px 0;
