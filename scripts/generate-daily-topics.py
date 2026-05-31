@@ -597,7 +597,7 @@ def fetch_top_comments(data, max_items_per_platform=3):
 # ── DeepSeek LLM enrich ───────────────────────────────
 
 ENRICH_KEYS = ("summary", "highlights", "biz_relevance", "biz_reason", "creation_angle",
-               "audience_needs", "talk_script", "title_suggestion", "compliance")
+               "audience_needs")
 BIZ_RELEVANCE_VALUES = ("港险", "分红险", "养老", "通用获客", "不建议")
 
 
@@ -609,9 +609,6 @@ def _empty_enrich():
         "biz_reason": "",
         "creation_angle": "",
         "audience_needs": [],
-        "talk_script": "",
-        "title_suggestion": "",
-        "compliance": "",
     }
 
 
@@ -654,9 +651,6 @@ results 数组长度必须等于输入条目数, 每条包含:
   - biz_reason: <=20 字, 简述判断理由
   - creation_angle: <=30 字, 给保心上人编辑的具体再创作角度建议
   - audience_needs: 2-3 条数组, 每条<=15 字, 受众真正关心的疑问/诉求(有"评论摘录"就从中提炼, 没有就据标题+常识推断)
-  - talk_script: <=110 字, 给编辑可直接用的口播开场草稿(解疑/避坑式开场, 先建立信任再带产品, 口语化)
-  - title_suggestion: <=28 字, 一条我方可发布的合规标题(替换掉原标题里的违规/夸张表达)
-  - compliance: <=40 字, 合规提醒, 指出该选题需规避的红线(承诺收益/绝对化用语/最优级/伪权威背书/抢购焦虑)
 
 判定 "不建议" 的典型情况:
   1) 负面舆情(如 "3.15 曝光香港保险""分红险暴雷")
@@ -682,7 +676,7 @@ results 数组长度必须等于输入条目数, 每条包含:
         ],
         "temperature": 0.3,
         "response_format": {"type": "json_object"},
-        "max_tokens": 8000,
+        "max_tokens": 4000,
     }
 
     last_err = ""
@@ -740,9 +734,6 @@ results 数组长度必须等于输入条目数, 每条包含:
                         "biz_reason": str(d.get("biz_reason", ""))[:40],
                         "creation_angle": str(d.get("creation_angle", ""))[:60],
                         "audience_needs": an,
-                        "talk_script": str(d.get("talk_script", ""))[:160],
-                        "title_suggestion": str(d.get("title_suggestion", ""))[:40],
-                        "compliance": str(d.get("compliance", ""))[:60],
                     })
                 else:
                     result.append(_empty_enrich())
@@ -861,7 +852,7 @@ def build_item_card(item, rank):
     angle = esc(item.get("creation_angle") or "")
     angle_html = f'<div class="angle">💡 {angle}</div>' if angle else ""
 
-    # 第一期: 爆款拆解 — 受众诉求 / 口播草稿 / 合规标题 / 合规提醒 (不建议项不展示)
+    # 受众诉求 (不建议项不展示)。口播草稿/合规标题/合规提醒已按需求下线。
     is_bad = (item.get("biz_relevance") == "不建议")
     needs = item.get("audience_needs") or []
     if needs and not is_bad:
@@ -869,12 +860,6 @@ def build_item_card(item, rank):
         needs_html = f'<div class="needs-row"><span class="blk-label">💬 受众在问</span>{nchips}</div>' if nchips else ""
     else:
         needs_html = ""
-    script = esc(item.get("talk_script") or "")
-    script_html = f'<div class="talk-script"><span class="blk-label">🎙️ 口播草稿</span>{script}</div>' if script and not is_bad else ""
-    tsug = esc(item.get("title_suggestion") or "")
-    tsug_html = f'<div class="title-sug"><span class="blk-label">✍️ 合规标题</span>{tsug}</div>' if tsug and not is_bad else ""
-    comp = esc(item.get("compliance") or "")
-    comp_html = f'<div class="compliance">⚠ {comp}</div>' if comp and not is_bad else ""
 
     biz_reason = esc(item.get("biz_reason") or "")
     reason_html = f'<div class="biz-reason">{biz_reason}</div>' if biz == "不建议" and biz_reason else ""
@@ -903,9 +888,6 @@ def build_item_card(item, rank):
         {highlights_html}
         {angle_html}
         {needs_html}
-        {script_html}
-        {tsug_html}
-        {comp_html}
         {reason_html}
         <div class="meta-row">{stats_html}</div>
       </div>
@@ -1069,6 +1051,137 @@ def render_featured_section(featured):
             f'<div class="item-list">{cards}</div></div>')
 
 
+# ── 昨日要闻(财经时事, Google News RSS, best-effort)──────
+NEWS_QUERIES = [
+    ("存款",     "大额存单 OR 存款利率 OR 定期存款 OR 利率下调"),
+    ("港险",     "香港保险 OR 香港储蓄险"),
+    ("分红险",   "分红险 OR 增额终身寿 OR 年金险 OR 预定利率"),
+    ("养老",     "个人养老金 OR 商业养老金"),
+]
+
+
+def _strip_tags(s):
+    return re.sub(r"<[^>]+>", "", s or "").strip()
+
+
+def fetch_news(max_total=28):
+    """Google News RSS 抓最近 2 天的财经时事。返回 [{title, source, url, topic}]。
+    在 GitHub Actions(ubuntu, US)可达;本机中国网络可能 302/超时, 失败即返回空(best-effort)。"""
+    import xml.etree.ElementTree as ET
+    out, seen = [], set()
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; baoxin-news/1.0)"}
+    for label, q in NEWS_QUERIES:
+        url = ("https://news.google.com/rss/search?q="
+               + requests.utils.quote(q + " when:2d")
+               + "&hl=zh-CN&gl=CN&ceid=CN:zh")
+        try:
+            r = requests.get(url, headers=headers, timeout=20, allow_redirects=True)
+            if r.status_code != 200:
+                print(f"  news[{label}] HTTP {r.status_code}")
+                continue
+            root = ET.fromstring(r.content)
+            cnt = 0
+            for it in root.iter("item"):
+                title = _strip_tags(it.findtext("title") or "")
+                link = (it.findtext("link") or "").strip()
+                src_el = it.find("source")
+                source = (src_el.text or "").strip() if src_el is not None else ""
+                if not source and " - " in title:  # Google News 标题常是 "标题 - 来源"
+                    title, source = title.rsplit(" - ", 1)
+                title = title.strip()
+                if not title:
+                    continue
+                key = _normalize_title(title)
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append({"title": title[:90], "source": source[:18],
+                            "url": link, "topic": label})
+                cnt += 1
+                if cnt >= 10:
+                    break
+        except Exception as e:
+            print(f"  news[{label}] failed: {e}")
+    print(f"  Fetched {len(out)} news items")
+    return out[:max_total]
+
+
+def curate_news(news):
+    """DeepSeek 从抓取的财经新闻里挑业务相关的(<=8 条), 每条加一句'选题切入'。
+    无 key / 失败时回退为原始前 8 条(无切入语)。"""
+    if not news:
+        return []
+    # DeepSeek 缺失/失败时返回空、不渲染该块: 原始 Google News 对宽查询的结果噪声很大
+    # (外媒/公司公告/股市行情混入), 必须靠 DeepSeek 过滤才有价值。
+    fallback = []
+    if not DEEPSEEK_API_KEY:
+        return fallback
+    inputs = [{"id": i + 1, "title": n["title"], "source": n.get("source", ""), "topic": n.get("topic", "")}
+              for i, n in enumerate(news)]
+    sys_msg = "你是保心上人(高端香港保险+分红险+养老规划)的内容选题助手, 输出必须是合法 JSON。"
+    user_msg = f"""下面是抓取的财经新闻标题(存款/大额存单/利率/香港保险/分红险/增额寿/年金/养老等)。
+请挑出**对保险获客内容创作最有价值**的(最多 8 条):剔除重复、与保险/存款理财无关、纯股市行情、标题党、广告。
+输出 {{"results":[{{"id":输入序号,"category":"存款|港险|分红险|养老|其他","angle":"<=24字, 给编辑的选题切入(怎么把这条新闻做成获客内容)"}}]}},
+只保留你选中的, 按对业务的价值从高到低排序。
+新闻:
+{json.dumps(inputs, ensure_ascii=False, indent=2)}
+"""
+    try:
+        resp = requests.post(
+            DEEPSEEK_URL,
+            headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}", "Content-Type": "application/json"},
+            json={"model": DEEPSEEK_MODEL,
+                  "messages": [{"role": "system", "content": sys_msg},
+                               {"role": "user", "content": user_msg}],
+                  "temperature": 0.3, "response_format": {"type": "json_object"}, "max_tokens": 1200},
+            timeout=60,
+        )
+        if resp.status_code != 200:
+            print(f"  news curate HTTP {resp.status_code}")
+            return fallback
+        parsed = json.loads(resp.json()["choices"][0]["message"]["content"])
+        arr = parsed.get("results") if isinstance(parsed, dict) else parsed
+        if not isinstance(arr, list) or not arr:
+            return fallback
+        curated = []
+        for d in arr:
+            if not isinstance(d, dict):
+                continue
+            idx = d.get("id")
+            if not isinstance(idx, int) or not (1 <= idx <= len(news)):
+                continue
+            n = news[idx - 1]
+            curated.append({**n,
+                            "category": str(d.get("category", n.get("topic", "")))[:6],
+                            "angle": str(d.get("angle", ""))[:40]})
+        return curated[:8] if curated else fallback
+    except Exception as e:
+        print(f"  news curate failed: {e}")
+        return fallback
+
+
+def render_news_section(curated):
+    if not curated:
+        return ""
+    rows = ""
+    for n in curated:
+        cat = esc(n.get("category") or n.get("topic") or "")
+        cat_html = f'<span class="news-cat">{cat}</span>' if cat else ""
+        title = esc(n.get("title") or "")
+        url = (n.get("url") or "").strip()
+        title_html = (f'<a href="{esc(url)}" target="_blank" rel="noopener">{title}</a>'
+                      if url else title)
+        src = esc(n.get("source") or "")
+        src_html = f'<span class="news-src">{src}</span>' if src else ""
+        angle = esc(n.get("angle") or "")
+        angle_html = f'<div class="news-angle">📌 {angle}</div>' if angle else ""
+        rows += (f'<div class="news-item">{cat_html}'
+                 f'<div class="news-body"><div class="news-tl">{title_html} {src_html}</div>'
+                 f'{angle_html}</div></div>')
+    return (f'<div class="news-section"><div class="news-bar">📰 昨日要闻 '
+            f'<span class="news-sub">存款 / 大额存单 / 港险 / 分红险</span></div>{rows}</div>')
+
+
 def synthesize_insight(data):
     """对当日全部精选爆款做一句话风向综述, 给编辑定选题方向。"""
     if not DEEPSEEK_API_KEY:
@@ -1105,12 +1218,12 @@ def synthesize_insight(data):
     return ""
 
 
-def generate_detail_page(data, insight="", monitor_html=""):
+def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     insight_html = ""
     if insight:
         insight_html = f'<div class="insight-banner"><span class="ib-label">🔥 今日风向</span>{esc(insight)}</div>'
     featured_html = render_featured_section(pick_featured(data, 6))
-    topic_cards = insight_html + monitor_html + featured_html
+    topic_cards = insight_html + news_html + monitor_html + featured_html
     for topic in data:
         sections = ""
         for platform_key, items in topic["platforms"].items():
@@ -1302,14 +1415,23 @@ def generate_detail_page(data, insight="", monitor_html=""):
     .blk-label {{ display:inline-block; font-weight:700; font-size:0.92em; margin-right:6px; opacity:.85; }}
     .needs-row {{ margin:5px 0; font-size:0.8em; color:#475569; display:flex; flex-wrap:wrap; gap:5px; align-items:center; }}
     .need-chip {{ background:#eef2ff; border:1px solid #e0e7ff; color:#4338ca; border-radius:6px; padding:1px 8px; font-size:0.95em; }}
-    .talk-script {{ margin:6px 0; padding:8px 11px; background:#0f172a; color:#e2e8f0; border-radius:8px; border-left:3px solid #10B981; font-size:0.82em; line-height:1.55; }}
-    .talk-script .blk-label {{ color:#6ee7b7; }}
-    .title-sug {{ margin:5px 0; padding:5px 10px; background:#ecfdf5; border-radius:6px; font-size:0.82em; color:#065f46; }}
-    .title-sug .blk-label {{ color:#059669; }}
-    .compliance {{ margin:5px 0; padding:5px 10px; background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; font-size:0.78em; color:#9a3412; }}
+    /* 昨日要闻 */
+    .news-section {{ grid-column:1/-1; background:#fff; border:1.5px solid #dbeafe; border-left:5px solid #2563eb; border-radius:12px; padding:14px 18px; }}
+    .news-bar {{ font-weight:800; color:#1e40af; font-size:1.0em; margin-bottom:8px; }}
+    .news-sub {{ font-size:0.74em; color:#93a3c0; font-weight:600; margin-left:4px; }}
+    .news-item {{ display:flex; gap:10px; padding:8px 0; border-bottom:1px solid #f1f5f9; align-items:flex-start; }}
+    .news-item:last-child {{ border-bottom:none; }}
+    .news-cat {{ flex:none; font-size:0.72em; font-weight:700; color:#1d4ed8; background:#eff6ff; border:1px solid #dbeafe; border-radius:6px; padding:2px 8px; margin-top:2px; }}
+    .news-body {{ flex:1; min-width:0; }}
+    .news-tl {{ font-size:0.9em; color:#1f2937; line-height:1.5; }}
+    .news-tl a {{ color:#1f2937; text-decoration:none; }}
+    .news-tl a:hover {{ color:#2563eb; text-decoration:underline; }}
+    .news-src {{ font-size:0.76em; color:#9ca3af; margin-left:4px; white-space:nowrap; }}
+    .news-angle {{ font-size:0.8em; color:#2563eb; margin-top:3px; }}
 
     /* 风向洞察 */
     .insight-banner {{
+      grid-column:1/-1;
       background: linear-gradient(135deg,#fff7ed,#fff);
       border:1.5px solid #fed7aa; border-left:5px solid #f97316;
       border-radius:12px; padding:14px 18px; font-size:0.92em; color:#7c2d12; line-height:1.6;
@@ -1452,8 +1574,14 @@ def main():
     print("Step 5.6: Monitor 对标账号...")
     monitor = monitor_accounts()
 
+    print("Step 5.7: Fetch 昨日要闻...")
+    news = curate_news(fetch_news())
+    if news:
+        print(f"  Curated {len(news)} news items")
+
     print("Step 6: Generate detail page...")
-    html = generate_detail_page(data, insight, render_monitor_section(monitor))
+    html = generate_detail_page(data, insight, render_monitor_section(monitor),
+                                render_news_section(news))
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  Written: {DETAIL_FILE}")
