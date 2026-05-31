@@ -107,6 +107,18 @@ PLATFORM_TAG_CLASSES = {
     "xiaohongshu": "tag-xhs",
 }
 
+# 对标账号日更监控(第二期)。抖音用 sec_uid、小红书用 user_id。
+MONITOR_ACCOUNTS = [
+    {"name": "深蓝保",            "platform": "douyin",      "id": "MS4wLjABAAAAiQ4RY3tqs-dJydax0-MjYuFnEviabmS2Q5ttbsOAD38"},
+    {"name": "保瓶儿",            "platform": "douyin",      "id": "MS4wLjABAAAA_SCf-XEttYRH0bJmPmeOhnVAHbOGWhG8vU1jK3gRTO8"},
+    {"name": "奶爸保险测评",      "platform": "douyin",      "id": "MS4wLjABAAAAk8H3SHUDYbgzj7HR9RVX96ZAW0sJW7_R52QPOT_Qixs"},
+    {"name": "保瓶儿聊产品",      "platform": "douyin",      "id": "MS4wLjABAAAAYVcTd31FsiRb23i2kzb28iT-YJiYxRUdtqxX4gyhNe4"},
+    {"name": "保瓶儿养老规划",    "platform": "douyin",      "id": "MS4wLjABAAAAJOfIL3zfCgjMICU7lRi1j6sl3wjAAQtJ-TYhq6NjwuZP_LInia4rmJR71ehHmgWZ"},
+    {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
+    {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
+    {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
+]
+
 
 # ── TikHub API 搜索 ──────────────────────────────────
 RETRY_ATTEMPTS = 3
@@ -866,6 +878,123 @@ def build_platform_section(platform_key, items):
     </div>"""
 
 
+# ── 对标账号日更监控(第二期) ──────────────────────────
+def _find_list(o, key_hint, depth=0):
+    """递归找第一个 list[dict], 元素含任一 key_hint 字段。"""
+    if depth > 8:
+        return None
+    if isinstance(o, list):
+        if o and isinstance(o[0], dict) and any(k in o[0] for k in key_hint):
+            return o
+        for v in o:
+            r = _find_list(v, key_hint, depth + 1)
+            if r:
+                return r
+    elif isinstance(o, dict):
+        for v in o.values():
+            r = _find_list(v, key_hint, depth + 1)
+            if r:
+                return r
+    return None
+
+
+def _to_int_count(v):
+    """把点赞/收藏数解析成 int, 兼容 '1.2万'/'1234'/'1,234'/数字。"""
+    if isinstance(v, (int, float)):
+        return int(v)
+    if isinstance(v, str):
+        s = v.strip().replace(",", "")
+        if not s:
+            return 0
+        try:
+            if s[-1] in ("万", "w", "W"):
+                return int(float(s[:-1]) * 10000)
+            return int(float(s))
+        except ValueError:
+            return 0
+    return 0
+
+
+def _fetch_account_posts(acc):
+    """拉单个对标账号近期作品 → [{title, like, create_time, url}]。"""
+    plat = acc["platform"]
+    out = []
+    if plat == "douyin":
+        data = tikhub_get("/api/v1/douyin/web/fetch_user_post_videos",
+                          {"sec_user_id": acc["id"], "count": 15})
+        for a in (_find_list((data or {}).get("data"), ("desc", "aweme_id")) or []):
+            if not isinstance(a, dict):
+                continue
+            st = a.get("statistics", {}) or {}
+            out.append({
+                "title": a.get("desc", "") or "",
+                "like": st.get("digg_count", 0) or 0,
+                "create_time": a.get("create_time", 0) or 0,
+                "url": a.get("share_url", "") or (f"https://www.douyin.com/video/{a.get('aweme_id')}" if a.get("aweme_id") else ""),
+            })
+    elif plat == "xiaohongshu":
+        data = tikhub_get("/api/v1/xiaohongshu/app_v2/get_user_posted_notes",
+                          {"user_id": acc["id"]})
+        for n in (_find_list((data or {}).get("data"), ("display_title", "note_id", "desc")) or []):
+            if not isinstance(n, dict):
+                continue
+            il = n.get("interact_info", {}) or {}
+            lk = _to_int_count(il.get("liked_count") if il.get("liked_count") is not None else n.get("liked_count"))
+            nid = n.get("note_id") or n.get("id") or ""
+            out.append({
+                "title": n.get("display_title") or n.get("title") or "",
+                "like": lk,
+                "create_time": int(n.get("time", 0) or n.get("create_time", 0) or 0),
+                "url": f"https://www.xiaohongshu.com/explore/{nid}" if nid else "",
+            })
+    return out
+
+
+def monitor_accounts():
+    """对标账号监控: 每个号近期作品 → 近7天发布数 + 本批最高赞作品。"""
+    if not TIKHUB_API_KEY:
+        return []
+    seven_ago = int((TODAY - timedelta(days=7)).timestamp())
+    result = []
+    for acc in MONITOR_ACCOUNTS:
+        try:
+            posts = _fetch_account_posts(acc)
+        except Exception as e:
+            print(f"  monitor {acc['name']} failed: {e}")
+            posts = []
+        recent7 = sum(1 for p in posts if p["create_time"] and p["create_time"] >= seven_ago)
+        top = max(posts, key=lambda p: p["like"]) if posts else None
+        result.append({**acc, "recent7": recent7, "top": top, "total": len(posts)})
+        print(f"  monitor {acc['name']}({acc['platform']}): {len(posts)} posts, 近7天 {recent7}, top赞 {top['like'] if top else '-'}")
+        time.sleep(0.4)
+    return result
+
+
+def render_monitor_section(monitor):
+    if not monitor:
+        return ""
+    rows = ""
+    for m in monitor:
+        pn = {"douyin": "抖音", "xiaohongshu": "小红书"}.get(m["platform"], m["platform"])
+        top = m.get("top")
+        if top and top.get("title"):
+            t = esc(top["title"][:38])
+            tl = (f'<a href="{esc(top["url"])}" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">{t}</a>'
+                  if top.get("url") else t)
+            like_badge = (f' <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥{format_count(top["like"])}</span>'
+                          if (top.get("like") or 0) > 0 else "")
+            topcell = f'{tl}{like_badge}'
+        else:
+            topcell = '<span style="color:#bbb;">—（接口未取到，稍后重试）</span>'
+        rows += (f'<tr><td>{esc(m["name"])}</td><td style="color:#888;">{pn}</td>'
+                 f'<td style="text-align:center;font-weight:700;">{m.get("recent7", 0)}</td>'
+                 f'<td>{topcell}</td></tr>')
+    return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向</div>'
+            f'<table class="monitor-table"><thead><tr>'
+            f'<th>对标账号</th><th>平台</th><th>近7天发布</th><th>本批最高赞作品</th>'
+            f'</tr></thead><tbody>{rows}</tbody></table></div>')
+
+
 def synthesize_insight(data):
     """对当日全部精选爆款做一句话风向综述, 给编辑定选题方向。"""
     if not DEEPSEEK_API_KEY:
@@ -902,11 +1031,11 @@ def synthesize_insight(data):
     return ""
 
 
-def generate_detail_page(data, insight=""):
+def generate_detail_page(data, insight="", monitor_html=""):
     insight_html = ""
     if insight:
         insight_html = f'<div class="insight-banner"><span class="ib-label">🔥 今日风向</span>{esc(insight)}</div>'
-    topic_cards = insight_html
+    topic_cards = insight_html + monitor_html
     for topic in data:
         sections = ""
         for platform_key, items in topic["platforms"].items():
@@ -1112,6 +1241,14 @@ def generate_detail_page(data, insight=""):
     }}
     .insight-banner .ib-label {{ font-weight:800; color:#c2410c; margin-right:8px; }}
 
+    /* 对标账号动向 */
+    .monitor-section {{ background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }}
+    .monitor-title {{ font-weight:800; color:#1E2761; font-size:0.98em; margin-bottom:10px; }}
+    .monitor-table {{ width:100%; border-collapse:collapse; font-size:0.85em; }}
+    .monitor-table th {{ text-align:left; color:#888; font-weight:600; padding:7px 12px; border-bottom:1px solid #eef0f6; font-size:0.92em; }}
+    .monitor-table td {{ padding:9px 12px; border-bottom:1px solid #f5f6fa; }}
+    .monitor-table tr:hover td {{ background:#fafbff; }}
+
     .biz-reason {{
       margin: 4px 0;
       font-size: 0.78em;
@@ -1231,8 +1368,11 @@ def main():
     if insight:
         print(f"  Insight: {insight}")
 
+    print("Step 5.6: Monitor 对标账号...")
+    monitor = monitor_accounts()
+
     print("Step 6: Generate detail page...")
-    html = generate_detail_page(data, insight)
+    html = generate_detail_page(data, insight, render_monitor_section(monitor))
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  Written: {DETAIL_FILE}")
