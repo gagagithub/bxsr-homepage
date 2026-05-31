@@ -413,6 +413,15 @@ SEARCH_FUNCS = {
 }
 
 
+# 数据护栏: 剔除与保险无关的污染内容(典型: B站搜"养老"搜出《我的世界》养老整合包)
+NOISE_PATTERNS = ("我的世界", "minecraft", "整合包", "种子推荐", "种子分享", "联机生存",
+                  "手游", "模组", "光遇", "原神", "迷你世界", "沙盒游戏", "实况解说",
+                  "钢琴教学", "皮肤下载")
+def _is_noise(title):
+    t = (title or "").lower()
+    return any(p.lower() in t for p in NOISE_PATTERNS)
+
+
 def collect_all_data():
     """每个话题搜索全部4个平台，按平台标准筛选。"""
     results = []
@@ -438,6 +447,9 @@ def collect_all_data():
                         continue
                     # 2) 按平台质量标准过滤
                     if not quality_filter(item):
+                        continue
+                    # 2.5) 数据护栏: 剔除游戏/娱乐等无关污染
+                    if _is_noise(item.get("title", "")):
                         continue
                     # 按标题去重
                     key = item["title"][:20]
@@ -528,7 +540,8 @@ def fetch_top_comments(data, max_items_per_platform=8):
 
 # ── DeepSeek LLM enrich ───────────────────────────────
 
-ENRICH_KEYS = ("summary", "highlights", "biz_relevance", "biz_reason", "creation_angle")
+ENRICH_KEYS = ("summary", "highlights", "biz_relevance", "biz_reason", "creation_angle",
+               "audience_needs", "talk_script", "title_suggestion", "compliance")
 BIZ_RELEVANCE_VALUES = ("港险", "分红险", "养老", "通用获客", "不建议")
 
 
@@ -539,6 +552,10 @@ def _empty_enrich():
         "biz_relevance": "通用获客",
         "biz_reason": "",
         "creation_angle": "",
+        "audience_needs": [],
+        "talk_script": "",
+        "title_suggestion": "",
+        "compliance": "",
     }
 
 
@@ -580,6 +597,10 @@ results 数组长度必须等于输入条目数, 每条包含:
   - biz_relevance: 必须是 ["港险","分红险","养老","通用获客","不建议"] 之一
   - biz_reason: <=20 字, 简述判断理由
   - creation_angle: <=30 字, 给保心上人编辑的具体再创作角度建议
+  - audience_needs: 2-3 条数组, 每条<=15 字, 受众真正关心的疑问/诉求(有"评论摘录"就从中提炼, 没有就据标题+常识推断)
+  - talk_script: <=110 字, 给编辑可直接用的口播开场草稿(解疑/避坑式开场, 先建立信任再带产品, 口语化)
+  - title_suggestion: <=28 字, 一条我方可发布的合规标题(替换掉原标题里的违规/夸张表达)
+  - compliance: <=40 字, 合规提醒, 指出该选题需规避的红线(承诺收益/绝对化用语/最优级/伪权威背书/抢购焦虑)
 
 判定 "不建议" 的典型情况:
   1) 负面舆情(如 "3.15 曝光香港保险""分红险暴雷")
@@ -605,7 +626,7 @@ results 数组长度必须等于输入条目数, 每条包含:
         ],
         "temperature": 0.3,
         "response_format": {"type": "json_object"},
-        "max_tokens": 3000,
+        "max_tokens": 8000,
     }
 
     last_err = ""
@@ -652,12 +673,20 @@ results 数组长度必须等于输入条目数, 每条包含:
                     if not isinstance(hl, list):
                         hl = [str(hl)]
                     hl = [str(x) for x in hl][:3]
+                    an = d.get("audience_needs") or []
+                    if not isinstance(an, list):
+                        an = [str(an)]
+                    an = [str(x)[:20] for x in an if x][:3]
                     result.append({
                         "summary": str(d.get("summary", ""))[:80],
                         "highlights": hl,
                         "biz_relevance": biz,
                         "biz_reason": str(d.get("biz_reason", ""))[:40],
                         "creation_angle": str(d.get("creation_angle", ""))[:60],
+                        "audience_needs": an,
+                        "talk_script": str(d.get("talk_script", ""))[:160],
+                        "title_suggestion": str(d.get("title_suggestion", ""))[:40],
+                        "compliance": str(d.get("compliance", ""))[:60],
                     })
                 else:
                     result.append(_empty_enrich())
@@ -776,6 +805,21 @@ def build_item_card(item, rank):
     angle = esc(item.get("creation_angle") or "")
     angle_html = f'<div class="angle">💡 {angle}</div>' if angle else ""
 
+    # 第一期: 爆款拆解 — 受众诉求 / 口播草稿 / 合规标题 / 合规提醒 (不建议项不展示)
+    is_bad = (item.get("biz_relevance") == "不建议")
+    needs = item.get("audience_needs") or []
+    if needs and not is_bad:
+        nchips = " ".join(f'<span class="need-chip">{esc(n)}</span>' for n in needs if n)
+        needs_html = f'<div class="needs-row"><span class="blk-label">💬 受众在问</span>{nchips}</div>' if nchips else ""
+    else:
+        needs_html = ""
+    script = esc(item.get("talk_script") or "")
+    script_html = f'<div class="talk-script"><span class="blk-label">🎙️ 口播草稿</span>{script}</div>' if script and not is_bad else ""
+    tsug = esc(item.get("title_suggestion") or "")
+    tsug_html = f'<div class="title-sug"><span class="blk-label">✍️ 合规标题</span>{tsug}</div>' if tsug and not is_bad else ""
+    comp = esc(item.get("compliance") or "")
+    comp_html = f'<div class="compliance">⚠ {comp}</div>' if comp and not is_bad else ""
+
     biz_reason = esc(item.get("biz_reason") or "")
     reason_html = f'<div class="biz-reason">{biz_reason}</div>' if biz == "不建议" and biz_reason else ""
 
@@ -802,6 +846,10 @@ def build_item_card(item, rank):
         {summary_html}
         {highlights_html}
         {angle_html}
+        {needs_html}
+        {script_html}
+        {tsug_html}
+        {comp_html}
         {reason_html}
         <div class="meta-row">{stats_html}</div>
       </div>
@@ -818,8 +866,47 @@ def build_platform_section(platform_key, items):
     </div>"""
 
 
-def generate_detail_page(data):
-    topic_cards = ""
+def synthesize_insight(data):
+    """对当日全部精选爆款做一句话风向综述, 给编辑定选题方向。"""
+    if not DEEPSEEK_API_KEY:
+        return ""
+    lines = []
+    for topic in data:
+        for plat, items in topic.get("platforms", {}).items():
+            for it in items[:3]:
+                if it.get("biz_relevance") == "不建议":
+                    continue
+                t = (it.get("title") or "").strip()
+                if t:
+                    lines.append(f"[{topic['name']}] {t}")
+    sample = "\n".join(lines[:40])
+    if not sample:
+        return ""
+    sys_msg = "你是保心上人的内容选题分析助手, 只输出一句话, 不要任何前缀或解释。"
+    user_msg = ("下面是今天保险相关的跨平台热门标题:\n" + sample +
+                "\n\n请用<=60字总结'今天平台上什么角度/情绪在跑量', 给内容编辑一句可执行的选题方向。")
+    try:
+        resp = requests.post(
+            DEEPSEEK_URL,
+            headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}", "Content-Type": "application/json"},
+            json={"model": DEEPSEEK_MODEL,
+                  "messages": [{"role": "system", "content": sys_msg},
+                               {"role": "user", "content": user_msg}],
+                  "temperature": 0.4, "max_tokens": 200},
+            timeout=60,
+        )
+        if resp.status_code == 200:
+            return resp.json()["choices"][0]["message"]["content"].strip()[:160]
+    except Exception as e:
+        print(f"  insight synth failed: {e}")
+    return ""
+
+
+def generate_detail_page(data, insight=""):
+    insight_html = ""
+    if insight:
+        insight_html = f'<div class="insight-banner"><span class="ib-label">🔥 今日风向</span>{esc(insight)}</div>'
+    topic_cards = insight_html
     for topic in data:
         sections = ""
         for platform_key, items in topic["platforms"].items():
@@ -1007,6 +1094,24 @@ def generate_detail_page(data):
     }}
     .item-card.muted .angle {{ display: none; }}
 
+    /* 第一期: 爆款拆解块 */
+    .blk-label {{ display:inline-block; font-weight:700; font-size:0.92em; margin-right:6px; opacity:.85; }}
+    .needs-row {{ margin:5px 0; font-size:0.8em; color:#475569; display:flex; flex-wrap:wrap; gap:5px; align-items:center; }}
+    .need-chip {{ background:#eef2ff; border:1px solid #e0e7ff; color:#4338ca; border-radius:6px; padding:1px 8px; font-size:0.95em; }}
+    .talk-script {{ margin:6px 0; padding:8px 11px; background:#0f172a; color:#e2e8f0; border-radius:8px; border-left:3px solid #10B981; font-size:0.82em; line-height:1.55; }}
+    .talk-script .blk-label {{ color:#6ee7b7; }}
+    .title-sug {{ margin:5px 0; padding:5px 10px; background:#ecfdf5; border-radius:6px; font-size:0.82em; color:#065f46; }}
+    .title-sug .blk-label {{ color:#059669; }}
+    .compliance {{ margin:5px 0; padding:5px 10px; background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; font-size:0.78em; color:#9a3412; }}
+
+    /* 风向洞察 */
+    .insight-banner {{
+      background: linear-gradient(135deg,#fff7ed,#fff);
+      border:1.5px solid #fed7aa; border-left:5px solid #f97316;
+      border-radius:12px; padding:14px 18px; font-size:0.92em; color:#7c2d12; line-height:1.6;
+    }}
+    .insight-banner .ib-label {{ font-weight:800; color:#c2410c; margin-right:8px; }}
+
     .biz-reason {{
       margin: 4px 0;
       font-size: 0.78em;
@@ -1121,8 +1226,13 @@ def main():
     print("Step 5: Enrich with DeepSeek...")
     enrich_with_llm(data)
 
+    print("Step 5.5: Synthesize daily insight...")
+    insight = synthesize_insight(data)
+    if insight:
+        print(f"  Insight: {insight}")
+
     print("Step 6: Generate detail page...")
-    html = generate_detail_page(data)
+    html = generate_detail_page(data, insight)
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  Written: {DETAIL_FILE}")

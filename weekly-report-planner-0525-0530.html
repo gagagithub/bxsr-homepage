@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保心上人 - 规划师周报 (05.25-05.30)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+:root {
+  --gold-primary: #D4AF37;
+  --gold-light: #F5E6AD;
+  --black-bg: #0d0d0d;
+  --black-card: #1a1a1a;
+  --danger: #ff4d4f;
+  --success: #52c41a;
+}
+body { background-color: var(--black-bg); color: #e0e0e0; font-family: 'Noto Sans SC', sans-serif; }
+.gold-text { color: var(--gold-primary); }
+.gold-gradient-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-header { border-left: 4px solid var(--gold-primary); padding-left: 1rem; margin-bottom: 2rem; font-size: 1.5rem; font-weight: 700; }
+.card { background: var(--black-card); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 12px; padding: 1.5rem; }
+.data-table th { color: var(--gold-primary); text-align: left; padding: 12px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); font-size: 0.8rem; }
+.data-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+.bg-red-alert { background: rgba(255, 77, 79, 0.15); border-radius: 4px; padding: 2px 4px; color: #ff4d4f; font-weight: bold; }
+.summary-pill { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; }
+.task-number { width: 20px; height: 20px; background: var(--gold-primary); color: black; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; margin-right: 8px; flex-shrink: 0; }
+.kpi-down { color: #ff4d4f; }
+.kpi-up { color: #52c41a; }
+.kpi-flat { color: #aaa; }
+.script-link { background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.05) 100%); border: 1px solid rgba(212,175,55,0.4); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; transition: all 0.2s; text-decoration: none; }
+.script-link:hover { background: linear-gradient(135deg, rgba(212,175,55,0.25) 0%, rgba(212,175,55,0.1) 100%); transform: translateY(-1px); }
+@media print { .no-print { display: none; } }
+</style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+<!-- 顶栏 -->
+<header class="flex justify-between items-center mb-16 no-print">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+    <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+  </div>
+  <div class="text-right text-sm text-gray-500">周报周期：2026.05.25 - 05.30</div>
+</header>
+
+<!-- 0、上周目标达成 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">0、上周目标达成回顾</h2>
+  <p class="text-xs text-gray-500 mb-5 italic">对照 5/18-5/23 周报里制定的本周任务，本周实际完成情况。<span class="text-orange-400">注：林付贤 5/25-5/27 休假 3 天，全队有效工作日偏少。</span></p>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- 江宁 -->
+    <div class="card border-l-4 border-l-orange-500 bg-gradient-to-br from-orange-500/5 to-transparent">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-bold text-orange-400">江宁</h3>
+        <span class="text-[10px] bg-orange-500/15 text-orange-400 px-2 py-1 rounded border border-orange-500/30 font-bold">双双回落</span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">存量激活</span>
+            <span class="font-mono"><span class="text-white font-bold text-base">6</span><span class="text-gray-500"> / 11</span></span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-orange-500 rounded-full" style="width:55%"></div>
+          </div>
+          <p class="text-[10px] text-orange-400 mt-1.5">完成 55% ↓ 激活 11→6 回落，但激活率守 35% 高位</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">新发加好友率</span>
+            <span class="font-mono"><span class="text-red-400 font-bold text-base">27%</span><span class="text-gray-500"> / 40%</span></span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-red-500 rounded-full" style="width:67%"></div>
+          </div>
+          <p class="text-[10px] text-red-400 mt-1.5">未达 · 连续两周加好友率 &lt; 30%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 林付贤 -->
+    <div class="card border-l-4 border-l-red-500 bg-gradient-to-br from-red-500/5 to-transparent">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-bold text-red-400">林付贤</h3>
+        <span class="text-[10px] bg-red-500/15 text-red-400 px-2 py-1 rounded border border-red-500/30 font-bold">严重违规</span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">激活（有效 1对1）</span>
+            <span class="font-mono"><span class="text-white font-bold text-base">4</span><span class="text-gray-500"> / 6</span></span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-orange-500 rounded-full" style="width:67%"></div>
+          </div>
+          <p class="text-[10px] text-orange-400 mt-1.5">有效率回到 25%（休假 3 天，量未到 6）</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">停群发 · 回归 1对1</span>
+            <span class="font-mono text-red-400 font-bold text-base">违背</span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-red-500 rounded-full" style="width:100%"></div>
+          </div>
+          <p class="text-[10px] text-red-400 mt-1.5">5/30 反而群发 1505 户（见第 4 节预警）</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 马康挺 -->
+    <div class="card border-l-4 border-l-green-500 bg-gradient-to-br from-green-500/5 to-transparent">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-bold text-green-500">马康挺</h3>
+        <span class="text-[10px] bg-green-500/15 text-green-400 px-2 py-1 rounded border border-green-500/30 font-bold">部分达成</span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">存量激活</span>
+            <span class="font-mono"><span class="text-white font-bold text-base">7</span><span class="text-gray-500"> / 5</span></span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-green-500 rounded-full" style="width:100%"></div>
+          </div>
+          <p class="text-[10px] text-green-400 mt-1.5">达标 140% ↑ 激活 4→7，率回到 25%</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">方案制作 / 讲解</span>
+            <span class="font-mono"><span class="text-white font-bold text-base">1</span><span class="text-gray-500"> / 2 · 讲解 0/1</span></span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-orange-500 rounded-full" style="width:50%"></div>
+          </div>
+          <p class="text-[10px] text-orange-400 mt-1.5">方案制作破冰 1（全队连续两周 0 后首次），讲解未跑通</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 李颢 -->
+    <div class="card border-l-4 border-l-[#D4AF37] bg-gradient-to-br from-[#D4AF37]/5 to-transparent">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-bold gold-text">李颢</h3>
+        <span class="text-[10px] bg-[#D4AF37]/15 text-[#D4AF37] px-2 py-1 rounded border border-[#D4AF37]/30 font-bold">接近达成</span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">上周 5 未续追回</span>
+            <span class="font-mono"><span class="text-white font-bold text-base">2</span><span class="text-gray-500"> / ≥3</span></span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-[#D4AF37] rounded-full" style="width:67%"></div>
+          </div>
+          <p class="text-[10px] text-[#D4AF37] mt-1.5">追回陈春莞(阿波罗)、牛婧诗 2 单，差 1 单</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1.5">
+            <span class="text-gray-400">新应续 100% 企微邀约</span>
+            <span class="font-mono text-red-400 font-bold text-base">未落实</span>
+          </div>
+          <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+            <div class="h-full bg-red-500 rounded-full" style="width:5%"></div>
+          </div>
+          <p class="text-[10px] text-red-400 mt-1.5">企微好友覆盖率反降到 5%（1/22）</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-4 bg-gradient-to-r from-red-500/10 via-orange-500/5 to-transparent border-l-4 border-l-red-500">
+    <p class="text-sm text-gray-300 leading-relaxed">
+      <strong class="text-red-400">▎ 总体回顾：</strong>
+      本周最大事件是<strong class="text-red-400">林付贤 5/30 大规模群发 1505 户（彻底违背上周"停群发、回归 1对1"的明确要求）</strong>，且话术含承诺收益 + 下架焦虑，质量与合规双失守。
+      唯一亮点是<strong class="text-green-400">马康挺存量激活超额（7/5）且方案制作破冰（全队连续两周 0% 后首次出现 1 个）</strong>。
+      江宁激活与加好友率双双回落；李颢续保稳定但追单差 1 单、企微邀约机制未落地。
+      <span class="text-white">"激活 → 方案讲解"漏斗末端依旧 0，但马康挺的 1 个方案是下周打通漏斗的突破口。</span>
+    </p>
+  </div>
+</section>
+
+<!-- 1、概览篇 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">1、概览篇</h2>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    <div class="card bg-gradient-to-br from-[#1a1a1a] to-[#252525] border-l-4 border-l-[#D4AF37] flex flex-col justify-center">
+      <p class="text-gray-400 text-xs mb-4 uppercase tracking-widest font-bold">本周核心成交战报</p>
+      <div class="py-8 text-center text-gray-500 italic text-sm">本周暂无大额成交录入</div>
+    </div>
+    <div class="lg:col-span-2 card">
+      <div class="flex justify-between items-center mb-3">
+        <p class="text-sm font-bold">规划师能效对比 (存量触达 vs 激活)</p>
+        <div class="flex gap-4 text-[10px]">
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#D4AF37]"></span>存量触达</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#666]"></span>存量激活</span>
+        </div>
+      </div>
+      <p class="text-[10px] text-orange-400 mb-3 italic">※ 林付贤按"有效 1对1"口径（16/4）；其 5/30 群发的 1505 户单独计入第 4 节预警，不进此图。</p>
+      <div class="h-44"><canvas id="plannerOverviewChart"></canvas></div>
+    </div>
+  </div>
+  <!-- 本周核心指标：三项 2 周对比 -->
+  <div class="mb-2">
+    <p class="text-xs text-[#D4AF37] font-bold uppercase tracking-widest mb-3">▍ 本周核心指标 · 因林付贤休假 3 天 + 全队有效工作日偏少，总量回落，但激活率（质量）守住</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- 存量激活 -->
+      <div class="card border-t-2 border-t-orange-500 bg-gradient-to-b from-orange-500/5 to-transparent">
+        <p class="text-xs text-gray-500 mb-3 uppercase tracking-widest">存量激活（有效）</p>
+        <div class="flex items-baseline gap-3 mb-5">
+          <p class="text-5xl font-bold text-white leading-none">18</p>
+          <span class="text-sm font-bold text-orange-400">↓ -25%</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 w-10">上周</span>
+            <div class="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-gray-500 rounded-full" style="width: 100%"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-8 text-right font-mono">24</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 w-10">本周</span>
+            <div class="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-orange-500 rounded-full" style="width: 75%"></div>
+            </div>
+            <span class="text-xs text-white font-bold w-8 text-right font-mono">18</span>
+          </div>
+        </div>
+      </div>
+      <!-- 存量触达 -->
+      <div class="card border-t-2 border-t-orange-500 bg-gradient-to-b from-orange-500/5 to-transparent">
+        <p class="text-xs text-gray-500 mb-3 uppercase tracking-widest">存量触达（有效）</p>
+        <div class="flex items-baseline gap-3 mb-5">
+          <p class="text-5xl font-bold text-white leading-none">62</p>
+          <span class="text-sm font-bold text-orange-400">↓ -29%</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 w-10">上周</span>
+            <div class="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-gray-500 rounded-full" style="width: 100%"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-8 text-right font-mono">87</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 w-10">本周</span>
+            <div class="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-orange-500 rounded-full" style="width: 71.3%"></div>
+            </div>
+            <span class="text-xs text-white font-bold w-8 text-right font-mono">62</span>
+          </div>
+        </div>
+      </div>
+      <!-- 团队存量激活率 -->
+      <div class="card border-t-2 border-t-green-500 bg-gradient-to-b from-green-500/5 to-transparent">
+        <p class="text-xs text-gray-500 mb-3 uppercase tracking-widest">团队存量激活率</p>
+        <div class="flex items-baseline gap-3 mb-1">
+          <p class="text-5xl font-bold text-white leading-none">29<span class="text-2xl">%</span></p>
+          <span class="text-sm font-bold text-green-400">↑ +1pp</span>
+        </div>
+        <p class="text-[11px] text-gray-500 mb-4">全团队 18 激活 / 62 触达（有效口径）</p>
+        <div class="space-y-2">
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 w-10">上周</span>
+            <div class="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-gray-500 rounded-full" style="width: 96.6%"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-10 text-right font-mono">28%</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 w-10">本周</span>
+            <div class="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-green-500 rounded-full" style="width: 100%"></div>
+            </div>
+            <span class="text-xs text-white font-bold w-10 text-right font-mono">29%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 团队亮点小条 -->
+    <div class="mt-4 px-4 py-3 bg-gradient-to-r from-green-500/10 via-green-500/5 to-transparent border-l-2 border-l-green-500 rounded-r">
+      <p class="text-xs text-gray-300">
+        <span class="text-green-400 font-bold">🏆 本周之星：</span>
+        马康挺出差归位后全队最稳——存量触达 22→28、激活 4→7 双升，激活率回到 25%，并贡献全队连续两周以来<strong class="text-white">第一个方案制作（破冰）</strong>。林付贤休假 3 天，有效 1对1 激活率从 10% 回到 25%（质量本可回升）。
+        <span class="text-red-400">隐忧：林付贤 5/30 大规模群发 1505 户（激活率 0.7% + 承诺收益/下架焦虑话术），质量+合规双预警，见第 4 节。</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 2、存量客户篇 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">2、存量客户篇</h2>
+  <div class="card mb-6">
+    <h3 class="text-lg font-bold mb-6 flex items-center"><span class="w-1 h-5 bg-[#D4AF37] mr-3"></span> 本周存量客户激活概况</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm data-table text-center">
+        <thead>
+          <tr class="bg-white/5">
+            <th class="text-left px-4">规划师</th>
+            <th>触达存量客户数</th>
+            <th>激活存量客户数</th>
+            <th>激活率</th>
+            <th>状态反馈</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left px-4 font-bold">江宁</td>
+            <td class="font-mono">17</td>
+            <td class="font-mono text-[#D4AF37] font-bold">6</td>
+            <td class="text-[#D4AF37] font-bold">35%</td>
+            <td class="text-xs text-gray-400 text-left">触达 27→17、激活 11→6 <span class="text-orange-400">双双回落</span>（本周更多精力转向新发，新发 8→11）。但激活率守在 35% 高位（长期 35-46%），<strong class="text-white">质量未掉</strong>，下周需把激活量拉回 8+。</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 font-bold">林付贤</td>
+            <td class="font-mono">16</td>
+            <td class="font-mono text-[#D4AF37] font-bold">4</td>
+            <td class="text-green-400 font-bold">25%</td>
+            <td class="text-xs text-gray-400 text-left"><strong class="text-white">仅统计有效 1对1（5/25-5/29，休假 25-27 仅 3 个有效工作日）</strong>：激活率从上周 10% 回到 25%，1对1 质量本已回升。<span class="text-red-400">但 5/30 另行大规模群发 1505 户（激活 11 / 率 0.7%），按质量预警单列、不计入本行 —— 见第 4 节。</span></td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 font-bold">马康挺</td>
+            <td class="font-mono">28</td>
+            <td class="font-mono text-[#D4AF37] font-bold">7</td>
+            <td class="text-green-400 font-bold">25%</td>
+            <td class="text-xs text-gray-400 text-left">触达 22→28、激活 4→7 <span class="text-green-400">双双提升</span>，激活率 18%→25% 回升。出差归位后<strong class="text-white">全队最稳</strong>，量质同步改善，本周之星。</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 font-bold text-[#D4AF37]">李颢</td>
+            <td class="font-mono">1</td>
+            <td class="font-mono text-[#D4AF37] font-bold">1</td>
+            <td class="text-gray-400 font-bold">100%</td>
+            <td class="text-xs text-gray-400 text-left">主做续保，本周存量参与极少（样本仅 1，上周 8）。续保专项见第 5 节。</td>
+          </tr>
+          <tr class="bg-white/5 font-bold">
+            <td class="text-left px-4">综合</td>
+            <td class="font-mono">62</td>
+            <td class="font-mono text-[#D4AF37]">18</td>
+            <td class="text-[#D4AF37]">29%</td>
+            <td class="text-xs text-gray-500 text-left">触达 87→62（-29%）/ 激活 24→18（-25%）/ 激活率 28%→29%。<span class="text-orange-400">总量回落主要因林付贤休假 3 天 + 全队有效工作日偏少</span>，但<span class="text-green-400">激活率（质量）微升</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-[11px] text-gray-500 mt-3 italic">※ 口径说明：林付贤 5/30 群发的 1505 户（激活 11 / 0.7%）按质量预警单列、未计入上表。后台「晨会数据」存量页读同一张表，会显示林付贤本周触达 1514 / 激活 15 / 率 1%（被群发主导）—— 本表采用"有效 1对1"口径以反映真实触达质量。</p>
+  </div>
+
+  <!-- 话术参考链接 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <a href="lf-mk-stock-activation-script-analysis.html" target="_blank" class="script-link" style="background: linear-gradient(135deg, rgba(82,196,26,0.15) 0%, rgba(82,196,26,0.05) 100%); border-color: rgba(82,196,26,0.4);">
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center text-xl font-bold flex-shrink-0" style="background: rgba(82,196,26,0.1); color: #52c41a;">🔥</div>
+      <div class="flex-1">
+        <p class="text-sm font-bold mb-1" style="color: #52c41a;">重点回看 ▸ 林付贤 / 马康挺 激活话术分析</p>
+        <p class="text-xs text-gray-400 leading-relaxed">
+          <strong class="text-white">马康挺</strong>本周触达激活双升 + 方案破冰，可对照这份打法继续放大；<strong class="text-white">林付贤</strong>本周 1对1 有效率虽回到 25%，却选择了群发 1505 户的反向操作，更应重读"上周做对的 1对1 节奏"，彻底告别群发。
+        </p>
+      </div>
+      <div class="text-xl" style="color: #52c41a;">▸</div>
+    </a>
+    <a href="jiangning-stock-activation-script-analysis.html" target="_blank" class="script-link">
+      <div class="w-12 h-12 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] text-xl font-bold flex-shrink-0">📖</div>
+      <div class="flex-1">
+        <p class="text-sm font-bold gold-text mb-1">基础参考 ▸ 江宁存量激活话术分析</p>
+        <p class="text-xs text-gray-400 leading-relaxed">
+          基于江宁稳定 35-46% 激活率，提炼 6 大可复制打法 + 完整对话原文。
+          打法 1（个人化记忆点）+ 打法 4（拒绝后追问）是基础功。
+        </p>
+      </div>
+      <div class="text-[#D4AF37] text-xl">▸</div>
+    </a>
+  </div>
+</section>
+
+<!-- 3、新发客户篇 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">3、新发客户篇 (05.25 - 05.30)</h2>
+  <div class="card overflow-x-auto">
+    <table class="w-full text-sm data-table text-center">
+      <thead>
+        <tr class="bg-white/5">
+          <th class="text-left px-4">规划师</th>
+          <th>新发数</th>
+          <th>好友添加率</th>
+          <th>方案制作率</th>
+          <th>方案讲解率</th>
+          <th>当前计数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-left px-4 font-bold text-gray-200">江宁</td>
+          <td class="font-mono">11</td>
+          <td class="bg-red-alert">27%</td>
+          <td class="bg-red-alert">0%</td>
+          <td class="bg-red-alert">0%</td>
+          <td class="font-mono">193</td>
+        </tr>
+        <tr>
+          <td class="text-left px-4 font-bold text-gray-200">林付贤</td>
+          <td class="font-mono">1</td>
+          <td class="text-green-500 font-bold">100%</td>
+          <td class="bg-red-alert">0%</td>
+          <td class="bg-red-alert">0%</td>
+          <td class="bg-red-alert">305</td>
+        </tr>
+        <tr>
+          <td class="text-left px-4 font-bold text-gray-200">马康挺</td>
+          <td class="font-mono">9</td>
+          <td class="text-green-500 font-bold">44%</td>
+          <td class="text-green-500 font-bold">25%</td>
+          <td class="bg-red-alert">0%</td>
+          <td class="text-green-500 font-bold">54</td>
+        </tr>
+        <tr class="bg-white/5 font-bold">
+          <td class="text-left px-4">综合</td>
+          <td class="font-mono text-[#D4AF37]">21</td>
+          <td class="text-[#D4AF37]">38%</td>
+          <td class="text-[#D4AF37]">12.5%</td>
+          <td class="text-[#D4AF37]">0%</td>
+          <td class="text-[#D4AF37]">552</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-[11px] text-gray-500 mt-3 italic">注：李颢主做续保 + 二次开发，本周新发 0，不计入新发漏斗（其续保专项见第 5 节）。当前计数 = 上周快照 + 本周新发（本周无成交，无港险进位）。</p>
+    <div class="mt-6 p-4 bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-lg">
+      <p class="text-sm font-bold gold-text mb-2">漏斗数据诊断：</p>
+      <div class="space-y-2 text-xs text-gray-400 leading-relaxed">
+        <p>1. <strong class="text-green-400">马康挺方案制作率 25%（1/4）首次破冰：</strong>全队方案制作率连续两周全 0% 后，本周马康挺出现 <span class="text-green-400 font-bold">1 个方案制作</span>，漏斗"加好友 → 方案"这一段首次被推进。这是本周最积极的信号，<strong class="text-white">下周务必把这 1 个方案推到讲解，跑通团队第一个完整漏斗闭环</strong>。</p>
+        <p>2. <strong class="text-white">江宁新发 8→11 回升，但好友添加率 27% 仍偏低：</strong>连续两周加好友率 &lt; 30%（上周 25%、本周 27%），新发承接的加好友环节是江宁的短板，下周目标拉到 40%。</p>
+        <p>3. <strong class="text-white">林付贤新发仅 1：</strong>5/25-5/27 休假 3 天，新发自然偏低，属正常；其精力问题集中体现在 5/30 的群发（见第 4 节）。</p>
+        <p>4. <strong class="text-orange-400">全队方案讲解率仍 0%：</strong>漏斗末端尚未打通，但马康挺的 1 个方案就是突破口。建议把"方案 → 讲解"设为下周硬指标。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4、状态预警 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">4、状态预警</h2>
+  <div class="card bg-gradient-to-br from-red-500/8 to-transparent border-l-4 border-l-red-500">
+    <h3 class="text-lg font-bold text-red-400 mb-4">⚠ 林付贤：5/30 大规模群发 1505 户 —— 质量 + 合规双预警（本周第一要事）</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+      <div class="bg-red-500/10 rounded-lg p-3 text-center">
+        <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">群发触达</p>
+        <p class="text-3xl font-bold text-red-400">1505<span class="text-sm text-gray-500"> 户</span></p>
+        <p class="text-[10px] text-gray-500 mt-1">全天触达 1964 个不同客户 / 2093 条</p>
+      </div>
+      <div class="bg-red-500/10 rounded-lg p-3 text-center">
+        <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">群发激活率</p>
+        <p class="text-3xl font-bold text-red-400">0.7<span class="text-sm">%</span></p>
+        <p class="text-[10px] text-gray-500 mt-1">仅 11 户达成 3 轮往返（vs 1对1 的 25%）</p>
+      </div>
+      <div class="bg-red-500/10 rounded-lg p-3 text-center">
+        <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">群发速率</p>
+        <p class="text-3xl font-bold text-red-400">1961<span class="text-sm text-gray-500"> 条/分</span></p>
+        <p class="text-[10px] text-gray-500 mt-1">10:11 一分钟内发出，同一秒最高 76 个不同人</p>
+      </div>
+    </div>
+    <div class="space-y-3 text-sm text-gray-300 leading-relaxed">
+      <p><strong class="text-white">① 事实认定：</strong>5/30 上午 10:11 一分钟内向 1961 个不同客户群发同一条消息（同一秒发给 76 个不同客户，人力 1对1 不可能），全天触达 1964 个不同客户、2093 条。对照他 5/28 正常工作日全天仅 39 条 / 12 人 —— 完全是企业微信"群发助手"自动扇出，<strong class="text-red-400">确属大规模群发</strong>。</p>
+      <p><strong class="text-white">② 质量问题：</strong>群发触达 1505 个存量客户，只有 11 个进入有效 3 轮往返，<span class="text-red-400">激活率 0.7%</span>，远低于他自己 1对1 的 25%。上周已明确预警"回到群发式低质触达"（激活率 32%→10%），<strong class="text-red-400">本周不仅没收敛，反而升级为全册一次性群发</strong>。</p>
+      <p><strong class="text-white">③ 合规问题：</strong>群发话术含 <span class="bg-red-alert">"6 月 30 号前国内收益 3.5% 降到 2.9% 以下、香港 6.5% 降 6%"</span>、<span class="bg-red-alert">"国内保本 2% 分红 3.5%、香港保本 3.5% 分红 6.5%"</span> —— 同时踩中<strong class="text-red-400">承诺/预测具体收益</strong>与<strong class="text-red-400">制造"下架前"抢购焦虑</strong>两类保险营销宣传红线，且直发 1500+ 客户，风险敞口大。</p>
+      <p class="pt-1"><strong class="text-white">行动建议：</strong>① <strong class="text-red-400">立即叫停群发</strong>，停用上述收益/下架话术；② 回归 1对1 个性化（他有效率本有 25%），对照
+        <a href="lf-mk-stock-activation-script-analysis.html" target="_blank" class="text-[#D4AF37] underline hover:no-underline">上周激活话术分析</a>找回节奏；
+        ③ <strong class="text-white">建立对外群发"发前合规审核"机制</strong>，杜绝承诺收益/抢购焦虑表述。</p>
+    </div>
+  </div>
+  <div class="card bg-gradient-to-br from-orange-500/5 to-transparent border-l-4 border-l-orange-500 mt-4 max-w-3xl">
+    <h3 class="text-lg font-bold text-orange-400 mb-4">全队：方案讲解漏斗末端连续多周为 0，但本周出现突破口</h3>
+    <div class="space-y-3 text-sm text-gray-300 leading-relaxed">
+      <p>全队方案讲解率仍为 <span class="text-red-400">0%</span>，"新发 → 加好友 → 方案 → 讲解"链路末端尚未打通。但本周<strong class="text-green-400">马康挺出现 1 个方案制作（连续两周 0 后首次）</strong>，是打通漏斗的现实抓手。</p>
+      <p><strong class="text-white">行动建议：</strong>把马康挺这 1 个方案在下周推进到讲解，跑通团队第一个完整闭环案例；同时把"每人每周新发中至少 1 个推进到方案、团队至少 1 个推进到讲解"设为下周硬指标。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5、李颢续保工作专项 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">5、李颢续保工作专项</h2>
+  <p class="text-xs text-gray-500 mb-5 italic">李颢主要做续期续保服务 + 二次开发。本周共 22 条应续保单（含未分配 + 朱盛男及其他 user_id 名下，全部归李颢处理），单独成节分析。<span class="text-[#D4AF37]">本周完成率 77%，与上周持平。</span></p>
+
+  <!-- KPI 卡 -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="card border-t-2 border-t-[#D4AF37] bg-gradient-to-b from-[#D4AF37]/5 to-transparent text-center">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">本周应续总数</p>
+      <p class="text-4xl font-bold text-white">22</p>
+    </div>
+    <div class="card border-t-2 border-t-green-500 bg-gradient-to-b from-green-500/5 to-transparent text-center">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">已续</p>
+      <p class="text-4xl font-bold text-green-400">17<span class="text-base text-gray-500"> /22</span></p>
+    </div>
+    <div class="card border-t-2 border-t-red-500 bg-gradient-to-b from-red-500/5 to-transparent text-center">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">未续</p>
+      <p class="text-4xl font-bold text-red-400">5<span class="text-base text-gray-500"> /22</span></p>
+    </div>
+    <div class="card border-t-2 border-t-green-500 bg-gradient-to-b from-green-500/5 to-transparent text-center">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">续保完成率</p>
+      <p class="text-4xl font-bold text-green-400">77<span class="text-2xl">%</span></p>
+    </div>
+  </div>
+
+  <!-- 全量任务表 -->
+  <div class="card mb-6">
+    <h3 class="text-lg font-bold text-white mb-4 flex items-center"><span class="w-1 h-5 bg-[#D4AF37] mr-3"></span> 22 条应续任务全量明细</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs data-table">
+        <thead>
+          <tr class="bg-white/5">
+            <th class="text-left px-3">投保人 / 被保人</th>
+            <th class="text-left px-3">产品</th>
+            <th>应续</th>
+            <th>状态</th>
+            <th>企微好友</th>
+            <th>本周企微沟通</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="text-left px-3">敖丹 / 敖丹</td><td class="text-left px-3 text-gray-400">瑞泰超级玛丽重大疾病险全面版</td><td class="text-center font-mono">5/25</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">张沁羽 / 张沁羽</td><td class="text-left px-3 text-gray-400">和泰人寿增多多2号增额终身寿险普通版</td><td class="text-center font-mono">5/25</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">汪华荣 / 汪华荣</td><td class="text-left px-3 text-gray-400">和泰人寿增多多2号增额终身寿险普通版</td><td class="text-center font-mono">5/25</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">吴静仪 / 吴静仪</td><td class="text-left px-3 text-gray-400">和泰人寿增多多2号增额终身寿险普通版</td><td class="text-center font-mono">5/25</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">马明明 / 李锦希</td><td class="text-left px-3 text-gray-400">慧馨安-健康保少儿版</td><td class="text-center font-mono">5/25</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr class="bg-red-500/5"><td class="text-left px-3">童青 / 吴思童</td><td class="text-left px-3 text-gray-400">晴天保保重大疾病保险</td><td class="text-center font-mono">5/25</td><td class="text-center"><span class="text-red-400">未续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">张琳琳 / 张琳琳</td><td class="text-left px-3 text-gray-400">和泰人寿增多多2号增额终身寿险普通版</td><td class="text-center font-mono">5/26</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr class="bg-red-500/5"><td class="text-left px-3">车金华 / 车金华</td><td class="text-left px-3 text-gray-400">和泰人寿增多多2号增额终身寿险普通版</td><td class="text-center font-mono">5/26</td><td class="text-center"><span class="text-red-400">未续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">高燕 / 罗亦凡</td><td class="text-left px-3 text-gray-400">和泰人寿增多多2号增额终身寿险普通版</td><td class="text-center font-mono">5/26</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">刘芳 / 邓星潼</td><td class="text-left px-3 text-gray-400">小医仙3号医疗险</td><td class="text-center font-mono">5/26</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">邱小倩 / 魏芊宁</td><td class="text-left px-3 text-gray-400">晴天保保超越版</td><td class="text-center font-mono">5/27</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">曾亚维 / 曾亚维</td><td class="text-left px-3 text-gray-400">国富人寿定海柱1号定期寿险（含被保险人豁免）</td><td class="text-center font-mono">5/27</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr class="bg-red-500/5"><td class="text-left px-3">陈昕 / 陈昕</td><td class="text-left px-3 text-gray-400">金满意足两全保险产品计划（增额型）</td><td class="text-center font-mono">5/28</td><td class="text-center"><span class="text-red-400">未续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr class="bg-green-500/5"><td class="text-left px-3">李桂兰 / 李桂兰</td><td class="text-left px-3 text-gray-400">太平e康保特定疾病保险</td><td class="text-center font-mono">5/28</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-green-400">✓</td><td class="text-center text-orange-400">无</td></tr>
+          <tr class="bg-red-500/5"><td class="text-left px-3">钟婕 / 周桓宇等3人</td><td class="text-left px-3 text-gray-400">e享护-医享无忧百万医疗险（20年期）-家庭版</td><td class="text-center font-mono">5/28</td><td class="text-center"><span class="text-red-400">未续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">张洋 / 张洋</td><td class="text-left px-3 text-gray-400">阳光人寿擎天柱7号（珍藏版）定期寿险免体检版</td><td class="text-center font-mono">5/29</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">张洋 / 王宇鹏</td><td class="text-left px-3 text-gray-400">阳光人寿擎天柱7号（珍藏版）定期寿险免体检版</td><td class="text-center font-mono">5/29</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">陆宽 / 陆宽</td><td class="text-left px-3 text-gray-400">e享护-医享无忧百万医疗险（20年期）-个人版</td><td class="text-center font-mono">5/29</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">王铃 / 王铃</td><td class="text-left px-3 text-gray-400">和泰人寿超级玛丽6号重疾险保终身</td><td class="text-center font-mono">5/30</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">王铃 / 赵晨睿</td><td class="text-left px-3 text-gray-400">招商仁和青云卫1号少儿重疾险(互联网专属)</td><td class="text-center font-mono">5/30</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr><td class="text-left px-3">陈昊 / 陈昊</td><td class="text-left px-3 text-gray-400">长相安长期医疗险（20年保证续保）—个人版</td><td class="text-center font-mono">5/30</td><td class="text-center"><span class="text-green-400">已续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+          <tr class="bg-red-500/5"><td class="text-left px-3">来孜娜·阿布甫江 / 来孜娜·阿布甫江</td><td class="text-left px-3 text-gray-400">e享护-医享无忧百万医疗险（20年期）-个人版</td><td class="text-center font-mono">5/30</td><td class="text-center"><span class="text-red-400">未续</span></td><td class="text-center text-red-400">×</td><td class="text-center text-gray-500">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-[11px] text-gray-500 mt-3 italic">5 条未续（标红底）：童青、车金华、陈昕、钟婕、来孜娜·阿布甫江，需下周首轮追单。</p>
+  </div>
+
+  <!-- 三个关键指标 -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="card border-t-2 border-t-red-500 bg-gradient-to-b from-red-500/5 to-transparent">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">企微好友覆盖率</p>
+      <p class="text-4xl font-bold text-red-400 mb-2">1<span class="text-xl text-gray-500"> / 22</span></p>
+      <p class="text-xs text-gray-400 leading-relaxed">仅李桂兰 1 人有企微好友（约 <strong class="text-red-400">5%</strong>），<strong class="text-red-400">比上周 9% 还低</strong>。21 个客户无法通过企微触达，续保严重依赖电话/线下，结构性短板进一步恶化。</p>
+    </div>
+    <div class="card border-t-2 border-t-red-500 bg-gradient-to-b from-red-500/5 to-transparent">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">本周企微沟通的应续客户</p>
+      <p class="text-4xl font-bold text-red-400 mb-2">0<span class="text-xl text-gray-500"> / 1</span></p>
+      <p class="text-xs text-gray-400 leading-relaxed">唯一的企微好友李桂兰，本周也走电话/线下续保，<strong class="text-red-400">全周无企微沟通</strong>。上周"叶文文式"企微追单闭环（应续当天密集沟通→续保）<strong class="text-white">本周未能复制</strong>。</p>
+    </div>
+    <div class="card border-t-2 border-t-blue-500 bg-gradient-to-b from-blue-500/5 to-transparent">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">本周企微总触达（其他工作）</p>
+      <p class="text-4xl font-bold text-white mb-2">38<span class="text-xl text-gray-500"> 人</span></p>
+      <p class="text-xs text-gray-400 leading-relaxed">发出 <strong class="text-white">260 条</strong>消息（上周 32 人 / 282 条），触达面与上周相当，主要服务二开 + 其他续保客户。</p>
+    </div>
+  </div>
+
+  <!-- 核心问题 -->
+  <div class="card bg-gradient-to-r from-orange-500/10 via-orange-500/5 to-transparent border-l-4 border-l-orange-500">
+    <h3 class="text-base font-bold text-orange-400 mb-3">▎ 核心问题</h3>
+    <ul class="space-y-2 text-sm text-gray-300 list-disc pl-5">
+      <li><strong class="text-green-400">完成率 77%（17/22）与上周持平</strong>：续保基本盘稳定。</li>
+      <li><strong class="text-red-400">企微好友覆盖率降到 5%（1/22）、本周企微闭环为 0</strong>：上周叶文文式企微追单范式未延续，企微作为追单工具的渗透不进反退，是最需要补的结构性短板。</li>
+      <li><strong class="text-white">追单存在历史积压</strong>：上周 5 个未续中柴伟、沈姝希（2 张）连续两周仍未续回；加本周 5 个新未续，待办累积。</li>
+      <li><strong class="text-white">5 个本周未续</strong>：童青、车金华、陈昕、钟婕、来孜娜，需下周首轮追单。</li>
+    </ul>
+  </div>
+
+  <div class="card bg-gradient-to-r from-green-500/10 via-green-500/5 to-transparent border-l-4 border-l-green-500 mt-4">
+    <h3 class="text-base font-bold text-green-400 mb-3">▎ 下周行动建议</h3>
+    <ol class="space-y-2 text-sm text-gray-300 list-decimal pl-5">
+      <li><strong class="text-white">本周 5 未续 + 历史 3 单一并追单</strong>：本周（童青、车金华、陈昕、钟婕、来孜娜）+ 历史遗留（柴伟、沈姝希 2 张）走电话/私人微信首轮回访，同步发企微好友邀请，目标合计追回 ≥ 4 单。</li>
+      <li><strong class="text-white">复制"叶文文式"企微追单闭环</strong>：对已是企微好友的客户（如李桂兰），应续前主动企微跟进，而非默认走电话。</li>
+      <li><strong class="text-white">建立"续保前 30 天必加企微"机制</strong>：覆盖率连续三周 5-11% 且本周下滑，要求承保保单生效时即邀请客户加企微，纳入承保 SOP。</li>
+      <li><strong class="text-white">续保动作全程留痕</strong>：电话/微信/线下续保动作均在系统记录沟通时间与方式，避免"已续但渠道不明"。</li>
+    </ol>
+  </div>
+
+  <!-- 新工具：保单整理（家庭保单体检） -->
+  <div class="card bg-gradient-to-r from-[#D4AF37]/12 via-[#D4AF37]/5 to-transparent border-l-4 border-l-[#D4AF37] mt-4">
+    <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+      <h3 class="text-base font-bold gold-text">🩺 工具复用提醒：保单整理（家庭保单体检）</h3>
+      <span class="text-[10px] bg-[#D4AF37]/10 text-[#D4AF37] px-2 py-1 rounded border border-[#D4AF37]/20">2026-05-24 已上线</span>
+    </div>
+    <p class="text-sm text-gray-300 leading-relaxed mb-3">
+      续保追单时的"送服务"利器——把催费电话升级成保障梳理服务，顺带挖出保障缺口 = 续保 + 加保 + 转介绍机会。本周 5 个未续客户正适合用它作为切入点。
+    </p>
+    <ul class="space-y-2 text-xs text-gray-400 list-disc pl-5 mb-3">
+      <li><strong class="text-white">一键生成、无需客户配合</strong>：客户维护页点「🩺 生成保单整理报告」，系统用已有成交 + 续保数据，AI 自动出《家庭保单体检报告》——健康分、全家保障地图、已有保障 / 缺口、<span class="text-green-400">即将到期提醒</span>、行动建议。</li>
+      <li><strong class="text-white">可导出 PDF 发客户</strong>，报告自动存档，下次进客户页直接调出、免重复生成。</li>
+      <li><strong class="text-white">想看全市场保单</strong>：引导客户上传金事通截图（客户维护 &gt; 保单整理），补全在别处投保的保单，做更完整的查缺补漏。</li>
+    </ul>
+    <p class="text-[11px] text-gray-500 italic">建议：续保回访时同步生成保单整理报告作为服务切入点；尤其对"重储蓄轻保障""有缺口"的客户，是自然的加保理由。</p>
+  </div>
+</section>
+
+<!-- 6、下周任务部署 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">6、下周任务部署 (06.01 - 06.06)</h2>
+  <p class="text-xs text-orange-400 mb-5 italic">⚠ 以下为按本周数据给出的<strong>建议目标，待崔总拍板</strong>后定稿；可逐人调整数值。</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <!-- 江宁 -->
+    <div class="card border-l-4 border-l-orange-500">
+      <div class="flex justify-between items-start mb-6">
+        <h3 class="text-xl font-bold text-orange-400">江宁</h3>
+        <span class="text-[10px] bg-orange-500/10 text-orange-400 px-2 py-1 rounded border border-orange-500/20">激活回量</span>
+      </div>
+      <div class="space-y-6">
+        <div class="flex items-start">
+          <span class="task-number">1</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">存量激活拉回 8+（率守 35%+）</p>
+            <p class="text-[11px] text-gray-500 leading-relaxed">本周激活回落到 6，但激活率 35% 高位未掉。下周在保持质量的前提下把激活量拉回 8+，触达回到 20+。</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="task-number">2</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">新发加好友率提到 40%+</p>
+            <p class="text-[11px] text-gray-500 italic">连续两周加好友率 &lt; 30%（25%→27%），新发承接的加好友环节是短板，必须收紧。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 林付贤 -->
+    <div class="card border-l-4 border-l-red-500">
+      <div class="flex justify-between items-start mb-6">
+        <h3 class="text-xl font-bold text-red-400">林付贤</h3>
+        <span class="text-[10px] bg-red-500/10 text-red-400 px-2 py-1 rounded border border-red-500/20">立即整改</span>
+      </div>
+      <div class="space-y-6">
+        <div class="flex items-start">
+          <span class="task-number">1</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">立即停止群发，100% 回归 1对1</p>
+            <p class="text-[11px] text-gray-500 leading-relaxed">彻底停用群发与"收益下降/下架前"话术。回归 1对1 个性化（有效率本有 25%），激活 ≥ 6。</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="task-number">2</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">对外话术合规整改 + 发前审核</p>
+            <p class="text-[11px] text-gray-500 italic">所有对外群发发前做合规审核，杜绝承诺收益、抢购焦虑表述，规避合规风险。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 马康挺 -->
+    <div class="card border-l-4 border-l-green-500">
+      <div class="flex justify-between items-start mb-6">
+        <h3 class="text-xl font-bold text-green-500">马康挺</h3>
+        <span class="text-[10px] bg-green-500/10 text-green-500 px-2 py-1 rounded border border-green-500/20">乘势破冰</span>
+      </div>
+      <div class="space-y-6">
+        <div class="flex items-start">
+          <span class="task-number">1</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">方案 1→2-3，跑通 1 个讲解</p>
+            <p class="text-[11px] text-gray-500 leading-relaxed">本周方案制作破冰 1（全队唯一）。下周把这个方案推到讲解，跑通团队第一个完整漏斗闭环，方案制作再增至 2-3。</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="task-number">2</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">存量激活维持 7+ / 新发回 15+</p>
+            <p class="text-[11px] text-gray-500">本周存量激活 7、率 25% 全队最稳，继续保持；新发 9 回补到 15+。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 李颢 -->
+    <div class="card border-l-4 border-l-[#D4AF37]">
+      <div class="flex justify-between items-start mb-6">
+        <h3 class="text-xl font-bold gold-text">李颢</h3>
+        <span class="text-[10px] bg-[#D4AF37]/10 text-[#D4AF37] px-2 py-1 rounded border border-[#D4AF37]/20">续保 + 企微</span>
+      </div>
+      <div class="space-y-6">
+        <div class="flex items-start">
+          <span class="task-number">1</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">5 未续 + 3 历史遗留追单：追回 ≥ 4</p>
+            <p class="text-[11px] text-gray-500 leading-relaxed">本周 5 单（童青/车金华/陈昕/钟婕/来孜娜）+ 历史遗留（柴伟/沈姝希 2 张）全部首轮回访，合计追回 ≥ 4 单。</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="task-number">2</span>
+          <div>
+            <p class="text-sm text-white font-bold mb-1">企微好友覆盖率：新应续客户 100% 邀约</p>
+            <p class="text-[11px] text-gray-500 italic">覆盖率连续三周低位且本周降到 5%。复制叶文文式企微闭环，应续前主动企微邀约 + 跟进。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 7、团队执行概括 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">7、团队执行概括</h2>
+  <div class="card bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] border-[#D4AF37]/30">
+    <div class="space-y-6">
+      <div class="summary-pill border-l-4 border-l-green-500 bg-green-500/5">
+        <h4 class="font-bold text-green-400 mb-2">马康挺：本周之星，触达激活双升 + 方案制作破冰</h4>
+        <p class="text-sm text-gray-400">
+          存量触达 22→28、激活 4→7 <strong class="text-white">双双提升</strong>，激活率回到 25%，出差归位后全队最稳。
+          更关键的是贡献了<strong class="text-green-400">全队连续两周 0% 后的第一个方案制作</strong>，是下周打通"方案 → 讲解"漏斗的现实抓手
+          （<a href="lf-mk-stock-activation-script-analysis.html" target="_blank" class="text-[#D4AF37] underline hover:no-underline">见话术分析</a>）。
+        </p>
+      </div>
+      <div class="summary-pill border-l-4 border-l-orange-500">
+        <h4 class="font-bold text-orange-400 mb-2">江宁：激活率守住高位，但触达激活双回落、加好友率偏低</h4>
+        <p class="text-sm text-gray-400">
+          存量触达 27→17、激活 11→6 <strong class="text-white">双双回落</strong>（本周精力转向新发，新发 8→11），但激活率守在 35% 高位、质量未掉
+          （<a href="jiangning-stock-activation-script-analysis.html" target="_blank" class="text-[#D4AF37] underline hover:no-underline">见话术分析</a>）。
+          短板是新发加好友率连续两周 &lt; 30%。下周把激活量拉回、加好友率提到 40%。
+        </p>
+      </div>
+      <div class="summary-pill border-l-4 border-l-[#D4AF37]">
+        <h4 class="font-bold gold-text mb-2">李颢：续保完成率 77% 稳定，但企微闭环本周断档</h4>
+        <p class="text-sm text-gray-400">
+          本周 <strong class="text-white">22 个应续完成 17 个（77%）</strong>，与上周持平，续保基本盘稳。
+          但<strong class="text-red-400">企微好友覆盖率反降到 5%、本周企微闭环为 0</strong>，上周叶文文式范式未延续；
+          上周 5 未续仅追回 2 单，柴伟、沈姝希（2 张）连续两周未续回。详见
+          <a href="#" onclick="document.querySelectorAll('.section-header')[5].scrollIntoView({behavior:'smooth'});return false;" class="text-[#D4AF37] underline hover:no-underline">第 5 节专项分析</a>。
+        </p>
+      </div>
+      <div class="summary-pill border-l-4 border-l-red-500 bg-red-500/5">
+        <h4 class="font-bold text-red-400 mb-2">⚠ 林付贤：5/30 大规模群发 1505 户，质量 + 合规双预警，本周最需干预</h4>
+        <p class="text-sm text-gray-400">
+          5/30 一分钟内群发 1961 条、触达 1505 个存量客户，<strong class="text-red-400">激活率仅 0.7%</strong>，话术含承诺收益 + 下架焦虑，
+          同时触碰质量与合规两条红线，且彻底违背上周"停群发、回归 1对1"的明确要求。
+          其有效 1对1 激活率本已回到 25%，更说明群发是错误选择，是本周<strong class="text-white">最需要立即干预</strong>的问题，详见
+          <a href="#" onclick="document.querySelectorAll('.section-header')[4].scrollIntoView({behavior:'smooth'});return false;" class="text-[#D4AF37] underline hover:no-underline">第 4 节状态预警</a>。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="text-center py-10 no-print border-t border-white/5">
+  <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">预览并打印规划师战报</button>
+  <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 规划团队内部复盘 · 2026.05.25-05.30</p>
+</footer>
+
+<script>
+const ctx = document.getElementById('plannerOverviewChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['江宁', '林付贤', '马康挺', '李颢'],
+    datasets: [
+      { label: '存量触达', data: [17, 16, 28, 1], backgroundColor: '#D4AF37', borderRadius: 20, barThickness: 12 },
+      { label: '存量激活', data: [6, 4, 7, 1], backgroundColor: '#666', borderRadius: 20, barThickness: 12 }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#666' } },
+      y: { grid: { display: false }, ticks: { color: '#e0e0e0', font: { weight: 'bold' } } }
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保心上人 - 编辑团队周报 (05.25-05.30)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+:root {
+  --gold-primary: #D4AF37;
+  --gold-light: #F5E6AD;
+  --black-bg: #0d0d0d;
+  --black-card: #1a1a1a;
+  --danger: #ff4d4f;
+  --success: #52c41a;
+  --info: #4A90E2;
+}
+body { background-color: var(--black-bg); color: #e0e0e0; font-family: 'Noto Sans SC', sans-serif; }
+.gold-gradient-text { background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.gold-text { color: var(--gold-primary); }
+.section-header { border-left: 4px solid var(--gold-primary); padding-left: 1rem; margin-bottom: 2rem; font-size: 1.5rem; font-weight: 700; }
+.subsection-header { border-left: 3px solid var(--gold-primary); padding-left: 0.75rem; font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 1rem; color: #fff; }
+.card { background: var(--black-card); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 12px; padding: 1.5rem; }
+.data-table th { color: #888; font-size: 0.75rem; text-transform: uppercase; padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.data-table td { padding: 14px 8px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; }
+.progress-container { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; margin-top: 12px; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #D4AF37, #F5E6AD); border-radius: 3px; }
+.rate-high { color: var(--success); font-weight: bold; }
+.rate-low { color: var(--danger); font-weight: bold; }
+@media print { .no-print { display: none; } }
+</style>
+</head>
+<body class="p-6 md:p-12 max-w-7xl mx-auto">
+
+<!-- 顶栏 -->
+<header class="flex justify-between items-center mb-16 no-print border-b border-white/5 pb-8">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+    <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+  </div>
+  <div class="text-right text-sm text-gray-500">内容编辑周报 | 2026.05.25 - 05.30</div>
+</header>
+
+<!-- 1、概览篇：5 月个人线索目标 -->
+<section class="mb-16">
+  <div class="flex justify-between items-end mb-8">
+    <h2 class="section-header gold-gradient-text mb-0">1、概览篇：个人线索目标 (5月收官)</h2>
+    <p class="text-xs text-gray-500 italic">月目标：干货 20 个/人 (崔伟/陈鑫/小雪) · 极短 30 个/人 (吴婷婷/吕军伟) | 截止 5/30</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+
+    <!-- 吕军伟 -->
+    <div class="card border-t-2 border-t-[#D4AF37] bg-gradient-to-b from-[#1c1810] to-[#1a1a1a]">
+      <div class="flex justify-between items-start mb-1">
+        <p class="text-xs text-gray-500 uppercase tracking-widest gold-text font-bold">吕军伟</p>
+        <span class="text-[10px] text-[#D4AF37] border border-[#D4AF37]/30 px-2 py-0.5 rounded">月度领先</span>
+      </div>
+      <p class="text-3xl font-bold mt-1 gold-text">22 <span class="text-xs font-normal text-white/40">/ 30</span></p>
+      <div class="progress-container">
+        <div class="progress-bar" style="width: 73%"></div>
+      </div>
+      <p class="text-[10px] text-gray-500 mt-3">达标率 73%（极短视频专项）</p>
+      <p class="text-[10px] text-[#D4AF37]/80 mt-1">极短 19 · 干货 3 · 好友 6 · 方案 1</p>
+    </div>
+
+    <!-- 崔伟 -->
+    <div class="card border-t-2 border-t-[#D4AF37] bg-gradient-to-b from-[#1c1810] to-[#1a1a1a]">
+      <div class="flex justify-between items-start mb-1">
+        <p class="text-xs text-gray-500 uppercase tracking-widest gold-text font-bold">崔伟</p>
+        <span class="text-[10px] text-[#D4AF37] border border-[#D4AF37]/30 px-2 py-0.5 rounded">量质双优</span>
+      </div>
+      <p class="text-3xl font-bold mt-1 gold-text">14 <span class="text-xs font-normal text-white/40">/ 20</span></p>
+      <div class="progress-container">
+        <div class="progress-bar" style="width: 70%"></div>
+      </div>
+      <p class="text-[10px] text-gray-500 mt-3">达标率 70%（干货为主 + 极短）</p>
+      <p class="text-[10px] text-[#D4AF37]/80 mt-1">干货 12 · 极短 2 · 好友 8 · 方案 1</p>
+    </div>
+
+    <!-- 陈鑫 -->
+    <div class="card border-t-2 border-t-orange-500">
+      <p class="text-xs text-gray-500 uppercase tracking-widest">陈鑫</p>
+      <p class="text-3xl font-bold mt-1 text-orange-400">11 <span class="text-xs font-normal text-gray-600">/ 20</span></p>
+      <div class="progress-container">
+        <div class="progress-bar" style="width: 55%; background:#ffa500;"></div>
+      </div>
+      <p class="text-[10px] text-orange-400 mt-3">达标率 55%，缺 9 个</p>
+      <p class="text-[10px] text-gray-500/80 mt-1">干货 11 · 好友 8 · 方案 0</p>
+    </div>
+
+    <!-- 小雪 -->
+    <div class="card border-t-2 border-t-red-500">
+      <p class="text-xs text-gray-500 uppercase tracking-widest">小雪</p>
+      <p class="text-3xl font-bold mt-1 text-red-400">6 <span class="text-xs font-normal text-gray-600">/ 20</span></p>
+      <div class="progress-container">
+        <div class="progress-bar" style="width: 30%; background:#ff4d4f;"></div>
+      </div>
+      <p class="text-[10px] text-red-400 mt-3">达标率 30%，缺 14 个</p>
+      <p class="text-[10px] text-gray-500/80 mt-1">干货 6 · 好友 2 · 方案 0</p>
+    </div>
+
+    <!-- 吴婷婷 -->
+    <div class="card border-t-2 border-t-red-500">
+      <div class="flex justify-between items-start mb-1">
+        <p class="text-xs text-gray-500 uppercase tracking-widest">吴婷婷</p>
+        <span class="text-[10px] text-[#4A90E2] border border-[#4A90E2]/30 px-2 py-0.5 rounded">极短专项</span>
+      </div>
+      <p class="text-3xl font-bold mt-1 text-red-400">8 <span class="text-xs font-normal text-gray-600">/ 30</span></p>
+      <div class="progress-container">
+        <div class="progress-bar" style="width: 27%; background:#ff4d4f;"></div>
+      </div>
+      <p class="text-[10px] text-red-400 mt-3">达标率 27%，全队最低</p>
+      <p class="text-[10px] text-gray-500/80 mt-1">极短 8 · 好友 1 · 方案 0</p>
+    </div>
+
+  </div>
+
+  <div class="card mt-6 bg-gradient-to-r from-orange-500/10 to-transparent border-l-4 border-l-orange-500">
+    <p class="text-sm text-gray-300 leading-relaxed">
+      <strong class="text-orange-400">5 月收官：全员未达标，两极分化。</strong>
+      团队全月累计 <span class="text-white font-bold">61 条线索</span>（吕军伟 22 + 崔伟 14 + 陈鑫 11 + 吴婷婷 8 + 小雪 6），月度总目标 120，整体完成 <strong class="text-white">51%</strong>，<span class="text-red-400">无人达成 100%</span>。
+      <strong class="text-white">吕军伟（73%）+ 崔伟（70%）</strong>领跑且贡献 59%（36/61）的线索；陈鑫 55% 居中；<span class="text-red-400">小雪 30% / 吴婷婷 27%</span> 全月严重落后。
+      其中<strong class="text-white">崔伟量质双优</strong>（线索 70% + 本周干货 4 条全优秀）；吕军伟线索量最高，但本周干货 2 条不合格、且标题违规偏多（见第 4 节）。
+      <span class="text-gray-500">注：月末最后一周（5/25-5/30）新增线索几乎停滞（仅崔伟、陈鑫各 1），与林付贤休假、临近月末有关。</span>
+    </p>
+  </div>
+</section>
+
+<!-- 2、视频质量篇 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">2、视频质量篇 (本周复盘)</h2>
+
+  <!-- 2.1 干货视频 - 完播率合格率（按编辑大字） -->
+  <div class="flex justify-between items-end mt-2 mb-6">
+    <h3 class="subsection-header mb-0">2.1 干货视频 — 完播率合格率</h3>
+    <p class="text-xs text-gray-500">合格 = 完播率 &gt; 6% · 责任：编辑</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- 崔伟 -->
+    <div class="card text-center bg-gradient-to-b from-[#52c41a]/10 to-[#1a1a1a] border-t-2 border-t-[#52c41a]">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">崔伟</p>
+      <p class="text-5xl font-bold text-[#52c41a]">100<span class="text-2xl">%</span></p>
+      <p class="text-[10px] text-[#52c41a]/80 mt-3">4/4 已填全合格 · <strong>4 条全优秀</strong></p>
+    </div>
+    <!-- 陈鑫 -->
+    <div class="card text-center bg-gradient-to-b from-orange-500/10 to-[#1a1a1a] border-t-2 border-t-orange-500">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">陈鑫</p>
+      <p class="text-5xl font-bold text-orange-400">75<span class="text-2xl">%</span></p>
+      <p class="text-[10px] text-orange-400/80 mt-3">4/5 已填，3 合格 · 1 不合格 · 1 优秀</p>
+    </div>
+    <!-- 小雪 -->
+    <div class="card text-center bg-gradient-to-b from-red-500/10 to-[#1a1a1a] border-t-2 border-t-red-500">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">小雪</p>
+      <p class="text-5xl font-bold text-red-500">50<span class="text-2xl">%</span></p>
+      <p class="text-[10px] text-red-400/80 mt-3">4/4 已填，2 合格 · <strong>2 不合格</strong></p>
+    </div>
+    <!-- 吕军伟 -->
+    <div class="card text-center bg-gradient-to-b from-red-500/10 to-[#1a1a1a] border-t-2 border-t-red-500">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">吕军伟</p>
+      <p class="text-5xl font-bold text-red-500">50<span class="text-2xl">%</span></p>
+      <p class="text-[10px] text-red-400/80 mt-3">4/4 已填，2 合格 · <strong>2 不合格</strong></p>
+    </div>
+  </div>
+
+  <div class="card mt-6 bg-gradient-to-r from-orange-500/10 to-transparent border-l-4 border-l-orange-500">
+    <p class="text-sm text-gray-300 leading-relaxed">
+      <strong class="text-orange-400">本周整体合格率 68.8%（11/16 已填）vs 上周 92.3%，明显下滑：</strong>
+      崔伟一枝独秀（4 条<strong class="text-white">全部优秀</strong>，完播率 &gt; 12%）；但<span class="text-red-400">小雪、吕军伟各出现 2 条不合格</span>（完播率 ≤ 6%），陈鑫也有 1 条不合格。下半周干货完播率集体回落，需复盘选题与开场钩子。
+    </p>
+  </div>
+
+  <!-- 2.2 极短视频 - 一个大字 -->
+  <div class="flex justify-between items-end mt-12 mb-6">
+    <h3 class="subsection-header mb-0">2.2 极短视频 — 互动指数合格率</h3>
+    <p class="text-xs text-gray-500">合格 = 互动指数 ≥ 500 · 责任：编辑</p>
+  </div>
+
+  <div class="card text-center bg-gradient-to-b from-orange-500/8 to-[#1a1a1a]">
+    <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">极短视频本周合格率</p>
+    <p class="text-7xl font-bold text-orange-400">50<span class="text-3xl">%</span></p>
+    <p class="text-sm text-gray-500 mt-4">本周共发布 7 条（吴婷婷 5、吕军伟 2），已填互动指数 6 条，3 条合格、<strong class="text-red-400">优秀 0 条</strong></p>
+    <p class="text-[10px] text-orange-400/80 mt-2">吴婷婷 2/4、吕军伟 1/2 各半合格；较上周 66.7%（优秀率 50%）回落，本周无优秀视频（≥ 1500）</p>
+  </div>
+</section>
+
+<!-- 3、剪辑品质监控 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">3、剪辑品质监控 (剪辑师维度)</h2>
+  <p class="text-xs text-gray-500 italic mb-6">本周 唐振文 承接 14 条，任紫薇 承接 10 条。两个指标均由剪辑师负责。</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- 唐振文 -->
+    <div class="card border-t-2 border-t-[#D4AF37]">
+      <div class="flex justify-between items-baseline mb-6">
+        <h3 class="text-xl font-bold gold-text">唐振文</h3>
+        <span class="text-xs text-gray-500">承接 14 条</span>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center bg-[#52c41a]/5 rounded-lg p-4 border border-[#52c41a]/20">
+          <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest">2 秒跳出率合格率</p>
+          <p class="text-4xl font-bold text-[#52c41a]">100<span class="text-xl">%</span></p>
+          <p class="text-[10px] text-[#52c41a]/80 mt-2">已填 6·合格 6 · ↑ 上周 85.7%</p>
+        </div>
+        <div class="text-center bg-red-500/5 rounded-lg p-4 border border-red-500/20">
+          <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest">封面点击率合格率</p>
+          <p class="text-4xl font-bold text-red-500">25<span class="text-xl">%</span></p>
+          <p class="text-[10px] text-red-400/80 mt-2">已填 8·合格 2 · 上周 28.6%（连续低位）</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任紫薇 -->
+    <div class="card border-t-2 border-t-[#4A90E2]">
+      <div class="flex justify-between items-baseline mb-6">
+        <h3 class="text-xl font-bold text-[#4A90E2]">任紫薇</h3>
+        <span class="text-xs text-gray-500">承接 10 条</span>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center bg-[#52c41a]/5 rounded-lg p-4 border border-[#52c41a]/20">
+          <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest">2 秒跳出率合格率</p>
+          <p class="text-4xl font-bold text-[#52c41a]">100<span class="text-xl">%</span></p>
+          <p class="text-[10px] text-[#52c41a]/80 mt-2">已填 8·合格 8 · ↑ 上周 80%</p>
+        </div>
+        <div class="text-center bg-[#52c41a]/5 rounded-lg p-4 border border-[#52c41a]/20">
+          <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest">封面点击率合格率</p>
+          <p class="text-4xl font-bold text-[#52c41a]">83.3<span class="text-xl">%</span></p>
+          <p class="text-[10px] text-[#52c41a]/80 mt-2">已填 6·合格 5 · ↑↑ 上周 20%（大幅改善）</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+    <div class="card border-l-4 border-l-[#52c41a]/60 bg-[#52c41a]/5">
+      <p class="font-bold text-[#52c41a] mb-2">✓ 2 秒跳出率：双双 100%，全队历史最佳</p>
+      <p class="text-xs text-gray-400 leading-relaxed">唐振文 85.7%→100%、任紫薇 80%→100%，两人本周已填视频<strong class="text-white">全部合格</strong>。前 2 秒留人能力已不再是短板，开场画面节奏调整成效稳固。合格 = 2 秒跳出率 ≤ 40%。</p>
+    </div>
+    <div class="card border-l-4 border-l-red-500 bg-red-500/5">
+      <p class="font-bold text-red-400 mb-2">✗ 封面点击率：任紫薇大跃升，唐振文连续多周不合格</p>
+      <p class="text-xs text-gray-400 leading-relaxed"><strong class="text-[#52c41a]">任紫薇从 20% 飙到 83.3%（+63pp）</strong>，证明封面是可以做对的；但<strong class="text-red-400">唐振文 25%（连续多周 &lt; 30%）</strong>仍远低于合格线。建议唐振文直接对照任紫薇本周封面，提炼差异、限期整改。合格 = 封面点击率 ≥ 6%，目标合格率 ≥ 50%。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4、内容生产复盘 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">4、内容生产复盘</h2>
+  <div class="card mb-8">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-gray-500 border-b border-white/5">
+            <th class="text-left px-4 py-3">作品类型</th><th class="py-3">本周产量</th><th class="py-3">核心指标</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr>
+            <td class="text-left px-4 py-4 font-bold">干货视频</td>
+            <td class="font-mono text-lg">17 条</td>
+            <td class="text-gray-400 italic">已填合格率 68.8% (11/16) · 优秀率 29.4% (5/17) · 不合格 5 条</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-4 font-bold">极短视频</td>
+            <td class="font-mono text-lg">7 条</td>
+            <td class="text-gray-400 italic">合格率 50% (3/6 已填) · 优秀 0 条</td>
+          </tr>
+          <tr>
+            <td class="text-left px-4 py-4 font-bold">文章</td>
+            <td class="font-mono text-lg text-gray-500">0 条</td>
+            <td class="text-gray-500 italic">本周无文章产出</td>
+          </tr>
+          <tr class="bg-white/3 border-t border-white/5">
+            <td class="text-left px-4 py-4 font-bold gold-text">本周综合</td>
+            <td class="font-mono text-lg gold-text">24 条</td>
+            <td class="text-gray-400 italic">较上周 (21 条) +14%；但干货完播率 -23.5pp、极短优秀归 0，<span class="text-orange-400">产量升、质量降</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 核心风控任务 -->
+  <div class="grid grid-cols-1 gap-6">
+    <div class="card border-l-4 border-l-red-600 bg-gradient-to-br from-red-950/10 to-[#1a1a1a]">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold">!</span>
+        <h3 class="text-xl font-bold text-white uppercase tracking-wider">本周核心任务：内容风控与合规</h3>
+      </div>
+      <div class="p-6 bg-white/5 rounded-lg border border-white/10">
+        <p class="text-md text-gray-200 leading-relaxed mb-4">
+          编辑团队本周延续方向：<strong class="text-white underline decoration-red-500 decoration-2">不违规、不踩广告法</strong>。
+          <span class="text-red-400 font-bold">承诺收益类风险已连续多周存在，本周更为系统化（尤其极短视频"现金流"标题），必须立即建立"发布前二次审核"机制，不能再按"本周新发现"处理。</span>
+        </p>
+        <div class="bg-red-500/10 border border-red-500/30 rounded p-4 mb-4">
+          <p class="text-sm text-red-300 leading-relaxed mb-3">
+            <strong class="text-red-400">⚠ 本周扫描发现 5 类待整改风险：</strong>
+            （上周已警示，本周持续存在且承诺收益类更密集，需立即整改）
+          </p>
+          <table class="w-full text-xs text-gray-300">
+            <thead><tr class="text-gray-500"><th class="text-left py-2 pr-3">风险类型</th><th class="text-left py-2 pr-3">本周标题示例</th><th class="text-left py-2">编辑</th></tr></thead>
+            <tbody>
+              <tr class="border-t border-white/5"><td class="py-2 pr-3 text-red-400">承诺收益类<br><span class="text-[10px] text-red-500">（最严重·持续）</span></td><td class="py-2 pr-3">"每月<span class="text-white">稳领 6000</span>元，轻松拥有<span class="text-white">终身现金流</span>"、"<span class="text-white">年领 49000</span>，打造终身养老现金流"、"<span class="text-white">每月到账 5833</span>"、"每年领 13万5<span class="text-white">谁也动不了</span>"</td><td class="py-2">吴婷婷（5 条全踩）、吕军伟、小雪</td></tr>
+              <tr class="border-t border-white/5"><td class="py-2 pr-3 text-red-400">抢购/下架焦虑</td><td class="py-2 pr-3">"<span class="text-white">630 利率下调前</span>，哪些更值得买？"、"演示<span class="text-white">利率要降 3.5% 了</span>"、"6 月存款到期…能帮你<span class="text-white">多赚十几万</span>"</td><td class="py-2">陈鑫、吕军伟、崔伟</td></tr>
+              <tr class="border-t border-white/5"><td class="py-2 pr-3 text-red-400">伪权威背书</td><td class="py-2 pr-3">"<span class="text-white">国家力推</span>的新型养老方式，3.23 亿老人笑哈哈"、"<span class="text-white">国寿亲自下场</span>卷养老金"</td><td class="py-2">小雪、吕军伟</td></tr>
+              <tr class="border-t border-white/5"><td class="py-2 pr-3 text-red-400">绝对化 / 夸张</td><td class="py-2 pr-3">"太保<span class="text-white">杀疯了</span>！"、"爆款重疾险<span class="text-white">掀桌子</span>…直接改写行业规则！"</td><td class="py-2">吕军伟</td></tr>
+              <tr class="border-t border-white/5"><td class="py-2 pr-3 text-red-400">争议 / 制造恐慌</td><td class="py-2 pr-3">"700 万保险<span class="text-white">一夜归了儿媳</span>，致命的漏洞"、"<span class="text-white">港险要凉？</span>金管局倒查…这类人<span class="text-white">已被盯上</span>"、"等着<span class="text-white">被割韭菜</span>吧"</td><td class="py-2">崔伟、陈鑫、吕军伟</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <div class="border-r border-white/5 pr-4">
+            <p class="text-red-400 font-bold mb-2">● 严禁动作：</p>
+            <ul class="text-sm text-gray-400 leading-relaxed space-y-1">
+              <li>• 承诺/暗示具体收益（"稳领 X 元""年领 X""终身现金流"+ 数字）</li>
+              <li>• 标题/正文使用"最""第一""唯一""谁也动不了"等绝对化用语</li>
+              <li>• 制造"下架前/利率下调前"抢购焦虑</li>
+              <li>• 引用未授权的政府/官方背书（"国家力推""国家队"）</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-[#D4AF37] font-bold mb-2">● 核心准则：</p>
+            <ul class="text-sm text-gray-400 leading-relaxed space-y-1">
+              <li>• 所有收益数据必须注明"演示，不构成保证"</li>
+              <li>• <strong class="text-white">建立发布前二次审核机制（重点账号交叉审核）</strong></li>
+              <li>• 极短视频"现金流"模板标题全部重写，去数字化承诺</li>
+              <li>• 保持品牌专业度与内容稳健性</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5、下周关注 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">5、下周关注 (06.01 - 06.06)</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="card border-l-4 border-l-red-500">
+      <h3 class="font-bold text-red-400 mb-3">优先级 1：标题合规专项整改</h3>
+      <p class="text-sm text-gray-400 leading-relaxed">承诺收益类连续多周，本周吴婷婷 5 条极短全踩"现金流 + 具体数字"。下周<strong class="text-white">落地"发布前二次审核"机制</strong>，极短"现金流"模板标题全部重写、去数字化承诺，重点账号交叉审核。</p>
+    </div>
+    <div class="card border-l-4 border-l-orange-500">
+      <h3 class="font-bold text-orange-400 mb-3">优先级 2：干货完播率止跌</h3>
+      <p class="text-sm text-gray-400 leading-relaxed">本周干货合格率 92%→69%，小雪 / 吕军伟各 2 条不合格。下周复盘低完播选题与开场钩子，目标合格率回到 85%+；对照崔伟（4 条全优秀）的选题逻辑。</p>
+    </div>
+    <div class="card border-l-4 border-l-red-500">
+      <h3 class="font-bold text-red-400 mb-3">优先级 3：唐振文封面点击率专项</h3>
+      <p class="text-sm text-gray-400 leading-relaxed">唐振文连续多周 &lt; 30%（本周 25%），而任紫薇本周已做到 83%。下周唐振文直接对照任紫薇封面提炼差异，限期把合格率提到 50%+。</p>
+    </div>
+  </div>
+  <div class="card mt-6 bg-gradient-to-r from-[#4A90E2]/10 to-transparent border-l-4 border-l-[#4A90E2]">
+    <p class="text-sm text-gray-300 leading-relaxed">
+      <strong class="text-[#4A90E2]">▎ 团队变化提示（6 月）：</strong>
+      吕军伟 6 月起转规划师试岗（主攻 P2 公海 + 老客保单整理，7/1 复盘定岗），<strong class="text-white">极短视频专项 6 月将主要由吴婷婷承担</strong>。需提前规划极短产能与目标分配，避免月初断档。<span class="text-gray-500">（此项待崔总确认）</span>
+    </p>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="text-center py-10 no-print border-t border-white/5">
+  <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:shadow-2xl transition-all">预览并导出编辑周报</button>
+  <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 内容组 · 2026.05.25-05.30</p>
+</footer>
+
+</body>
+</html>
