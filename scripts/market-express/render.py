@@ -14,7 +14,7 @@ def cls(v):       return "flat" if v is None else ("up" if v >= 0 else "down")
 def ar(v):        return "·"    if v is None else ("▲" if v >= 0 else "▼")
 def pct(v):       return "—"    if v is None else f"{v:+.2f}%"
 def comma3(v):    return "—"    if v is None else f"{v:,.3f}"
-def comma2(v):    return "服务器接入" if v is None else f"{v:,.2f}"
+def comma2(v):    return "—" if v is None else f"{v:,.2f}"
 
 # ---- 指数 ----
 IDX_NAME = {"DJI": "道琼斯指数", "GSPC": "标普500指数", "IXIC": "纳斯达克指数"}

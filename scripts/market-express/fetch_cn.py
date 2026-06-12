@@ -7,6 +7,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 import socket; socket.setdefaulttimeout(20)
 import signal, json, time, sys
 import akshare as ak
+import pandas as pd
 from datetime import datetime, timezone, timedelta
 
 OUT = f"{BASE}/data.json"
@@ -99,25 +100,39 @@ for tk in M7:
     out["mag7"][tk] = dict(cur=m["cur"], day_pct=m["day_pct"], ytd_pct=m["ytd_pct"]) if m else None
     print(f"Mag7 {tk}: {'%.2f%% / YTD %.2f%%' % (m['day_pct'], m['ytd_pct']) if m else 'NA'}")
 
-# ---- 6. 油/金(国际期货现价+日涨跌; YTD 暂无历史→None) ----
-fg = retry("futures_global_spot_em", lambda: ak.futures_global_spot_em())
+# ---- 6. 油/金 (USD计价, 新浪外盘期货 CL=NYMEX原油 / GC=COMEX黄金; YTD=年初首日收盘) ----
+#    旧 futures_global_spot_em 的"原油/黄金当月连续"是东京盘日元计价(被价格区间挡掉→None→"服务器接入");
+#    新浪外盘 futures_foreign_commodity_realtime 才是美元计价, 内地+海外runner 均实测可达。
 out["commodities"] = {}
-def fpick(core, lo, hi):
-    """按名取当月连续合约 + 价格区间合理性校验(防取错品种)。"""
-    if fg is None: return None, None, None
-    nm = fg["名称"].astype(str)
-    bad = ("豆","菜","棕","沪","燃","汽","沥青","甲醇","乙二醇","布伦特" if core=="原油" else "X")
-    r = fg[nm.str.contains(core, na=False) & nm.str.contains("当月连续", na=False) & fg["最新价"].notna()]
-    for _, row in r.iterrows():
-        if any(b in str(row["名称"]) for b in bad): continue
-        v = float(row["最新价"])
-        if lo <= v <= hi:
-            return v, float(row["涨跌幅"]), str(row["名称"])
-    return None, None, None
-wti  = fpick("原油", 30, 200)     # WTI ~ $88
-gold = fpick("黄金", 1500, 7000)  # COMEX ~ $4200
-out["commodities"]["WTI"]  = dict(cur=wti[0],  day_pct=wti[1],  ytd_pct=None, src=wti[2])
-out["commodities"]["GOLD"] = dict(cur=gold[0], day_pct=gold[1], ytd_pct=None, src=gold[2])
+def foreign_cmdty(sym, lo, hi):
+    """sym=CL(NYMEX原油)/GC(COMEX黄金)。返回 (cur, day_pct, ytd_pct, name)。"""
+    rt = retry(f"foreign_rt_{sym}", lambda: ak.futures_foreign_commodity_realtime(symbol=sym))
+    if rt is None or len(rt) == 0:
+        return None, None, None, None
+    row = rt.iloc[0]
+    try:
+        cur = float(row["最新价"])
+    except Exception:
+        return None, None, None, None
+    if not (lo <= cur <= hi):          # 价格区间合理性校验(防取错/脏数据)
+        return None, None, None, None
+    try: day = float(row["涨跌幅"])
+    except Exception: day = None
+    name = str(row["名称"])
+    ytd = None
+    h = retry(f"foreign_hist_{sym}", lambda: ak.futures_foreign_hist(symbol=sym))
+    if h is not None and len(h) > 0:
+        try:
+            h = h.copy(); h["date"] = pd.to_datetime(h["date"])
+            base = float(h[h["date"] >= pd.Timestamp(f"{datetime.now().year}-01-01")].iloc[0]["close"])
+            if base > 0: ytd = (cur / base - 1) * 100
+        except Exception:
+            pass
+    return cur, day, ytd, name
+wti  = foreign_cmdty("CL", 20, 250)    # WTI ~ $86
+gold = foreign_cmdty("GC", 800, 9000)  # COMEX ~ $4200
+out["commodities"]["WTI"]  = dict(cur=wti[0],  day_pct=wti[1],  ytd_pct=wti[2],  src=wti[3])
+out["commodities"]["GOLD"] = dict(cur=gold[0], day_pct=gold[1], ytd_pct=gold[2], src=gold[3])
 print(f"油: {wti}  金: {gold}")
 
 # ---- 7. 人民币(中行牌价, USD/CNY) + 美元指数 ----
