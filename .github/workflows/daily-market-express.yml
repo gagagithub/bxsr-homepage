@@ -1,0 +1,74 @@
+name: 隔夜市场速递 - 每日行情卡片出图
+
+on:
+  schedule:
+    # 每天北京时间 07:30 (UTC 23:30 前一日) 运行 —— 此时美股前一日收盘数据已入库
+    - cron: '30 23 * * *'
+  workflow_dispatch:
+    # 支持手动触发（首次验证 akshare 可达性 / 调试用）
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chinese fonts (CJK rendering for the card)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra
+
+      - name: Install Python dependencies
+        run: pip install -r scripts/market-express/requirements.txt
+
+      - name: Fetch market data (akshare, 内地直连源)
+        working-directory: scripts/market-express
+        run: python -u fetch_cn.py
+
+      - name: Generate AI commentary (DeepSeek, best-effort)
+        working-directory: scripts/market-express
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python llm_commentary.py || echo "⚠ AI文案失败, render 将回退到现有/硬编码"
+
+      - name: Render HTML (pub_date = 北京当天)
+        working-directory: scripts/market-express
+        run: |
+          export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
+          python render.py
+
+      - name: Screenshot + crop (headless Chrome, preinstalled on runner)
+        run: |
+          OUT="$GITHUB_WORKSPACE/market_express.png"
+          google-chrome --headless=new --disable-gpu --hide-scrollbars \
+            --force-device-scale-factor=2 --window-size=960,2150 \
+            --screenshot="$OUT" "file://$GITHUB_WORKSPACE/scripts/market-express/index.html"
+          python - "$OUT" <<'PY'
+          import sys
+          from PIL import Image
+          p = sys.argv[1]
+          im = Image.open(p).convert('RGB'); w, h = im.size; px = im.load(); bg = (238, 242, 248)
+          def bgrow(y):
+              return all(abs(px[x, y][0]-bg[0])+abs(px[x, y][1]-bg[1])+abs(px[x, y][2]-bg[2]) <= 18 for x in range(0, w, 40))
+          y = h-1
+          while y > 0 and bgrow(y): y -= 1
+          im.crop((0, 0, w, y+1)).save(p, optimize=True)
+          print("cropped ->", im.crop((0, 0, w, y+1)).size)
+          PY
+
+      - name: Commit and push card image
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add market_express.png
+          DATE=$(TZ='Asia/Shanghai' date +%Y-%m-%d)
+          git diff --staged --quiet || git commit -m "auto: 隔夜市场速递 ${DATE}"
+          git push

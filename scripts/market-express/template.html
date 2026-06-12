@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root{
+    --navy:#0b2552; --navy2:#1a4a8f; --blue:#1769c0; --blue2:#2f86dd; --sky:#9ecbff;
+    --up:#d92d2d; --down:#13935a; --flat:#6b7689;
+    --ink:#16233d; --muted:#6b7689; --line:#e3e9f2; --bg:#eef2f8; --card:#ffffff;
+    --cnbg1:#eef5fc; --cnbg2:#f7fbff; --cnline:#cfe2f6; --cnink:#2a4a6b; --cnb:#15518f;
+  }
+  html,body{ width:960px; font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif; color:var(--ink); background:var(--bg); }
+  .frame{ width:960px; background:var(--bg); }
+  .up{ color:var(--up); } .down{ color:var(--down); } .flat{ color:var(--flat); }
+
+  /* ===== HEADER ===== */
+  .header{ position:relative; height:300px; background:linear-gradient(120deg,#08204b 0%,#123b78 55%,#1a5bb0 100%); overflow:hidden; }
+  .header svg.sky{ position:absolute; right:0; top:0; height:300px; opacity:.9; }
+  .brandbar{ display:flex; align-items:center; gap:14px; padding:22px 34px 0; position:relative; z-index:2; }
+  .logo-badge{ width:46px;height:46px;border:2px solid rgba(255,255,255,.85);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;letter-spacing:-1px;background:rgba(255,255,255,.08); }
+  .brand-cn{ color:#fff;font-size:21px;font-weight:800;letter-spacing:3px; }
+  .brand-en{ color:#aecbf0;font-size:11px;letter-spacing:3px;margin-top:2px; }
+  .brand-sep{ width:1px;height:34px;background:rgba(255,255,255,.25); }
+  .title{ position:relative; z-index:2; padding:24px 34px 0; }
+  .title h1{ color:#fff; font-size:60px; font-weight:900; letter-spacing:6px; text-shadow:0 2px 18px rgba(0,0,0,.3); }
+  .title .date{ margin-top:14px; display:inline-flex; align-items:center; gap:10px; color:#dbe8fb; font-size:18px; }
+  .title .date b{ color:#fff; font-weight:700; }
+  .title .date .tag{ background:rgba(255,255,255,.16); padding:4px 12px; border-radius:6px; font-size:14px; color:#d3e2f7; }
+  .title .slogan{ margin-top:12px; color:var(--sky); font-size:16px; letter-spacing:2px; font-weight:600; }
+
+  /* ===== LEAD ===== */
+  .lead{ background:var(--navy); color:#e7eefb; padding:22px 34px; font-size:18.5px; line-height:1.7; letter-spacing:.3px; }
+  .lead b.up{ color:#ff6b6b; } .lead b.down{ color:#4fd6a0; }
+
+  /* ===== INDEX CARDS ===== */
+  .idx-wrap{ display:flex; gap:16px; padding:22px 24px 6px; }
+  .idx{ flex:1; background:var(--card); border-radius:14px; padding:18px 20px; box-shadow:0 4px 16px rgba(20,50,110,.07); border:1px solid var(--line); }
+  .idx .h{ display:flex; align-items:center; gap:7px; font-size:15px; color:var(--navy); font-weight:700; margin-bottom:12px; }
+  .idx .h .ic{ color:var(--blue); }
+  .idx .pts{ font-size:34px; font-weight:900; letter-spacing:-.5px; }
+  .idx .pts small{ font-size:15px; font-weight:600; color:var(--muted); margin-left:4px; }
+  .idx .row2{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .idx .pct{ font-size:23px; font-weight:800; }
+  .idx .ar{ font-size:26px; }
+  .idx .ytd{ margin-top:7px; font-size:14px; color:var(--muted); }
+  .idx .ytd b{ font-weight:700; }
+
+  /* ===== FOCUS BANNER ===== */
+  .focus{ margin:14px 24px; background:linear-gradient(100deg,#0e2f63,#1a59ab); border-radius:12px; padding:16px 22px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 14px rgba(20,50,110,.14); }
+  .focus .em{ font-size:26px; }
+  .focus .tx{ color:#fff; font-size:17px; font-weight:600; line-height:1.55; }
+  .focus .tx b{ color:var(--sky); }
+
+  /* ===== 3 PANELS ===== */
+  .panels{ display:flex; gap:16px; padding:8px 24px; }
+  .panel{ flex:1; background:var(--card); border-radius:14px; border:1px solid var(--line); box-shadow:0 4px 16px rgba(20,50,110,.05); overflow:hidden; }
+  .panel .ph{ background:#eef4fc; border-bottom:1px solid var(--line); padding:11px 16px; font-size:15px; font-weight:800; color:var(--navy); display:flex; align-items:center; gap:8px; }
+  .panel .ph .ic{ color:var(--blue); font-size:16px; }
+  .panel .pb{ padding:13px 16px; }
+  .mrow{ padding:8px 0; border-bottom:1px dashed var(--line); }
+  .mrow:last-child{ border-bottom:none; }
+  .mrow .nm{ font-size:13.5px; color:var(--muted); }
+  .mrow .vline{ display:flex; align-items:baseline; justify-content:space-between; margin-top:3px; }
+  .mrow .v{ font-size:21px; font-weight:800; }
+  .mrow .v small{ font-size:12px; color:var(--muted); font-weight:600; }
+  .mrow .ch{ font-size:14.5px; font-weight:700; }
+
+  /* ===== 内地理财风向 BAND ===== */
+  .cnband{ margin:14px 24px 2px; background:var(--card); border:1px solid var(--cnline); border-radius:14px; overflow:hidden; box-shadow:0 4px 16px rgba(20,50,110,.06); }
+  .cnband .ch{ background:linear-gradient(100deg,#123b78,#1f6fc4); color:#fff; padding:11px 18px; font-size:16px; font-weight:800; display:flex; align-items:center; justify-content:space-between; }
+  .cnband .ch .lft{ display:flex; align-items:center; gap:9px; }
+  .cnband .ch .src{ font-size:11px; font-weight:500; color:#cfe2f6; background:rgba(255,255,255,.12); padding:3px 9px; border-radius:5px; }
+  .cnbody{ display:flex; }
+  .cn-rates{ width:46%; padding:8px 18px 12px; border-right:1px solid var(--cnline); }
+  .cn-rates .rt{ display:flex; align-items:baseline; justify-content:space-between; padding:8.5px 0; border-bottom:1px dashed var(--cnline); }
+  .cn-rates .rt:last-child{ border-bottom:none; }
+  .cn-rates .lab{ font-size:13.5px; color:var(--cnink); }
+  .cn-rates .val{ font-size:18px; font-weight:800; color:var(--navy); }
+  .cn-rates .val small{ font-size:11px; color:var(--muted); font-weight:600; }
+  .cn-rates .note{ font-size:12px; font-weight:700; margin-left:8px; }
+  .cn-news{ width:54%; padding:10px 18px 12px; }
+  .cn-news .nt{ font-size:12.5px; font-weight:800; color:var(--cnb); margin:2px 0 8px; }
+  .cn-news .ni{ display:flex; gap:10px; padding:7px 0; border-bottom:1px dashed var(--cnline); }
+  .cn-news .ni:last-child{ border-bottom:none; }
+  .cn-news .dt{ flex-shrink:0; font-size:11px; font-weight:800; color:#fff; background:var(--blue); padding:2px 7px; border-radius:5px; height:fit-content; margin-top:2px; }
+  .cn-news .tx{ font-size:13.2px; line-height:1.55; color:var(--cnink); }
+
+  /* ===== 2 TABLES ===== */
+  .tables{ display:flex; gap:16px; padding:14px 24px 6px; }
+  .tbl{ flex:1; background:var(--card); border-radius:14px; border:1px solid var(--line); box-shadow:0 4px 16px rgba(20,50,110,.05); overflow:hidden; }
+  .tbl .th{ background:var(--navy); color:#fff; padding:12px 16px; font-size:15.5px; font-weight:800; display:flex; align-items:center; justify-content:space-between; }
+  .tbl .th .sub{ font-size:12px; font-weight:500; color:#aecbf0; }
+  .tbl table{ width:100%; border-collapse:collapse; }
+  .tbl td{ padding:9.5px 16px; font-size:14.5px; border-bottom:1px solid var(--line); }
+  .tbl tr:last-child td{ border-bottom:none; }
+  .tbl .tk{ font-weight:700; color:var(--ink); }
+  .tbl .tk small{ color:var(--muted); font-weight:500; font-size:12px; margin-left:2px; }
+  .tbl .num{ text-align:right; font-weight:800; }
+  .tbl .ytd{ text-align:right; font-weight:700; font-size:13.5px; }
+
+  /* insurance-view box */
+  .insure{ flex:1; background:linear-gradient(160deg,var(--cnbg1),var(--cnbg2)); border:1px solid var(--cnline); border-radius:14px; box-shadow:0 4px 16px rgba(20,50,110,.05); overflow:hidden; }
+  .insure .th2{ background:linear-gradient(100deg,#1a4a8f,#2f86dd); color:#fff; padding:12px 16px; font-size:15.5px; font-weight:800; display:flex; align-items:center; gap:8px; }
+  .insure .ib{ padding:13px 16px; }
+  .ins-item{ display:flex; gap:11px; padding:9px 0; border-bottom:1px dashed var(--cnline); }
+  .ins-item:last-child{ border-bottom:none; }
+  .ins-item .ei{ font-size:20px; line-height:1.2; }
+  .ins-item .et{ font-size:13.8px; line-height:1.55; color:var(--cnink); }
+  .ins-item .et b{ color:var(--cnb); }
+
+  /* ===== INTERPRET + DISCLAIMER ===== */
+  .bottom{ display:flex; gap:16px; padding:14px 24px 6px; align-items:stretch; }
+  .interpret{ flex:1.55; background:var(--card); border-radius:14px; border:1px solid var(--line); padding:18px 20px; box-shadow:0 4px 16px rgba(20,50,110,.05); }
+  .interpret h3{ font-size:17px; color:var(--navy); display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+  .interpret h3 .ic{ color:var(--blue); }
+  .ip{ display:flex; gap:10px; margin-bottom:11px; }
+  .ip .k{ flex-shrink:0; width:74px; font-size:13px; font-weight:800; color:var(--navy2); }
+  .ip .t{ font-size:13.3px; line-height:1.6; color:#3c4659; }
+  .ip .t b.up{ color:var(--up);} .ip .t b.down{ color:var(--down);}
+  .side{ flex:1; display:flex; flex-direction:column; gap:14px; }
+  .focus2{ background:linear-gradient(160deg,var(--cnbg1),var(--cnbg2)); border:1px solid var(--cnline); border-radius:14px; padding:16px 18px; flex:1; }
+  .focus2 h3{ color:var(--cnb); font-size:16px; display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .focus2 p{ font-size:15px; line-height:1.65; color:var(--cnink); font-weight:600; }
+  .focus2 p b{ color:#0a66c2; }
+  .disc{ background:#eef4fc; border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .disc h4{ font-size:13px; color:var(--muted); display:flex; gap:6px; align-items:center; margin-bottom:6px; }
+  .disc p{ font-size:11.5px; line-height:1.55; color:#8a93a3; }
+
+  /* ===== FOOTER ===== */
+  .footer{ margin-top:14px; background:var(--navy); padding:18px 34px; display:flex; align-items:center; justify-content:space-between; }
+  .footer .fl{ display:flex; align-items:center; gap:12px; }
+  .footer .logo-badge{ width:38px;height:38px;font-size:18px; }
+  .footer .fcn{ color:#fff; font-weight:800; font-size:17px; letter-spacing:2px; }
+  .footer .fr{ color:var(--sky); font-size:16px; font-weight:700; letter-spacing:3px; }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <!-- HEADER -->
+  <div class="header">
+    <svg class="sky" width="520" height="300" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#2455a0" opacity="0.5">
+        <rect x="20" y="150" width="34" height="150"/><rect x="64" y="110" width="40" height="190"/>
+        <rect x="114" y="170" width="30" height="130"/><rect x="152" y="90" width="44" height="210"/>
+        <rect x="206" y="140" width="34" height="160"/><rect x="250" y="120" width="38" height="180"/>
+        <rect x="298" y="60" width="46" height="240"/><rect x="354" y="130" width="32" height="170"/>
+        <rect x="394" y="100" width="42" height="200"/><rect x="446" y="160" width="30" height="140"/>
+        <rect x="484" y="120" width="30" height="180"/>
+      </g>
+      <path d="M70 250 L210 150 L300 200 L470 70" stroke="#22c08a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+      <path d="M462 60 L478 64 L474 86 Z" fill="#22c08a"/>
+      <path d="M70 90 L210 190 L300 150 L470 250" stroke="#e8413a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M478 240 L462 244 L466 266 Z" fill="#e8413a"/>
+    </svg>
+    <div class="brandbar">
+      <div class="logo-badge">保</div>
+      <div>
+        <div class="brand-cn">保心上人</div>
+        <div class="brand-en">PROTECT · WEALTH · ADVISORY</div>
+      </div>
+      <div class="brand-sep"></div>
+      <div>
+        <div class="brand-cn" style="font-size:16px;letter-spacing:1px;color:#bcd6f5">健康 · 养老 · 传承</div>
+        <div class="brand-en">HEALTH · RETIREMENT · LEGACY</div>
+      </div>
+    </div>
+    <div class="title">
+      <h1>隔夜市场速递</h1>
+      <div class="date">📅 <b>{{ pub_date }}</b> <span class="tag">数据截至前一日（{{ data_date }}）收盘</span></div>
+      <div class="slogan">{{ slogan }}</div>
+    </div>
+  </div>
+
+  <!-- LEAD -->
+  <div class="lead">{{ lead | safe }}</div>
+
+  <!-- INDEX CARDS -->
+  <div class="idx-wrap">
+    {% for c in indices %}
+    <div class="idx">
+      <div class="h"><span class="ic">📊</span>{{ c.name }}</div>
+      <div class="pts">{{ c.pts }}<small>点</small></div>
+      <div class="row2">
+        <span class="pct {{ c.cls }}">{{ c.pct }}</span>
+        <span class="ar {{ c.cls }}">{{ c.ar }}</span>
+      </div>
+      <div class="ytd">YTD <b class="{{ c.ytd_cls }}">{{ c.ytd }}</b></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- FOCUS BANNER -->
+  <div class="focus">
+    <span class="em">🏆</span>
+    <div class="tx">{{ focus_banner | safe }}</div>
+  </div>
+
+  <!-- 3 PANELS -->
+  <div class="panels">
+    <div class="panel">
+      <div class="ph"><span class="ic">🛢️</span>大宗商品</div>
+      <div class="pb">
+        {% for m in commodities %}
+        <div class="mrow">
+          <div class="nm">{{ m.name }} <small>{{ m.unit }}</small></div>
+          <div class="vline"><span class="v">{{ m.price }}</span><span class="ch {{ m.cls }}">{{ m.ar }} {{ m.pct }}</span></div>
+          <div class="nm" style="margin-top:2px">YTD <b class="{{ m.ytd_cls }}">{{ m.ytd }}</b></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="ic">🏛️</span>美债收益率</div>
+      <div class="pb">
+        {% for y in yields %}
+        <div class="mrow">
+          <div class="vline"><span class="nm">{{ y.label }}</span></div>
+          <div class="vline" style="margin-top:1px"><span class="v">{{ y.level }}<small>%</small></span><span class="ch {{ y.cls }}">{{ y.ar }} {{ y.bp }}</span></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="ic">🌐</span>外汇与利率</div>
+      <div class="pb">
+        {% for f in forex %}
+        <div class="mrow">
+          <div class="nm">{{ f.label }}</div>
+          <div class="vline" style="margin-top:1px"><span class="v">{{ f.value }}</span><span class="ch {{ f.cls }}">{{ f.ar }} {{ f.chg }}</span></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 内地理财风向 -->
+  <div class="cnband">
+    <div class="ch">
+      <span class="lft">🇨🇳 内地理财风向 · 保险 / 存款 / 国债</span>
+      <span class="src">利率实时 · akshare 内地源</span>
+    </div>
+    <div class="cnbody">
+      <div class="cn-rates">
+        {% for r in cn_rates %}
+        <div class="rt">
+          <span class="lab">{{ r.lab }}</span>
+          <span><span class="val">{{ r.val }}<small>{{ r.unit }}</small></span><span class="note {{ r.cls }}">{{ r.note }}</span></span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="cn-news">
+        <div class="nt">📰 资讯速览</div>
+        {% for n in cn_news %}
+        <div class="ni"><span class="dt">{{ n.date }}</span><span class="tx">{{ n.tx | safe }}</span></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 TABLES -->
+  <div class="tables">
+    <div class="tbl">
+      <div class="th"><span>纳指七姐妹</span><span class="sub">隔夜涨跌 ｜ YTD</span></div>
+      <table>
+        {% for s in mag7 %}
+        <tr>
+          <td class="tk">{{ s.cn }} <small>{{ s.tk }}</small></td>
+          <td class="num {{ s.cls }}">{{ s.pct }}</td>
+          <td class="ytd {{ s.ytd_cls }}">{{ s.ytd }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div class="insure">
+      <div class="th2"><span>🛡️</span>保险配置视角</div>
+      <div class="ib">
+        {% for i in insure %}
+        <div class="ins-item"><div class="ei">{{ i.ic }}</div><div class="et">{{ i.tx | safe }}</div></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERPRET + DISCLAIMER -->
+  <div class="bottom">
+    <div class="interpret">
+      <h3><span class="ic">💡</span>市场动态解读</h3>
+      {% for p in interpret %}
+      <div class="ip"><div class="k">{{ p.k }}</div><div class="t">{{ p.t | safe }}</div></div>
+      {% endfor %}
+    </div>
+    <div class="side">
+      <div class="focus2">
+        <h3>🎯 焦点</h3>
+        <p>{{ focus_box | safe }}</p>
+      </div>
+      <div class="disc">
+        <h4>⚠️ 免责声明</h4>
+        <p>本资料仅供参考，不构成任何投资建议或保险产品销售要约。投资有风险，入市需谨慎。数据来源：公开市场行情，以最终交易所披露为准。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="fl">
+      <div class="logo-badge">保</div>
+      <div class="fcn">保心上人 · 健康 · 养老 · 传承</div>
+    </div>
+    <div class="fr">{{ slogan }}</div>
+  </div>
+
+</div>
+</body>
+</html>
