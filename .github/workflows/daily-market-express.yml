@@ -64,11 +64,20 @@ jobs:
           print("cropped ->", im.crop((0, 0, w, y+1)).size)
           PY
 
-      - name: Commit and push card image
+      - name: Push card image to production (HTTPS POST, token-auth)
+        env:
+          MARKET_EXPRESS_TOKEN: ${{ secrets.MARKET_EXPRESS_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add market_express.png
-          DATE=$(TZ='Asia/Shanghai' date +%Y-%m-%d)
-          git diff --staged --quiet || git commit -m "auto: 隔夜市场速递 ${DATE}"
-          git push
+          if [ -z "${MARKET_EXPRESS_TOKEN}" ]; then
+            echo "::error::缺少 secret MARKET_EXPRESS_TOKEN —— 在 GitHub 仓库 Settings → Secrets 添加后重试"
+            exit 1
+          fi
+          # 内地服务器拉 raw 大图会被限速, 故由 Action 反向推送: GitHub→内地服务器入站可靠。
+          # 走 HTTPS(214club.com.cn 单域名证书有效), 令牌仅授权覆盖行情卡片图, 服务端 .token 校验。
+          RESP=$(curl -sS --max-time 120 \
+            -F "token=${MARKET_EXPRESS_TOKEN}" \
+            -F "file=@${GITHUB_WORKSPACE}/market_express.png" \
+            https://214club.com.cn/creation/marketExpressUpload)
+          echo "server response: ${RESP}"
+          echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
+          echo "✓ 已推送今日卡片到生产"
