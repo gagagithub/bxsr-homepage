@@ -112,12 +112,16 @@ PLATFORM_TAG_CLASSES = {
     "xiaohongshu": "tag-xhs",
 }
 
-# 对标账号日更监控(第二期)。抖音用 sec_uid、小红书用 user_id。
-# 2026-06-13: 按用户要求删除 5 个抖音号(深蓝保/保瓶儿/奶爸保险测评/保瓶儿养老规划/紫荆保险规划),
-#   拟换成视频号号(维港保典/紫荆保险规划/保瓶儿/花花姐说险), 但 TikHub 视频号 user_search 接口
-#   持续 400、home_page 按名解析为空, 暂无法接入, 待拿到 finder ID 再加。
+# 对标账号日更监控(第二期)。抖音用 sec_uid(必须走 app/v3 接口才新鲜)、小红书用 user_id。
+# 2026-06-13: 曾误用 web 版抖音接口(数据滞后一周)致抖音号显示"昨日无更新", 用户误以为要删;
+#   已改 app/v3 修复, 抖音号恢复。视频号账号监控因 TikHub user_search/home_page 接口损坏暂不可行。
 MONITOR_ACCOUNTS = [
+    {"name": "深蓝保",            "platform": "douyin",      "id": "MS4wLjABAAAAiQ4RY3tqs-dJydax0-MjYuFnEviabmS2Q5ttbsOAD38"},
+    {"name": "保瓶儿",            "platform": "douyin",      "id": "MS4wLjABAAAA_SCf-XEttYRH0bJmPmeOhnVAHbOGWhG8vU1jK3gRTO8"},
+    {"name": "奶爸保险测评",      "platform": "douyin",      "id": "MS4wLjABAAAAk8H3SHUDYbgzj7HR9RVX96ZAW0sJW7_R52QPOT_Qixs"},
     {"name": "保瓶儿聊产品",      "platform": "douyin",      "id": "MS4wLjABAAAAYVcTd31FsiRb23i2kzb28iT-YJiYxRUdtqxX4gyhNe4"},
+    {"name": "保瓶儿养老规划",    "platform": "douyin",      "id": "MS4wLjABAAAAJOfIL3zfCgjMICU7lRi1j6sl3wjAAQtJ-TYhq6NjwuZP_LInia4rmJR71ehHmgWZ"},
+    {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
     {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
     {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
 ]
@@ -1016,17 +1020,21 @@ def _fetch_account_posts(acc):
     plat = acc["platform"]
     out = []
     if plat == "douyin":
-        data = tikhub_get("/api/v1/douyin/web/fetch_user_post_videos",
-                          {"sec_user_id": acc["id"], "count": 15})
+        # ⚠ 必须用 app/v3: web 版数据滞后约一周(实测停在一周前), app/v3 是当天最新的
+        data = tikhub_get("/api/v1/douyin/app/v3/fetch_user_post_videos",
+                          {"sec_user_id": acc["id"], "count": 20, "max_cursor": 0})
         for a in (_find_list((data or {}).get("data"), ("desc", "aweme_id")) or []):
             if not isinstance(a, dict):
                 continue
+            if a.get("is_top"):   # 跳过置顶老作品, 不算"动向"
+                continue
             st = a.get("statistics", {}) or {}
+            aid = a.get("aweme_id") or st.get("aweme_id")
             out.append({
                 "title": a.get("desc", "") or "",
                 "like": st.get("digg_count", 0) or 0,
                 "create_time": a.get("create_time", 0) or 0,
-                "url": a.get("share_url", "") or (f"https://www.douyin.com/video/{a.get('aweme_id')}" if a.get("aweme_id") else ""),
+                "url": a.get("share_url", "") or (f"https://www.douyin.com/video/{aid}" if aid else ""),
             })
     elif plat == "xiaohongshu":
         data = tikhub_get("/api/v1/xiaohongshu/app_v2/get_user_posted_notes",
@@ -1374,12 +1382,12 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
       padding: 24px 16px 60px;
     }}
 
+    /* 瀑布流: 多列流式, 卡片紧凑往上堆, 不按行对齐留白 */
     .topic-grid {{
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      align-items: start;
+      column-count: 1;
+      column-gap: 22px;
     }}
+    .topic-grid > * {{ break-inside: avoid; margin-bottom: 22px; }}
 
     .topic-card {{
       background: white;
@@ -1495,7 +1503,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     .needs-row {{ margin:5px 0; font-size:0.8em; color:#475569; display:flex; flex-wrap:wrap; gap:5px; align-items:center; }}
     .need-chip {{ background:#eef2ff; border:1px solid #e0e7ff; color:#4338ca; border-radius:6px; padding:1px 8px; font-size:0.95em; }}
     /* 昨日要闻 */
-    .news-section {{ grid-column:1/-1; background:#fff; border:1.5px solid #dbeafe; border-left:5px solid #2563eb; border-radius:12px; padding:14px 18px; }}
+    .news-section {{ column-span:all; background:#fff; border:1.5px solid #dbeafe; border-left:5px solid #2563eb; border-radius:12px; padding:14px 18px; }}
     .news-bar {{ font-weight:800; color:#1e40af; font-size:1.0em; margin-bottom:8px; }}
     .news-sub {{ font-size:0.74em; color:#93a3c0; font-weight:600; margin-left:4px; }}
     .news-item {{ display:flex; gap:10px; padding:8px 0; border-bottom:1px solid #f1f5f9; align-items:flex-start; }}
@@ -1510,7 +1518,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
 
     /* 风向洞察 */
     .insight-banner {{
-      grid-column:1/-1;
+      column-span:all;
       background: linear-gradient(135deg,#fff7ed,#fff);
       border:1.5px solid #fed7aa; border-left:5px solid #f97316;
       border-radius:12px; padding:14px 18px; font-size:0.92em; color:#7c2d12; line-height:1.6;
@@ -1518,7 +1526,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     .insight-banner .ib-label {{ font-weight:800; color:#c2410c; margin-right:8px; }}
 
     /* 对标账号动向 */
-    .monitor-section {{ grid-column:1/-1; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }}
+    .monitor-section {{ column-span:all; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }}
     .monitor-title {{ font-weight:800; color:#1E2761; font-size:0.98em; margin-bottom:10px; }}
     .monitor-table {{ width:100%; border-collapse:collapse; font-size:0.85em; }}
     .monitor-table th {{ text-align:left; color:#888; font-weight:600; padding:7px 12px; border-bottom:1px solid #eef0f6; font-size:0.92em; }}
@@ -1526,7 +1534,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     .monitor-table tr:hover td {{ background:#fafbff; }}
 
     /* 今日精选 */
-    .featured-section {{ grid-column:1/-1; background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }}
+    .featured-section {{ column-span:all; background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }}
     .featured-section .item-list {{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px 16px; }}
     .featured-title {{ font-weight:800; color:#b45309; font-size:1.05em; margin-bottom:10px; }}
     .feat-wrap {{ margin-bottom:4px; }}
@@ -1579,7 +1587,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     .legend b {{ color:#333; }}
 
     @media (min-width: 900px) {{
-      .topic-grid {{ grid-template-columns: 1fr 1fr; }}
+      .topic-grid {{ column-count: 2; }}
     }}
   </style>
 </head>
