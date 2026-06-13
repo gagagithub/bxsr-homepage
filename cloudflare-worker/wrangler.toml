@@ -1,0 +1,7 @@
+name = "tikhub-search"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+# TIKHUB_API_KEY 是已在 Cloudflare 后台配好的 secret，wrangler deploy 不会覆盖它，
+# 故此处不声明（声明成明文 var 反而会把 secret 降级，切勿写）。
