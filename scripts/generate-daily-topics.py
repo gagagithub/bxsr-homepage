@@ -1547,12 +1547,13 @@ def main():
     print(f"  Collected {total} raw items")
 
     if total == 0:
-        print("  WARNING: No results collected. Check API key and endpoints.")
-        # 仍然写一个空页面, 避免 Netlify 上残留旧数据
-        html = generate_detail_page(data)
-        with open(DETAIL_FILE, "w", encoding="utf-8") as f:
-            f.write(html)
-        return
+        # 采到 0 条 = 上游异常(TikHub 余额耗尽 / API Key 失效 / 接口变更)。
+        # 1) 绝不用空页面覆盖上一次的好数据, 否则页面直接变白;保留 daily-topics.html 原样。
+        # 2) 以非 0 退出码 raise, 让 GitHub Action 标红报警, 杜绝"采到0条仍报成功"的静默断更。
+        raise SystemExit(
+            "ERROR: 全平台合计采到 0 条 —— 疑似 TikHub 余额耗尽 / API Key 失效 / 接口变更。"
+            "已保留上一次的 daily-topics.html(不覆盖), 请检查 TikHub 账号与接口。"
+        )
 
     print("Step 2: Dedupe across topics/platforms...")
     dedupe_across_topics(data)
