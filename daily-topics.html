@@ -189,7 +189,7 @@
     .insight-banner .ib-label { font-weight:800; color:#c2410c; margin-right:8px; }
 
     /* 对标账号动向 */
-    .monitor-section { background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }
+    .monitor-section { grid-column:1/-1; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }
     .monitor-title { font-weight:800; color:#1E2761; font-size:0.98em; margin-bottom:10px; }
     .monitor-table { width:100%; border-collapse:collapse; font-size:0.85em; }
     .monitor-table th { text-align:left; color:#888; font-weight:600; padding:7px 12px; border-bottom:1px solid #eef0f6; font-size:0.92em; }
@@ -197,7 +197,8 @@
     .monitor-table tr:hover td { background:#fafbff; }
 
     /* 今日精选 */
-    .featured-section { background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }
+    .featured-section { grid-column:1/-1; background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }
+    .featured-section .item-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px 16px; }
     .featured-title { font-weight:800; color:#b45309; font-size:1.05em; margin-bottom:10px; }
     .feat-wrap { margin-bottom:4px; }
     .feat-src { font-size:0.74em; color:#92590a; font-weight:700; padding:0 0 2px 34px; }
@@ -275,73 +276,72 @@
 
 <main>
   <div class="topic-grid">
-    <div class="insight-banner"><span class="ib-label">🔥 今日风向</span>焦虑+抢购情绪：用“存款搬家、利率下行、停售”制造紧迫感，聚焦香港分红险高收益与内地年金确定性对比。</div><div class="monitor-section"><div class="monitor-title">📡 对标账号动向 · 昨日更新</div><table class="monitor-table"><thead><tr><th>对标账号</th><th>平台</th><th>昨日发布作品</th></tr></thead><tbody><tr><td style="white-space:nowrap;vertical-align:top;">深蓝保</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">保瓶儿</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">奶爸保险测评</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">保瓶儿聊产品</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">保瓶儿养老规划</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">紫荆保险规划</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">Joy张老师保险规划</td><td style="color:#888;white-space:nowrap;vertical-align:top;">小红书</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">Mo姐财经</td><td style="color:#888;white-space:nowrap;vertical-align:top;">小红书</td><td style="vertical-align:top;"><div style="padding:3px 0;line-height:1.4;"><a href="https://www.xiaohongshu.com/explore/6a2be4b60000000008000049" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">史上最大IPO·SpaceX，为什么无缘中国！</a> <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥13</span></div><div style="padding:3px 0;line-height:1.4;"><a href="https://www.xiaohongshu.com/explore/6a2c26f900000000080337e7" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">Space X上市买的到底是什么！ 跟中国跟普通</a> <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥7</span></div></td></tr></tbody></table></div><div class="featured-section"><div class="featured-title">⭐ 今日精选 · 建议优先做</div><div class="item-list"><div class="feat-wrap"><div class="feat-src">视频号 · 存款/定存/国债</div><div class="item-card">
+    <div class="insight-banner"><span class="ib-label">🔥 今日风向</span>停售倒计时与存款搬家焦虑驱动，借合规避险推分红险和提前退休养老规划。</div><div class="monitor-section"><div class="monitor-title">📡 对标账号动向 · 昨日更新</div><table class="monitor-table"><thead><tr><th>对标账号</th><th>平台</th><th>昨日发布作品</th></tr></thead><tbody><tr><td style="white-space:nowrap;vertical-align:top;">保瓶儿聊产品</td><td style="color:#888;white-space:nowrap;vertical-align:top;">抖音</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">Joy张老师保险规划</td><td style="color:#888;white-space:nowrap;vertical-align:top;">小红书</td><td style="vertical-align:top;"><span style="color:#bbb;">昨日无更新</span></td></tr><tr><td style="white-space:nowrap;vertical-align:top;">Mo姐财经</td><td style="color:#888;white-space:nowrap;vertical-align:top;">小红书</td><td style="vertical-align:top;"><div style="padding:3px 0;line-height:1.4;"><a href="https://www.xiaohongshu.com/explore/6a2be4b60000000008000049" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">史上最大IPO·SpaceX，为什么无缘中国！</a> <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥17</span></div><div style="padding:3px 0;line-height:1.4;"><a href="https://www.xiaohongshu.com/explore/6a2c26f9000000020803b2dd" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">Space X上市买的到底是什么！ 跟中国跟普通</a> <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥11</span></div></td></tr></tbody></table></div><div class="featured-section"><div class="featured-title">⭐ 今日精选 · 建议优先做</div><div class="item-list"><div class="feat-wrap"><div class="feat-src">视频号 · 香港保险/分红险</div><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo35HEB49WJRbedm5h2LicSBDorWbqzdUYJnhS8Dkfc9C4BzhrJM0t89YaCrlibh11KflpBa9via6iadicA&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTnqhgQo5jffflUf2VyCdTIWib0AhDAW4MxPj0hWGBibScHDC7FocIS55UDCVVYBIT0ZpNe7fhoJddzCkU6Kuibz3kict6Gf1bW0vCf3GYG1iauXeicG8UsNQCRSIuBO4m5iaPPQickopBYGUS8b61vicB5SHricBVZ7OeQB5K31xjzjCKl1Kia7vwlqbbM59QFgTdkCicyoqJMGkojiaUAcBpCiamMbBJZ33l&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXUjExMhAACgoKBnhXVDExMRAA&amp;sign=UnDvg536hDyZloZ_CdLgH5zzaT9tod4K12MgQvel3-yO7jM5W2ZAHO1nz8RFn1txCp-fG9rDFTiRYFSUG8bL3w" target="_blank" rel="noopener" class="tl">财联社：万亿存款挪入保险，分红险成为投资主力，安全+稳健+财富有保障！</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
-        <div class="summary">财联社报道万亿存款涌向分红险，成投资新主力。</div>
-        <div class="hl-row"><span class="hl-chip">#万亿存款入保险</span> <span class="hl-chip">#分红险火爆</span> <span class="hl-chip">#安全稳健保障</span></div>
-        <div class="angle">💡 借势深度解析分红险，对比内地与港险分红差异。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">分红险真的安全吗？</span> <span class="need-chip">哪些分红险靠谱？</span> <span class="need-chip">港险分红优势在哪？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo1YJERlRxTcIUEA9TEmmoOPdJEcqLuGibicV8ibmQPbHGUib1x4t8ZWSgml4VxDbLmUkmeDXOPSvvfH1A&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awicREQXemfOvdd3tiak4GZNXqRe5vkO73xrudILrAAaQnIWUBXmfjEDKldTtOp8gYZwyhRXb5F5p8qHdGMhXNIxfiaskbRgP9HkATMnmE3paShSByEqDQpEdyia4VpGn3GdxaDQOkb9xfISSiaIG8khFiae1qSfQWTQ7dHryRcoZBfLcDbEJBlyMH08aUcSrB8Vic7ia2cxibUibq6HmNQDeJ7TSk9Lfl&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=O6T3l_DlUXWAIznJjD2RLqJ4WFWEbKdUfK1eRRV4AZF2RBaGZkupn6a8J0eVx1GbvMx5lmA4js9Sgp51w4nLHg" target="_blank" rel="noopener" class="tl">财联社：万亿存款挪向保险，其中‘分红险’成为吸金主力。#保险 #分红险</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
+        <div class="summary">财联社报道居民存款向保险搬家，分红险成主力。</div>
+        <div class="hl-row"><span class="hl-chip">#存款搬家万亿</span> <span class="hl-chip">#分红险爆火</span> <span class="hl-chip">#利率下行推动</span></div>
+        <div class="angle">💡 从新闻切入，分析分红险火爆背后逻辑，引荐港险</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">分红险值得买吗？</span> <span class="need-chip">为什么存款都转保险了？</span> <span class="need-chip">港险分红收益更高吗？</span></div>
         
-        <div class="meta-row">♥ 2491 · 📅 昨天 · <span class="hot-score">🔥 82</span></div>
+        <div class="meta-row">♥ 159 · 📅 今天 · <span class="hot-score">🔥 69</span></div>
       </div>
     </div></div><div class="feat-wrap"><div class="feat-src">视频号 · 香港保险/分红险</div><div class="item-card">
       <div class="rank-col">2</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQB1eo2z56DuCBqUNQIOWVibraDovkpTgAC3TN5jbvnAkBTcRRE9pFa8UGjINpSrS6qb7LpkAH9nUBW4Kcp3QMTcu&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awic4zWxCKVrZVKMaiaRpOj88pMiaIL9nQnMELtQDmxgqibzeObKzQ0rbjn9gzZYloeYIw6FPNCmN0XwJPt6r4BGic33eQBWiaaPg5iaqj7YRXHX8kOKdpMn2LzFB0OiaLNf0aFt3nlIASTxNaVVjIZib4ohS1SUvz8Yv9fibRVCpIicuZQAYU8xw2JPmJzlGVOlk9kW7aibR41tVvKbUuH7X78T6a3xhtgP&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=cQ9FyKPkIdEPH9HZ4wThzmyZCswyQY8nHBalWDdj06ZZBvo6WjZ9-L2PCM56zv0BriLjg2ieBCL5p4DCGv7ADQ" target="_blank" rel="noopener" class="tl">香港保险辨析（上）：换汇去香港买保险，到底合规不合规？#香港保险#换汇#理财保险#储蓄险#香港#小新说保#保险新闻#保险资讯
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQB1eo2z56DuCBqUNQIOWVibraDovkpTgAC3TN5jbvnAkBTcRRE9pFa8UGjINpSrS6qb7LpkAH9nUBW4Kcp3QMTcu&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTlIJNNHdcTtKeaBnvxNfVIrQqsjia2heFKoNsC6SDAcd6HLNAS9iaZdgWdKxeCYuEuXyiaupdLkJ1MC1sq8FN5z3dWicVGflZ9hrrrvWsMgVO9j8m6PYgc6drQ4VNJuBH0pTPhVRRscSBw0BrC90ZJgTnIyZKX3pN4BDGbVGpd1OU0cNY0CWWhC92pQUfyf3KictL9Tuhv6hdiaAWibcYCeXBssSeE&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=6bpjiZ_lgzMUEROYYpMDoRyMCB35BkmBKXy7rvG-NVQRNHKwD2PR4NX5eyTWnirhxy6d839ds432u41UlFWcDA" target="_blank" rel="noopener" class="tl">香港保险辨析（上）：换汇去香港买保险，到底合规不合规？#香港保险#换汇#理财保险#储蓄险#香港#小新说保#保险新闻#保险资讯
 @微信创作者 @微信时刻 @微信视频号创造营</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
-        <div class="summary">探讨换汇出境购买香港保险的合规性问题</div>
-        <div class="hl-row"><span class="hl-chip">#换汇买港险合规吗?</span> <span class="hl-chip">#资金出境风险</span> <span class="hl-chip">#香港保险合法流程</span></div>
-        <div class="angle">💡 解答合规疑虑，提供资金出境方案，引导高客咨询</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">购买港险如何合规换汇？</span> <span class="need-chip">资金出境有风险吗？</span> <span class="need-chip">合规操作流程是怎样的?</span></div>
+        <div class="summary">换汇去香港买保险合规性分析，解答外汇政策疑问。</div>
+        <div class="hl-row"><span class="hl-chip">#合规换汇路径</span> <span class="hl-chip">#外汇政策解读</span> <span class="hl-chip">#港险配置风险</span></div>
+        <div class="angle">💡 做合规深扒，用案例讲清换汇买港险流程与红线</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">换汇买港险是否违法？</span> <span class="need-chip">大额资金如何合规出境？</span> <span class="need-chip">港险受内地法律保护吗？</span></div>
         
-        <div class="meta-row">♥ 89 · 📅 3天前 · <span class="hot-score">🔥 44</span></div>
+        <div class="meta-row">♥ 89 · 📅 4天前 · <span class="hot-score">🔥 44</span></div>
       </div>
     </div></div><div class="feat-wrap"><div class="feat-src">视频号 · 香港保险/分红险</div><div class="item-card">
       <div class="rank-col">3</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQBicSibYibeYnTpHeENcOHtudN0HWMwL6fiaNhd5R7moTbFbicelHMibibiboh4Y5tlfNtVQUclXaQlkxBJJ3ByxMWAib6hm&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTlh2FwJcEBzia9BibGibdyAukYkzv4Jialrr2ofxSHWJ4SKQVrujqVv47g3rly050EcfyYbh2feS11MVOKhUB4yRPRVQSBJwlAJKibttb3I991vKe08RY9ZQuMPLjXJIhwwguHd7DvU7iaOWH1kItLYSo4FyeLahVxz45kRZPsNsib4oAMtPWhmGw4GdQz0cbjKXHFAvqwBJqdg7SoVe3n01hnibykW&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=p-kxF3NxTvv5jtNaQTNrl-66WOV-2IrSruIu2mDkBF2nDEz6WUVr48H5BIYN6jx8NWzvD0vNkhI7e1kTT258gQ" target="_blank" rel="noopener" class="tl">香港保险辨析（下）：收益6%、7%？香港保险真的这么赚？#香港保险#香港保险收益·#理财保险#储蓄险#香港#小新说保#保险新闻#保险资讯
-@微信创作者 @微信时刻 @微信视频号创造营</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
-        <div class="summary">解析香港保险宣称的6-7%高收益是否真实可持续</div>
-        <div class="hl-row"><span class="hl-chip">#6%收益真的假的?</span> <span class="hl-chip">#香港保险收益揭秘</span> <span class="hl-chip">#高收益背后风险</span></div>
-        <div class="angle">💡 从真实收溢率切入，拆解港险收益构成，吸引高净值客户</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">港险收益是否真实？</span> <span class="need-chip">高收益怎么做到的？</span> <span class="need-chip">投资风险有多大？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo21b9EibA2Fibk4dDJe9LovUCTDrByMSqj3ZWbFIADhw8XzdmbhXib6NfXbLeW4YKlG6y1iaqQMSPSJyQ&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a152&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTlhWBjNbMetc9WhgibMpMa1LQF1RUichibWibT85bicWqKOdofVMUUCllcxT4qW6ibyZe3WkF1NmPvp4VeiawI9fOhnibmk2pnn1Rs98xkmSiayPt0uynaUMYrOnEn55IfvNr6Wm9icOXib6AZARx01NE1LibnYzlzG5QNThY7ScB0qbiauETlQI0QGMPTPeNtfhfROmqCroVG0SZGJPkuSraqu4icbzcuHYH&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=FSGxaKfD0_KcmRr4KgAreSNq6WbhyJmvXk9m9xS89x2zx2hL6XYX41SXqlyGflz51bmVCCM7782johEKm8CWGQ" target="_blank" rel="noopener" class="tl">分红险为啥这么火，3大独有特性无可替代#保险#分红险#保底利率#分红#保险公司</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
+        <div class="summary">分析分红险火爆的三大特性，如保底分红等。</div>
+        <div class="hl-row"><span class="hl-chip">#三大独特优势</span> <span class="hl-chip">#保底加分紅</span> <span class="hl-chip">#不可替代性</span></div>
+        <div class="angle">💡 对比内地与港险分红特性，突出港险高实现率</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">内地分红险保底多少？</span> <span class="need-chip">港险分红实现率如何？</span> <span class="need-chip">哪个产品更值得买？</span></div>
         
-        <div class="meta-row">♥ 84 · 📅 3天前 · <span class="hot-score">🔥 38</span></div>
+        <div class="meta-row">♥ 33 · 📅 今天 · <span class="hot-score">🔥 28</span></div>
       </div>
     </div></div><div class="feat-wrap"><div class="feat-src">视频号 · 香港保险/分红险</div><div class="item-card">
       <div class="rank-col">4</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo1YJERlRxTcIUEA9TEmmoOPdJEcqLuGibicV8ibmQPbHGUib1x4t8ZWSgml4VxDbLmUkmeDXOPSvvfH1A&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awic4zWxCKVrZVGiatol9KJVxZFMvHWtRRO22eqwUOZvApibqju0lDzUnSTLAp0IFV8ytOicMicSEo54VyYtKIKfM4O8eaUiaPVZSodRz4BBrJh8YwW3kZ38I0snhGMGhIdiaW0dow0x4Bd1QSD6bANQAtBhxoy5g1ESqftr3XvDbQrmU3ics1RxfBaz2GUXibL9ib1pRp9LbUStxCgbJBnAjX826zVxPA&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=PgOwS70vTgBw7b9df0U950JcMwZThGkS17HqSy-TmxH15GoRwWWMOxkK5aSFY59VzJO0lZSZ95Dn_4s5Uuu5rA" target="_blank" rel="noopener" class="tl">财联社：万亿存款挪向保险，其中‘分红险’成为吸金主力。#保险 #分红险</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
-        <div class="summary">报道万亿存款转向保险，分红险成吸金主力趋势</div>
-        <div class="hl-row"><span class="hl-chip">#万亿存款涌向保险</span> <span class="hl-chip">#分红险为何火爆?</span> <span class="hl-chip">#抓住财富趋势</span></div>
-        <div class="angle">💡 借势新闻热度分析分红险爆火，对比港险优势</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">为什么存款搬向保险？</span> <span class="need-chip">分红险真的值得买吗？</span> <span class="need-chip">现在是配置好时机吗？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewQsFvYyicia1J5JazUpxpIrcNUe7GENiaQq9l0LT0nRl6ufw9atyYe0JetqibWiaTOohg5LNo7ic6hsX58YofZEfmTqyuC8hDILDYZdqzPE2XRC0bA&amp;hy=SZ&amp;idx=1&amp;m=de5864a5f0ee465863f3b94d738b0b34&amp;uzid=7a206&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awicREQXemfOvdY0UEbuAricpNgic4nqtTJdzldCicTEIeorfoNwoSzEpBZr4VJ0aeC1SJwcg8B4S0ZuiafTRxNfqRG8PicuGTA4FzKMvzJEvziaBIZ5IYZrEwJybNYQ47pcLBvBO5kocACwAV6ZPbPYibpBSSyZgX22hnp1guITKgdoVpu0xlxBPwaQl6tC3X0wWQMiajPd0DialqhicUCz3BxUB28cr8R&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=B-OWN349pGxxI8b0P64pfy6Zr-NSCI-bMAWfgkuJRIE6mOfGaGXI73qOXSonfvY7rgRibF1NWpRQ319pnLbyUw" target="_blank" rel="noopener" class="tl">分红险演示利率没有写进合同，是不是就是很随意。客户的权益如何保障？规则法条逐一拆解。#分红险的运营规则#国寿年丰</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
+        <div class="summary">拆解分红险演示利率规则，解答客户对非保证收益的担忧。</div>
+        <div class="hl-row"><span class="hl-chip">#演示利率非保证</span> <span class="hl-chip">#规则法条解读</span> <span class="hl-chip">#客户权益保障</span></div>
+        <div class="angle">💡 澄清演示利率迷思，用港险分红实现率证明可靠性</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">演示利率能实现吗？</span> <span class="need-chip">非保证部分靠不靠谱？</span> <span class="need-chip">港险分红历史数据如何？</span></div>
         
-        <div class="meta-row">♥ 67 · 📅 今天 · <span class="hot-score">🔥 35</span></div>
+        <div class="meta-row">♥ 13 · 📅 今天 · <span class="hot-score">🔥 9</span></div>
       </div>
-    </div></div><div class="feat-wrap"><div class="feat-src">抖音 · 香港保险/分红险</div><div class="item-card">
+    </div></div><div class="feat-wrap"><div class="feat-src">小红书 · 存款/定存/国债</div><div class="item-card">
       <div class="rank-col">5</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7650065204193021220/?region=US&amp;mid=7650065163919657769&amp;u_code=0&amp;did=MS4wLjABAAAAxorvmC-O579-IqOkaOSYDCKpHmFIL9DHU5a4MsiW3cLjWrtdoi5K-D7J1w6owk13&amp;iid=MS4wLjABAAAAy6GOuIqsW8BnfMG05V4j4BLYCFmFhKtqZrREKVNvxXC3nqVipx280-JQniE6sKCZ&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=Z_CC1GXtTstRh_y_3geDF69Q5f8C1ptWM4WaxPUHBJw-&amp;share_version=320900&amp;ts=1781315836&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">40岁手握200w如何提前退休躺平 #香港保险 #香港储蓄 #香港储蓄险 #养老 #海外资产配置</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
-        <div class="summary">40岁有200万用香港储蓄险实现提前退休躺平</div>
-        <div class="hl-row"><span class="hl-chip">#200万提前退休方案</span> <span class="hl-chip">#香港储蓄险躺平攻略</span> <span class="hl-chip">#40岁养老新思路</span></div>
-        <div class="angle">💡 制作港险养老方案深度测评，对比不同提取计划</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">200万如何实现退休</span> <span class="need-chip">香港储蓄险真实收益</span> <span class="need-chip">购买流程与注意事项</span></div>
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a27ea7a0000000006031bdc" target="_blank" rel="noopener" class="tl">6月10号发行的国债纳入个人养老金</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">6月10日发行的储蓄国债首次纳入个人养老金账户</div>
+        <div class="hl-row"><span class="hl-chip">#国债纳入养老金</span> <span class="hl-chip">#个人养老新选择</span> <span class="hl-chip">#安全稳健投资</span></div>
+        <div class="angle">💡 国债 vs 个人养老金 vs 港险，养老钱放哪好？</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">国债如何参与个人养老金？</span> <span class="need-chip">收益率比银行理财高吗？</span> <span class="need-chip">养老钱怎样投最稳妥？</span></div>
         
-        <div class="meta-row">♥ 1147 · 📅 昨天 · <span class="hot-score">🔥 0</span></div>
+        <div class="meta-row">♥ 797 · 📅 2天前 · <span class="hot-score">🔥 83</span></div>
       </div>
-    </div></div><div class="feat-wrap"><div class="feat-src">小红书 · 内地保险/年金/增额寿</div><div class="item-card">
+    </div></div><div class="feat-wrap"><div class="feat-src">视频号 · 养老</div><div class="item-card">
       <div class="rank-col">6</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a2759e9000000001702f0ed" target="_blank" rel="noopener" class="tl">到底那种养老方式更靠谱</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
-        <div class="summary">对比退休金、医保报销和储蓄存款三种养老方式的可靠性及真实收益。</div>
-        <div class="hl-row"><span class="hl-chip">#退休金是错觉？</span> <span class="hl-chip">#医保报销差一倍</span> <span class="hl-chip">#40万养老够吗？</span></div>
-        <div class="angle">💡 对比内地养老方式短板，引出港险分红险作补充养老方案。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">退休金真的划算吗？</span> <span class="need-chip">医保能覆盖大病吗？</span> <span class="need-chip">40万存款如何养老？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo38Jlo5Zc024x5tg3Ktfp0jialYL2iaiadouND0TeD8CibZibX7h8alhulSC3ywXS79eQasJe9mQjKZeYg&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a21a&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTmvfMBiaibIicnsPW0ajPAx5BF15XqMicmOFJ0JWtARU9f49icwEFUGRbxe8cRmeCSm5llrehE8NlO73DQib2Hm0fHNFOIHk6ia6nWUmky17d2mJricv5w4BbM1ia1bmFQqFnEZuDQ7nc4U1vfeR6bI1BzNuupsW9V35N5YrkNFoSdbyRgq6tf68819q6EzptZuL8PbicyfLRXN4apib3jNCPKvZatwQdL&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=vU-9X1k6GxbowdjYreeAg-oBf5aBL5xGVrYSQpdZfhenayWrYQbORq2IMKKJzWdnufvSEi8PjvudpsPxENmfaw" target="_blank" rel="noopener" class="tl">...构建一刻钟养老服务 打造老年人家门口的幸福。</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">构建一刻钟养老服务圈，让老年人门口享幸福</div>
+        <div class="hl-row"><span class="hl-chip">#一刻钟养老</span> <span class="hl-chip">#家门口的幸福</span> <span class="hl-chip">#养老服务圈</span></div>
+        <div class="angle">💡 一刻钟养老圈虽好但够用吗？聊高净值养老升级</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">社区养老能靠得住吗？</span> <span class="need-chip">高端养老需要多少钱？</span> <span class="need-chip">如何保证养老品质？</span></div>
         
-        <div class="meta-row">♥ 5838 · 📅 4天前 · <span class="hot-score">🔥 100</span></div>
+        <div class="meta-row">♥ 118 · 📅 2天前 · <span class="hot-score">🔥 59</span></div>
       </div>
     </div></div></div></div>
     <div class="topic-card">
@@ -353,37 +353,36 @@
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQBicSibYibeYnTpHeENcOHtudN0HWMwL6fiaNhd5R7moTbFbicelHMibibiboh4Y5tlfNtVQUclXaQlkxBJJ3ByxMWAib6hm&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTlh2FwJcEBzia9BibGibdyAukYkzv4Jialrr2ofxSHWJ4SKQVrujqVv47g3rly050EcfyYbh2feS11MVOKhUB4yRPRVQSBJwlAJKibttb3I991vKe08RY9ZQuMPLjXJIhwwguHd7DvU7iaOWH1kItLYSo4FyeLahVxz45kRZPsNsib4oAMtPWhmGw4GdQz0cbjKXHFAvqwBJqdg7SoVe3n01hnibykW&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=p-kxF3NxTvv5jtNaQTNrl-66WOV-2IrSruIu2mDkBF2nDEz6WUVr48H5BIYN6jx8NWzvD0vNkhI7e1kTT258gQ" target="_blank" rel="noopener" class="tl">香港保险辨析（下）：收益6%、7%？香港保险真的这么赚？#香港保险#香港保险收益·#理财保险#储蓄险#香港#小新说保#保险新闻#保险资讯
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQB1eo2z56DuCBqUNQIOWVibraDovkpTgAC3TN5jbvnAkBTcRRE9pFa8UGjINpSrS6qb7LpkAH9nUBW4Kcp3QMTcu&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTlIJNNHdcTtKeaBnvxNfVIrQqsjia2heFKoNsC6SDAcd6HLNAS9iaZdgWdKxeCYuEuXyiaupdLkJ1MC1sq8FN5z3dWicVGflZ9hrrrvWsMgVO9j8m6PYgc6drQ4VNJuBH0pTPhVRRscSBw0BrC90ZJgTnIyZKX3pN4BDGbVGpd1OU0cNY0CWWhC92pQUfyf3KictL9Tuhv6hdiaAWibcYCeXBssSeE&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=6bpjiZ_lgzMUEROYYpMDoRyMCB35BkmBKXy7rvG-NVQRNHKwD2PR4NX5eyTWnirhxy6d839ds432u41UlFWcDA" target="_blank" rel="noopener" class="tl">香港保险辨析（上）：换汇去香港买保险，到底合规不合规？#香港保险#换汇#理财保险#储蓄险#香港#小新说保#保险新闻#保险资讯
 @微信创作者 @微信时刻 @微信视频号创造营</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
-        <div class="summary">解析香港保险宣称的6-7%高收益是否真实可持续</div>
-        <div class="hl-row"><span class="hl-chip">#6%收益真的假的?</span> <span class="hl-chip">#香港保险收益揭秘</span> <span class="hl-chip">#高收益背后风险</span></div>
-        <div class="angle">💡 从真实收溢率切入，拆解港险收益构成，吸引高净值客户</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">港险收益是否真实？</span> <span class="need-chip">高收益怎么做到的？</span> <span class="need-chip">投资风险有多大？</span></div>
+        <div class="summary">换汇去香港买保险合规性分析，解答外汇政策疑问。</div>
+        <div class="hl-row"><span class="hl-chip">#合规换汇路径</span> <span class="hl-chip">#外汇政策解读</span> <span class="hl-chip">#港险配置风险</span></div>
+        <div class="angle">💡 做合规深扒，用案例讲清换汇买港险流程与红线</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">换汇买港险是否违法？</span> <span class="need-chip">大额资金如何合规出境？</span> <span class="need-chip">港险受内地法律保护吗？</span></div>
         
-        <div class="meta-row">♥ 84 · 📅 3天前 · <span class="hot-score">🔥 38</span></div>
+        <div class="meta-row">♥ 89 · 📅 4天前 · <span class="hot-score">🔥 44</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">2</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQB1eo2z56DuCBqUNQIOWVibraDovkpTgAC3TN5jbvnAkBTcRRE9pFa8UGjINpSrS6qb7LpkAH9nUBW4Kcp3QMTcu&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awic4zWxCKVrZVKMaiaRpOj88pMiaIL9nQnMELtQDmxgqibzeObKzQ0rbjn9gzZYloeYIw6FPNCmN0XwJPt6r4BGic33eQBWiaaPg5iaqj7YRXHX8kOKdpMn2LzFB0OiaLNf0aFt3nlIASTxNaVVjIZib4ohS1SUvz8Yv9fibRVCpIicuZQAYU8xw2JPmJzlGVOlk9kW7aibR41tVvKbUuH7X78T6a3xhtgP&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=cQ9FyKPkIdEPH9HZ4wThzmyZCswyQY8nHBalWDdj06ZZBvo6WjZ9-L2PCM56zv0BriLjg2ieBCL5p4DCGv7ADQ" target="_blank" rel="noopener" class="tl">香港保险辨析（上）：换汇去香港买保险，到底合规不合规？#香港保险#换汇#理财保险#储蓄险#香港#小新说保#保险新闻#保险资讯
-@微信创作者 @微信时刻 @微信视频号创造营</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
-        <div class="summary">探讨换汇出境购买香港保险的合规性问题</div>
-        <div class="hl-row"><span class="hl-chip">#换汇买港险合规吗?</span> <span class="hl-chip">#资金出境风险</span> <span class="hl-chip">#香港保险合法流程</span></div>
-        <div class="angle">💡 解答合规疑虑，提供资金出境方案，引导高客咨询</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">购买港险如何合规换汇？</span> <span class="need-chip">资金出境有风险吗？</span> <span class="need-chip">合规操作流程是怎样的?</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo0gSDwZ22L1MSQdOiarbvZJ1CJIcicYV0mpDCJw2IA3sCD80ERu8rnhcxNK8kT23LFL2yIckZO9cCJw&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a1fc&amp;X-snsvideoflag=xWT112&amp;token=2lt8WBSnjTlhWBjNbMetc8cZtPGKaUWon7GxiaZq1sICcwOUu2HXMyEltJianPVjukkz5P5RXw0TdxibeTCgDSd399aIuluBHBhHhESFQcCH1Cl7ZjrKF2qVwX9TJ8aZUxM8ptIYpTkwphiaACp8b3jYUr5S91ErbFd5A1RsZiatIoFia9QdZriboMNJH9hXupKwxCSkevo3XNx9XscBxSkVTbF8wiaNDGeYthfa&amp;basedata=CAMSBnhXVDExMiI8CgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAACgoKBnhXUjExMxAA&amp;sign=jEry-infzs5wXy01Q2kt0a0K0bE8OgmvIqZUa2qw08tiBzL07LhTtmVaz-LnAW_nSvIzudx4IhsgZxWTQvH-yw" target="_blank" rel="noopener" class="tl">6月30日前必买的两个险种，错过不再有，再也不会有！</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">宣传6月30日前停售两款储蓄险，制造稀缺感。</div>
+        <div class="hl-row"><span class="hl-chip">#停售倒计时</span> <span class="hl-chip">#高收益末班车</span> <span class="hl-chip">#错过不再有</span></div>
+        <div class="angle">💡 拆穿停售营销，对比港险vs内地停售产品真实收益</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">停售产品真的好吗？</span> <span class="need-chip">现在买划算吗？</span> <span class="need-chip">港险有无更好替代？</span></div>
         
-        <div class="meta-row">♥ 89 · 📅 3天前 · <span class="hot-score">🔥 44</span></div>
+        <div class="meta-row">♥ 10 · 📅 今天 · <span class="hot-score">🔥 0</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">3</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo1YJERlRxTcIUEA9TEmmoOPdJEcqLuGibicV8ibmQPbHGUib1x4t8ZWSgml4VxDbLmUkmeDXOPSvvfH1A&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awic4zWxCKVrZVGiatol9KJVxZFMvHWtRRO22eqwUOZvApibqju0lDzUnSTLAp0IFV8ytOicMicSEo54VyYtKIKfM4O8eaUiaPVZSodRz4BBrJh8YwW3kZ38I0snhGMGhIdiaW0dow0x4Bd1QSD6bANQAtBhxoy5g1ESqftr3XvDbQrmU3ics1RxfBaz2GUXibL9ib1pRp9LbUStxCgbJBnAjX826zVxPA&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=PgOwS70vTgBw7b9df0U950JcMwZThGkS17HqSy-TmxH15GoRwWWMOxkK5aSFY59VzJO0lZSZ95Dn_4s5Uuu5rA" target="_blank" rel="noopener" class="tl">财联社：万亿存款挪向保险，其中‘分红险’成为吸金主力。#保险 #分红险</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
-        <div class="summary">报道万亿存款转向保险，分红险成吸金主力趋势</div>
-        <div class="hl-row"><span class="hl-chip">#万亿存款涌向保险</span> <span class="hl-chip">#分红险为何火爆?</span> <span class="hl-chip">#抓住财富趋势</span></div>
-        <div class="angle">💡 借势新闻热度分析分红险爆火，对比港险优势</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">为什么存款搬向保险？</span> <span class="need-chip">分红险真的值得买吗？</span> <span class="need-chip">现在是配置好时机吗？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo1YJERlRxTcIUEA9TEmmoOPdJEcqLuGibicV8ibmQPbHGUib1x4t8ZWSgml4VxDbLmUkmeDXOPSvvfH1A&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awicREQXemfOvdd3tiak4GZNXqRe5vkO73xrudILrAAaQnIWUBXmfjEDKldTtOp8gYZwyhRXb5F5p8qHdGMhXNIxfiaskbRgP9HkATMnmE3paShSByEqDQpEdyia4VpGn3GdxaDQOkb9xfISSiaIG8khFiae1qSfQWTQ7dHryRcoZBfLcDbEJBlyMH08aUcSrB8Vic7ia2cxibUibq6HmNQDeJ7TSk9Lfl&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=O6T3l_DlUXWAIznJjD2RLqJ4WFWEbKdUfK1eRRV4AZF2RBaGZkupn6a8J0eVx1GbvMx5lmA4js9Sgp51w4nLHg" target="_blank" rel="noopener" class="tl">财联社：万亿存款挪向保险，其中‘分红险’成为吸金主力。#保险 #分红险</a><span class="biz-badge" style="background:#8B5CF6;color:#fff;">分红险</span></div>
+        <div class="summary">财联社报道居民存款向保险搬家，分红险成主力。</div>
+        <div class="hl-row"><span class="hl-chip">#存款搬家万亿</span> <span class="hl-chip">#分红险爆火</span> <span class="hl-chip">#利率下行推动</span></div>
+        <div class="angle">💡 从新闻切入，分析分红险火爆背后逻辑，引荐港险</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">分红险值得买吗？</span> <span class="need-chip">为什么存款都转保险了？</span> <span class="need-chip">港险分红收益更高吗？</span></div>
         
-        <div class="meta-row">♥ 67 · 📅 今天 · <span class="hot-score">🔥 35</span></div>
+        <div class="meta-row">♥ 159 · 📅 今天 · <span class="hot-score">🔥 69</span></div>
       </div>
     </div></div>
     </div><div class="platform-section">
@@ -391,13 +390,13 @@
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7650065204193021220/?region=US&amp;mid=7650065163919657769&amp;u_code=0&amp;did=MS4wLjABAAAAxorvmC-O579-IqOkaOSYDCKpHmFIL9DHU5a4MsiW3cLjWrtdoi5K-D7J1w6owk13&amp;iid=MS4wLjABAAAAy6GOuIqsW8BnfMG05V4j4BLYCFmFhKtqZrREKVNvxXC3nqVipx280-JQniE6sKCZ&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=Z_CC1GXtTstRh_y_3geDF69Q5f8C1ptWM4WaxPUHBJw-&amp;share_version=320900&amp;ts=1781315836&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">40岁手握200w如何提前退休躺平 #香港保险 #香港储蓄 #香港储蓄险 #养老 #海外资产配置</a><span class="biz-badge" style="background:#EC4899;color:#fff;">港险</span></div>
-        <div class="summary">40岁有200万用香港储蓄险实现提前退休躺平</div>
-        <div class="hl-row"><span class="hl-chip">#200万提前退休方案</span> <span class="hl-chip">#香港储蓄险躺平攻略</span> <span class="hl-chip">#40岁养老新思路</span></div>
-        <div class="angle">💡 制作港险养老方案深度测评，对比不同提取计划</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">200万如何实现退休</span> <span class="need-chip">香港储蓄险真实收益</span> <span class="need-chip">购买流程与注意事项</span></div>
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7650065204193021220/?region=US&amp;mid=7650065163919657769&amp;u_code=0&amp;did=MS4wLjABAAAAGXGBH14Fs0vMkV5fsWdNDJo39Z6CL4OcIDwDXLy7zYwHmF6aEpbSIf66yuz76n1S&amp;iid=MS4wLjABAAAABjtFb8oyolmZEAFHjbv7jxjvNDn93FgFYDSbYBRHkLR_lurz_ObGzwFRCnoOwgjF&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=Z_CC1GXtTstRh_y_3geDF69Q5f8C1ptWM4WaxPUHBJw-&amp;share_version=320900&amp;ts=1781336325&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">40岁手握200w如何提前退休躺平 #香港保险 #香港储蓄 #香港储蓄险 #养老 #海外资产配置</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">40岁用200万通过香港储蓄险实现提前退休躺平</div>
+        <div class="hl-row"><span class="hl-chip">#40岁提前退休秘籍</span> <span class="hl-chip">#200万躺平方案</span> <span class="hl-chip">#香港保险海外配置</span></div>
+        <div class="angle">💡 从提前退休痛点切入，测评香港储蓄险收益与提领方案，对比内地养老金</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">200万真的够退休吗？</span> <span class="need-chip">香港保险靠谱吗？</span> <span class="need-chip">具体怎么操作？</span></div>
         
-        <div class="meta-row">♥ 1147 · 📅 昨天 · <span class="hot-score">🔥 0</span></div>
+        <div class="meta-row">♥ 1193 · 📅 昨天 · <span class="hot-score">🔥 29</span></div>
       </div>
     </div></div>
     </div>
@@ -411,49 +410,35 @@
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewQsFvYyicia1J2jtQTCkeUxuv1DuLkklbCDD9EMFp0liaYVhzKuKEibkhA4TMjqhlf3I2vrTpMMUunN1QxD18IIACwmWq9adW60LpcKsOcKiaGJ3Q&amp;hy=SH&amp;idx=1&amp;m=a757b5a11ec2200e894d9f5c124d193a&amp;uzid=7a1fc&amp;X-snsvideoflag=xWT112&amp;token=ic1n0xDG6awic4zWxCKVrZVBLFWib9qibQWgWHWmlhqzwlgLJbuGfsdKWzyAAjOJIGKM8UrsuicOq4hITo1oWuBOX289srZfM8U12RJ8621qCHx56SLpVXbSCltWPuQfpV2icFibQXLE5SE31A0dXgNz289PaSDicl7bqrq1Iib097Nunj8cG7QmAXpO83grDzdo2OqjJHbcz8917UU94W61PZOJPpYic7ksOL8JH5&amp;basedata=CAMSBnhXVDExMiI8CgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAACgoKBnhXUjExMxAA&amp;sign=y_GziQTpWz1zxeDACxjWC_Cv6FKPyUVXkSR-Y6O3hrtkRQacdUc0WwimVv3n9b0G2ra6oOY5e4enN8Bz1nq43Q" target="_blank" rel="noopener" class="tl">7月1日起社保要变了！国务院新规落地，3个“真好事”别错过。</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
-        <div class="summary">社保新规7月起实施，关乎养老医疗等3项利好变化。</div>
-        <div class="hl-row"><span class="hl-chip">#社保新规落地</span> <span class="hl-chip">#3项真好事</span> <span class="hl-chip">#养老待遇提升</span></div>
-        <div class="angle">💡 从社保新规切入，谈养老缺口，引出港险养老方案对比。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">社保变化对退休金有何影响？</span> <span class="need-chip">我需要额外补充养老吗？</span> <span class="need-chip">商业养老和社保如何搭配？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewQsFvYyicia1J2jtQTCkeUxuv1DuLkklbCDD9EMFp0liaYVhzKuKEibkhA4TMjqhlf3I2vrTpMMUunN1QxD18IIACwmWq9adW60LpcKsOcKiaGJ3Q&amp;hy=SH&amp;idx=1&amp;m=a757b5a11ec2200e894d9f5c124d193a&amp;uzid=7a1fc&amp;X-snsvideoflag=xWT112&amp;token=2lt8WBSnjTmibibPu3a942icoeBhOtksgK9Ea03NkK3RtcRoQpKibZlicTkwQYU8EG03uU5tbicicwmcYFjLPklkhO3gib1ibYibfdV8Le6Fl9c9rGJh9uEsA9TeybsbiauFcT9ictPhFrYnEQWzrTsPDdRcGMm6gQLFdyJib6wL6kJSbOAGZ14kz3yDvyGW6emfWh1JJrwB9iccoS988Xj5q5DepvWTe747P76FKfEG23&amp;basedata=CAMSBnhXVDExMiI8CgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAACgoKBnhXUjExMxAA&amp;sign=uRN3xv1Y6VXmheX2WOT41P20LDL2zcC-fdQgxnn3PDezlbER1eMFE-pSly-NYRdFaflK52Lt-GfOoLghz3q3RA" target="_blank" rel="noopener" class="tl">7月1日起社保要变了！国务院新规落地，3个“真好事”别错过。</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
         
-        <div class="meta-row">♥ 194 · 📅 2天前 · <span class="hot-score">🔥 62</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 203 · 📅 2天前 · <span class="hot-score">🔥 72</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">2</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQC5K5cicv4nNZqCsibU8iax89H0wia3j6jFPNaChy8RKrYtkkzMia2u7X2gHE0dhaykibsnbENm2TIcWnOTIJFHJVbQK3&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTlRmPQsVtkbia4hBmhSpUO3yzPgTwBnlibD0Xh3xNm0h707iawQvibVgBicBNBnN3mFdlfPufJhAjSXzLiaLWjq7RF3D7qR9rZZtrib2VKRian6HpClgxibicxqjOMT9s3TLvVndlDQLc1EtukvWia1GRhrSOUzWk1MstvJ1NtVbYqXEm92QPiaVd1uRx855FKIOol5Wqju2hbSia9Ljsj2fU0GGeWvkCYwl&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=Y6xRCp1ZY4yQv9gQ91_i-n9D3kdz3B0oaek_ua-HKtIHKph-hqGH2V397XMC6Cz9mCM4e0dgmkRr4QZEeO7Nzg" target="_blank" rel="noopener" class="tl">...利率下行+生命表+监管，这次停售很关键#保险停售#利率下行#中长期规划#理性消费</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">利率下行和生命表更新导致保险停售潮，建议理性投保。</div>
-        <div class="hl-row"><span class="hl-chip">#利率下行停售</span> <span class="hl-chip">#生命表更新影响</span> <span class="hl-chip">#理性消费提示</span></div>
-        <div class="angle">💡 拆解停售话术，对比内地增额寿与港险分红险的长期收益。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">停售产品值得抢吗？</span> <span class="need-chip">利率下行如何保全资产？</span> <span class="need-chip">港险能对冲利率风险吗？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQC5K5cicv4nNZqCsibU8iax89H0wia3j6jFPNaChy8RKrYtkkzMia2u7X2gHE0dhaykibsnbENm2TIcWnOTIJFHJVbQK3&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTmibibPu3a942icleLEia33zdWQCLxPvtowGeyEDT5q8xWceOibJwdLdq01W3JlibCyy7GjUnKFYpxjjgamrItCEjtrD0eTaIoiciajgL247nnGia2KCZyabnTqsJx9zSfoN8Mgt5JVCT7cgPGY4KbUqvF5EA8lAxlySlLFXAJ8E7kmFyZ3I46BcwnGhZ1twxSDwVf2YC1WIzgicGQboYYkFCicy3E1v2m&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=xSN9obbsKt7pdJ747Br-aT6TnncAjWK0QoeIQGwROjy8hmrIY8d1weMarOkiepMrwiXE_mrJ3Kb_BkiPeCi5fw" target="_blank" rel="noopener" class="tl">...利率下行+生命表+监管，这次停售很关键#保险停售#利率下行#中长期规划#理性消费</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
         
-        <div class="meta-row">♥ 5335 · 📅 4天前 · <span class="hot-score">🔥 94</span></div>
+        
+        
+        
+        
+        <div class="meta-row">♥ 5490 · 📅 4天前 · <span class="hot-score">🔥 97</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">3</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo20n5W6ngvXYcKSxQGJOq6CNuQSfL0vLp64mY7ftFoDYkBWVaaDuJITfTHNFZ3RIzXnlzWNO5zWZw&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awic4zWxCKVrZVD7qJAs9ON4PpRamKOa4eV8J4vNpfLI4KO6LW97LG06ksIv7gvu7JgEXTwb7qZFUOsNDJg2AoAsplByR6O7rdCJmXTo5CKnibpia8SCJuv7yISK4bPfzsKe3g186SzvLUsEQd7MdgGcJmSQCrVzf9dFAWaYgn4woHISgVXZeBN72SibS5U46CrgOAoz5iaiaVJNWGBwKxTicIjtt9Z&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=hUbme4qh7mbrh0QUxkOOBlDUKpgBJOV8ap-3TWMU_58zx_awzBGDAHv8SDC8kC24Ja9xPic0kOUrbX0z0o1D2w" target="_blank" rel="noopener" class="tl">三句话讲清楚，增额终身寿/快返年金，到底怎么选？#增额终身寿#快返年金#保险</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">三句话讲清增额终身寿和快返年金的差异与选择逻辑。</div>
-        <div class="hl-row"><span class="hl-chip">#增额寿vs快返年金</span> <span class="hl-chip">#选择逻辑拆解</span> <span class="hl-chip">#储蓄险决策指南</span></div>
-        <div class="angle">💡 制作港险与内地增额寿/快返年金的多维度对比测评，突出港险优势。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">二者收益差距多大？</span> <span class="need-chip">我该选哪种储蓄险？</span> <span class="need-chip">港险能替代这两类吗？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewQsFvYyicia1JibqFBkuzxZ9bS40A8DiapoNaXZpUol3QEOsFEPlEmyEGkVej951WY2iaqMm8nSibia5vACGXVFKialQqMB1YNBeqKzpAkRo3d7yVKqg&amp;hy=SH&amp;idx=1&amp;m=515ad284d24b544fcc9e433b24ead62c&amp;uzid=7a1b6&amp;X-snsvideoflag=xWT112&amp;token=ic1n0xDG6awicREQXemfOvdcErKFZAkmtATN52bg0hjgV3scN9O7wlUYPBzRjszWoIXicdQjg8RLYr6Il0EBNqiaZbQFGQNguBB8AqNBVSmZyibkjyzDyjwzTYYY8Bo1nwXuGaqhaqy8MmMTHmEoQxrng7aG9XG3XcEAq5iaovc2Gc1kB9TXX8raxgtfaHicrdH8aCGdlgicfbf0AWdo42qogfLzgbIBRDDibIR71&amp;basedata=CAMSBnhXVDExMiI8CgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXUjExMhAACgoKBnhXVDExMRAACgoKBnhXUjExMxAA&amp;sign=uc1QlhLV2KObwGqAbOMRqrpVq5p2UjQyKQDcYynUaRTtMhjD_dDA5lHlF0VobnZF2fafLHwG5JNlVYfiR8Q9Tw" target="_blank" rel="noopener" class="tl">#保险#保险起源   200年的保险发展，为什么普及率这么低</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
         
-        <div class="meta-row">♥ 58 · 📅 3天前 · <span class="hot-score">🔥 32</span></div>
-      </div>
-    </div></div>
-    </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(精选 1 / 共 1)</span></div>
-      <div class="item-list"><div class="item-card">
-      <div class="rank-col">1</div>
-      <div class="content-col">
-        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a2759e9000000001702f0ed" target="_blank" rel="noopener" class="tl">到底那种养老方式更靠谱</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
-        <div class="summary">对比退休金、医保报销和储蓄存款三种养老方式的可靠性及真实收益。</div>
-        <div class="hl-row"><span class="hl-chip">#退休金是错觉？</span> <span class="hl-chip">#医保报销差一倍</span> <span class="hl-chip">#40万养老够吗？</span></div>
-        <div class="angle">💡 对比内地养老方式短板，引出港险分红险作补充养老方案。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">退休金真的划算吗？</span> <span class="need-chip">医保能覆盖大病吗？</span> <span class="need-chip">40万存款如何养老？</span></div>
         
-        <div class="meta-row">♥ 5838 · 📅 4天前 · <span class="hot-score">🔥 100</span></div>
+        
+        
+        
+        <div class="meta-row">♥ 12 · 📅 今天 · <span class="hot-score">🔥 6</span></div>
       </div>
     </div></div>
     </div>
@@ -462,137 +447,110 @@
       <div class="topic-header" style="background:#F59E0B;">
         💰 存钱
       </div>
-      <div class="platform-section">
-      <div class="platform-name" style="color:#FA9D3B;">● 视频号 <span class="plat-count">(精选 1 / 共 1)</span></div>
-      <div class="item-list"><div class="item-card">
-      <div class="rank-col">1</div>
-      <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=Cvvj5Ix3eewK0tHtibORqcsqchXNh0Gf3sJcaYqC2rQDTYBKGhah8n9WV2icF8ibKaXDbrhE4FuZkLCsXLeCooh68X7Sjc8ic5Eoy6fOD8iaSsFZm9RZSNddxR79RiaI56UtDw&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a1fc&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6aw9asrnfHKRnBe80KQbJr7s82icWBMjEMPjPFyjv8o7GFlmSJUgVyAUFXTk3cKQ1iaQ4nlAIoBvrIkPXGjyJT60nmFRGLOQdiaZiannNdY6ibhjr3350MTHlRoR9Q9FPibGRBrspxmG0M655M5iaZibOWhP00tlnMpwuPZwaYHxV9iaiaYnhKJeplIjQXMjSPmDGicW955sjVBw79RCDn6HTMXDu5icXUW8a&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXVDI1OBAACgoKBnhXVDE1OBAA&amp;sign=9ejOTo6icC2EIrL_znibxd20vWSEi5557310jATMgdT4WN1QL0kZyH5A5J-sglqyIn0I-bEdQM92d_1VRV1BRg" target="_blank" rel="noopener" class="tl">不同收入阶段，最适合咱们的存钱方法。银行卡里的数字，才是女孩子生活中最大的底气！#存钱#girlstalk#女性#冯大眼</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">不同收入阶段女性存钱方法，强调银行卡余额是底气。</div>
-        <div class="hl-row"><span class="hl-chip">#分层存钱技巧</span> <span class="hl-chip">#女性经济独立底气</span> <span class="hl-chip">#适合各阶段女性</span></div>
-        <div class="angle">💡 对比不同存钱工具，突出港险强制储蓄和收益优势。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">如何根据收入存钱？</span> <span class="need-chip">什么工具收益高？</span> <span class="need-chip">如何强制储蓄？</span></div>
-        
-        <div class="meta-row">♥ 4786 · 📅 4天前 · <span class="hot-score">🔥 91</span></div>
-      </div>
-    </div></div>
-    </div>
+      <div class="empty">暂无数据</div>
     </div>
     <div class="topic-card">
       <div class="topic-header" style="background:#6366F1;">
         🏦 存款/定存/国债
       </div>
       <div class="platform-section">
-      <div class="platform-name" style="color:#FA9D3B;">● 视频号 <span class="plat-count">(精选 3 / 共 9)</span></div>
+      <div class="platform-name" style="color:#FA9D3B;">● 视频号 <span class="plat-count">(精选 3 / 共 10)</span></div>
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=KGDRibp2wkicIUyAjy5lq11oMpgBVtYA2Ka69uAPR5TdgIu8lwuI5NQZzyscrib3zMlcZZwJo141Zo1FhianBzh73w&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTnqhgQo5jffftnnyicu5RZhhG0bfGWh7nGwq6DY23HUhndtxrnzcfV83F2Hib5w4gV7y4w32eWuCzLCt7iaC5sHA04icWvTCZxH3DcfSKxH16wqTSvaUQcDRiaZYfd2c8DGl1q6x7zU5rYibBVY4wpEK3J6EgHNeWU2zmYTabBJD1n27TKg6VbVuaAo03HwLdlaXOMKbMYv6lnx7iaSicUc01M3Txia8&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=LVz75R8lRg6Bo7cQsRN1vEMJGgOpxZGdUtugoi-ox5ASeeYqU9lJrZYugmNDoWbpVm_wHgOl0xBnf9Ra6-cjFw" target="_blank" rel="noopener" class="tl">央行发布重要数据：前五个月，人民币存款增加15.77万亿元，人民币贷款增加9.11万亿元。</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">央行数据显示前五月人民币存款增加15.77万亿元，存款持续高增。</div>
-        <div class="hl-row"><span class="hl-chip">#存款创纪录</span> <span class="hl-chip">#钱去哪了</span> <span class="hl-chip">#利率下行怎么办</span></div>
-        <div class="angle">💡 剖析存款大增背后的焦虑，对比港险分红优势。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">存款如何对抗通胀？</span> <span class="need-chip">港险收益稳定吗？</span> <span class="need-chip">高净值家庭如何配置？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo23BicXhxPlKDEN6fe1TkZM7E6PBlKgc3rq9Bsb5h1rFYUeA6GFgMfpV4xtv7doftib7T02Nz3QU65A&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a1ac&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTmkdpdUNicZY4swmd1725dWaxoIMmEVZP74Dv2ImJxSJ58zcKlDjuJqDGZKxy0FtrSniattrzD3YiaiatFmCYYGGjDxGwfbh6vsptwJcicZV2X1ib9nJ5LQ44Cv8XfSt06KIm57iapQc75xaUJWoibhJyjSC2Rdq4vhrPG2WCIFWDEh8UXmojP5uLv0Ip5pr4WYBMHC3fAxKtu3LlbZcczVPoYsHuxib&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=u5XMuB1rZv4SouZml9IzUTcgb_qkFkVUqhojU7_Z2wN-PLZtRkcPjQ6Jrv07sllXgo5ZHh4HR4MJkqyhItq5SA" target="_blank" rel="noopener" class="tl">存款去哪儿了？居民存款连续两个月减少，合计缩水超2万亿元</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">居民存款连续两个月减少，合计缩水超2万亿，钱去哪了？</div>
+        <div class="hl-row"><span class="hl-chip">#存款搬家</span> <span class="hl-chip">#2万亿缩水</span> <span class="hl-chip">#钱流向了哪</span></div>
+        <div class="angle">💡 存款缩水，高净值人群转向香港分红险避险</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">存款怎么保值</span> <span class="need-chip">钱该投向哪里</span> <span class="need-chip">有比存款更稳的高收益吗</span></div>
         
-        <div class="meta-row">♥ 779 · 📅 今天 · <span class="hot-score">🔥 74</span></div>
+        <div class="meta-row">♥ 539 · 📅 今天 · <span class="hot-score">🔥 78</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">2</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo23BicXhxPlKDEN6fe1TkZM7E6PBlKgc3rq9Bsb5h1rFYUeA6GFgMfpV4xtv7doftib7T02Nz3QU65A&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a1ac&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTnqhgQo5jfffsO2FTYX8cFgicVsHp9VEIU9GAmGQNeKMotryIz7HOgl9Ul2T6tT2XfPbWbKEibgmWPiajIMffgnzkrRqT9WaCcDordeyzjB9U3ibicN4taSgtaXQf9FOMyJemG7SxtUOPZ2XLL9U1CWFRGsTicZibyn7hibGwfYL29ueX9rhU2x8WEFYcYf1Isx6PiclUX5t0JZy7vVL6qJupUplR7lc&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=hIc7TruppFCU7A7dduZ_4HDLuo5bs7-g9OyvmAYUy8TKVCowrvleN8O7S_HDnZFPOTRZl_b5nmbAZ201H5pEVA" target="_blank" rel="noopener" class="tl">存款去哪儿了？居民存款连续两个月减少，合计缩水超2万亿元</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">居民存款连续两月减少超2万亿，拷问资金流向。</div>
-        <div class="hl-row"><span class="hl-chip">#存款搬家</span> <span class="hl-chip">#钱在逃离银行</span> <span class="hl-chip">#资金寻保值</span></div>
-        <div class="angle">💡 用存款流出数据引出资本避险需求，带出港险。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">钱该往哪去？</span> <span class="need-chip">稳健高收益产品有哪些？</span> <span class="need-chip">港险安全性如何？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=KGDRibp2wkicIUyAjy5lq11oMpgBVtYA2Ka69uAPR5TdgIu8lwuI5NQZzyscrib3zMlcZZwJo141Zo1FhianBzh73w&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awicCakib3pFC7b7LvsYTibOjh0q7pSEFD72UZiaSYbaNkOXpia9yZd85j1Ba2WLHtqW761uyOlrVqnoveibWHJWsTBMZ9YiaGeyKhKN9V1at34aBvAcjcM3vI3q5sDWmbjs4PVGJK4zlkRZ3cAYavicfWeiaPFCfOf6UBxWrCZQAeoglBQw78RNhtIl0rEsmDdlCnXgf8fOPgxfiaCMwbEHgpvA9suEpF&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=hvgGmGFqqxZGFm6Hh6kDT_WTvJ0cmJ_PwiliBD_zttMtmgKxbqMHjqvFpbdx5pvy4Bq_7lueWtzoN54rTDHMew" target="_blank" rel="noopener" class="tl">央行发布重要数据：前五个月，人民币存款增加15.77万亿元，人民币贷款增加9.11万亿元。</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">央行数据：前五月人民币存款大增15.77万亿，贷款增9.11万亿</div>
+        <div class="hl-row"><span class="hl-chip">#央行重磅数据</span> <span class="hl-chip">#存款大增15万亿</span> <span class="hl-chip">#贷款同步增长</span></div>
+        <div class="angle">💡 存款创纪录，但利息越来越低，不如看看港险</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">存款多了怎么打理</span> <span class="need-chip">利率下行怎么办</span> <span class="need-chip">大额资金如何配置</span></div>
         
-        <div class="meta-row">♥ 17 · 📅 今天 · <span class="hot-score">🔥 12</span></div>
+        <div class="meta-row">♥ 2381 · 📅 今天 · <span class="hot-score">🔥 88</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">3</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=nLWUlAoVvyxMsabg4yb6umq2T5EzhnkAlpAwV2ukFibEIs7mbc6pmYRgzbs5yomVZp2qw2jO3ibVqynFQUDHNfKQ&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTnqhgQo5jfffvU7zgevbvQJmQoneKAtWgRC8ics65CuU82pAV4jrujN4bicdPFo7kXC7zAFKYJHbTl84f7FuUMM0ODs1W1CGGW19HscSibpXKVtzibm2opAJhH0ZvtwQzHtxXxvKW2GR53Cic3za0wC5TVnD7WfUQIWgrz8sXC9sQ9p4WGuLAkNdxLL0jbggzKGhAqwlMUW7f7jmqQEQn96P9dWe&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXUjExMRAACgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=_0bVgqDu_-zW6LwnVMsRytGxuL5Y2uamwBVoaS5c4QIfb9qGNwWNIsHq_ebSkUCHSCUb144FOlKDW9ZAXLtJSg" target="_blank" rel="noopener" class="tl">利率越降，存款越多！钱到底该放在哪里？#财富 #认知 #商业</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">利率越降存款越多，反常识现象揭示资金保值焦虑。</div>
-        <div class="hl-row"><span class="hl-chip">#利率降存款增</span> <span class="hl-chip">#钱无处可去</span> <span class="hl-chip">#保值焦虑</span></div>
-        <div class="angle">💡 拆解现象背后的安全资产荒，引出港险方案。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">低利率下如何理财？</span> <span class="need-chip">港险分红能抗通胀吗？</span> <span class="need-chip">安全与收益如何兼得？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo0MNrhxGpC3MgvsrvibnSmYSBB2j5ZGEib0AsjzlB4yiau27nFyaPwTmUjzfqCZxzg1XtQmBiarrMoAEA&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a22e&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awicCakib3pFC7bxQsa53m2gBbUfnWaSLhqeBQ9kw5flexfQcXsv5fQkYrueYXpnZr4a9MGgQAS9ZbB7S5kib2gz4NWmicgNYyIibufaIugv1rA7R8ia6cD4ibQbScBx0ymCzkum7wrqlZSvAPCjNd5eyKMFtq0hwduF1Ddl2ibEs8xcpyNbWIYl7dXjAGKMjpw8g2uKpibbD1KNLPJ0KRadU2vpAZQiaW&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXUjExMRAACgoKBnhXVDExMhABCgoKBnhXUjExMhAACgoKBnhXVDExMRAA&amp;sign=XAnIgckEVJxz-khZhZkswOw1ZvP063HKc3ygOCsjSB-Ba8RhkcgbgoGA3B_tGt4UCgZk3jlBldsPZfiFjvX6rg" target="_blank" rel="noopener" class="tl">6月13日（报道）截至5月末，人民币存款余额达344.45万亿元！其中，居民存款连续两个月减少：合计缩水超2万亿元，这是近10年来居民存款首次连续两个月减少！</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">5月末人民币存款余额344.45万亿，居民存款连续两个月减少</div>
+        <div class="hl-row"><span class="hl-chip">#存款余额创新高</span> <span class="hl-chip">#居民存款却减少</span> <span class="hl-chip">#近10年首次</span></div>
+        <div class="angle">💡 近10年首次！居民存款搬家，港险或成赢家</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">钱从存款去了哪</span> <span class="need-chip">如何捕捉资金流向机会</span> <span class="need-chip">替代存款的稳健选择</span></div>
         
-        <div class="meta-row">♥ 3058 · 📅 昨天 · <span class="hot-score">🔥 85</span></div>
+        <div class="meta-row">♥ 40 · 📅 今天 · <span class="hot-score">🔥 31</span></div>
       </div>
     </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(精选 2 / 共 2)</span></div>
+      <div class="platform-name" style="color:#00A1D6;">● B站 <span class="plat-count">(精选 1 / 共 1)</span></div>
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
         <div class="title-row"><a href="https://www.bilibili.com/video/BV16bEq6XEb6" target="_blank" rel="noopener" class="tl">上海有百万存款的家庭多吗？一位居民说百分之八十的家庭有</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">上海居民称八成家庭有百万存款，引发热议</div>
-        <div class="hl-row"><span class="hl-chip">#百万存款算有钱吗？</span> <span class="hl-chip">#存款如何跑赢通胀？</span> <span class="hl-chip">#高净值家庭资产配置</span></div>
-        <div class="angle">💡 从百万存款家庭困境，引导港险长期收益</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">存款百万怎么增值？</span> <span class="need-chip">利率下行怎么办？</span> <span class="need-chip">港险比存款更好吗？</span></div>
+        <div class="summary">上海居民称八成家庭有百万存款，引发对家庭财富真实水平的讨论。</div>
+        <div class="hl-row"><span class="hl-chip">#上海家庭真这么富？</span> <span class="hl-chip">#百万存款是门槛？</span> <span class="hl-chip">#存款贬值焦虑</span></div>
+        <div class="angle">💡 从百万存款争议切入，对比存款与港险收益，展示长期现金流方案。</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">存款如何保值增值？</span> <span class="need-chip">家庭资产稳健配置</span> <span class="need-chip">低利率时代替代方案</span></div>
         
-        <div class="meta-row">▶ 1.2万 · ♥ 72 · 📅 昨天 · <span class="hot-score">🔥 0</span></div>
-      </div>
-    </div><div class="item-card">
-      <div class="rank-col">2</div>
-      <div class="content-col">
-        <div class="title-row"><a href="https://www.bilibili.com/video/BV1UzEQ6GEXD" target="_blank" rel="noopener" class="tl">6月10日发售！个人养老金能买国债了，多家银行手机端已开放申购，理论购买上限从50万元跃升到100万元！</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
-        <div class="summary">个人养老金可投国债，购买上限升至100万</div>
-        <div class="hl-row"><span class="hl-chip">#养老金买国债新政</span> <span class="hl-chip">#上限100万够养老吗？</span> <span class="hl-chip">#养老选国债还是港险？</span></div>
-        <div class="angle">💡 测个人养老金+国债vs港险养老收益差</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">个人养老金怎么买国债？</span> <span class="need-chip">国债养老够用吗？</span> <span class="need-chip">港险养老收益更高吗？</span></div>
-        
-        <div class="meta-row">▶ 2.6万 · ♥ 461 · 📅 2天前 · <span class="hot-score">🔥 25</span></div>
+        <div class="meta-row">▶ 1.6万 · ♥ 76 · 📅 昨天 · <span class="hot-score">🔥 0</span></div>
       </div>
     </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(精选 2 / 共 2)</span></div>
+      <div class="platform-name" style="color:#1A1A1A;">● 抖音 <span class="plat-count">(精选 1 / 共 1)</span></div>
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://www.iesdouyin.com/share/note/7649241629954517193/?region=US&amp;mid=7647844563528862514&amp;u_code=0&amp;did=MS4wLjABAAAAtMt55AiTwK_y-lOKyndMGuzyeUK5fOT6p6SDLlrcmjYA1PUW15MgJXgL9Sf6kNBe&amp;iid=MS4wLjABAAAA1m32th-Ny49xLXJMYT2sJB1YZFaGP3TK7xUrTK9GwGixfcANppfCcoXjQz0hWlTG&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;schema_type=37&amp;share_sign=wclBGGQXloN8CQeX0SG6IaytsH5SvjaI3mYIbjnGPQE-&amp;share_version=320900&amp;ts=1781316033&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">普通人理财的第一个里程碑，先攒够10万。第一个10万，得靠实打实的“存”；而过了这道坎后，每多一个10万，就得靠复利加上长期攒钱的习惯啦～
-
-#手写#认知提升#金融常识#存钱 #10万</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">普通人理财先攒10万，之后靠复利和习惯积累更多财富</div>
-        <div class="hl-row"><span class="hl-chip">#存钱里程碑10万</span> <span class="hl-chip">#复利加速积累</span> <span class="hl-chip">#长期攒钱习惯</span></div>
-        <div class="angle">💡 从10万到100万, 港险分红如何复利加速？</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">如何更快存到10万？</span> <span class="need-chip">10万之后如何投资？</span> <span class="need-chip">什么工具复利效果好？</span></div>
+        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7649214211817475334/?region=US&amp;mid=7554570563550251044&amp;u_code=0&amp;did=MS4wLjABAAAAI9FJd-FioX2dsaGnZWN1_o768CS95NBedi1i0xvHod5WDkLr0TetOg8yYiEmnwjT&amp;iid=MS4wLjABAAAAmRPkvqSdsOZUn19VBNKj1AgxTlQP97-haJdHWodQ1gwBiLxqFZNQWGBglwb6d_L4&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=veFNCWEShcu6qK16x5TPONCapCHuWDBNuQpFqSWp6Lo-&amp;share_version=320900&amp;ts=1781336537&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">刚刚，财政部重磅！ 6月16日将在香港特别行政区发行150亿元人民币国债！#人民币 #国债 #央行 #香港  （编辑：于）</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">财政部将在香港发行150亿元人民币国债的新闻</div>
+        <div class="hl-row"><span class="hl-chip">#香港发行国债</span> <span class="hl-chip">#人民币国际化</span> <span class="hl-chip">#境外资产新选项</span></div>
+        <div class="angle">💡 借新闻热度，科普香港金融优势，引出港险</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">香港人民币国债怎么买</span> <span class="need-chip">香港资产配置途径</span> <span class="need-chip">国债与港险比较</span></div>
         
-        <div class="meta-row">♥ 4.3万 · 📅 3天前 · <span class="hot-score">🔥 100</span></div>
-      </div>
-    </div><div class="item-card">
-      <div class="rank-col">2</div>
-      <div class="content-col">
-        <div class="title-row"><a href="https://www.iesdouyin.com/share/video/7649601219341700379/?region=US&amp;mid=7156503268927342600&amp;u_code=0&amp;did=MS4wLjABAAAArL5EvF9rWwv5IEdQNNNAgqJ_8A9sKngkRqspCu79arkF6qti3jP8kXI4qfOpmfxM&amp;iid=MS4wLjABAAAAADJOXzA7C0dtuJWKcyIxjYILsQTvtjlQ9A-2i9LnM3y-DXFG1CIo9af_kqItXtw5&amp;with_sec_did=1&amp;video_share_track_ver=&amp;titleType=title&amp;share_sign=fuZ5nOgIIQyWmT8wOjNX8Urke98snu3eqkJNCcf_8kI-&amp;share_version=320900&amp;ts=1781316051&amp;from_aid=615883&amp;from_ssr=1&amp;share_track_info=%7B%22link_description_type%22%3A%22%22%7D" target="_blank" rel="noopener" class="tl">700亿元储蓄国债(电子式)今起发售（央视频号：总台电视资讯）</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">700亿元储蓄国债发售，低风险投资渠道</div>
-        <div class="hl-row"><span class="hl-chip">#国债发售700亿</span> <span class="hl-chip">#低风险投资</span> <span class="hl-chip">#利率下行趋势</span></div>
-        <div class="angle">💡 国债2.5% vs 港险6%+, 长期收益差多少？</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">国债利率多少？</span> <span class="need-chip">怎么买国债？</span> <span class="need-chip">有没有收益更高的安全产品？</span></div>
-        
-        <div class="meta-row">♥ 1.8万 · 📅 2天前 · <span class="hot-score">🔥 67</span></div>
+        <div class="meta-row">♥ 2120 · 📅 4天前 · <span class="hot-score">🔥 43</span></div>
       </div>
     </div></div>
     </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(精选 2 / 共 2)</span></div>
+      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(精选 3 / 共 5)</span></div>
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
         <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a241ae400000000060373d6" target="_blank" rel="noopener" class="tl">30万存款，怎样理财最稳？</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">30万闲置资金如何配置才能兼顾稳健与收益</div>
-        <div class="hl-row"><span class="hl-chip">#逆回购日赚</span> <span class="hl-chip">#美股机会</span> <span class="hl-chip">#基金定投</span></div>
-        <div class="angle">💡 30万稳健配置：港险分红 vs 国内工具实测对比</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">如何跑赢通胀</span> <span class="need-chip">风险与收益平衡</span> <span class="need-chip">资金灵活存取</span></div>
+        <div class="summary">探讨30万存款的低风险理财方式，比较存款、逆回购、美股等</div>
+        <div class="hl-row"><span class="hl-chip">#30万怎么存最稳</span> <span class="hl-chip">#利率下行时代</span> <span class="hl-chip">#澳元存款年化4.8%</span></div>
+        <div class="angle">💡 从30万低风险理财对比港险长期分红</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">怎么存钱收益最高？</span> <span class="need-chip">低风险理财有哪些？</span> <span class="need-chip">现在存款利率多少？</span></div>
         
-        <div class="meta-row">♥ 1038 · 📅 6天前 · <span class="hot-score">🔥 40</span></div>
+        <div class="meta-row">♥ 1039 · 📅 6天前 · <span class="hot-score">🔥 100</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">2</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a27ea7a0000000006031bdc" target="_blank" rel="noopener" class="tl">6月10号发行的国债纳入个人养老金</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">国债纳入个人养老金账户引发节税争议</div>
-        <div class="hl-row"><span class="hl-chip">#个人养老金节税</span> <span class="hl-chip">#国债安全稳健</span> <span class="hl-chip">#退休取现扣税</span></div>
-        <div class="angle">💡 买国债养老 vs 港险分红养老，哪个更省税更划算？</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">节税效果到底如何</span> <span class="need-chip">退休后实际到手收益</span> <span class="need-chip">资金中途能否取用</span></div>
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a1d48cc0000000036033a79" target="_blank" rel="noopener" class="tl">2026.6.1最新银行存款利率！存钱党速看</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">整理2026年6月银行最新存款利率，供存钱党参考</div>
+        <div class="hl-row"><span class="hl-chip">#最新存款利率</span> <span class="hl-chip">#一年期1.7%</span> <span class="hl-chip">#三年期2.2%</span></div>
+        <div class="angle">💡 用银行利率走势引出港险分红锁利优势</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">哪家银行利率高？</span> <span class="need-chip">存款利率还会降吗？</span> <span class="need-chip">怎样锁定长期利率？</span></div>
         
-        <div class="meta-row">♥ 791 · 📅 2天前 · <span class="hot-score">🔥 20</span></div>
+        <div class="meta-row">♥ 265 · 📅 3天前 · <span class="hot-score">🔥 33</span></div>
+      </div>
+    </div><div class="item-card">
+      <div class="rank-col">3</div>
+      <div class="content-col">
+        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a26ba27000000000603308f" target="_blank" rel="noopener" class="tl">金银标普美债石油的实时盘面，简单看一下</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">展示金银、标普、美债、石油等全球资产实时行情</div>
+        <div class="hl-row"><span class="hl-chip">#金银标普美债</span> <span class="hl-chip">#实时盘面一览</span> <span class="hl-chip">#全球资产配置</span></div>
+        <div class="angle">💡 从全球资产波动引入港险稳定分红优势</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">现在该买黄金还是美债？</span> <span class="need-chip">美股还能涨吗？</span> <span class="need-chip">如何分散投资风险？</span></div>
+        
+        <div class="meta-row">♥ 507 · 📅 4天前 · <span class="hot-score">🔥 67</span></div>
       </div>
     </div></div>
     </div>
@@ -602,53 +560,39 @@
         🏡 养老
       </div>
       <div class="platform-section">
-      <div class="platform-name" style="color:#FA9D3B;">● 视频号 <span class="plat-count">(精选 3 / 共 8)</span></div>
+      <div class="platform-name" style="color:#FA9D3B;">● 视频号 <span class="plat-count">(精选 3 / 共 6)</span></div>
       <div class="item-list"><div class="item-card">
       <div class="rank-col">1</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo24o2NTmKqib1wCAnGanqcWial3ibicMeLndz4XyJooSOMWvVPINanYFQMhXaTCKr6QS5NeuTHdwPawtQ&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awibv1211GkmeBavqUgLmv1r01xiaCSOtv2KIYfDfkYLPHNuI8oQicg6xGmpiaxibyhE2UmqLWYvOSX0cJ4XUiam2DtmPrSzVbUsUMvd5epXPBW7esdPia6RWI4MkMRv9wXsa07RvmhUHaSicymQFDwXTDQTTiaLDtQIHch4ibuwyRhoBlXlS0fLOm0PjWlNiadpdRqgddWY8LlQfyE0pfNgjjf2ibGSsJWR&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=3cwIWxohAa2WdIJChBRNvCZtPHH777s5gf3_yqEeLBhjOuK3qVpXTbIuXmtC_BATkxBqWOZDXJ_8UT39k8BZoA" target="_blank" rel="noopener" class="tl">...长沙#长沙民政#“共享儿女”#居家养老</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">长沙民政推广“共享儿女”居家养老服务模式。</div>
-        <div class="hl-row"><span class="hl-chip">#共享儿女解决照护难</span> <span class="hl-chip">#居家养老新趋势</span> <span class="hl-chip">#长沙民政创新</span></div>
-        <div class="angle">💡 对比居家养老与高端养老社区，引出养老资金配置。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">居家养老资源够用吗？</span> <span class="need-chip">如何保障晚年照护质量？</span> <span class="need-chip">需要多少钱才能安心居家？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo24o2NTmKqib1wCAnGanqcWial3ibicMeLndz4XyJooSOMWvVPINanYFQMhXaTCKr6QS5NeuTHdwPawtQ&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6aw9kkF5Coe6ZPfKRm2Hp5ia4q8BdckNcvoFpRtSLtJicVpTkgRJGE3DEg3zsa4cicM8plxQVvsIaPlR81Bx1MP9PgEKknou2ibYlCPNKxDuxn45zD2ibxGS8YicSqUAfUx2HR5Hto3Er4aHttgS7ibyE4B6cOy3ic7RAmV6OshxPj2jCC1nkY9uRSCl1v7qJ7Pyo0FniaLwbsIgTvmma9W9czs2H4bxMw&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=SU5mpo_Pbs6Z55bn31shvanudLIeq-A79ZZ01dYKZ4STZoDkWxTMJVq1L5syu9PRxTjVy2lr0ZT2cwjsv-QxfQ" target="_blank" rel="noopener" class="tl">...长沙#长沙民政#“共享儿女”#居家养老</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">长沙推出“共享儿女”居家养老互助新模式</div>
+        <div class="hl-row"><span class="hl-chip">#长沙民政</span> <span class="hl-chip">#共享儿女</span> <span class="hl-chip">#互助居家养老</span></div>
+        <div class="angle">💡 从共享儿女看养老成本，引出香港分红险储备</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">这种养老模式可靠吗？</span> <span class="need-chip">养老需要多少钱？</span> <span class="need-chip">如何提前规划养老？</span></div>
         
-        <div class="meta-row">♥ 92 · 📅 2天前 · <span class="hot-score">🔥 47</span></div>
+        <div class="meta-row">♥ 92 · 📅 2天前 · <span class="hot-score">🔥 50</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">2</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo3BFyibKR9gRADL6YeWvB3iaTF6yQSVE5iav9BBHCTbLxEk2AXF3mx6QuygrUxURe1kY3ejM0KmqwfKw&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a166&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTk5XfnITG6OKqiaH6UicZRYH7FGBZXYC2keqMIULH1QMLRJ5UysCKy5CYcPicg6lZrFonnoKH1a0G06dAIkHaglXmia0ics4p1F1XhUWxSMxW3eaH2KlERicXiapBRlYYMHfia9YBWaUmnIicC9IvGnlbEj1icS5ggqUaQZj1DfokUCptEQTUVXKicrw6iahFQJqKdrw6YJ8Tibh9lPX7LeOzib6uVTGffzMV&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXVDE1OBAACgoKBnhXVDE1NxAB&amp;sign=B8YgthQZ9Wm9Vfru-9L7X3zLAPU9VtU1CipQgD821hHMu5E_OzqJcyDKiVjp71zT15Px2b3-6aFD-87yQiCZfQ" target="_blank" rel="noopener" class="tl">长沙市2026年养老金调整了吗？#长沙 #养老金 #五险一金 #退休</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">询问长沙2026年养老金是否调整。</div>
-        <div class="hl-row"><span class="hl-chip">#养老金涨了吗</span> <span class="hl-chip">#长沙最新政策</span> <span class="hl-chip">#五险一金变化</span></div>
-        <div class="angle">💡 从养老金涨幅有限，引出香港储蓄分红险稳定增值。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">养老金够花吗？</span> <span class="need-chip">退休后医保怎么办？</span> <span class="need-chip">如何补充养老收入？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo1ITSOsW3VeGibK9f3toEvyO8ZDicjPvicm7ID3eAb7V5QJ42U2PYTDpG7MLyccpfB9s5XO3948icqQOw&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTmvfMBiaibIicnsDN75A6qZicE7IOnG4JY1mNXP96ZVelvJicwhBrPPFkhG8OMFUASbmHUeUn0pOBu1IIOJ6EtNTiciaicFzjp3LdLkuKEA3EkZczUMULzgFvf5UzfYsXenhUa2wXJzKX3icOxq4DGib6EocNgkWKl6Pgz5NKaLP7G1f6dwEc3nmGibdHUrneibjw8rTVuHKh7EF53XmCI3XFLWWdn9AFuq&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXUjExMRAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=EId5jv1anYx0PoOSJHiMeEVjnWZ30bvKDw9rW9sBa2OmMaCgPvUGQQgVroEOAoUZC5XEgXr-J6JcVgTfF2BpCA" target="_blank" rel="noopener" class="tl">退休金3500元，在长沙河西能住什么样的养老院#养老金#退休生活#为父母收藏#长沙养老#养老院</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
+        <div class="summary">退休金3500元在长沙河西能住怎样的养老院</div>
+        <div class="hl-row"><span class="hl-chip">#退休金3500</span> <span class="hl-chip">#长沙河西养老院</span> <span class="hl-chip">#养老成本真相</span></div>
+        <div class="angle">💡 对比退休金3500的养老院与香港分红险打造的养老社区</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">父母养老要花多少钱？</span> <span class="need-chip">退休金不够怎么办？</span> <span class="need-chip">如何规划高品质养老？</span></div>
         
-        <div class="meta-row">♥ 113 · 📅 6天前 · <span class="hot-score">🔥 53</span></div>
+        <div class="meta-row">♥ 31 · 📅 昨天 · <span class="hot-score">🔥 25</span></div>
       </div>
     </div><div class="item-card">
       <div class="rank-col">3</div>
       <div class="content-col">
-        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo1ITSOsW3VeGibK9f3toEvyO8ZDicjPvicm7ID3eAb7V5QJ42U2PYTDpG7MLyccpfB9s5XO3948icqQOw&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a15c&amp;X-snsvideoflag=xWT113&amp;token=ic1n0xDG6awibv1211GkmeBRZCXicRRyian1CA2Goic6QAnIUr9sc3IHbOicBzkSI7dNXXdBQrf04xohYqiaCiaj7RbZ1zVy1tLjDYfDr9tpcBbcNpJXiaroHGSJeuwlNLfPbjsVia7MfJuHYDpC4V7VGLZkh62yEEN4rGevRnIDBXYUcx99XAQFMmnRq3rBJtKgIUXZzjwnot0p4F5LZRuFhm73dnwWmoat3o6JGz&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXUjExMRAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMhAA&amp;sign=G0XWDpLghCfy6jvjRncSFwwFP_A1HtpKVK0FqegFim5MlgZF47czaNWOpk4suJmlBSmL5fCmVGcvt0V7kULtkg" target="_blank" rel="noopener" class="tl">退休金3500元，在长沙河西能住什么样的养老院#养老金#退休生活#为父母收藏#长沙养老#养老院</a><span class="biz-badge" style="background:#3B82F6;color:#fff;">通用获客</span></div>
-        <div class="summary">3500元退休金在长沙河西能住什么档次的养老院。</div>
-        <div class="hl-row"><span class="hl-chip">#3500元养老院实探</span> <span class="hl-chip">#河西养老院性价比</span> <span class="hl-chip">#退休金够住吗</span></div>
-        <div class="angle">💡 对比普通养老院与高端社区费用，说明储蓄分红险怎么覆盖。</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">退休金够养老吗？</span> <span class="need-chip">好养老院多少钱？</span> <span class="need-chip">怎么为父母选养老院？</span></div>
+        <div class="title-row"><a href="https://findermp.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo38Jlo5Zc024x5tg3Ktfp0jialYL2iaiadouND0TeD8CibZibX7h8alhulSC3ywXS79eQasJe9mQjKZeYg&amp;bizid=1023&amp;dotrans=0&amp;hy=SH&amp;idx=1&amp;m=&amp;uzid=7a21a&amp;X-snsvideoflag=xWT113&amp;token=2lt8WBSnjTmvfMBiaibIicnsPW0ajPAx5BF15XqMicmOFJ0JWtARU9f49icwEFUGRbxe8cRmeCSm5llrehE8NlO73DQib2Hm0fHNFOIHk6ia6nWUmky17d2mJricv5w4BbM1ia1bmFQqFnEZuDQ7nc4U1vfeR6bI1BzNuupsW9V35N5YrkNFoSdbyRgq6tf68819q6EzptZuL8PbicyfLRXN4apib3jNCPKvZatwQdL&amp;basedata=CAMSBnhXVDExMyI8CgoKBnhXVDExMxAACgoKBnhXVDExMhABCgoKBnhXVDExMRAACgoKBnhXUjExMRAACgoKBnhXUjExMhAA&amp;sign=vU-9X1k6GxbowdjYreeAg-oBf5aBL5xGVrYSQpdZfhenayWrYQbORq2IMKKJzWdnufvSEi8PjvudpsPxENmfaw" target="_blank" rel="noopener" class="tl">...构建一刻钟养老服务 打造老年人家门口的幸福。</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
+        <div class="summary">构建一刻钟养老服务圈，让老年人门口享幸福</div>
+        <div class="hl-row"><span class="hl-chip">#一刻钟养老</span> <span class="hl-chip">#家门口的幸福</span> <span class="hl-chip">#养老服务圈</span></div>
+        <div class="angle">💡 一刻钟养老圈虽好但够用吗？聊高净值养老升级</div>
+        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">社区养老能靠得住吗？</span> <span class="need-chip">高端养老需要多少钱？</span> <span class="need-chip">如何保证养老品质？</span></div>
         
-        <div class="meta-row">♥ 31 · 📅 昨天 · <span class="hot-score">🔥 24</span></div>
-      </div>
-    </div></div>
-    </div><div class="platform-section">
-      <div class="platform-name" style="color:#FF2442;">● 小红书 <span class="plat-count">(精选 1 / 共 1)</span></div>
-      <div class="item-list"><div class="item-card">
-      <div class="rank-col">1</div>
-      <div class="content-col">
-        <div class="title-row"><a href="https://www.xiaohongshu.com/explore/6a2638900000000208038531" target="_blank" rel="noopener" class="tl">我想知道年轻的时候躺平 老了干不动了没有养老金怎么办 #未来需要靠什么来养老  #提前退休的年轻人  #晚年生活方式</a><span class="biz-badge" style="background:#10B981;color:#fff;">养老</span></div>
-        <div class="summary">年轻人担忧躺平后老无所养，探讨养老钱从哪来。</div>
-        <div class="hl-row"><span class="hl-chip">#躺平养老咋办</span> <span class="hl-chip">#存钱不如买保险</span> <span class="hl-chip">#社保真的够吗</span></div>
-        <div class="angle">💡 用躺平话题切入：香港分红险如何打造终生现金流？</div>
-        <div class="needs-row"><span class="blk-label">💬 受众在问</span><span class="need-chip">现有养老金是否充足？</span> <span class="need-chip">社保与商保如何搭配？</span> <span class="need-chip">老了如何不拖累子女？</span></div>
-        
-        <div class="meta-row">♥ 2821 · 📅 4天前 · <span class="hot-score">🔥 80</span></div>
+        <div class="meta-row">♥ 118 · 📅 2天前 · <span class="hot-score">🔥 59</span></div>
       </div>
     </div></div>
     </div>

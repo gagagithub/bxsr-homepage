@@ -113,13 +113,11 @@ PLATFORM_TAG_CLASSES = {
 }
 
 # 对标账号日更监控(第二期)。抖音用 sec_uid、小红书用 user_id。
+# 2026-06-13: 按用户要求删除 5 个抖音号(深蓝保/保瓶儿/奶爸保险测评/保瓶儿养老规划/紫荆保险规划),
+#   拟换成视频号号(维港保典/紫荆保险规划/保瓶儿/花花姐说险), 但 TikHub 视频号 user_search 接口
+#   持续 400、home_page 按名解析为空, 暂无法接入, 待拿到 finder ID 再加。
 MONITOR_ACCOUNTS = [
-    {"name": "深蓝保",            "platform": "douyin",      "id": "MS4wLjABAAAAiQ4RY3tqs-dJydax0-MjYuFnEviabmS2Q5ttbsOAD38"},
-    {"name": "保瓶儿",            "platform": "douyin",      "id": "MS4wLjABAAAA_SCf-XEttYRH0bJmPmeOhnVAHbOGWhG8vU1jK3gRTO8"},
-    {"name": "奶爸保险测评",      "platform": "douyin",      "id": "MS4wLjABAAAAk8H3SHUDYbgzj7HR9RVX96ZAW0sJW7_R52QPOT_Qixs"},
     {"name": "保瓶儿聊产品",      "platform": "douyin",      "id": "MS4wLjABAAAAYVcTd31FsiRb23i2kzb28iT-YJiYxRUdtqxX4gyhNe4"},
-    {"name": "保瓶儿养老规划",    "platform": "douyin",      "id": "MS4wLjABAAAAJOfIL3zfCgjMICU7lRi1j6sl3wjAAQtJ-TYhq6NjwuZP_LInia4rmJR71ehHmgWZ"},
-    {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
     {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
     {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
 ]
@@ -1520,7 +1518,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     .insight-banner .ib-label {{ font-weight:800; color:#c2410c; margin-right:8px; }}
 
     /* 对标账号动向 */
-    .monitor-section {{ background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }}
+    .monitor-section {{ grid-column:1/-1; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:14px 18px; }}
     .monitor-title {{ font-weight:800; color:#1E2761; font-size:0.98em; margin-bottom:10px; }}
     .monitor-table {{ width:100%; border-collapse:collapse; font-size:0.85em; }}
     .monitor-table th {{ text-align:left; color:#888; font-weight:600; padding:7px 12px; border-bottom:1px solid #eef0f6; font-size:0.92em; }}
@@ -1528,7 +1526,8 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
     .monitor-table tr:hover td {{ background:#fafbff; }}
 
     /* 今日精选 */
-    .featured-section {{ background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }}
+    .featured-section {{ grid-column:1/-1; background:linear-gradient(135deg,#fffbeb,#fff); border:1.5px solid #fde68a; border-radius:14px; padding:14px 18px; }}
+    .featured-section .item-list {{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px 16px; }}
     .featured-title {{ font-weight:800; color:#b45309; font-size:1.05em; margin-bottom:10px; }}
     .feat-wrap {{ margin-bottom:4px; }}
     .feat-src {{ font-size:0.74em; color:#92590a; font-weight:700; padding:0 0 2px 34px; }}
