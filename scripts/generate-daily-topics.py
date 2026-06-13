@@ -1016,6 +1016,17 @@ def _to_int_count(v):
 
 
 def _fetch_account_posts(acc):
+    """拉单个对标账号近期作品。app/v3 等接口偶发 400, 重试到拿到作品为止(最多5次),
+    否则瞬时失败会让本来有更新的号误显示"昨日无更新"。"""
+    for attempt in range(5):
+        posts = _fetch_account_posts_once(acc)
+        if posts:
+            return posts
+        time.sleep(1.2)
+    return []
+
+
+def _fetch_account_posts_once(acc):
     """拉单个对标账号近期作品 → [{title, like, create_time, url}]。"""
     plat = acc["platform"]
     out = []
