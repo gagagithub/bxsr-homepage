@@ -33,8 +33,8 @@ DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
 DEEPSEEK_MODEL = "deepseek-v4-pro"
 
-# 3个月前的时间戳，用于过滤太旧的内容
-THREE_MONTHS_AGO = int((TODAY - timedelta(days=90)).timestamp())
+# 一周前的时间戳：关键词搜索只保留最近 7 天发布的帖子
+ONE_WEEK_AGO = int((TODAY - timedelta(days=7)).timestamp())
 
 HEADERS = {
     "Authorization": f"Bearer {TIKHUB_API_KEY}",
@@ -43,7 +43,7 @@ HEADERS = {
 
 # ── 话题/平台配置 ─────────────────────────────────────
 # 所有平台列表
-ALL_PLATFORMS = ["xigua", "bilibili", "douyin", "xiaohongshu"]
+ALL_PLATFORMS = ["wechat_channels", "xigua", "bilibili", "douyin", "xiaohongshu"]
 
 TOPICS = [
     {
@@ -80,6 +80,8 @@ TOPICS = [
 
 # 各平台筛选标准
 PLATFORM_FILTERS = {
+    # 视频号点赞量整体偏低(几十级), 门槛设低些避免误杀; 主要靠相关度+近3月+护栏
+    "wechat_channels": lambda item: item.get("like", 0) >= 10,
     "xigua":       lambda item: item.get("play", 0) >= 50000,
     "bilibili":    lambda item: item.get("play", 0) >= 10000,
     "douyin":      lambda item: item.get("like", 0) >= 200,
@@ -87,6 +89,7 @@ PLATFORM_FILTERS = {
 }
 
 PLATFORM_NAMES = {
+    "wechat_channels": "视频号",
     "xigua": "西瓜视频",
     "bilibili": "B站",
     "douyin": "抖音",
@@ -94,6 +97,7 @@ PLATFORM_NAMES = {
 }
 
 PLATFORM_COLORS = {
+    "wechat_channels": "#FA9D3B",
     "xigua": "#F04142",
     "bilibili": "#00A1D6",
     "douyin": "#1A1A1A",
@@ -101,6 +105,7 @@ PLATFORM_COLORS = {
 }
 
 PLATFORM_TAG_CLASSES = {
+    "wechat_channels": "tag-channels",
     "xigua": "tag-xigua",
     "bilibili": "tag-bili",
     "douyin": "tag-douyin",
@@ -351,6 +356,29 @@ def search_douyin(keyword):
     return items
 
 
+def _xhs_publish_ts(note):
+    """小红书搜索结果的发布时间(秒)。搜索接口大多不返 time/create_time,
+    改取 corner_tag_info 里的 'YYYY-MM-DD' 显示日期(=发布日), 兜底 update_time(毫秒)。"""
+    for tag in (note.get("corner_tag_info") or []):
+        if not isinstance(tag, dict):
+            continue
+        for s in (tag.get("text_en"), tag.get("text")):
+            if isinstance(s, str):
+                m = re.search(r"(20\d{2})-(\d{1,2})-(\d{1,2})", s)
+                if m:
+                    try:
+                        return int(datetime(int(m.group(1)), int(m.group(2)),
+                                            int(m.group(3)), tzinfo=BEIJING_TZ).timestamp())
+                    except ValueError:
+                        pass
+    for k in ("time", "create_time", "last_update_time", "update_time"):
+        v = note.get(k)
+        if v:
+            v = int(v)
+            return v // 1000 if v > 1_000_000_000_000 else v   # 毫秒→秒
+    return 0
+
+
 def search_xiaohongshu(keyword):
     """搜索小红书（App V2 接口；旧版 /xiaohongshu/app/ 于 2026-06-19 下线）"""
     data = tikhub_get("/api/v1/xiaohongshu/app_v2/search_notes", {
@@ -410,14 +438,55 @@ def search_xiaohongshu(keyword):
                 like = int(float(like))
             except ValueError:
                 like = 0
-        create_time = note.get("time", 0) or note.get("last_update_time", 0)
+        create_time = _xhs_publish_ts(note)
         if title:
             items.append({"title": title, "url": url, "play": 0, "like": like,
                           "create_time": create_time, "cid": note_id})
     return items
 
 
+def search_wechat_channels(keyword):
+    """搜索微信视频号(综合搜索)。
+    旧路径 /wechat_channels/fetch_search_ordinary, 2026-06-19 起迁 v2; 参数名是 keywords(复数)。
+    返回的 videoUrl 是腾讯 finder 直链(video/mp4, 浏览器可直接播放; 带签名当天有效),
+    用作编辑点击观看入口。接口偶发返回空, 内部重试几次。"""
+    raw_list = []
+    for attempt in range(3):
+        resp = tikhub_get("/api/v1/wechat_channels/fetch_search_ordinary", {"keywords": keyword})
+        raw_list = _find_list(resp, ("videoUrl", "title", "docID")) or []
+        if raw_list:
+            break
+        time.sleep(1.0)
+    items = []
+    for v in raw_list[:15]:
+        if not isinstance(v, dict):
+            continue
+        # 标题里带搜索高亮 <em class="highlight">..</em>, 剥掉所有标签
+        title = re.sub(r"<[^>]+>", "", v.get("title") or "").strip()
+        if not title:
+            continue
+        like = v.get("likeNum") or 0
+        if isinstance(like, str):
+            like = _to_int_count(like)
+        ct = v.get("pubTime") or v.get("createtime") or 0
+        try:
+            ct = int(ct)
+        except (ValueError, TypeError):
+            ct = 0
+        items.append({
+            "title": title,
+            "url": v.get("videoUrl") or "",          # 直链, 点开即播放
+            "play": 0,                                 # 视频号搜索不返播放量
+            "like": like,
+            "comment": 0,
+            "create_time": ct,
+            "cid": v.get("docID") or v.get("exportId") or "",
+        })
+    return items
+
+
 SEARCH_FUNCS = {
+    "wechat_channels": search_wechat_channels,
     "xigua": search_xigua,
     "bilibili": search_bilibili,
     "douyin": search_douyin,
@@ -453,9 +522,9 @@ def collect_all_data():
                 items = search_fn(kw)
                 print(f"    -> {len(items)} raw results")
                 for item in items:
-                    # 1) 最近3个月过滤
+                    # 1) 只保留最近一周的帖子(create_time 缺失也丢弃, 避免老帖混入)
                     ct = item.get("create_time", 0)
-                    if ct and ct < THREE_MONTHS_AGO:
+                    if not ct or ct < ONE_WEEK_AGO:
                         continue
                     # 2) 按平台质量标准过滤
                     if not quality_filter(item):
@@ -967,8 +1036,15 @@ def _fetch_account_posts(acc):
         for n in (_find_list((data or {}).get("data"), ("display_title", "note_id", "desc")) or []):
             if not isinstance(n, dict):
                 continue
-            il = n.get("interact_info", {}) or {}
-            lk = _to_int_count(il.get("liked_count") if il.get("liked_count") is not None else n.get("liked_count"))
+            if n.get("sticky"):   # 跳过置顶简介贴, 否则它会霸占"本批最高赞"显得不更新
+                continue
+            # ⚠ app_v2 get_user_posted_notes 把点赞放在顶层 likes 字段(interact_info 恒为 null);
+            #   旧代码读 interact_info.liked_count → 永远 0 → 小红书号不显示♥且"最高赞"失真。
+            il = n.get("interact_info") or {}
+            lk = _to_int_count(
+                n.get("likes") if n.get("likes") is not None
+                else (il.get("liked_count") or n.get("liked_count") or n.get("nice_count"))
+            )
             nid = n.get("note_id") or n.get("id") or ""
             out.append({
                 "title": n.get("display_title") or n.get("title") or "",
@@ -980,10 +1056,12 @@ def _fetch_account_posts(acc):
 
 
 def monitor_accounts():
-    """对标账号监控: 每个号近期作品 → 近7天发布数 + 本批最高赞作品。"""
+    """对标账号监控: 这些号每天都更新 → 直接列出每个号「昨天」发布的新作品(按赞排)。"""
     if not TIKHUB_API_KEY:
         return []
-    seven_ago = int((TODAY - timedelta(days=7)).timestamp())
+    yest = TODAY - timedelta(days=1)
+    yest_start = int(yest.replace(hour=0, minute=0, second=0, microsecond=0).timestamp())
+    yest_end = yest_start + 86400  # 昨日 00:00 ~ 今日 00:00(不含)
     result = []
     for acc in MONITOR_ACCOUNTS:
         try:
@@ -991,10 +1069,11 @@ def monitor_accounts():
         except Exception as e:
             print(f"  monitor {acc['name']} failed: {e}")
             posts = []
-        recent7 = sum(1 for p in posts if p["create_time"] and p["create_time"] >= seven_ago)
-        top = max(posts, key=lambda p: p["like"]) if posts else None
-        result.append({**acc, "recent7": recent7, "top": top, "total": len(posts)})
-        print(f"  monitor {acc['name']}({acc['platform']}): {len(posts)} posts, 近7天 {recent7}, top赞 {top['like'] if top else '-'}")
+        yposts = [p for p in posts
+                  if p["create_time"] and yest_start <= p["create_time"] < yest_end]
+        yposts.sort(key=lambda p: p.get("like", 0) or 0, reverse=True)
+        result.append({**acc, "yesterday": yposts})
+        print(f"  monitor {acc['name']}({acc['platform']}): 共{len(posts)}条, 昨日{len(yposts)}条")
         time.sleep(0.4)
     return result
 
@@ -1005,23 +1084,25 @@ def render_monitor_section(monitor):
     rows = ""
     for m in monitor:
         pn = {"douyin": "抖音", "xiaohongshu": "小红书"}.get(m["platform"], m["platform"])
-        top = m.get("top")
-        if top and top.get("title"):
-            t = esc(top["title"][:38])
-            tl = (f'<a href="{esc(top["url"])}" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">{t}</a>'
-                  if top.get("url") else t)
-            like_badge = (f' <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥{format_count(top["like"])}</span>'
-                          if (top.get("like") or 0) > 0 else "")
-            topcell = f'{tl}{like_badge}'
+        yposts = m.get("yesterday") or []
+        if yposts:
+            lines = []
+            for p in yposts[:5]:
+                t = esc((p.get("title") or "")[:40]) or "(无标题)"
+                tl = (f'<a href="{esc(p["url"])}" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">{t}</a>'
+                      if p.get("url") else t)
+                like_badge = (f' <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥{format_count(p["like"])}</span>'
+                              if (p.get("like") or 0) > 0 else "")
+                lines.append(f'<div style="padding:3px 0;line-height:1.4;">{tl}{like_badge}</div>')
+            cell = "".join(lines)
         else:
-            topcell = '<span style="color:#bbb;">—（接口未取到，稍后重试）</span>'
-        rows += (f'<tr><td style="white-space:nowrap;">{esc(m["name"])}</td>'
-                 f'<td style="color:#888;white-space:nowrap;">{pn}</td>'
-                 f'<td style="text-align:center;font-weight:700;">{m.get("recent7", 0)}</td>'
-                 f'<td>{topcell}</td></tr>')
-    return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向</div>'
+            cell = '<span style="color:#bbb;">昨日无更新</span>'
+        rows += (f'<tr><td style="white-space:nowrap;vertical-align:top;">{esc(m["name"])}</td>'
+                 f'<td style="color:#888;white-space:nowrap;vertical-align:top;">{pn}</td>'
+                 f'<td style="vertical-align:top;">{cell}</td></tr>')
+    return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向 · 昨日更新</div>'
             f'<table class="monitor-table"><thead><tr>'
-            f'<th>对标账号</th><th>平台</th><th>近7天发布</th><th>本批最高赞作品</th>'
+            f'<th>对标账号</th><th>平台</th><th>昨日发布作品</th>'
             f'</tr></thead><tbody>{rows}</tbody></table></div>')
 
 
