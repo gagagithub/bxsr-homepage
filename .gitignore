@@ -3,3 +3,4 @@ D:/
 sdk/
 *.tgz
 *.log
+cloudflare-worker/.wrangler/
