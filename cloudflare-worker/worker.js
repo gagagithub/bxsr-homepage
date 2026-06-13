@@ -128,7 +128,7 @@ async function searchDouyin(keyword, apiKey) {
 
 async function searchXiaohongshu(keyword, apiKey) {
   try {
-    const url = `${TIKHUB_BASE}/api/v1/xiaohongshu/app/search_notes?keyword=${encodeURIComponent(keyword)}&page=1`;
+    const url = `${TIKHUB_BASE}/api/v1/xiaohongshu/app_v2/search_notes?keyword=${encodeURIComponent(keyword)}&page=1`;
     const resp = await fetch(url, {
       headers: { Authorization: `Bearer ${apiKey}` },
     });

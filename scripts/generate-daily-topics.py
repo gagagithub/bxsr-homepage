@@ -352,8 +352,8 @@ def search_douyin(keyword):
 
 
 def search_xiaohongshu(keyword):
-    """搜索小红书（使用 App 接口）"""
-    data = tikhub_get("/api/v1/xiaohongshu/app/search_notes", {
+    """搜索小红书（App V2 接口；旧版 /xiaohongshu/app/ 于 2026-06-19 下线）"""
+    data = tikhub_get("/api/v1/xiaohongshu/app_v2/search_notes", {
         "keyword": keyword,
         "page": 1,
     })
