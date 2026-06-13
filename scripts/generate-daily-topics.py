@@ -120,7 +120,6 @@ MONITOR_ACCOUNTS = [
     {"name": "保瓶儿",            "platform": "douyin",      "id": "MS4wLjABAAAA_SCf-XEttYRH0bJmPmeOhnVAHbOGWhG8vU1jK3gRTO8"},
     {"name": "奶爸保险测评",      "platform": "douyin",      "id": "MS4wLjABAAAAk8H3SHUDYbgzj7HR9RVX96ZAW0sJW7_R52QPOT_Qixs"},
     {"name": "保瓶儿聊产品",      "platform": "douyin",      "id": "MS4wLjABAAAAYVcTd31FsiRb23i2kzb28iT-YJiYxRUdtqxX4gyhNe4"},
-    {"name": "保瓶儿养老规划",    "platform": "douyin",      "id": "MS4wLjABAAAAJOfIL3zfCgjMICU7lRi1j6sl3wjAAQtJ-TYhq6NjwuZP_LInia4rmJR71ehHmgWZ"},
     {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
     {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
     {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
@@ -1100,23 +1099,24 @@ def render_monitor_section(monitor):
         return ""
     rows = ""
     for m in monitor:
-        pn = {"douyin": "抖音", "xiaohongshu": "小红书"}.get(m["platform"], m["platform"])
         yposts = m.get("yesterday") or []
-        if yposts:
-            lines = []
-            for p in yposts[:5]:
-                t = esc((p.get("title") or "")[:40]) or "(无标题)"
-                tl = (f'<a href="{esc(p["url"])}" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">{t}</a>'
-                      if p.get("url") else t)
-                like_badge = (f' <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥{format_count(p["like"])}</span>'
-                              if (p.get("like") or 0) > 0 else "")
-                lines.append(f'<div style="padding:3px 0;line-height:1.4;">{tl}{like_badge}</div>')
-            cell = "".join(lines)
-        else:
-            cell = '<span style="color:#bbb;">昨日无更新</span>'
+        if not yposts:        # 昨日没更新的号直接不显示(只留真发了的)
+            continue
+        pn = {"douyin": "抖音", "xiaohongshu": "小红书"}.get(m["platform"], m["platform"])
+        lines = []
+        for p in yposts[:5]:
+            t = esc((p.get("title") or "")[:40]) or "(无标题)"
+            tl = (f'<a href="{esc(p["url"])}" target="_blank" rel="noopener" style="color:#1E2761;text-decoration:none;">{t}</a>'
+                  if p.get("url") else t)
+            like_badge = (f' <span style="color:#f04142;font-weight:700;white-space:nowrap;">♥{format_count(p["like"])}</span>'
+                          if (p.get("like") or 0) > 0 else "")
+            lines.append(f'<div style="padding:3px 0;line-height:1.4;">{tl}{like_badge}</div>')
+        cell = "".join(lines)
         rows += (f'<tr><td style="white-space:nowrap;vertical-align:top;">{esc(m["name"])}</td>'
                  f'<td style="color:#888;white-space:nowrap;vertical-align:top;">{pn}</td>'
                  f'<td style="vertical-align:top;">{cell}</td></tr>')
+    if not rows:              # 所有号昨日都没更新 → 整块隐藏, 不显示空表
+        return ""
     return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向 · 昨日更新</div>'
             f'<table class="monitor-table"><thead><tr>'
             f'<th>对标账号</th><th>平台</th><th>昨日发布作品</th>'
