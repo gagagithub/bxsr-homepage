@@ -119,7 +119,9 @@ PLATFORM_TAG_CLASSES = {
 
 # 对标账号日更监控(第二期)。抖音用 sec_uid(必须走 app/v3 接口才新鲜)、小红书用 user_id。
 # 2026-06-13: 曾误用 web 版抖音接口(数据滞后一周)致抖音号显示"昨日无更新", 用户误以为要删;
-#   已改 app/v3 修复, 抖音号恢复。视频号账号监控因 TikHub user_search/home_page 接口损坏暂不可行。
+#   已改 app/v3 修复, 抖音号恢复。
+# 视频号: id 直接填 sph 视频号ID 即可——脚本会用 v2/fetch_channel_id_to_username 解析成 finder
+#   username(v2_…@finder)再拉作品(旧账号搜索接口已下线); 也兼容历史已写死的 v2_…@finder。
 MONITOR_ACCOUNTS = [
     {"name": "深蓝保",            "platform": "douyin",      "id": "MS4wLjABAAAAiQ4RY3tqs-dJydax0-MjYuFnEviabmS2Q5ttbsOAD38"},
     {"name": "保瓶儿",            "platform": "douyin",      "id": "MS4wLjABAAAA_SCf-XEttYRH0bJmPmeOhnVAHbOGWhG8vU1jK3gRTO8"},
@@ -128,7 +130,7 @@ MONITOR_ACCOUNTS = [
     {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
     {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
     {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
-    # 视频号: id 存 finder username(由 sph 视频号ID 经 v2/channel_id_to_username 解析一次得到)
+    # 视频号(历史项已写死解析好的 finder username, sph 见行尾注释; 新增项直接填 sph 即可, 见末尾两行)
     {"name": "维港保典",          "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6eb811bcbd7c702ee36b0773cbba8b5e61b8176da3edc0ef800c0f1@finder"},  # sphVKL5Bfva3RK8
     {"name": "花花姐说险",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e7811cc0dcc705ed35b077162ac57d048abef06509fe4dfb2e0503@finder"},  # sphsuHpdQaLxlUs
     {"name": "月亮保琳姐",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8cae78f1cc3dcca06eb30b077710b4f76b9fff41415f11e68c61ae885@finder"},  # sphUS6ynuOCu0rK
@@ -139,6 +141,9 @@ MONITOR_ACCOUNTS = [
     {"name": "精算师京哥",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c5e28f1bcaddc903e532b077d16989e1fb99e97abe4ba78de4708814@finder"},  # sphFE7J8SCuSSiG
     {"name": "大衡白话港险",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e18b1cc7d4ca05e836b077b4de9dc5d75c2bf20bed554558077e0e@finder"},  # sphDkhP9Rg5FPXL
     {"name": "陈太储蓄规划",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e18c11c3d5cd03ef3cb0777d0f6881d2ddc79b959100ef73b12f1d@finder"},  # sphJWPnywPfTwo6
+    # ↓ 直接填 sph 视频号ID, 脚本运行时自动解析成 finder username
+    {"name": "合时储蓄规划",      "platform": "wechat_channels", "id": "sphZyTMKCHtq50F"},  # 新青年保险代理(佛山)禅城区第二分公司
+    {"name": "晨星财富规划",      "platform": "wechat_channels", "id": "sphAqXOV1MAXOLB"},  # 保险从业者(个人)·广州
 ]
 
 
@@ -1041,6 +1046,58 @@ def _fetch_account_posts(acc):
     return []
 
 
+_CHANNEL_USERNAME_MEMO = {}  # sph 视频号ID -> finder username, 本进程内只解析一次
+
+
+def _resolve_channel_username(channel_id):
+    """把 sph 视频号ID 解析成 finder username(v2_…@finder)。
+    fetch_user_videos 只认 username; 旧账号搜索接口已下线, 改用 v2/fetch_channel_id_to_username。
+    解析结果缓存到本进程; 失败返回 None(该号当天不出动向, 不影响其它号)。"""
+    if channel_id in _CHANNEL_USERNAME_MEMO:
+        return _CHANNEL_USERNAME_MEMO[channel_id]
+    uname = None
+    resp = _request_with_retry(
+        "POST", f"{TIKHUB_BASE}/api/v1/wechat_channels/v2/fetch_channel_id_to_username",
+        headers=HEADERS, json={"channel_id": channel_id, "raw": False})
+    if resp is not None:
+        try:
+            data = resp.json()
+        except Exception:
+            data = None
+        uname = _extract_finder_username(data)
+    if uname:
+        _CHANNEL_USERNAME_MEMO[channel_id] = uname
+        print(f"    resolved {channel_id} -> {uname}")
+    else:
+        print(f"    ⚠ resolve channel_id {channel_id} failed (该号今日跳过)")
+    return uname
+
+
+def _extract_finder_username(data):
+    """从 fetch_channel_id_to_username 响应里抠出 v2_…@finder。容错: 直接字段/嵌套/扫描所有字符串值。"""
+    def _ok(v):
+        return isinstance(v, str) and v.startswith("v2_") and v.endswith("@finder")
+    if _ok(data):
+        return data
+    if not isinstance(data, dict):
+        return None
+    d = data.get("data", data)
+    if _ok(d):
+        return d
+    if isinstance(d, dict):
+        for k in ("username", "user_name", "userName", "finder_username"):
+            if _ok(d.get(k)):
+                return d[k]
+        for v in d.values():                 # 兜底: 扫描值, 含再嵌一层的 dict(如 data.user.username)
+            if _ok(v):
+                return v
+            if isinstance(v, dict):
+                for vv in v.values():
+                    if _ok(vv):
+                        return vv
+    return None
+
+
 def _fetch_account_posts_once(acc):
     """拉单个对标账号近期作品 → [{title, like, create_time, url}]。"""
     plat = acc["platform"]
@@ -1085,10 +1142,14 @@ def _fetch_account_posts_once(acc):
                 "url": f"https://www.xiaohongshu.com/explore/{nid}" if nid else "",
             })
     elif plat == "wechat_channels":
-        # 视频号: id 存的是 finder username(v2_…@finder), POST v2/fetch_user_videos(账号搜索接口坏,
-        #   sph 视频号ID 已在外部用 channel_id_to_username 解析成 username 存好)。
+        # 视频号: id 可填 finder username(v2_…@finder, 历史项)或 sph 视频号ID(自动解析一次)。
+        username = acc["id"]
+        if username.startswith("sph"):
+            username = _resolve_channel_username(acc["id"])
+        if not username:
+            return out
         resp = _request_with_retry("POST", f"{TIKHUB_BASE}/api/v1/wechat_channels/v2/fetch_user_videos",
-                                   headers=HEADERS, json={"username": acc["id"], "raw": False})
+                                   headers=HEADERS, json={"username": username, "raw": False})
         data = None
         if resp is not None:
             try:
