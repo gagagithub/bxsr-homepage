@@ -144,6 +144,9 @@ MONITOR_ACCOUNTS = [
     # ↓ 直接填 sph 视频号ID, 脚本运行时自动解析成 finder username
     {"name": "合时储蓄规划",      "platform": "wechat_channels", "id": "sphZyTMKCHtq50F"},  # 新青年保险代理(佛山)禅城区第二分公司
     {"name": "晨星财富规划",      "platform": "wechat_channels", "id": "sphAqXOV1MAXOLB"},  # 保险从业者(个人)·广州
+    {"name": "雪姐财富规划",      "platform": "wechat_channels", "id": "sphmulEaC9EBavm"},  # 泰瑞保险代理有限责任公司·北京
+    {"name": "有毒有料陈葭怡",    "platform": "wechat_channels", "id": "sphsAid33VfPJVV"},  # 保险从业者(个人)·深圳
+    {"name": "有财保险咨询",      "platform": "wechat_channels", "id": "sphxJ6DJ3Rek86z"},  # 保险从业者(个人)·深圳
 ]
 
 
