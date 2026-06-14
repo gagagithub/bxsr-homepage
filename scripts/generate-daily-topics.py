@@ -126,6 +126,7 @@ MONITOR_ACCOUNTS = [
     # 视频号: id 存 finder username(由 sph 视频号ID 经 v2/channel_id_to_username 解析一次得到)
     {"name": "维港保典",          "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6eb811bcbd7c702ee36b0773cbba8b5e61b8176da3edc0ef800c0f1@finder"},  # sphVKL5Bfva3RK8
     {"name": "花花姐说险",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e7811cc0dcc705ed35b077162ac57d048abef06509fe4dfb2e0503@finder"},  # sphsuHpdQaLxlUs
+    {"name": "月亮保琳姐",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8cae78f1cc3dcca06eb30b077710b4f76b9fff41415f11e68c61ae885@finder"},  # sphUS6ynuOCu0rK
 ]
 
 
