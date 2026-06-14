@@ -123,6 +123,9 @@ MONITOR_ACCOUNTS = [
     {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
     {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
     {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
+    # 视频号: id 存 finder username(由 sph 视频号ID 经 v2/channel_id_to_username 解析一次得到)
+    {"name": "维港保典",          "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6eb811bcbd7c702ee36b0773cbba8b5e61b8176da3edc0ef800c0f1@finder"},  # sphVKL5Bfva3RK8
+    {"name": "花花姐说险",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e7811cc0dcc705ed35b077162ac57d048abef06509fe4dfb2e0503@finder"},  # sphsuHpdQaLxlUs
 ]
 
 
@@ -1068,6 +1071,34 @@ def _fetch_account_posts_once(acc):
                 "create_time": int(n.get("time", 0) or n.get("create_time", 0) or 0),
                 "url": f"https://www.xiaohongshu.com/explore/{nid}" if nid else "",
             })
+    elif plat == "wechat_channels":
+        # 视频号: id 存的是 finder username(v2_…@finder), POST v2/fetch_user_videos(账号搜索接口坏,
+        #   sph 视频号ID 已在外部用 channel_id_to_username 解析成 username 存好)。
+        resp = _request_with_retry("POST", f"{TIKHUB_BASE}/api/v1/wechat_channels/v2/fetch_user_videos",
+                                   headers=HEADERS, json={"username": acc["id"], "raw": False})
+        data = None
+        if resp is not None:
+            try:
+                data = resp.json()
+            except Exception:
+                data = None
+        for v in (_find_list((data or {}).get("data"), ("create_time", "like_count", "id")) or []):
+            if not isinstance(v, dict):
+                continue
+            # 视频号常无标题(title 多为 [{"shortTitle":""}] 结构), 尽力取短标题, 没有则占位
+            cap = ""
+            t = v.get("title")
+            if isinstance(t, list) and t and isinstance(t[0], dict):
+                cap = (t[0].get("shortTitle") or "").strip()
+            elif isinstance(t, str):
+                cap = t.strip()
+            media = v.get("media") if isinstance(v.get("media"), dict) else {}
+            out.append({
+                "title": cap or "🎬 视频作品",
+                "like": v.get("like_count", 0) or 0,
+                "create_time": int(v.get("create_time", 0) or 0),
+                "url": media.get("url", "") or "",
+            })
     return out
 
 
@@ -1102,7 +1133,7 @@ def render_monitor_section(monitor):
         yposts = m.get("yesterday") or []
         if not yposts:        # 昨日没更新的号直接不显示(只留真发了的)
             continue
-        pn = {"douyin": "抖音", "xiaohongshu": "小红书"}.get(m["platform"], m["platform"])
+        pn = {"douyin": "抖音", "xiaohongshu": "小红书", "wechat_channels": "视频号"}.get(m["platform"], m["platform"])
         lines = []
         for p in yposts[:5]:
             t = esc((p.get("title") or "")[:40]) or "(无标题)"
