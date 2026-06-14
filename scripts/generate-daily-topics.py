@@ -88,6 +88,11 @@ PLATFORM_FILTERS = {
     "xiaohongshu": lambda item: item.get("like", 0) >= 200,
 }
 
+# ⭐ 今日精选额外门槛(只约束精选, 不影响下方各平台卡片):
+#   ① 点赞 ≥ 200(含视频号, 低赞不进精选);② 发布时间 ≤ 2 天内(最好昨天)。
+FEATURED_MIN_LIKE = 200
+FEATURED_MAX_DAYS = 2
+
 PLATFORM_NAMES = {
     "wechat_channels": "视频号",
     "xigua": "西瓜视频",
@@ -1155,14 +1160,31 @@ def render_monitor_section(monitor):
             f'</tr></thead><tbody>{rows}</tbody></table></div>')
 
 
+def _is_fresh(item, max_days):
+    """发布时间在 max_days 天内(含今天/昨天)才算新鲜; 无日期一律视为不新鲜。"""
+    ts = item.get("create_time", 0) or 0
+    if not ts:
+        return False
+    try:
+        dt = datetime.fromtimestamp(ts, BEIJING_TZ)
+    except (OSError, ValueError, OverflowError):
+        return False
+    return 0 <= (TODAY - dt).days <= max_days
+
+
 def pick_featured(data, n=6):
-    """全局精选: 排除『不建议』, 业务相关度优先(港险/分红险/养老) + 热度, 取 top n。"""
+    """全局精选: 只收『发布≤2天内 + 点赞≥200』且非『不建议』的爆款,
+    业务相关度优先(港险/分红险/养老) + 热度, 取 top n。"""
     cands = []
     for topic in data:
         for plat, items in topic.get("platforms", {}).items():
             for it in items:
                 if it.get("biz_relevance") == "不建议" or not it.get("title"):
                     continue
+                if (it.get("like", 0) or 0) < FEATURED_MIN_LIKE:
+                    continue  # 低赞(如视频号 20 赞)不进精选
+                if not _is_fresh(it, FEATURED_MAX_DAYS):
+                    continue  # 只要近 2 天的新鲜内容
                 cands.append((topic["name"], plat, it))
     pri = {"港险": 3, "分红险": 3, "养老": 2, "通用获客": 1}
     cands.sort(key=lambda x: (pri.get(x[2].get("biz_relevance"), 0), x[2].get("hotness_score", 0) or 0), reverse=True)
