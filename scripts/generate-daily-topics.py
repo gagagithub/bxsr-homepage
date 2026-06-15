@@ -147,6 +147,8 @@ MONITOR_ACCOUNTS = [
     {"name": "雪姐财富规划",      "platform": "wechat_channels", "id": "sphmulEaC9EBavm"},  # 泰瑞保险代理有限责任公司·北京
     {"name": "有毒有料陈葭怡",    "platform": "wechat_channels", "id": "sphsAid33VfPJVV"},  # 保险从业者(个人)·深圳
     {"name": "有财保险咨询",      "platform": "wechat_channels", "id": "sphxJ6DJ3Rek86z"},  # 保险从业者(个人)·深圳
+    {"name": "V姐财富规划",       "platform": "wechat_channels", "id": "sphImCKCy4ghh4T"},  # 保险从业者(个人)·广东(资料北京); 原"Misa储蓄规划"2026-06-09改名
+    {"name": "文琳很靠谱",        "platform": "wechat_channels", "id": "sphVlZQfmm6PhqX"},  # 保险从业者(个人)·四川成都
 ]
 
 
