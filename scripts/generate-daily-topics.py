@@ -1222,6 +1222,9 @@ def render_monitor_section(monitor):
                           if (p.get("like") or 0) > 0 else "")
             lines.append(f'<div style="padding:3px 0;line-height:1.4;">{tl}{like_badge}</div>')
         cell = "".join(lines)
+        # 视频号链接是腾讯当天有效的签名直链(隔天失效), 加灰字提示避免被误判为坏链
+        if m["platform"] == "wechat_channels" and any(p.get("url") for p in yposts[:5]):
+            cell += '<div style="color:#bbb;font-size:11px;padding-top:2px;line-height:1.3;">🕐 视频号链接仅当天有效，请当天点开</div>'
         rows += (f'<tr><td style="white-space:nowrap;vertical-align:top;">{esc(m["name"])}</td>'
                  f'<td style="color:#888;white-space:nowrap;vertical-align:top;">{pn}</td>'
                  f'<td style="vertical-align:top;">{cell}</td></tr>')
