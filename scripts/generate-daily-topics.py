@@ -1172,11 +1172,19 @@ def _fetch_account_posts_once(acc):
             elif isinstance(t, str):
                 cap = t.strip()
             media = v.get("media") if isinstance(v.get("media"), dict) else {}
+            # 视频号 CDN 链接做了防盗链: 裸 url(无 token)直接打开会撞防盗链 → ERR_INVALID_RESPONSE。
+            # 必须用 full_url(已拼好)或 url+url_token。见 TikHub 文档 docs.tikhub.io/472974842e0。
+            # 只有裸 url、拿不到 token 时, 宁可不挂链(返回空 → 渲染成不可点文字), 也不挂死链。
+            vurl = (media.get("full_url") or "").strip()
+            if not vurl:
+                u = (media.get("url") or "").strip()
+                tok = (media.get("url_token") or "").strip()
+                vurl = (u + tok) if (u and tok) else ""
             out.append({
                 "title": cap or "🎬 视频作品",
                 "like": v.get("like_count", 0) or 0,
                 "create_time": int(v.get("create_time", 0) or 0),
-                "url": media.get("url", "") or "",
+                "url": vurl,
             })
     return out
 
