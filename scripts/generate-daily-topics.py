@@ -128,25 +128,18 @@ MONITOR_ACCOUNTS = [
     {"name": "奶爸保险测评",      "platform": "douyin",      "id": "MS4wLjABAAAAk8H3SHUDYbgzj7HR9RVX96ZAW0sJW7_R52QPOT_Qixs"},
     {"name": "保瓶儿聊产品",      "platform": "douyin",      "id": "MS4wLjABAAAAYVcTd31FsiRb23i2kzb28iT-YJiYxRUdtqxX4gyhNe4"},
     {"name": "紫荆保险规划",      "platform": "douyin",      "id": "MS4wLjABAAAAM30hondWMZnmUF7AX9X8Tl26NIJGAwF0l_l1zd2vFaE"},
+    {"name": "维港保典",          "platform": "douyin",      "id": "MS4wLjABAAAATyq0h4e88MYfWYL-RYuugJfvx72-U0Hux3Ys_U81EOg"},  # 2026-06-19 从视频号改抖音
     {"name": "Joy张老师保险规划", "platform": "xiaohongshu", "id": "60c07116000000000100abce"},
     {"name": "Mo姐财经",          "platform": "xiaohongshu", "id": "56cd13dd84edcd1ee0154361"},
     # 视频号(历史项已写死解析好的 finder username, sph 见行尾注释; 新增项直接填 sph 即可, 见末尾两行)
-    {"name": "维港保典",          "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6eb811bcbd7c702ee36b0773cbba8b5e61b8176da3edc0ef800c0f1@finder"},  # sphVKL5Bfva3RK8
     {"name": "花花姐说险",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e7811cc0dcc705ed35b077162ac57d048abef06509fe4dfb2e0503@finder"},  # sphsuHpdQaLxlUs
     {"name": "月亮保琳姐",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8cae78f1cc3dcca06eb30b077710b4f76b9fff41415f11e68c61ae885@finder"},  # sphUS6ynuOCu0rK
-    {"name": "domi爱搞钱",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c4ea8d11c2d2cd04ea3db077df0e4463a802030d1b1796d31b5038a3@finder"},  # sphmRHsllk8DZy8
-    {"name": "domi理财规划",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8cae78e18c7ddc906e833b077d6b4e80ce83dc695b513e43bf90599bf@finder"},  # sphSJ21PqwVFfcH
     {"name": "诚安保险指南针",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c5e68018c4ddcd02eb3db077abd72881c4d485531fcef92f2636c449@finder"},  # sphzPGlYY0KTzO3
     {"name": "鑫姐聊储蓄",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e4881dc3d7cd0de437b077b3ee29077b6f583eb13c05191133d799@finder"},  # sphR6z4LtTprC3N
     {"name": "精算师京哥",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c5e28f1bcaddc903e532b077d16989e1fb99e97abe4ba78de4708814@finder"},  # sphFE7J8SCuSSiG
-    {"name": "大衡白话港险",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e18b1cc7d4ca05e836b077b4de9dc5d75c2bf20bed554558077e0e@finder"},  # sphDkhP9Rg5FPXL
-    {"name": "陈太储蓄规划",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e18c11c3d5cd03ef3cb0777d0f6881d2ddc79b959100ef73b12f1d@finder"},  # sphJWPnywPfTwo6
     # ↓ 直接填 sph 视频号ID, 脚本运行时自动解析成 finder username
     {"name": "合时储蓄规划",      "platform": "wechat_channels", "id": "sphZyTMKCHtq50F"},  # 新青年保险代理(佛山)禅城区第二分公司
     {"name": "晨星财富规划",      "platform": "wechat_channels", "id": "sphAqXOV1MAXOLB"},  # 保险从业者(个人)·广州
-    {"name": "雪姐财富规划",      "platform": "wechat_channels", "id": "sphmulEaC9EBavm"},  # 泰瑞保险代理有限责任公司·北京
-    {"name": "有毒有料陈葭怡",    "platform": "wechat_channels", "id": "sphsAid33VfPJVV"},  # 保险从业者(个人)·深圳
-    {"name": "有财保险咨询",      "platform": "wechat_channels", "id": "sphxJ6DJ3Rek86z"},  # 保险从业者(个人)·深圳
     {"name": "V姐财富规划",       "platform": "wechat_channels", "id": "sphImCKCy4ghh4T"},  # 保险从业者(个人)·广东(资料北京); 原"Misa储蓄规划"2026-06-09改名
     {"name": "文琳很靠谱",        "platform": "wechat_channels", "id": "sphVlZQfmm6PhqX"},  # 保险从业者(个人)·四川成都
 ]

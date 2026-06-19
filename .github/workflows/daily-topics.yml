@@ -44,3 +44,22 @@ jobs:
           DATE=$(TZ='Asia/Shanghai' date +%Y-%m-%d)
           git diff --staged --quiet || git commit -m "auto: 每日热门话题 ${DATE}"
           git push
+
+      - name: Push HTML to production (HTTPS POST, token-auth)
+        env:
+          TOPIC_POOL_UPLOAD_TOKEN: ${{ secrets.TOPIC_POOL_UPLOAD_TOKEN }}
+        run: |
+          if [ -z "${TOPIC_POOL_UPLOAD_TOKEN}" ]; then
+            echo "::error::缺少 secret TOPIC_POOL_UPLOAD_TOKEN —— 在 GitHub 仓库 Settings → Secrets 添加后重试"
+            exit 1
+          fi
+          # 内地服务器直连 raw.githubusercontent.com 常超时(拉模式会卡在旧缓存不更新),
+          # 故由 Action 反向推送: GitHub→内地服务器入站方向可靠。走 HTTPS(214club.com.cn 证书有效),
+          # 令牌仅授权覆盖选题池 HTML, 服务端 .token 校验, 落本地副本并即时刷新内存缓存。
+          RESP=$(curl -sS --max-time 60 \
+            -F "token=${TOPIC_POOL_UPLOAD_TOKEN}" \
+            -F "file=@${GITHUB_WORKSPACE}/daily-topics.html" \
+            https://214club.com.cn/creation/topicPoolUpload)
+          echo "server response: ${RESP}"
+          echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
+          echo "✓ 已推送今日选题池 HTML 到生产"
