@@ -1071,6 +1071,34 @@ def _resolve_channel_username(channel_id):
     return uname
 
 
+_CHANNEL_SHARE_MEMO = {}  # object_id -> https://weixin.qq.com/sph/ 永久短链, 本进程内只取一次
+
+
+def _get_channel_share_url(object_id):
+    """把视频号作品 object_id(纯数字, 来自账号作品/搜索结果的 id 字段)换成永久微信分享短链
+    (https://weixin.qq.com/sph/XXXX, 手机微信点开即播)。替代旧的 media.full_url ——
+    那是腾讯防盗链 + 加密文件, 隔天失效且浏览器播不了。失败返回 ""(渲染成不可点文字)。
+    ⚠ 每次调用是计费请求, 故只对真正要展示的作品调(见 monitor_accounts 里只取昨日 top5)。"""
+    object_id = str(object_id or "").strip()
+    if not object_id or not object_id.isdigit():
+        return ""
+    if object_id in _CHANNEL_SHARE_MEMO:
+        return _CHANNEL_SHARE_MEMO[object_id]
+    url = ""
+    resp = _request_with_retry(
+        "POST", f"{TIKHUB_BASE}/api/v1/wechat_channels/v2/fetch_video_share_url",
+        headers=HEADERS, json={"object_id": object_id, "raw": False})
+    if resp is not None:
+        try:
+            su = ((resp.json() or {}).get("data") or {}).get("share_url") or ""
+        except Exception:
+            su = ""
+        if isinstance(su, str) and su.startswith("http"):
+            url = su.strip()
+    _CHANNEL_SHARE_MEMO[object_id] = url
+    return url
+
+
 def _extract_finder_username(data):
     """从 fetch_channel_id_to_username 响应里抠出 v2_…@finder。容错: 直接字段/嵌套/扫描所有字符串值。"""
     def _ok(v):
@@ -1164,20 +1192,15 @@ def _fetch_account_posts_once(acc):
                 cap = (t[0].get("shortTitle") or "").strip()
             elif isinstance(t, str):
                 cap = t.strip()
-            media = v.get("media") if isinstance(v.get("media"), dict) else {}
-            # 视频号 CDN 链接做了防盗链: 裸 url(无 token)直接打开会撞防盗链 → ERR_INVALID_RESPONSE。
-            # 必须用 full_url(已拼好)或 url+url_token。见 TikHub 文档 docs.tikhub.io/472974842e0。
-            # 只有裸 url、拿不到 token 时, 宁可不挂链(返回空 → 渲染成不可点文字), 也不挂死链。
-            vurl = (media.get("full_url") or "").strip()
-            if not vurl:
-                u = (media.get("url") or "").strip()
-                tok = (media.get("url_token") or "").strip()
-                vurl = (u + tok) if (u and tok) else ""
+            # ⚠ media.full_url(wxapp.tc.qq.com + token)是防盗链 + 加密文件, 隔天失效且浏览器播不了。
+            # 改用永久微信分享短链(weixin.qq.com/sph/): 此处先留下 object_id(v["id"]),
+            # url 暂空; 到 monitor_accounts 里只对"昨日要展示的 top5"作品再换短链(省计费调用)。
             out.append({
                 "title": cap or "🎬 视频作品",
                 "like": v.get("like_count", 0) or 0,
                 "create_time": int(v.get("create_time", 0) or 0),
-                "url": vurl,
+                "url": "",
+                "object_id": str(v.get("id") or "").strip(),  # 视频号: 延后换分享短链用
             })
     return out
 
@@ -1199,6 +1222,12 @@ def monitor_accounts():
         yposts = [p for p in posts
                   if p["create_time"] and yest_start <= p["create_time"] < yest_end]
         yposts.sort(key=lambda p: p.get("like", 0) or 0, reverse=True)
+        # 视频号作品到这里 url 还是空, 只带 object_id; 仅给真正会展示的昨日 top5 换永久微信短链
+        # (weixin.qq.com/sph/), 省计费调用。抖音/小红书的 url 在抓取时已就绪, 不动。
+        if acc["platform"] == "wechat_channels":
+            for p in yposts[:5]:
+                if not p.get("url") and p.get("object_id"):
+                    p["url"] = _get_channel_share_url(p["object_id"])
         result.append({**acc, "yesterday": yposts})
         print(f"  monitor {acc['name']}({acc['platform']}): 共{len(posts)}条, 昨日{len(yposts)}条")
         time.sleep(0.4)
@@ -1223,9 +1252,7 @@ def render_monitor_section(monitor):
                           if (p.get("like") or 0) > 0 else "")
             lines.append(f'<div style="padding:3px 0;line-height:1.4;">{tl}{like_badge}</div>')
         cell = "".join(lines)
-        # 视频号链接是腾讯当天有效的签名直链(隔天失效), 加灰字提示避免被误判为坏链
-        if m["platform"] == "wechat_channels" and any(p.get("url") for p in yposts[:5]):
-            cell += '<div style="color:#bbb;font-size:11px;padding-top:2px;line-height:1.3;">🕐 视频号链接仅当天有效，请当天点开</div>'
+        # 视频号链接已改用永久微信分享短链(weixin.qq.com/sph/), 不再隔天失效, 去掉旧提示。
         rows += (f'<tr><td style="white-space:nowrap;vertical-align:top;">{esc(m["name"])}</td>'
                  f'<td style="color:#888;white-space:nowrap;vertical-align:top;">{pn}</td>'
                  f'<td style="vertical-align:top;">{cell}</td></tr>')
