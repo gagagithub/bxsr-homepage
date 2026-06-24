@@ -142,6 +142,14 @@ MONITOR_ACCOUNTS = [
     {"name": "晨星财富规划",      "platform": "wechat_channels", "id": "sphAqXOV1MAXOLB"},  # 保险从业者(个人)·广州
     {"name": "V姐财富规划",       "platform": "wechat_channels", "id": "sphImCKCy4ghh4T"},  # 保险从业者(个人)·广东(资料北京); 原"Misa储蓄规划"2026-06-09改名
     {"name": "文琳很靠谱",        "platform": "wechat_channels", "id": "sphVlZQfmm6PhqX"},  # 保险从业者(个人)·四川成都
+    # ↓ 2026-06-24 重新关注: 6-19 曾取关的7个视频号, 用户要求加回监控(沿用历史 finder username/sph ID)
+    {"name": "domi爱搞钱",        "platform": "wechat_channels", "id": "v2_060000231003b20faec8c4ea8d11c2d2cd04ea3db077df0e4463a802030d1b1796d31b5038a3@finder"},  # sphmRHsllk8DZy8
+    {"name": "domi理财规划",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8cae78e18c7ddc906e833b077d6b4e80ce83dc695b513e43bf90599bf@finder"},  # sphSJ21PqwVFfcH
+    {"name": "大衡白话港险",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e18b1cc7d4ca05e836b077b4de9dc5d75c2bf20bed554558077e0e@finder"},  # sphDkhP9Rg5FPXL
+    {"name": "陈太储蓄规划",      "platform": "wechat_channels", "id": "v2_060000231003b20faec8c6e18c11c3d5cd03ef3cb0777d0f6881d2ddc79b959100ef73b12f1d@finder"},  # sphJWPnywPfTwo6
+    {"name": "雪姐财富规划",      "platform": "wechat_channels", "id": "sphmulEaC9EBavm"},  # 泰瑞保险代理有限责任公司·北京
+    {"name": "有毒有料陈葭怡",    "platform": "wechat_channels", "id": "sphsAid33VfPJVV"},  # 保险从业者(个人)·深圳
+    {"name": "有财保险咨询",      "platform": "wechat_channels", "id": "sphxJ6DJ3Rek86z"},  # 保险从业者(个人)·深圳
 ]
 
 
