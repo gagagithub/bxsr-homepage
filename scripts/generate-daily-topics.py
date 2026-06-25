@@ -150,6 +150,8 @@ MONITOR_ACCOUNTS = [
     {"name": "雪姐财富规划",      "platform": "wechat_channels", "id": "sphmulEaC9EBavm"},  # 泰瑞保险代理有限责任公司·北京
     {"name": "有毒有料陈葭怡",    "platform": "wechat_channels", "id": "sphsAid33VfPJVV"},  # 保险从业者(个人)·深圳
     {"name": "有财保险咨询",      "platform": "wechat_channels", "id": "sphxJ6DJ3Rek86z"},  # 保险从业者(个人)·深圳
+    # ↓ 2026-06-25 新增
+    {"name": "老冯保险规划",      "platform": "wechat_channels", "id": "sphvYsdljenLuEX"},  # 广东携安保险代理有限公司禅城季华路分公司·广东深圳
 ]
 
 
