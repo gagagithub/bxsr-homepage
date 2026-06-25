@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
+<title>财经晨报 · 2026-06-25 · 保心上人</title>
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root{
+    --navy:#0b2552; --navy2:#123b78; --blue:#1769c0; --sky:#9ecbff;
+    --up:#d92d2d; --down:#13935a; --flat:#6b7689;
+    --ink:#16233d; --muted:#6b7689; --line:#e6ecf5; --bg:#eef2f8; --card:#fff;
+    --gold:#c79a4b;
+  }
+  html,body{ font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif; color:var(--ink); background:var(--bg); line-height:1.6; }
+  .up{ color:var(--up); } .down{ color:var(--down); } .flat{ color:var(--flat); }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:520px; margin:0 auto; background:var(--bg); min-height:100vh; padding-bottom:30px; }
+
+  /* HEADER */
+  .header{ background:linear-gradient(135deg,#08204b 0%,#123b78 55%,#1a5bb0 100%); color:#fff; padding:20px 20px 22px; position:relative; overflow:hidden; }
+  .header::after{ content:""; position:absolute; right:-40px; top:-30px; width:180px; height:180px; background:radial-gradient(circle,rgba(158,203,255,.25),transparent 70%); }
+  .brandbar{ display:flex; align-items:center; gap:10px; position:relative; z-index:2; }
+  .logo{ width:34px; height:34px; border:2px solid rgba(255,255,255,.85); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; background:rgba(255,255,255,.08); }
+  .bname{ font-size:15px; font-weight:800; letter-spacing:2px; }
+  .bsub{ font-size:9.5px; letter-spacing:2px; color:#aecbf0; margin-top:1px; }
+  .upd{ margin-left:auto; font-size:11px; background:rgba(255,255,255,.16); padding:4px 10px; border-radius:20px; color:#dbe8fb; }
+  h1.title{ font-size:33px; font-weight:900; letter-spacing:3px; margin-top:16px; position:relative; z-index:2; }
+  h1.title .em{ font-size:27px; }
+  .meta{ margin-top:9px; font-size:13px; color:#cfe0fa; position:relative; z-index:2; }
+  .meta b{ color:#fff; }
+  .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
+
+  /* TREND */
+  .trend{ margin:14px; background:#fff; border-left:4px solid var(--gold); border-radius:10px; padding:13px 15px; box-shadow:0 3px 12px rgba(20,50,110,.06); font-size:14.5px; line-height:1.65; }
+  .trend .lab{ color:var(--gold); font-weight:800; margin-right:6px; }
+  .trend b{ color:var(--navy); }
+
+  /* MARKET STRIP */
+  .sec-lab{ margin:18px 14px 9px; font-size:13px; font-weight:800; color:var(--navy2); letter-spacing:1px; display:flex; align-items:center; gap:6px; }
+  .sec-lab::before{ content:""; width:4px; height:14px; background:var(--blue); border-radius:2px; }
+  .idx-row{ display:flex; gap:9px; padding:0 14px; }
+  .idx{ flex:1; background:#fff; border-radius:11px; padding:11px 10px; box-shadow:0 3px 10px rgba(20,50,110,.06); border:1px solid var(--line); text-align:center; }
+  .idx .n{ font-size:11px; color:var(--navy); font-weight:700; }
+  .idx .p{ font-size:18px; font-weight:900; margin-top:5px; letter-spacing:-.3px; }
+  .idx .d{ font-size:13.5px; font-weight:800; margin-top:2px; }
+  .idx .y{ font-size:10.5px; color:var(--muted); margin-top:3px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; padding:11px 14px 2px; }
+  .chip{ background:#fff; border:1px solid var(--line); border-radius:9px; padding:8px 11px; box-shadow:0 2px 7px rgba(20,50,110,.04); flex:1 1 calc(50% - 4px); min-width:calc(50% - 4px); }
+  .chip .l{ font-size:11px; color:var(--muted); }
+  .chip .v{ font-size:15px; font-weight:800; margin-top:2px; display:flex; align-items:baseline; gap:6px; }
+  .chip .v .nt{ font-size:10.5px; font-weight:700; }
+
+  /* HIGHLIGHTS */
+  .hl{ margin:8px 14px 0; background:linear-gradient(135deg,#0e2f63,#1a59ab); border-radius:13px; padding:15px 16px; box-shadow:0 5px 16px rgba(20,50,110,.16); }
+  .hl .ht{ color:#fff; font-size:15px; font-weight:800; letter-spacing:1px; margin-bottom:11px; display:flex; align-items:center; gap:7px; }
+  .hl ul{ list-style:none; }
+  .hl li{ position:relative; padding:8px 0 8px 22px; border-top:1px solid rgba(255,255,255,.12); color:#eaf2ff; font-size:14px; line-height:1.6; }
+  .hl li:first-child{ border-top:none; }
+  .hl li::before{ content:"★"; position:absolute; left:0; top:8px; color:var(--gold); font-size:13px; }
+  .hl li b{ color:#ffd9a0; }
+  .hl li b.hsrc{ color:#ffd9a0; font-weight:800; }
+  .hl li .lk{ color:var(--sky); font-size:11px; margin-left:3px; }
+
+  /* SECTIONS */
+  .sec{ margin:16px 14px 0; background:#fff; border-radius:13px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
+  .sec .sh{ display:flex; align-items:center; gap:10px; padding:13px 15px; background:linear-gradient(90deg,#f2f7fd,#fff); border-bottom:1px solid var(--line); }
+  .sec .sh .no{ font-size:22px; font-weight:900; color:var(--navy2); font-style:italic; letter-spacing:-1px; min-width:34px; }
+  .sec .sh .ic{ font-size:17px; }
+  .sec .sh .nm{ font-size:16px; font-weight:800; color:var(--navy); letter-spacing:1px; }
+  .sec ol{ list-style:none; counter-reset:item; padding:7px 16px 13px; }
+  .sec li{ counter-increment:item; padding:10px 0; border-bottom:1px dashed #eef2f8; font-size:14px; line-height:1.74; text-align:justify; color:#2c3a52; }
+  .sec li:last-child{ border-bottom:none; }
+  .sec li::before{ content:counter(item) "、"; color:#c8801f; font-weight:900; font-style:italic; margin-right:1px; }
+  .sec li b.src{ color:#c8801f; font-weight:800; font-style:normal; }
+  .sec li b{ color:var(--up); font-weight:800; }
+  .sec li .lk{ color:var(--blue); font-size:11px; white-space:nowrap; margin-left:2px; opacity:.85; }
+
+  /* REVIEW */
+  .review{ margin:18px 14px 0; background:#fff; border:1px solid var(--line); border-left:4px solid var(--navy2); border-radius:13px; padding:15px 16px; box-shadow:0 3px 12px rgba(20,50,110,.06); }
+  .review .rh{ font-size:15px; font-weight:800; color:var(--navy); letter-spacing:1px; margin-bottom:10px; }
+  .review p{ font-size:14px; line-height:1.78; color:#33425c; margin-top:9px; text-align:justify; }
+  .review p:first-of-type{ margin-top:0; }
+  .review p b{ color:var(--navy2); }
+
+  /* INSURE */
+  .ins{ margin:18px 14px 0; background:linear-gradient(135deg,#f6fbf7,#eef7f1); border:1px solid #cfe7d8; border-radius:13px; padding:15px 16px; }
+  .ins .it{ font-size:15px; font-weight:800; color:#147a4a; margin-bottom:11px; display:flex; align-items:center; gap:7px; }
+  .ins .row{ display:flex; gap:10px; padding:9px 0; border-top:1px solid #d8ecdf; font-size:13.5px; line-height:1.6; color:#244; }
+  .ins .row:first-of-type{ border-top:none; }
+  .ins .row .e{ font-size:18px; flex-shrink:0; }
+  .ins .row b{ color:#147a4a; }
+
+  /* FOOTER */
+  .footer{ margin:22px 14px 0; padding:15px 16px; background:var(--navy); border-radius:13px; color:#cfe0fa; }
+  .footer .fb{ font-size:13px; font-weight:800; color:#fff; letter-spacing:2px; }
+  .footer .fs{ font-size:11px; color:var(--sky); margin-top:3px; letter-spacing:1px; }
+  .footer .disc{ font-size:10.5px; color:#8fa9d0; margin-top:10px; line-height:1.6; border-top:1px solid rgba(255,255,255,.12); padding-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brandbar">
+      <div class="logo">保</div>
+      <div>
+        <div class="bname">保心上人</div>
+        <div class="bsub">PROTECT · WEALTH · ADVISORY</div>
+      </div>
+      <div class="upd">每日 07:30 自动更新</div>
+    </div>
+    <h1 class="title"><span class="em">📰</span> 财经晨报</h1>
+    <div class="meta">📅 <b>2026-06-25</b> ｜ 数据截至前一交易日（2026-06-24）收盘 · 全球市场 + 内地财经</div>
+    <div class="slogan">保心上人 · 让天下人老有所养</div>
+  </div>
+
+  
+  <div class="trend"><span class="lab">🔥 今日风向</span>美光财报引爆全球存储芯片行情，A股存储龙头齐创新高；委内瑞拉地震、公积金改革等事件亦需关注。</div>
+  
+
+  <!-- 行情数据 -->
+  <div class="sec-lab">行情数据 · 隔夜全球</div>
+  <div class="idx-row">
+    
+    <div class="idx">
+      <div class="n">道琼斯指数</div>
+      <div class="p">51,848.90</div>
+      <div class="d up">▲ +0.35%</div>
+      <div class="y">YTD +7.88%</div>
+    </div>
+    
+    <div class="idx">
+      <div class="n">标普500指数</div>
+      <div class="p">7,358.22</div>
+      <div class="d down">▼ -0.10%</div>
+      <div class="y">YTD +7.49%</div>
+    </div>
+    
+    <div class="idx">
+      <div class="n">纳斯达克指数</div>
+      <div class="p">25,476.63</div>
+      <div class="d down">▼ -0.43%</div>
+      <div class="y">YTD +9.61%</div>
+    </div>
+    
+  </div>
+  <div class="chips">
+    
+    <div class="chip">
+      <div class="l">中国10年国债</div>
+      <div class="v">1.7454%<span class="nt up">+0.2bp</span></div>
+    </div>
+    
+    <div class="chip">
+      <div class="l">LPR 1Y/5Y+</div>
+      <div class="v">3.00/3.50%<span class="nt flat">月度</span></div>
+    </div>
+    
+    <div class="chip">
+      <div class="l">美债10年</div>
+      <div class="v">4.410%<span class="nt down">-9.0bp</span></div>
+    </div>
+    
+    <div class="chip">
+      <div class="l">人民币 USD/CNY</div>
+      <div class="v">6.7970<span class="nt flat">中行</span></div>
+    </div>
+    
+    <div class="chip">
+      <div class="l">WTI原油</div>
+      <div class="v">$69.14<span class="nt down">-1.71%</span></div>
+    </div>
+    
+    <div class="chip">
+      <div class="l">COMEX黄金</div>
+      <div class="v">$3,988.63<span class="nt down">-0.50%</span></div>
+    </div>
+    
+  </div>
+
+  <!-- 今日关注 -->
+  
+  <div class="hl">
+    <div class="ht">⭐ 今日关注 · 头条精选</div>
+    <ul>
+      
+      <li><b class="hsrc">美光科技</b>　美光科技发布2026财年第三财季业绩，收入<b>414.6亿美元</b>，同比增<b>345.7%</b>；净利润<b>282.4亿美元</b>，同比增<b>1398.3%</b>；毛利率<b>84.9%</b>。预计第四财季营收<b>490亿至510亿美元</b>，超市场预期。美光CEO表示，供需紧张格局预计持续至<b>2027年</b>之后。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782554215.html" target="_blank">详情›</a></li>
+      
+      <li><b class="hsrc">国家能源局</b>　截至2026年5月底，我国发电装机达<b>40.1亿千瓦</b>，规模居全球首位。煤电装机占比从2010年的<b>61%</b>降至<b>32%</b>；非化石能源装机占比由<b>25%</b>提升至<b>62%</b>；可再生能源装机占比由<b>24%</b>提升至<b>61%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782766239.html" target="_blank">详情›</a></li>
+      
+      <li><b class="hsrc">A股存储龙头</b>　6月25日，兆易创新、德明利、佰维存储、香农芯创、普冉股份、江波龙等六只市值超千亿的存储龙头股股价均创历史新高。消息面上，美光科技财报超预期，存储芯片供应紧缺或持续至<b>2027年</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782533472.html" target="_blank">详情›</a></li>
+      
+      <li><b class="hsrc">委内瑞拉</b>　委内瑞拉首都加拉加斯附近发生强震，米兰达州查考市市长称已救出<b>18名</b>受困伤者，<b>500余名</b>政府工作人员正在救援。委内瑞拉代总统宣布全国停课，暂停所有非必要活动。美国地质调查局初步预估遇难人数可能在<b>1万至10万</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782583995.html" target="_blank">详情›</a></li>
+      
+      <li><b class="hsrc">住建部</b>　《全国住房公积金2024年年度报告》显示，2024年公积金实缴人数<b>1.76亿</b>，全年提取人数<b>8127万人</b>，占实缴人数的<b>46.1%</b>；提取率（提取额占缴存额）为<b>76.15%</b>，使用集中在少数人身上。公积金改革破题，涉及利率、收益归属及投资方向。 <a class="lk" href="https://finance.eastmoney.com/a/202606253781882152.html" target="_blank">详情›</a></li>
+      
+      <li><b class="hsrc">央行</b>　央行今日开展<b>3705亿元</b>7天逆回购操作，操作利率<b>1.40%</b>，与此前持平。同时，央行公告将在6月29日、30日公开市场操作中增加隔夜逆回购操作品种，以更好匹配银行体系短期流动性需求。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782300539.html" target="_blank">详情›</a></li>
+      
+    </ul>
+  </div>
+  
+
+  <!-- 板块 -->
+  
+  <div class="sec">
+    <div class="sh"><span class="no">01</span><span class="ic">🏛️</span><span class="nm">宏观经济</span></div>
+    <ol>
+      
+      <li><b class="src">国家能源局：</b>截至2026年5月底，我国发电装机达<b>40.1亿千瓦</b>，规模位居全球首位。非化石能源装机占比由2010年的<b>25%</b>提升至<b>62%</b>，煤电装机占比从<b>61%</b>下降至<b>32%</b>，可再生能源装机占比由<b>24%</b>提升至<b>61%</b>，能源结构持续优化。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782766239.html" target="_blank">›</a></li>
+      
+      <li><b class="src">上海海关：</b>今年前5个月，上海市累计实现进出口<b>2.1万亿元</b>，同比增长<b>17.9%</b>。其中5月进出口<b>4204.9亿元</b>，同比增长<b>11.5%</b>，连续16个月保持增长；出口<b>2000.1亿元</b>，增长<b>26.7%</b>；进口<b>2204.8亿元</b>，增长<b>0.6%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782371649.html" target="_blank">›</a></li>
+      
+      <li><b class="src">柳州市统计局：</b>1-5月柳州规上工业增加值同比增长<b>7.7%</b>，工业机器人产量大增<b>861.1%</b>，锂离子电池增长<b>139.2%</b>，电子元件增长<b>52.8%</b>。高技术制造业增加值增长<b>40.5%</b>，外贸出口<b>189.59亿元</b>增长<b>21.7%</b>，其中对东盟出口<b>58.92亿元</b>增长<b>54.8%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782298370.html" target="_blank">›</a></li>
+      
+      <li><b class="src">生态环境部：</b>“十四五”期间全国地表水好Ⅲ水质比例达到<b>91.4%</b>，劣Ⅴ类断面比例为<b>0.6%</b>，均为有监测记录以来最好水平。重点河湖生态流量达标率<b>90%以上</b>，累计修复河湖生态缓冲带<b>8600公里</b>，长江江豚种群数量回升至<b>1426头</b>。</li>
+      
+      <li><b class="src">生态环境部：</b>生态环境部发布《产品碳足迹管理体系建设进展报告（2026）》和《中国适应气候变化进展报告（2025）》。报告显示，我国产品碳足迹核算标准体系日趋完善，已印发《产品碳足迹因子数据库建设工作指引》，工作从核算走向应用。</li>
+      
+      <li><b class="src">生态环境部：</b>生态环境部部署五大攻坚行动：工业园区水污染整治、县乡黑臭水体治理、畜禽粪污综合治理、乡村河湖库管护、小微水体排查整治，集中解决群众“家门口”的突出水环境问题，实现水体无异色、无异味、无异物。</li>
+      
+      <li><b class="src">生态环境部：</b>生态环境部表示，汛期水质波动明显，每年6—9月全国I至Ⅲ类水质比例平均下降<b>10个百分点</b>。已启动“一湖一策”应对方案，针对白洋淀、洱海、丹江口水库及太湖、巢湖、滇池等新老“三湖”及24个重点水体，加强风险隐患排查。</li>
+      
+      <li><b class="src">央行：</b>央行今日开展<b>3705亿元</b>7天逆回购操作，操作利率为<b>1.40%</b>，与此前持平。同时公告将在6月29日、30日公开市场操作中增加隔夜逆回购操作品种，采用固定利率、数量招标，以更好匹配银行体系短期流动性需求。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782300539.html" target="_blank">›</a></li>
+      
+      <li><b class="src">人民币：</b>人民币兑美元中间价报<b>6.8209</b>，调贬<b>14个基点</b>。前一交易日中间价报6.8195。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782287860.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国家能源局：</b>国家能源局副局长宋宏坤出席上海合作组织成员国能源部长会第六次会议，会议在吉尔吉斯斯坦召开，各方就深化能源合作交换意见。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782149869.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国际能源署：</b>阿联酋6月初石油出口量已恢复至战前水平的近<b>85%</b>，约<b>430万桶/日</b>，而冲突后3月仅约<b>190万桶/日</b>。IEA指出，阿联酋依靠替代航线和输油管道实现出口回升。</li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">02</span><span class="ic">🏙️</span><span class="nm">地产动态</span></div>
+    <ol>
+      
+      <li><b class="src">北京市机动车调控办：</b>6月26日10:00，北京市将配置家庭和个人普通小客车指标共计<b>9600个</b>，家庭与个人申请人进入同池摇号；另配置单位普通小客车指标<b>400个</b>。油电切换无次数限制。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782790097.html" target="_blank">›</a></li>
+      
+      <li><b class="src">重庆市发改委：</b>重庆拟持续实施外资隐性壁垒排查整治专项行动，严格执行外商投资准入前国民待遇加负面清单管理制度，严禁针对外资单独设置准入限制，并谋划推进市级外商投资立法。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782738921.html" target="_blank">›</a></li>
+      
+      <li><b class="src">重庆市发改委：</b>重庆拟研究制定市级鼓励外资企业境内再投资政策举措，全面落实境外投资者以分配利润直接投资<b>10%</b>税额抵免、暂不征收预提所得税双重税收优惠，以及降低初期用地成本、简化登记手续等措施。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782726941.html" target="_blank">›</a></li>
+      
+      <li><b class="src">重庆市发改委：</b>重庆拟积极争取电信增值、医疗、教育等领域开放试点政策，发挥自贸试验区改革开放“试验田”作用，建立健全外资项目梯度招引机制，持续打造“投资重庆”品牌。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782719589.html" target="_blank">›</a></li>
+      
+      <li><b class="src">住建部：</b>2024年住房公积金实缴人数<b>1.76亿</b>，全年提取人数<b>8127万人</b>，占实缴人数的<b>46.1%</b>；提取率（提取额占缴存额）为<b>76.15%</b>，使用集中在少数人身上。公积金改革涉及利率、收益归属、投资方向等核心问题。 <a class="lk" href="https://finance.eastmoney.com/a/202606253781882152.html" target="_blank">›</a></li>
+      
+      <li><b class="src">隧道股份：</b>上海隧道工程股份有限公司<b>100亿元</b>小公募债项目获上交所受理，募集资金拟用于偿还有息负债、项目建设及运营、股权投资、补充流动资金等。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782209149.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">03</span><span class="ic">📊</span><span class="nm">股市盘点</span></div>
+    <ol>
+      
+      <li><b class="src">美光科技：</b>美光科技2026财年第三财季营收<b>414.6亿美元</b>，同比增<b>345.7%</b>；净利润<b>282.4亿美元</b>，同比增<b>1398.3%</b>；毛利率<b>84.9%</b>，均超市场预期。预计第四财季营收<b>490亿至510亿美元</b>，市场预期432.4亿美元，供需紧张预计持续至2027年后。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782554215.html" target="_blank">›</a></li>
+      
+      <li><b class="src">A股存储龙头：</b>6月25日盘中，兆易创新、德明利、佰维存储、香农芯创、普冉股份、江波龙等六只市值超千亿的存储龙头股股价齐创历史新高。消息面上，美光科技财报超预期，存储芯片供应紧缺或持续至2027年。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782533472.html" target="_blank">›</a></li>
+      
+      <li><b class="src">长电科技：</b>长电科技4天3板，股价续创历史新高，总市值超<b>1800亿元</b>。公司拟在上海临港投资<b>78亿元</b>建设高端先进封装厂，一期计划2028年下半年完成。先进封装概念反复活跃。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782377489.html" target="_blank">›</a></li>
+      
+      <li><b class="src">证券ETF：</b>6月25日证券板块持续拉升，长江证券涨停，中信建投、财达证券、方正证券纷纷上扬。跟踪券商龙头证券30指数的ETF东财（159692）上午拉升<b>3.5%</b>，价格突破1.29元，累计成交额超<b>1.3亿元</b>，换手率近<b>10%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782779276.html" target="_blank">›</a></li>
+      
+      <li><b class="src">两融余额：</b>6月23日A股两融余额站上<b>30009.71亿元</b>，创历史新高，比2015年峰值高出<b>32%</b>。从2.9万亿到3万亿仅用6个交易日，但流通市值占比<b>2.83%</b>、交易额占比<b>10.25%</b>，均远低于2015年极值。 <a class="lk" href="https://finance.eastmoney.com/a/202606243781646792.html" target="_blank">›</a></li>
+      
+      <li><b class="src">融资余额：</b>截至6月24日，两市融资余额合计<b>29834.59亿元</b>，较前一交易日增加<b>136.51亿元</b>。其中上交所融资余额<b>15102.74亿元</b>，深交所<b>14731.85亿元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782110353.html" target="_blank">›</a></li>
+      
+      <li><b class="src">科创板：</b>科创50指数涨幅扩大至<b>4%</b>，报2069.1点，年内累计涨近<b>50%</b>。成分股芯原股份涨<b>14.95%</b>创历史新高，佰维存储涨<b>11.53%</b>，百利天恒涨<b>11.10%</b>，海光信息涨<b>8.46%</b>。</li>
+      
+      <li><b class="src">创业板指：</b>创业板指突破<b>4300点</b>整数关口，涨<b>1.17%</b>。汽车芯片、被动元件、存储芯片等板块涨幅居前。此前一度涨超2%后翻绿，随后再度拉升。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782383386.html" target="_blank">›</a></li>
+      
+      <li><b class="src">港股：</b>港股开盘恒生指数低开<b>0.1%</b>，恒生科技指数高开<b>0.41%</b>。算力硬件股高开，澜起科技高开<b>7.16%</b>，长飞光纤光缆高开<b>5.28%</b>，建滔积层板高开<b>4.54%</b>，兆易创新高开<b>5.93%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782300342.html" target="_blank">›</a></li>
+      
+      <li><b class="src">韩国股市：</b>韩国KOSPI指数涨幅扩大至<b>6%</b>，KOSPI 200期货上涨<b>5%</b>后触发熔断机制，程序化交易暂停5分钟。SK海力士涨超<b>10%</b>，三星电子涨超<b>5%</b>，受美光业绩刺激。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782100316.html" target="_blank">›</a></li>
+      
+      <li><b class="src">日经指数：</b>日经指数扩大涨幅，最新上涨<b>2.6%</b>，报<b>70990.31点</b>。日韩半导体企业股价继续反弹，铠侠股价一度大涨<b>15%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782095253.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">04</span><span class="ic">📌</span><span class="nm">财富聚焦</span></div>
+    <ol>
+      
+      <li><b class="src">金融监管总局：</b>今年1—5月，全国农业保险已赔付<b>370亿元</b>，受益农户<b>1209万户次</b>。其中粮食作物保险赔付<b>60.47亿元</b>，受益农户<b>546.31万户次</b>，小麦赔付<b>30.93亿元</b>。当前黄淮海等夏粮主产区进入集中收获期，部分省份受灾严重。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782585831.html" target="_blank">›</a></li>
+      
+      <li><b class="src">黄金珠宝品牌：</b>6月25日国内足金首饰价格下调，老凤祥报价<b>1215元/克</b>，较前一日下降<b>26元</b>；周生生报价<b>1221元/克</b>，下降<b>19元</b>；周大福报价<b>1222元/克</b>，下降<b>16元</b>；老庙黄金报价<b>1238元/克</b>，下降<b>7元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782406414.html" target="_blank">›</a></li>
+      
+      <li><b class="src">碳酸锂：</b>今日MMLC电池级碳酸锂（早盘）价格较昨日下跌<b>1000元/吨</b>，中间价报<b>157250元/吨</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782748116.html" target="_blank">›</a></li>
+      
+      <li><b class="src">招商银行：</b>招商银行拟任行长王小青在股东会上表示，招行在北京、上海、深圳设有三个“特等行”，这些区域是国内经济和国家战略重点区域。同时强调以大财富管理为抓手的零售业务是压舱石，坚持长期主义、资产质量优先。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782708121.html" target="_blank">›</a></li>
+      
+      <li><b class="src">招商银行：</b>招商银行拟任行长王小青提出保持“四个定力”，将业务做精做透，形成中长期发展新动能，使招行在中国银行业“一样中的不一样”。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782668892.html" target="_blank">›</a></li>
+      
+      <li><b class="src">中国银行：</b>审计报告指出，2023年4月至2025年8月间，中国银行安排2家下属金融机构作为业务通道，以员工出资1元至100元“凑人头”方式，将11只私募基金包装成公募基金产品，利用公募基金免征所得税政策累计逃避缴纳税款<b>23.67亿元</b>。中国银行A股开盘价跌近<b>2%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782758397.html" target="_blank">›</a></li>
+      
+      <li><b class="src">A股补税潮：</b>6月以来，爱施德、建业股份、星徽股份、宏昌电子、凯盛科技等十余家A股企业密集披露补税及缴纳滞纳金公告，覆盖电子、化工、医药、环保等行业，有企业补缴税款和滞纳金累计超<b>3亿元</b>。专家表示，补税属常态化税务合规行为，并非“罚单”，不影响企业经营基本面。 <a class="lk" href="https://finance.eastmoney.com/a/202606243781815292.html" target="_blank">›</a></li>
+      
+      <li><b class="src">数据资产入表：</b>上海交通大学上海高级金融学院报告显示，A股上市公司数据资源入表数量和金额均增长，但板块分化：主板公司主导，科创板与创业板参与度较低。非上市公司入表增速放缓。 <a class="lk" href="https://finance.eastmoney.com/a/202606243781770377.html" target="_blank">›</a></li>
+      
+      <li><b class="src">郭兰峰：</b>中国经济体制改革研究会会长郭兰峰在2026夏季达沃斯论坛上表示，“胖东来现象”反映居民对优化消费环境的诉求，扩大消费需提升消费能力，这需要收入分配改革，让劳动价值在经济循环中得到更充分体现。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782762171.html" target="_blank">›</a></li>
+      
+      <li><b class="src">半夏投资：</b>知名私募半夏投资旗下产品半夏稳健混合宏观对冲，上周净值跌幅达<b>15.03%</b>，截至6月18日年内收益为<b>-24.5%</b>，大幅跑输沪深300同期<b>6.73%</b>的表现。多只在管产品创下成立来最差年度表现。 <a class="lk" href="https://finance.eastmoney.com/a/202606243781619419.html" target="_blank">›</a></li>
+      
+      <li><b class="src">摩根大通：</b>摩根大通将标普500指数年底目标价上调至<b>7800点</b>，理由是AI资本支出热潮及地缘政治改善推动“史无前例”的盈利预期上调周期。同时将韩国Kospi指数牛市情景目标位上调至<b>15000点</b>，建议逢低加仓。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782785831.html" target="_blank">›</a></li>
+      
+      <li><b class="src">中信证券：</b>中信证券研报称，科技或仍是主线，但表观拥挤度已处于高位。银行股作为稳健、回报确定性较高的权益资产，对资金端配置吸引力长期提升。预计下半年美股交易主线仍由基本面逻辑主导。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782101981.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">05</span><span class="ic">🔬</span><span class="nm">行业观察</span></div>
+    <ol>
+      
+      <li><b class="src">交通运输部等：</b>交通运输部等五部门联合印发《“人工智能+交通运输”典型应用场景创新行动方案》，提出开展智能驾驶“端到端”大模型研发与测试，面向公路货运、园区运输、短途接驳等场景，探索建立虚实结合的智能化测试场。同时，围绕航线规划、飞行安全等核心任务，鼓励开发民航垂域大模型，加快推进民航数智化转型升级。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782788883.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国家能源局：</b>国家能源局宣布，截至2026年5月底，我国发电装机达<b>40.1亿千瓦</b>，规模位居全球首位。煤电装机占比从2010年的<b>61%</b>下降至2026年5月的<b>32%</b>；非化石能源装机占比由2010年的<b>25%</b>提升至<b>62%</b>；可再生能源装机占比由<b>24%</b>提升至<b>61%</b>。规模化、低成本的绿电供给为工业转型和新兴产业培育筑牢能源基础。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782766239.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国家超级计算深圳中心：</b>ISC2026大会发布全球超算TOP500榜单，全国产自主研制的“灵晟”超级计算机以<b>2.19EFlops</b>持续双精度浮点性能登顶全球超算TOP500，这是中国超算时隔九年再攀巅峰。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782751722.html" target="_blank">›</a></li>
+      
+      <li><b class="src">IDC：</b>2026年上半年消费级AR智能眼镜迎来爆发式增长。IDC数据显示，今年第一季度全球AR市场规模同比大涨<b>168.6%</b>，国内市场增长同步提速。商务部大数据监测显示，1至3月国内智能眼镜线上零售销售额同比增长<b>161.9%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606243781504192.html" target="_blank">›</a></li>
+      
+      <li><b class="src">生态环境部：</b>生态环境部发布《产品碳足迹管理体系建设进展报告（2026）》和《中国适应气候变化进展报告（2025）》。报告显示，我国产品碳足迹核算标准体系日趋完善，印发《产品碳足迹因子数据库建设工作指引》，产品碳足迹工作从核算走向应用。</li>
+      
+      <li><b class="src">生态环境部：</b>生态环境部表示，“十四五”全国水生态环境质量实现转折性变化。2025年，全国地表水好Ⅲ水质比例达到<b>91.4%</b>，劣Ⅴ类断面比例为<b>0.6%</b>，均为有监测记录以来最好水平。长江干流连续6年全线Ⅱ类，黄河干流连续4年全线Ⅱ类。</li>
+      
+      <li><b class="src">银河证券：</b>银河证券研报称，展望2026年下半年，通信从“点突破”到“链自强”，在Token经济学深度重塑AI时代生产函数的背景下，景气度进一步抬升。全球主要CSP厂商资本支出超预期，预计未来5年内均有较大增量。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782100020.html" target="_blank">›</a></li>
+      
+      <li><b class="src">华泰证券：</b>华泰证券研报称，过去两周，中国AI资产领涨全球，长期受益于全球供应链敞口和中国主权AI长期布局，短期主要受国产大模型迭代、头部互联网公司采购国产芯片等催化。但表观拥挤度已处于高位。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782101981.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">06</span><span class="ic">🏢</span><span class="nm">公司要闻</span></div>
+    <ol>
+      
+      <li><b class="src">美光科技：</b>美光科技发布2026财年第三季度财报，收入<b>414.6亿美元</b>，同比增加<b>345.7%</b>；净利润<b>282.4亿美元</b>，同比增加<b>1398.3%</b>；毛利率高达<b>84.9%</b>，远超市场预期。公司预计第四财季经调整营收<b>490亿至510亿美元</b>，市场预期432.4亿美元。美光CEO表示，受全产业链AI需求叠加供给端结构性约束影响，预计供需紧张格局将持续至<b>2027自然年之后</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782554215.html" target="_blank">›</a></li>
+      
+      <li><b class="src">长电科技：</b>长电科技公告，拟在上海临港投资<b>78亿元</b>建设高端先进封装厂，项目拟分两期建设，一期计划2028年下半年完成。受此消息影响，长电科技股价4天3板，续创历史新高，总市值超<b>1800亿元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782446421.html" target="_blank">›</a></li>
+      
+      <li><b class="src">日月光：</b>日月光投控营运长吴田玉表示，今年正同步推动<b>15座</b>新建及扩建厂区计划，全球首条具经济规模的高度自动化面板级封装（FOPLP）量产线将于今年底投产。公司资本支出已提高至<b>85亿美元</b>，未来仍不排除上修。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782102490.html" target="_blank">›</a></li>
+      
+      <li><b class="src">OpenAI：</b>OpenAI与博通联合发布首款定制AI推理芯片Jalapeño，专为大语言模型推理设计的专用集成电路（ASIC）。该项目从设计到流片仅用<b>9个月</b>，采用OpenAI自身AI模型进行设计加速。博通负责硅片实现与网络硬件，Celestica负责板卡与机架系统集成。 <a class="lk" href="https://finance.eastmoney.com/a/202606253781878564.html" target="_blank">›</a></li>
+      
+      <li><b class="src">联想：</b>联想问天发布万全异构智算平台V5.0、超节点解决方案及产业专著《词元工厂》。联想集团副总裁陈振宽宣布，2027年联想中国基础设施群将锚定<b>1000亿元</b>人民币收入目标，并剑指中国服务器市场第一。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782674448.html" target="_blank">›</a></li>
+      
+      <li><b class="src">招商银行：</b>招商银行拟任行长王小青在股东会上表示，招行在北京、上海、深圳有三个“特等行”，这些区域是国内经济、国家战略的重点区域。同时，招行将保持“四个定力”，以大财富管理为抓手的零售业务依然是压舱石，打造“一样中的不一样”。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782708121.html" target="_blank">›</a></li>
+      
+      <li><b class="src">中国银行：</b>审计署审计工作报告指出，2023年4月至2025年8月间，中国银行安排2家下属金融机构作为业务通道，以大量本行员工出资1元至100元“凑人头”的方式，将11只私募基金包装成公募基金产品，利用公募基金免征所得税政策累计逃避缴纳税款<b>23.67亿元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782758397.html" target="_blank">›</a></li>
+      
+      <li><b class="src">华恒生物：</b>华恒生物实际控制人、董事长兼总经理郭恒华因涉嫌非法吸收公众存款罪被公安机关刑事拘留，并辞去全部职务。公司股价开盘“20cm”跌停，报17.12元/股。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782418939.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">07</span><span class="ic">🌍</span><span class="nm">环球视野</span></div>
+    <ol>
+      
+      <li><b class="src">摩根大通：</b>摩根大通将韩国股市Kospi指数在牛市情景的目标位上调至<b>15000点</b>，并建议逢低加仓，维持对韩国股市的最高敞口。策略师表示，参与AI数据中心建设的科技企业盈利已大到足以在宏观层面产生影响，为企业、家庭和政府带来财富提振。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782785831.html" target="_blank">›</a></li>
+      
+      <li><b class="src">日本央行：</b>日本央行审议委员田村直树表示，需要每隔几个月加息一次，将利率向<b>2%</b>左右的中性水平方向上调。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782257273.html" target="_blank">›</a></li>
+      
+      <li><b class="src">欧洲五国及北约：</b>法国、德国、意大利、波兰和英国领导人以及北约秘书长发表联合声明，称将尽可能地紧密加强防务工业合作。上述欧洲五国领导人当天在柏林举行会晤，北约秘书长吕特在美国华盛顿远程参会。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782770316.html" target="_blank">›</a></li>
+      
+      <li><b class="src">委内瑞拉：</b>委内瑞拉首都加拉加斯附近发生强震，米兰达州查考市市长称两处建筑物倒塌，已救出<b>18名</b>受困伤者。委内瑞拉代总统宣布全国停课，并暂停所有非必要活动。美国地质调查局初步预估遇难人数可能在<b>1万至10万</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782583995.html" target="_blank">›</a></li>
+      
+      <li><b class="src">美联储：</b>美联储压力测试显示，所有受检银行都能维持足够资本，以承受假设中的经济衰退冲击。摩根大通、高盛等大行随即宣布提高股利。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782594513.html" target="_blank">›</a></li>
+      
+      <li><b class="src">摩根大通：</b>摩根大通将标普500指数年底目标价上调至<b>7800点</b>，理由是AI资本支出热潮以及美伊和平进程取得进展后地缘政治环境的改善，推动该指数进入“史无前例”的盈利预期上调周期。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782095415.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国际能源署：</b>国际能源署（IEA）报告称，阿联酋依靠替代航线和输油管道，6月初石油出口量已恢复至战前水平的近<b>85%</b>。在美伊冲突爆发后的3月，阿联酋石油出口量仅为约<b>190万桶/日</b>，而6月初跃升至<b>430万桶/日</b>。</li>
+      
+      <li><b class="src">韩国交易所：</b>韩国交易所发布声明称，鉴于近期市场状况，将推迟上线个股周度期权，原计划于6月29日推出。KOSPI指数当日涨幅扩大至<b>6%</b>，KOSPI 200期货上涨5%后触发熔断机制，程序化交易暂停5分钟。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782333890.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+  <div class="sec">
+    <div class="sh"><span class="no">08</span><span class="ic">📈</span><span class="nm">金融数据</span></div>
+    <ol>
+      
+      <li><b class="src">央行：</b>央行今日开展<b>3705亿元</b>7天逆回购操作，操作利率为<b>1.40%</b>，与此前持平。央行同时公告，将在6月29日、30日公开市场操作中增加隔夜逆回购操作品种，采用固定利率、数量招标。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782300539.html" target="_blank">›</a></li>
+      
+      <li><b class="src">统计局：</b>上海海关统计，今年前5个月上海市累计实现进出口<b>2.1万亿元</b>，增长<b>17.9%</b>。其中5月进出口<b>4204.9亿元</b>，同比增长<b>11.5%</b>，连续16个月保持增长；出口<b>2000.1亿元</b>，增长<b>26.7%</b>；进口<b>2204.8亿元</b>，增长<b>0.6%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782371649.html" target="_blank">›</a></li>
+      
+      <li><b class="src">Mysteel：</b>今日MMLC电池级碳酸锂（早盘）价格较昨日下跌<b>1000元/吨</b>，中间价报<b>157250元/吨</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782748116.html" target="_blank">›</a></li>
+      
+      <li><b class="src">两市融资余额：</b>截至6月24日，两市融资余额合计<b>29834.59亿元</b>，较前一交易日增加<b>136.51亿元</b>。其中上交所融资余额<b>15102.74亿元</b>，深交所<b>14731.85亿元</b>。两融余额首次站上<b>3万亿元</b>，但流通市值占比<b>2.83%</b>、交易额占比<b>10.25%</b>，均远低于2015年极值时。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782110353.html" target="_blank">›</a></li>
+      
+      <li><b class="src">人民币中间价：</b>人民币兑美元中间价报<b>6.8209</b>，调贬<b>14个基点</b>。前一交易日中间价报6.8195。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782287860.html" target="_blank">›</a></li>
+      
+      <li><b class="src">黄金饰品价格：</b>6月25日，国内多家黄金珠宝品牌下调足金首饰价格。老凤祥报价<b>1215元/克</b>，较前一日下降<b>26元</b>；周生生报价<b>1221元/克</b>，下降<b>19元</b>；周大福报价<b>1222元/克</b>，下降<b>16元</b>；老庙黄金报价<b>1238元/克</b>，下降<b>7元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782406414.html" target="_blank">›</a></li>
+      
+      <li><b class="src">沪深两市：</b>沪深两市成交额超<b>1.5万亿元</b>，较上日此时放量<b>2304亿元</b>。科创50指数涨幅扩大至<b>4%</b>，报2069.1点，年内累计涨近50%。创业板指突破4300点整数关口，涨1.17%。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782619889.html" target="_blank">›</a></li>
+      
+      <li><b class="src">美团：</b>6月25日盘中，美团股价下跌超<b>4%</b>，最低为<b>64.75港元</b>，创一年以来新低，市值为<b>4004亿港元</b>。今年2月，美团市值约为5000亿港元。 <a class="lk" href="https://finance.eastmoney.com/a/202606253782734830.html" target="_blank">›</a></li>
+      
+    </ol>
+  </div>
+  
+
+  <!-- 晨报纵览 -->
+  
+  <div class="review">
+    <div class="rh">📌 晨报纵览 · 美光业绩引爆全球芯片，科技主线延续但拥挤度攀升</div>
+    
+    <p>美光科技第三财季营收<b>414.6亿美元</b>、净利润<b>282.4亿美元</b>均远超预期，并给出强劲下季指引，带动A股存储龙头兆易创新、德明利等六只千亿市值股股价齐创历史新高，芯片ETF开盘爆拉超4%。美光CEO表示供需紧张将持续至2027年后，进一步强化了存储产业链的确定性。但华泰证券提示，AI资产表观拥挤度已处于高位，投资者需警惕短期回调风险。</p>
+    
+    <p>宏观层面，央行维持逆回购利率<b>1.40%</b>不变，人民币中间价调贬至<b>6.8209</b>，低利率环境延续。两融余额首次站上<b>3万亿元</b>，但流通市值占比仅<b>2.83%</b>，远低于2015年极值，杠杆资金结构更趋理性。欧洲五国及北约宣布加强防务合作，日本央行释放加息信号，全球利率分化格局下，美元资产配置价值凸显。</p>
+    
+    <p>对于中高净值客户的养老与财富配置，当前科技主线虽强但波动加大，建议以稳健类资产如美元储蓄险、黄金作为压舱石，同时关注低利率环境下锁定长期收益的保险产品。黄金饰品价格下调至<b>1215元/克</b>，可逢低配置。招商银行拟任行长王小青强调零售业务压舱石作用，银行股作为高确定性权益资产，对长期资金配置吸引力提升。</p>
+    
+  </div>
+  
+
+  <!-- 保险配置视角 -->
+  
+  <div class="ins">
+    <div class="it">🛡️ 保险配置视角</div>
+    
+    <div class="row"><span class="e">💵</span><span>央行逆回购利率维持<b>1.40%</b>，人民币中间价调贬至<b>6.8209</b>，低利率环境下美元储蓄险的锁定利率优势凸显，可关注长期稳健收益的配置窗口。</span></div>
+    
+    <div class="row"><span class="e">📈</span><span>美光业绩超预期带动全球芯片股大涨，A股存储龙头股价齐创新高，科技主线延续但拥挤度已高。养老储备可关注与科技周期弱相关的红利资产，平衡组合波动。</span></div>
+    
+    <div class="row"><span class="e">🛡️</span><span>委内瑞拉强震、地缘冲突等风险事件频发，全球避险情绪升温。黄金饰品价格下调至<b>1215元/克</b>，可关注黄金作为避险资产在养老配置中的压舱石作用。</span></div>
+    
+  </div>
+  
+
+  <div class="footer">
+    <div class="fb">保 心 上 人</div>
+    <div class="fs">健康 · 养老 · 传承　HEALTH · RETIREMENT · LEGACY</div>
+    <div class="disc">本晨报由真实公开财经资讯（东方财富/新浪财经等）自动汇编整理，仅供学习参考，不构成任何投资建议或保险产品销售要约，不代表本机构观点。市场有风险，决策需谨慎。数据若有出入以官方信源为准。</div>
+  </div>
+
+</div>
+</body>
+</html>
