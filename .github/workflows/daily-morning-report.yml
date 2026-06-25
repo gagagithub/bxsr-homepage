@@ -44,11 +44,12 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: python -u llm_morning.py
 
-      - name: Render H5 + cover + moment text (pub_date = 北京当天)
+      - name: Render H5 + cover + moment text + 公众号图文 (pub_date = 北京当天)
         working-directory: scripts/morning-report
         run: |
           export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
           python -u render_morning.py
+          python -u render_wechat.py
 
       - name: Screenshot cover image (headless Chrome)
         run: |
@@ -81,7 +82,9 @@ jobs:
             -F "html=@morning-report.html;type=text/html" \
             -F "cover=@cover.png;type=image/png" \
             -F "momentText=<moment_text.txt" \
+            -F "wechatHtml=@wechat.html;type=text/html" \
+            -F "wechatDigest=<wechat_digest.txt" \
             https://214club.com.cn/creation/morningReportUpload)
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
-          echo "✓ 已推送今日财经晨报到生产 + 触发客户朋友圈下发"
+          echo "✓ 已推送今日财经晨报到生产 + 触发客户朋友圈下发 + 公众号草稿"

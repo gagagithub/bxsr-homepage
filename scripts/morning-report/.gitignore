@@ -8,3 +8,6 @@ cover.png
 moment_text.txt
 __pycache__/
 *.pyc
+wechat.html
+wechat_digest.txt
+preview.html
