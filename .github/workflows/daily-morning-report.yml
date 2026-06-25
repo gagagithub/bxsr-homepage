@@ -1,0 +1,87 @@
+name: 财经晨报 - 每日生成 + 推送规划师朋友圈
+
+on:
+  schedule:
+    # 每天北京时间 07:00 (UTC 23:00 前一日) 运行 —— 美股前一日收盘 + 当日早间内地资讯均已就绪
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chinese fonts (CJK for cover image)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra
+
+      - name: Install Python dependencies
+        run: pip install -r scripts/morning-report/requirements.txt
+
+      - name: Fetch market data (akshare 行情, 复用 market-express)
+        working-directory: scripts/market-express
+        run: |
+          python -u fetch_cn.py || echo "⚠ 行情取数部分失败, 晨报行情板块按缺省渲染"
+          cp -f data.json ../morning-report/data.json || true
+
+      - name: Fetch real news telegraph (东方财富快讯)
+        working-directory: scripts/morning-report
+        run: python -u fetch_news.py
+
+      - name: AI organize into morning report (DeepSeek, 3-call)
+        working-directory: scripts/morning-report
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python -u llm_morning.py
+
+      - name: Render H5 + cover + moment text (pub_date = 北京当天)
+        working-directory: scripts/morning-report
+        run: |
+          export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
+          python -u render_morning.py
+
+      - name: Screenshot cover image (headless Chrome)
+        run: |
+          google-chrome --headless=new --disable-gpu --hide-scrollbars \
+            --window-size=900,1125 \
+            --screenshot="$GITHUB_WORKSPACE/scripts/morning-report/cover.png" \
+            "file://$GITHUB_WORKSPACE/scripts/morning-report/cover.html"
+          ls -la "$GITHUB_WORKSPACE/scripts/morning-report/cover.png"
+
+      - name: Commit HTML to repo (留底 + 历史)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          cp scripts/morning-report/morning-report.html morning-report.html
+          git add morning-report.html scripts/morning-report/sections.json || true
+          git commit -m "财经晨报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
+          git push || echo "push 跳过"
+
+      - name: Push to production (H5 + cover + moment文案, 自动下发客户朋友圈)
+        env:
+          MORNING_REPORT_TOKEN: ${{ secrets.MORNING_REPORT_TOKEN }}
+        run: |
+          if [ -z "${MORNING_REPORT_TOKEN}" ]; then
+            echo "::error::缺少 secret MORNING_REPORT_TOKEN —— 在 GitHub 仓库 Settings → Secrets 添加后重试"
+            exit 1
+          fi
+          cd "$GITHUB_WORKSPACE/scripts/morning-report"
+          RESP=$(curl -sS --max-time 180 \
+            -F "token=${MORNING_REPORT_TOKEN}" \
+            -F "html=@morning-report.html;type=text/html" \
+            -F "cover=@cover.png;type=image/png" \
+            -F "momentText=<moment_text.txt" \
+            https://214club.com.cn/creation/morningReportUpload)
+          echo "server response: ${RESP}"
+          echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
+          echo "✓ 已推送今日财经晨报到生产 + 触发客户朋友圈下发"

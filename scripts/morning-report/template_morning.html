@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
+<title>财经晨报 · {{ pub_date }} · 保心上人</title>
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root{
+    --navy:#0b2552; --navy2:#123b78; --blue:#1769c0; --sky:#9ecbff;
+    --up:#d92d2d; --down:#13935a; --flat:#6b7689;
+    --ink:#16233d; --muted:#6b7689; --line:#e6ecf5; --bg:#eef2f8; --card:#fff;
+    --gold:#c79a4b;
+  }
+  html,body{ font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif; color:var(--ink); background:var(--bg); line-height:1.6; }
+  .up{ color:var(--up); } .down{ color:var(--down); } .flat{ color:var(--flat); }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:520px; margin:0 auto; background:var(--bg); min-height:100vh; padding-bottom:30px; }
+
+  /* HEADER */
+  .header{ background:linear-gradient(135deg,#08204b 0%,#123b78 55%,#1a5bb0 100%); color:#fff; padding:20px 20px 22px; position:relative; overflow:hidden; }
+  .header::after{ content:""; position:absolute; right:-40px; top:-30px; width:180px; height:180px; background:radial-gradient(circle,rgba(158,203,255,.25),transparent 70%); }
+  .brandbar{ display:flex; align-items:center; gap:10px; position:relative; z-index:2; }
+  .logo{ width:34px; height:34px; border:2px solid rgba(255,255,255,.85); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; background:rgba(255,255,255,.08); }
+  .bname{ font-size:15px; font-weight:800; letter-spacing:2px; }
+  .bsub{ font-size:9.5px; letter-spacing:2px; color:#aecbf0; margin-top:1px; }
+  .upd{ margin-left:auto; font-size:11px; background:rgba(255,255,255,.16); padding:4px 10px; border-radius:20px; color:#dbe8fb; }
+  h1.title{ font-size:33px; font-weight:900; letter-spacing:3px; margin-top:16px; position:relative; z-index:2; }
+  h1.title .em{ font-size:27px; }
+  .meta{ margin-top:9px; font-size:13px; color:#cfe0fa; position:relative; z-index:2; }
+  .meta b{ color:#fff; }
+  .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
+
+  /* TREND */
+  .trend{ margin:14px; background:#fff; border-left:4px solid var(--gold); border-radius:10px; padding:13px 15px; box-shadow:0 3px 12px rgba(20,50,110,.06); font-size:14.5px; line-height:1.65; }
+  .trend .lab{ color:var(--gold); font-weight:800; margin-right:6px; }
+  .trend b{ color:var(--navy); }
+
+  /* MARKET STRIP */
+  .sec-lab{ margin:18px 14px 9px; font-size:13px; font-weight:800; color:var(--navy2); letter-spacing:1px; display:flex; align-items:center; gap:6px; }
+  .sec-lab::before{ content:""; width:4px; height:14px; background:var(--blue); border-radius:2px; }
+  .idx-row{ display:flex; gap:9px; padding:0 14px; }
+  .idx{ flex:1; background:#fff; border-radius:11px; padding:11px 10px; box-shadow:0 3px 10px rgba(20,50,110,.06); border:1px solid var(--line); text-align:center; }
+  .idx .n{ font-size:11px; color:var(--navy); font-weight:700; }
+  .idx .p{ font-size:18px; font-weight:900; margin-top:5px; letter-spacing:-.3px; }
+  .idx .d{ font-size:13.5px; font-weight:800; margin-top:2px; }
+  .idx .y{ font-size:10.5px; color:var(--muted); margin-top:3px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; padding:11px 14px 2px; }
+  .chip{ background:#fff; border:1px solid var(--line); border-radius:9px; padding:8px 11px; box-shadow:0 2px 7px rgba(20,50,110,.04); flex:1 1 calc(50% - 4px); min-width:calc(50% - 4px); }
+  .chip .l{ font-size:11px; color:var(--muted); }
+  .chip .v{ font-size:15px; font-weight:800; margin-top:2px; display:flex; align-items:baseline; gap:6px; }
+  .chip .v .nt{ font-size:10.5px; font-weight:700; }
+
+  /* HIGHLIGHTS */
+  .hl{ margin:8px 14px 0; background:linear-gradient(135deg,#0e2f63,#1a59ab); border-radius:13px; padding:15px 16px; box-shadow:0 5px 16px rgba(20,50,110,.16); }
+  .hl .ht{ color:#fff; font-size:15px; font-weight:800; letter-spacing:1px; margin-bottom:11px; display:flex; align-items:center; gap:7px; }
+  .hl ul{ list-style:none; }
+  .hl li{ position:relative; padding:8px 0 8px 22px; border-top:1px solid rgba(255,255,255,.12); color:#eaf2ff; font-size:14px; line-height:1.6; }
+  .hl li:first-child{ border-top:none; }
+  .hl li::before{ content:"★"; position:absolute; left:0; top:8px; color:var(--gold); font-size:13px; }
+  .hl li b{ color:#ffd9a0; }
+  .hl li b.hsrc{ color:#ffd9a0; font-weight:800; }
+  .hl li .lk{ color:var(--sky); font-size:11px; margin-left:3px; }
+
+  /* SECTIONS */
+  .sec{ margin:16px 14px 0; background:#fff; border-radius:13px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
+  .sec .sh{ display:flex; align-items:center; gap:10px; padding:13px 15px; background:linear-gradient(90deg,#f2f7fd,#fff); border-bottom:1px solid var(--line); }
+  .sec .sh .no{ font-size:22px; font-weight:900; color:var(--navy2); font-style:italic; letter-spacing:-1px; min-width:34px; }
+  .sec .sh .ic{ font-size:17px; }
+  .sec .sh .nm{ font-size:16px; font-weight:800; color:var(--navy); letter-spacing:1px; }
+  .sec ol{ list-style:none; counter-reset:item; padding:7px 16px 13px; }
+  .sec li{ counter-increment:item; padding:10px 0; border-bottom:1px dashed #eef2f8; font-size:14px; line-height:1.74; text-align:justify; color:#2c3a52; }
+  .sec li:last-child{ border-bottom:none; }
+  .sec li::before{ content:counter(item) "、"; color:#c8801f; font-weight:900; font-style:italic; margin-right:1px; }
+  .sec li b.src{ color:#c8801f; font-weight:800; font-style:normal; }
+  .sec li b{ color:var(--up); font-weight:800; }
+  .sec li .lk{ color:var(--blue); font-size:11px; white-space:nowrap; margin-left:2px; opacity:.85; }
+
+  /* REVIEW */
+  .review{ margin:18px 14px 0; background:#fff; border:1px solid var(--line); border-left:4px solid var(--navy2); border-radius:13px; padding:15px 16px; box-shadow:0 3px 12px rgba(20,50,110,.06); }
+  .review .rh{ font-size:15px; font-weight:800; color:var(--navy); letter-spacing:1px; margin-bottom:10px; }
+  .review p{ font-size:14px; line-height:1.78; color:#33425c; margin-top:9px; text-align:justify; }
+  .review p:first-of-type{ margin-top:0; }
+  .review p b{ color:var(--navy2); }
+
+  /* INSURE */
+  .ins{ margin:18px 14px 0; background:linear-gradient(135deg,#f6fbf7,#eef7f1); border:1px solid #cfe7d8; border-radius:13px; padding:15px 16px; }
+  .ins .it{ font-size:15px; font-weight:800; color:#147a4a; margin-bottom:11px; display:flex; align-items:center; gap:7px; }
+  .ins .row{ display:flex; gap:10px; padding:9px 0; border-top:1px solid #d8ecdf; font-size:13.5px; line-height:1.6; color:#244; }
+  .ins .row:first-of-type{ border-top:none; }
+  .ins .row .e{ font-size:18px; flex-shrink:0; }
+  .ins .row b{ color:#147a4a; }
+
+  /* FOOTER */
+  .footer{ margin:22px 14px 0; padding:15px 16px; background:var(--navy); border-radius:13px; color:#cfe0fa; }
+  .footer .fb{ font-size:13px; font-weight:800; color:#fff; letter-spacing:2px; }
+  .footer .fs{ font-size:11px; color:var(--sky); margin-top:3px; letter-spacing:1px; }
+  .footer .disc{ font-size:10.5px; color:#8fa9d0; margin-top:10px; line-height:1.6; border-top:1px solid rgba(255,255,255,.12); padding-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brandbar">
+      <div class="logo">保</div>
+      <div>
+        <div class="bname">保心上人</div>
+        <div class="bsub">PROTECT · WEALTH · ADVISORY</div>
+      </div>
+      <div class="upd">每日 07:30 自动更新</div>
+    </div>
+    <h1 class="title"><span class="em">📰</span> 财经晨报</h1>
+    <div class="meta">📅 <b>{{ pub_date }}</b> ｜ 数据截至前一交易日（{{ data_date }}）收盘 · 全球市场 + 内地财经</div>
+    <div class="slogan">保心上人 · 让天下人老有所养</div>
+  </div>
+
+  {% if trend %}
+  <div class="trend"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>
+  {% endif %}
+
+  <!-- 行情数据 -->
+  <div class="sec-lab">行情数据 · 隔夜全球</div>
+  <div class="idx-row">
+    {% for x in indices %}
+    <div class="idx">
+      <div class="n">{{ x.name }}</div>
+      <div class="p">{{ x.pts }}</div>
+      <div class="d {{ x.cls }}">{{ x.ar }} {{ x.day }}</div>
+      <div class="y">YTD {{ x.ytd }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="chips">
+    {% for c in chips %}
+    <div class="chip">
+      <div class="l">{{ c.lab }}</div>
+      <div class="v">{{ c.val }}<span class="nt {{ c.cls }}">{{ c.note }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- 今日关注 -->
+  {% if highlights %}
+  <div class="hl">
+    <div class="ht">⭐ 今日关注 · 头条精选</div>
+    <ul>
+      {% for h in highlights %}
+      <li>{% if h.label %}<b class="hsrc">{{ h.label }}</b>　{% endif %}{{ (h.text or h.title)|safe }}{% if h.link %} <a class="lk" href="{{ h.link }}" target="_blank">详情›</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- 板块 -->
+  {% for s in sections %}
+  <div class="sec">
+    <div class="sh"><span class="no">{{ s.no }}</span><span class="ic">{{ s.icon }}</span><span class="nm">{{ s.name }}</span></div>
+    <ol>
+      {% for it in s['items'] %}
+      <li>{% if it.label %}<b class="src">{{ it.label }}：</b>{% endif %}{{ it.text|safe }}{% if it.link %} <a class="lk" href="{{ it.link }}" target="_blank">›</a>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endfor %}
+
+  <!-- 晨报纵览 -->
+  {% if review and review.paras %}
+  <div class="review">
+    <div class="rh">📌 晨报纵览{% if review.title %} · {{ review.title }}{% endif %}</div>
+    {% for p in review.paras %}
+    <p>{{ p|safe }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 保险配置视角 -->
+  {% if insure %}
+  <div class="ins">
+    <div class="it">🛡️ 保险配置视角</div>
+    {% for i in insure %}
+    <div class="row"><span class="e">{{ i.ic }}</span><span>{{ i.tx|safe }}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="footer">
+    <div class="fb">保 心 上 人</div>
+    <div class="fs">健康 · 养老 · 传承　HEALTH · RETIREMENT · LEGACY</div>
+    <div class="disc">本晨报由真实公开财经资讯（东方财富/新浪财经等）自动汇编整理，仅供学习参考，不构成任何投资建议或保险产品销售要约，不代表本机构观点。市场有风险，决策需谨慎。数据若有出入以官方信源为准。</div>
+  </div>
+
+</div>
+</body>
+</html>

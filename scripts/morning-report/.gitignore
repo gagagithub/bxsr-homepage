@@ -1,0 +1,10 @@
+# generated outputs (produced each run by the pipeline)
+data.json
+news_raw.json
+sections.json
+morning-report.html
+cover.html
+cover.png
+moment_text.txt
+__pycache__/
+*.pyc

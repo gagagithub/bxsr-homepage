@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root{ --navy:#0b2552; --navy2:#123b78; --blue:#1769c0; --sky:#9ecbff; --gold:#e3b65a; --up:#ff6b6b; }
+  html,body{ width:900px; height:1125px; font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif; }
+  .card{ width:900px; height:1125px; background:linear-gradient(160deg,#08204b 0%,#103365 45%,#1a5bb0 100%); position:relative; overflow:hidden; color:#fff; padding:64px 60px; }
+  .card::after{ content:""; position:absolute; right:-120px; top:-120px; width:460px; height:460px; background:radial-gradient(circle,rgba(158,203,255,.28),transparent 70%); }
+  .brandbar{ display:flex; align-items:center; gap:16px; position:relative; z-index:2; }
+  .logo{ width:60px; height:60px; border:3px solid rgba(255,255,255,.9); border-radius:13px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:30px; background:rgba(255,255,255,.08); }
+  .bname{ font-size:26px; font-weight:800; letter-spacing:3px; }
+  .bsub{ font-size:13px; letter-spacing:4px; color:#aecbf0; margin-top:3px; }
+  .upd{ margin-left:auto; font-size:16px; background:rgba(255,255,255,.16); padding:7px 16px; border-radius:24px; color:#dbe8fb; }
+  h1{ font-size:96px; font-weight:900; letter-spacing:8px; margin-top:60px; position:relative; z-index:2; line-height:1.05; }
+  h1 .em{ font-size:78px; }
+  .date{ margin-top:26px; font-size:30px; color:#dbe8fb; position:relative; z-index:2; letter-spacing:1px; }
+  .date b{ color:#fff; }
+  .trend{ margin-top:34px; background:rgba(255,255,255,.10); border-left:6px solid var(--gold); border-radius:14px; padding:24px 28px; font-size:27px; line-height:1.55; position:relative; z-index:2; color:#eef5ff; }
+  .trend .l{ color:var(--gold); font-weight:800; }
+  .trend b{ color:#ffe39c; }
+  .hl{ margin-top:34px; position:relative; z-index:2; }
+  .hl .t{ font-size:24px; color:var(--sky); font-weight:800; letter-spacing:2px; margin-bottom:18px; }
+  .hl .row{ display:flex; gap:16px; padding:17px 0; border-top:1px solid rgba(255,255,255,.14); font-size:26px; line-height:1.45; align-items:flex-start; }
+  .hl .row:first-of-type{ border-top:none; }
+  .hl .row .star{ color:var(--gold); font-size:22px; margin-top:3px; }
+  .hl .row .src{ color:#ffd9a0; font-weight:800; flex-shrink:0; }
+  .hl .row .tx{ color:#f0f6ff; }
+  .foot{ position:absolute; left:60px; right:60px; bottom:54px; z-index:2; display:flex; align-items:center; }
+  .foot .sl{ font-size:24px; color:var(--sky); letter-spacing:2px; font-weight:600; }
+  .foot .cta{ margin-left:auto; font-size:25px; font-weight:800; color:#08204b; background:var(--gold); padding:13px 26px; border-radius:30px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brandbar">
+    <div class="logo">保</div>
+    <div><div class="bname">保心上人</div><div class="bsub">PROTECT · WEALTH · ADVISORY</div></div>
+    <div class="upd">每日 07:30</div>
+  </div>
+
+  <h1><span class="em">📰</span> 财经晨报</h1>
+  <div class="date">📅 <b>{{ pub_date }}</b>　全球市场 · 内地财经 · 一图速览</div>
+
+  {% if trend %}
+  <div class="trend"><span class="l">🔥 今日风向　</span>{{ trend_plain }}</div>
+  {% endif %}
+
+  <div class="hl">
+    <div class="t">⭐ 今日头条精选</div>
+    {% for h in cover_items %}
+    <div class="row"><span class="star">★</span><span class="tx">{% if h.label %}<span class="src">{{ h.label }}　</span>{% endif %}{{ h.tx }}</span></div>
+    {% endfor %}
+  </div>
+
+  <div class="foot">
+    <div class="sl">保心上人 · 让天下人老有所养</div>
+    <div class="cta">点开看完整晨报 ›</div>
+  </div>
+</div>
+</body>
+</html>
