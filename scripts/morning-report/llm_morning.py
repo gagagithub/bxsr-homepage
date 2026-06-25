@@ -110,11 +110,12 @@ key = os.environ.get("DEEPSEEK_API_KEY") or get_key()
 if not key:
     print("!! 未找到 DeepSeek key", file=sys.stderr); sys.exit(1)
 
-def call(user):
+def _call_once(user):
     payload = json.dumps({
         "model": "deepseek-chat",
         "messages": [{"role": "system", "content": SYS}, {"role": "user", "content": user}],
         "temperature": 0.3, "max_tokens": 8000,
+        "response_format": {"type": "json_object"},  # DeepSeek 强制返回合法 JSON, 杜绝偶发语法错
     }).encode("utf-8")
     req = urllib.request.Request("https://api.deepseek.com/v1/chat/completions", data=payload,
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
@@ -124,18 +125,29 @@ def call(user):
     content = re.sub(r"^```(json)?|```$", "", content, flags=re.MULTILINE).strip()
     try:
         return json.loads(content)
-    except Exception as e:
-        # 兜底：截断时尽量挽救已完整的部分(截到最后一个完整 "}]" 并补全括号)
-        print(f"!! JSON 解析失败({e})，尝试挽救", file=sys.stderr)
+    except Exception:
+        # 兜底：万一截断, 挽救已完整的部分(截到最后一个完整 "}]" 并补全括号)
         cut = content.rfind('"}')
         if cut > 0:
-            frag = content[:cut+2]
+            frag = content[:cut + 2]
             for closer in ('}]}', ']}', '}', ']}]}'):
                 try:
                     return json.loads(frag + closer)
                 except Exception:
                     continue
         raise
+
+def call(user, tries=3):
+    """DeepSeek 偶发返回不合法 JSON, 整次重试(json_object 模式下基本不会发生, 仍兜底)。"""
+    last = None
+    for k in range(tries):
+        try:
+            return _call_once(user)
+        except Exception as e:
+            last = e
+            print(f"!! DeepSeek 第{k+1}次失败({type(e).__name__}: {str(e)[:80]})，重试", file=sys.stderr)
+            import time as _t; _t.sleep(2)
+    raise last
 
 # 三次调用：①风向+头条 ②前半板块 ③后半板块+保险+纵览(各自都在 8K 输出上限内，保证 JSON 完整)
 G1 = ["宏观经济", "地产动态", "股市盘点", "财富聚焦"]
