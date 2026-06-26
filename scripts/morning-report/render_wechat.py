@@ -58,23 +58,23 @@ try:
 except Exception:
     date_cn, week_cn = pub_date, ""
 
-# 外层容器(公众号正文宽度自适应手机屏)
+# 外层容器(公众号正文宽度自适应手机屏);字号整体加大、行距放宽,方便中老年阅读
 w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif;'
-  f'color:{INK};font-size:16px;line-height:1.75;background:{PAPER};padding:2px;">')
+  f'color:{INK};font-size:19px;line-height:2.0;background:{PAPER};padding:2px;">')
 
 # ---------- 报头 ----------
 w(f'<section style="text-align:center;padding:18px 8px 14px;border-bottom:3px double {GOLD};margin-bottom:6px;">')
-w(f'<p style="margin:0;font-size:13px;letter-spacing:3px;color:{GOLD};">保 · 心 上 人 · 投 资</p>')
-w(f'<p style="margin:8px 0 4px;font-size:30px;font-weight:800;letter-spacing:6px;color:{INK};">财 经 晨 报</p>')
-w(f'<p style="margin:0;font-size:13px;color:{SUB};letter-spacing:1px;">{date_cn} · {week_cn} · 让天下人老有所养</p>')
+w(f'<p style="margin:0;font-size:15px;letter-spacing:3px;color:{GOLD};">保 · 心 上 人 · 投 资</p>')
+w(f'<p style="margin:8px 0 4px;font-size:32px;font-weight:800;letter-spacing:6px;color:{INK};">财 经 晨 报</p>')
+w(f'<p style="margin:0;font-size:15px;color:{SUB};letter-spacing:1px;">{date_cn} · {week_cn} · 让天下人老有所养</p>')
 w('</section>')
 
 # ---------- 导读 trend ----------
 trend = S.get("trend", "").strip()
 if trend:
-    w(f'<section style="margin:10px 4px 16px;padding:12px 14px;background:#fffdf7;'
-      f'border-left:4px solid {GOLD};border-radius:2px;">')
-    w(f'<p style="margin:0;font-size:15px;line-height:1.8;color:{INK};">'
+    w(f'<section style="margin:10px 4px 16px;padding:14px 16px;background:#fffdf7;'
+      f'border-left:5px solid {GOLD};border-radius:2px;">')
+    w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">'
       f'<span style="color:{GOLD};font-weight:700;">【今日导读】</span>{emph(trend)}</p>')
     w('</section>')
 
@@ -107,18 +107,18 @@ def market_rows():
 rows = market_rows()
 if rows:
     w(f'<section style="margin:6px 4px 18px;">')
-    w(f'<p style="margin:0 0 8px;font-size:17px;font-weight:800;color:{INK};">📈 行情速览</p>')
-    w(f'<table style="width:100%;border-collapse:collapse;font-size:14px;">')
+    w(f'<p style="margin:0 0 8px;font-size:20px;font-weight:800;color:{INK};">📈 行情速览</p>')
+    w(f'<table style="width:100%;border-collapse:collapse;font-size:16px;">')
     for i in range(0, len(rows), 2):
         w('<tr>')
         for j in range(2):
             if i + j < len(rows):
                 name, val, note, raw = rows[i + j]
                 c = pct_color(raw)
-                w(f'<td style="width:50%;padding:7px 8px;border-bottom:1px solid {LINE};">'
-                  f'<span style="color:{SUB};">{name}</span><br>'
-                  f'<span style="font-weight:700;color:{INK};font-size:15px;">{val}</span> '
-                  f'<span style="color:{c};font-size:12px;">{note}</span></td>')
+                w(f'<td style="width:50%;padding:9px 8px;border-bottom:1px solid {LINE};">'
+                  f'<span style="color:{SUB};font-size:15px;">{name}</span><br>'
+                  f'<span style="font-weight:700;color:{INK};font-size:18px;">{val}</span> '
+                  f'<span style="color:{c};font-size:14px;">{note}</span></td>')
             else:
                 w(f'<td style="width:50%;border-bottom:1px solid {LINE};"></td>')
         w('</tr>')
@@ -129,15 +129,15 @@ if rows:
 highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
 if highlights:
     w(f'<section style="margin:18px 4px;">')
-    w(f'<p style="margin:0 0 10px;font-size:19px;font-weight:800;color:{INK};'
-      f'border-left:6px solid {RED};padding-left:10px;">今日头条</p>')
+    w(f'<p style="margin:0 0 10px;font-size:22px;font-weight:800;color:{INK};'
+      f'border-left:7px solid {RED};padding-left:12px;">今日头条</p>')
     for h in highlights:
         label = strip_tags(h.get("label", ""))
         body = emph(h.get("text") or h.get("title"))
-        w(f'<section style="margin:0 0 14px;padding:12px 14px;background:#fff;border:1px solid {LINE};border-radius:4px;">')
+        w(f'<section style="margin:0 0 16px;padding:14px 16px;background:#fff;border:1px solid {LINE};border-radius:4px;">')
         if label:
-            w(f'<p style="margin:0 0 6px;font-size:15px;font-weight:800;color:{ORANGE};">▎{label}</p>')
-        w(f'<p style="margin:0;font-size:15px;line-height:1.85;color:{INK};">{body}</p>')
+            w(f'<p style="margin:0 0 8px;font-size:18px;font-weight:800;color:{ORANGE};">▎{label}</p>')
+        w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">{body}</p>')
         w('</section>')
     w('</section>')
 
@@ -152,19 +152,19 @@ for sec in S.get("sections", []):
     no += 1
     name = sec.get("name", "")
     icon = SEC_ICON.get(name, "📌")
-    w(f'<section style="margin:22px 4px 6px;">')
-    w(f'<p style="margin:0 0 10px;font-size:18px;font-weight:800;color:{INK};">'
+    w(f'<section style="margin:26px 4px 6px;">')
+    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:{INK};">'
       f'<span style="color:{GOLD};">{no:02d}</span>&nbsp;&nbsp;{icon} {name}</p>')
     for it in its:
         label = strip_tags(it.get("label", ""))
         src = strip_tags(it.get("src", ""))
         body = emph(it.get("text"))
-        w(f'<p style="margin:0 0 12px;font-size:15px;line-height:1.82;color:{INK};">')
+        w(f'<p style="margin:0 0 16px;font-size:19px;line-height:2.0;color:{INK};">')
         if label:
             w(f'<span style="color:{ORANGE};font-weight:700;">【{label}】</span>')
         w(body)
         if src:
-            w(f'<span style="color:{SUB};font-size:12px;">（{src}）</span>')
+            w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
         w('</p>')
     w('</section>')
 
@@ -172,27 +172,27 @@ for sec in S.get("sections", []):
 review = S.get("review", {}) or {}
 paras = review.get("paras") or []
 if paras:
-    w(f'<section style="margin:24px 4px;padding:14px;background:#fffdf7;border:1px dashed {GOLD};border-radius:4px;">')
-    w(f'<p style="margin:0 0 10px;font-size:18px;font-weight:800;color:{GOLD};">📰 {review.get("title","晨报纵览")}</p>')
+    w(f'<section style="margin:24px 4px;padding:16px;background:#fffdf7;border:1px dashed {GOLD};border-radius:4px;">')
+    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:{GOLD};">📰 {review.get("title","晨报纵览")}</p>')
     for p in paras:
-        w(f'<p style="margin:0 0 10px;font-size:15px;line-height:1.85;color:{INK};">{emph(p)}</p>')
+        w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{emph(p)}</p>')
     w('</section>')
 
 # ---------- 保险配置视角 ----------
 insure = [x for x in S.get("insure", []) if x.get("tx")]
 if insure:
-    w(f'<section style="margin:22px 4px;padding:14px;background:#f3f6f4;border-left:4px solid #2e7d4f;border-radius:4px;">')
-    w(f'<p style="margin:0 0 10px;font-size:18px;font-weight:800;color:#2e7d4f;">🛡️ 保险配置视角</p>')
+    w(f'<section style="margin:22px 4px;padding:16px;background:#f3f6f4;border-left:5px solid #2e7d4f;border-radius:4px;">')
+    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:#2e7d4f;">🛡️ 保险配置视角</p>')
     for x in insure:
         ic = x.get("ic", "•")
-        w(f'<p style="margin:0 0 10px;font-size:15px;line-height:1.82;color:{INK};">{ic} {emph(x.get("tx"))}</p>')
+        w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{ic} {emph(x.get("tx"))}</p>')
     w('</section>')
 
 # ---------- 页脚 ----------
 w(f'<section style="margin:24px 4px 8px;padding-top:14px;border-top:3px double {GOLD};text-align:center;">')
-w(f'<p style="margin:0 0 6px;font-size:15px;font-weight:700;color:{INK};">保 · 心上人</p>')
-w(f'<p style="margin:0;font-size:13px;color:{SUB};line-height:1.7;">健康 · 养老 · 传承&nbsp;&nbsp;|&nbsp;&nbsp;让天下人老有所养</p>')
-w(f'<p style="margin:10px 0 0;font-size:11px;color:{SUB};line-height:1.6;">'
+w(f'<p style="margin:0 0 6px;font-size:17px;font-weight:700;color:{INK};">保 · 心上人</p>')
+w(f'<p style="margin:0;font-size:15px;color:{SUB};line-height:1.8;">健康 · 养老 · 传承&nbsp;&nbsp;|&nbsp;&nbsp;让天下人老有所养</p>')
+w(f'<p style="margin:10px 0 0;font-size:13px;color:{SUB};line-height:1.7;">'
   f'本晨报内容综合公开财经资讯整理，仅供参考，不构成任何投资建议。市场有风险，决策需谨慎。</p>')
 w('</section>')
 
