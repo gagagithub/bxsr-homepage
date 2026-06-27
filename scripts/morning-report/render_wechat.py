@@ -10,6 +10,7 @@ pub_date 走环境变量 MX_PUB_DATE(Asia/Shanghai), 缺省取本机当天。
 """
 import os, json, re
 from datetime import datetime
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 S = json.load(open(f"{BASE}/sections.json", encoding="utf-8"))
@@ -62,12 +63,12 @@ except Exception:
 w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif;'
   f'color:{INK};font-size:19px;line-height:2.0;background:{PAPER};padding:2px;">')
 
-# ---------- 报头 ----------
-w(f'<section style="text-align:center;padding:18px 8px 14px;border-bottom:3px double {GOLD};margin-bottom:6px;">')
-w(f'<p style="margin:0;font-size:15px;letter-spacing:3px;color:{GOLD};">保 · 心 上 人 · 投 资</p>')
-w(f'<p style="margin:8px 0 4px;font-size:32px;font-weight:800;letter-spacing:6px;color:{INK};">财 经 晨 报</p>')
-w(f'<p style="margin:0;font-size:15px;color:{SUB};letter-spacing:1px;">{date_cn} · {week_cn} · 让天下人老有所养</p>')
-w('</section>')
+# ---------- 头图(占位符, 服务器侧用 cover.png 上传微信图床后替换为 <img>) ----------
+# 复用当天封面海报作正文顶部头图;海报已含"财经晨报+日期+头条精选",故此处不再放文字报头。
+# 若服务器侧图片上传失败会原样删除占位符,故保留一行小字日期兜底。
+w("{{MR_IMG:hero}}")
+w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
+  f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
 # ---------- 导读 trend ----------
 trend = S.get("trend", "").strip()
@@ -106,24 +107,9 @@ def market_rows():
 
 rows = market_rows()
 if rows:
-    w(f'<section style="margin:6px 4px 18px;">')
-    w(f'<p style="margin:0 0 8px;font-size:20px;font-weight:800;color:{INK};">📈 行情速览</p>')
-    w(f'<table style="width:100%;border-collapse:collapse;font-size:16px;">')
-    for i in range(0, len(rows), 2):
-        w('<tr>')
-        for j in range(2):
-            if i + j < len(rows):
-                name, val, note, raw = rows[i + j]
-                c = pct_color(raw)
-                w(f'<td style="width:50%;padding:9px 8px;border-bottom:1px solid {LINE};">'
-                  f'<span style="color:{SUB};font-size:15px;">{name}</span><br>'
-                  f'<span style="font-weight:700;color:{INK};font-size:18px;">{val}</span> '
-                  f'<span style="color:{c};font-size:14px;">{note}</span></td>')
-            else:
-                w(f'<td style="width:50%;border-bottom:1px solid {LINE};"></td>')
-        w('</tr>')
-    w('</table>')
-    w('</section>')
+    # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
+    # 服务器侧把 market.png 上传微信图床后替换为 <img>。
+    w("{{MR_IMG:market}}")
 
 # ---------- 头条 highlights ----------
 highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
@@ -188,8 +174,15 @@ if insure:
         w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{ic} {emph(x.get("tx"))}</p>')
     w('</section>')
 
+# ---------- 看完整晨报入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
+w(f'<section style="margin:24px 4px 6px;padding:18px 16px;background:#11305f;border-radius:8px;text-align:center;">')
+w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整晨报</p>')
+w(f'<p style="margin:8px 0 0;font-size:16px;color:#cfe0f7;line-height:1.7;">'
+  f'点击文末左下角「阅读原文」，查看全球市场 · 内地财经一图全览</p>')
+w('</section>')
+
 # ---------- 页脚 ----------
-w(f'<section style="margin:24px 4px 8px;padding-top:14px;border-top:3px double {GOLD};text-align:center;">')
+w(f'<section style="margin:18px 4px 8px;padding-top:14px;border-top:3px double {GOLD};text-align:center;">')
 w(f'<p style="margin:0 0 6px;font-size:17px;font-weight:700;color:{INK};">保 · 心上人</p>')
 w(f'<p style="margin:0;font-size:15px;color:{SUB};line-height:1.8;">健康 · 养老 · 传承&nbsp;&nbsp;|&nbsp;&nbsp;让天下人老有所养</p>')
 w(f'<p style="margin:10px 0 0;font-size:13px;color:{SUB};line-height:1.7;">'
@@ -200,6 +193,29 @@ w('</section>')
 
 html = "".join(OUT)
 open(f"{BASE}/wechat.html", "w", encoding="utf-8").write(html)
+
+# ---------- 行情速览图(template_market.html → market.html, 由 workflow 用 Chrome 截图为 market.png) ----------
+def _cls(raw):
+    if raw is None or raw == 0:
+        return "flat"
+    return "up" if raw > 0 else "down"
+
+def _arrow(raw):
+    if raw is None or raw == 0:
+        return ""
+    return "▲ " if raw > 0 else "▼ "
+
+if rows:
+    mrows = [dict(name=n, val=v, note=(note or "持平"), cls=_cls(raw), ar=_arrow(raw))
+             for (n, v, note, raw) in rows]
+    env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
+    mhtml = env.get_template("template_market.html").render(
+        data_date=(D.get("data_date") or pub_date), rows=mrows)
+    open(f"{BASE}/market.html", "w", encoding="utf-8").write(mhtml)
+    # Chrome 截图窗口高度: 头部~150 + 每行~100 + 页脚~96(随行数变化, workflow 读此值)
+    mh = 150 + len(mrows) * 100 + 96
+    open(f"{BASE}/market_h.txt", "w", encoding="utf-8").write(str(mh))
+    print(f"已渲染 market.html  行数={len(mrows)}  截图高度={mh}")
 
 # digest 摘要(公众号文章列表/分享摘要, ≤120 字, 纯文本)
 digest = strip_tags(S.get("moment_text") or trend).replace("\n", " ").strip()

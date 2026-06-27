@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root{ --ink:#222019; --sub:#8a8275; --paper:#faf7ef; --line:#e8e1cf;
+         --gold:#9c7b2e; --up:#b23b2e; --down:#2e7d4f; }
+  html,body{ width:1000px; font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif; }
+  .card{ width:1000px; background:#fffdf8; padding:0 0 34px; }
+  .hd{ background:linear-gradient(135deg,#11305f 0%,#1a5bb0 100%); color:#fff;
+       padding:34px 40px 30px; }
+  .hd .t{ font-size:46px; font-weight:900; letter-spacing:3px; }
+  .hd .d{ font-size:24px; color:#cfe0f7; margin-top:10px; letter-spacing:1px; }
+  .rows{ padding:8px 40px 0; }
+  .row{ display:flex; align-items:center; padding:26px 4px; border-bottom:2px solid var(--line); }
+  .row:last-child{ border-bottom:none; }
+  .nm{ flex:1; font-size:34px; color:var(--ink); font-weight:600; letter-spacing:1px; }
+  .vl{ font-size:40px; font-weight:800; color:var(--ink); text-align:right;
+       min-width:240px; letter-spacing:0.5px; }
+  .pill{ min-width:170px; text-align:right; margin-left:24px; font-size:30px; font-weight:800; }
+  .pill.up{ color:var(--up); }
+  .pill.down{ color:var(--down); }
+  .pill.flat{ color:var(--sub); font-weight:600; }
+  .ft{ text-align:center; margin-top:22px; font-size:22px; color:var(--sub); letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="hd">
+    <div class="t">📈 今日行情速览</div>
+    <div class="d">{{ data_date }}　全球市场 · 一图看涨跌</div>
+  </div>
+  <div class="rows">
+    {% for r in rows %}
+    <div class="row">
+      <span class="nm">{{ r.name }}</span>
+      <span class="vl">{{ r.val }}</span>
+      <span class="pill {{ r.cls }}">{{ r.ar }}{{ r.note }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="ft">数据综合公开行情，仅供参考　·　保心上人 · 让天下人老有所养</div>
+</div>
+</body>
+</html>

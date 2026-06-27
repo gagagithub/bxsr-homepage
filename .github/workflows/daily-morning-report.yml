@@ -60,6 +60,20 @@ jobs:
             "file://$GITHUB_WORKSPACE/scripts/morning-report/cover.html"
           ls -la "$GITHUB_WORKSPACE/scripts/morning-report/cover.png"
 
+      - name: Screenshot 行情速览图 (headless Chrome, 高度随行数动态)
+        working-directory: scripts/morning-report
+        run: |
+          if [ -f market.html ]; then
+            MH=$(cat market_h.txt 2>/dev/null || echo 1200)
+            google-chrome --headless=new --disable-gpu --hide-scrollbars \
+              --window-size=1000,${MH} \
+              --screenshot="$GITHUB_WORKSPACE/scripts/morning-report/market.png" \
+              "file://$GITHUB_WORKSPACE/scripts/morning-report/market.html"
+            ls -la market.png
+          else
+            echo "⚠ 无 market.html(行情取数失败), 跳过行情图, 公众号正文将不含行情图"
+          fi
+
       - name: Commit HTML to repo (留底 + 历史)
         run: |
           git config user.name "github-actions"
@@ -78,6 +92,9 @@ jobs:
             exit 1
           fi
           cd "$GITHUB_WORKSPACE/scripts/morning-report"
+          # 行情图存在才带上(行情取数失败时无 market.png, 正文则不含行情图)
+          MARKET_ARG=()
+          [ -f market.png ] && MARKET_ARG=(-F "marketImg=@market.png;type=image/png")
           RESP=$(curl -sS --max-time 180 \
             -F "token=${MORNING_REPORT_TOKEN}" \
             -F "html=@morning-report.html;type=text/html" \
@@ -85,6 +102,7 @@ jobs:
             -F "momentText=<moment_text.txt" \
             -F "wechatHtml=@wechat.html;type=text/html" \
             -F "wechatDigest=<wechat_digest.txt" \
+            "${MARKET_ARG[@]}" \
             https://214club.com.cn/creation/morningReportUpload)
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
