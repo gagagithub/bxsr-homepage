@@ -63,10 +63,9 @@ except Exception:
 w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif;'
   f'color:{INK};font-size:19px;line-height:2.0;background:{PAPER};padding:2px;">')
 
-# ---------- 头图(占位符, 服务器侧用 cover.png 上传微信图床后替换为 <img>) ----------
-# 复用当天封面海报作正文顶部头图;海报已含"财经晨报+日期+头条精选",故此处不再放文字报头。
-# 若服务器侧图片上传失败会原样删除占位符,故保留一行小字日期兜底。
-w("{{MR_IMG:hero}}")
+# ---------- 报头(纯文字, 不嵌头图) ----------
+# 注:不再在正文顶部嵌封面海报头图——它和文章封面缩略图是同一张,正文里再放就重复了。
+# 封面海报仍作草稿 thumb_media_id(文章封面),正文只留一行小字日期作报头。
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
