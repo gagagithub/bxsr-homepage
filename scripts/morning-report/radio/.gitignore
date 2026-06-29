@@ -1,0 +1,7 @@
+# 每次运行生成的中间产物 / 成片（源码与 assets/ 入参照常提交）
+content/
+audio/
+renders/
+index.html
+__pycache__/
+*.pyc

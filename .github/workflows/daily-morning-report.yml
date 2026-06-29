@@ -45,6 +45,32 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: python -u llm_morning.py
 
+      - name: Set up Node (hyperframes 渲染视频用)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ffmpeg + 视频生成 Python 依赖
+        run: |
+          sudo apt-get install -y -qq ffmpeg
+          pip install dashscope Pillow
+
+      - name: 生成财经晨报·电台视频版 (在渲染图文之前, 失败不阻塞晨报)
+        id: makevideo
+        continue-on-error: true
+        working-directory: scripts/morning-report/radio
+        env:
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+        run: |
+          if [ -z "${DASHSCOPE_API_KEY}" ]; then
+            echo "⚠ 缺 secret DASHSCOPE_API_KEY, 跳过视频生成 (晨报照常推送)"; exit 1
+          fi
+          mkdir -p ~/.aliyun
+          printf 'DASHSCOPE_API_KEY=%s\nDASHSCOPE_VOICE=longxiang\n' "${DASHSCOPE_API_KEY}" > ~/.aliyun/nls.env
+          export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
+          bash make_video.sh "${MX_PUB_DATE}"
+          ls -la renders/
+
       - name: Render H5 + cover + moment text + 公众号图文 (pub_date = 北京当天)
         working-directory: scripts/morning-report
         run: |
@@ -95,7 +121,11 @@ jobs:
           # 行情图存在才带上(行情取数失败时无 market.png, 正文则不含行情图)
           MARKET_ARG=()
           [ -f market.png ] && MARKET_ARG=(-F "marketImg=@market.png;type=image/png")
-          RESP=$(curl -sS --max-time 180 \
+          # 视频版存在才带上(渲染失败时无 mp4, 服务端自动回退 H5 链接卡)
+          VIDEO_ARG=()
+          [ -f radio/renders/morning-radio.mp4 ] && VIDEO_ARG+=(-F "video=@radio/renders/morning-radio.mp4;type=video/mp4")
+          [ -f radio/renders/poster.jpg ] && VIDEO_ARG+=(-F "poster=@radio/renders/poster.jpg;type=image/jpeg")
+          RESP=$(curl -sS --max-time 600 \
             -F "token=${MORNING_REPORT_TOKEN}" \
             -F "html=@morning-report.html;type=text/html" \
             -F "cover=@cover.png;type=image/png" \
@@ -103,6 +133,7 @@ jobs:
             -F "wechatHtml=@wechat.html;type=text/html" \
             -F "wechatDigest=<wechat_digest.txt" \
             "${MARKET_ARG[@]}" \
+            "${VIDEO_ARG[@]}" \
             https://214club.com.cn/creation/morningReportUpload)
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
