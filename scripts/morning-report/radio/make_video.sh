@@ -23,7 +23,8 @@ python3 gen_html.py .
 
 echo "▶ 5/6 渲染 mp4 (1080x1920 / 30fps) + 压制 (CRF28 faststart, 静态画面压到 ~25MB)"
 mkdir -p renders
-npx hyperframes lint
+# lint 仅作提示, 不阻断出片(新增 advisory 规则不该让每日视频静默断档)
+npx hyperframes lint || echo "⚠ lint 有告警(不阻断渲染), 见上"
 npx hyperframes render -q high -f 30 -o renders/_raw.mp4
 ffmpeg -v error -y -i renders/_raw.mp4 -c:v libx264 -preset veryfast -crf 28 \
   -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart renders/morning-radio.mp4

@@ -67,9 +67,9 @@ HTML = f'''<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>
   <div id="footer" class="clip" data-start="0" data-duration="{SCENE}" data-track-index="7">
     <div class="footer"><div class="show">财 经 晨 报</div><div class="ep">{DATE_CN} {WEEK_CN}</div></div>
   </div>
-  <audio id="narr" data-start="0" data-duration="{NARR}" data-track-index="8" src="audio/narration.mp3" data-volume="1" crossorigin="anonymous"></audio>
-  <video id="outro" data-start="{OUT_AT}" data-duration="{OUTRO}" data-track-index="0" src="assets/outro.mp4" muted playsinline crossorigin="anonymous"></video>
-  <audio id="outro-audio" data-start="{OUT_AT}" data-duration="{OUTRO}" data-track-index="1" src="assets/outro.mp4" data-volume="0.85" crossorigin="anonymous"></audio>
+  <audio id="narr" data-start="0" data-duration="{NARR}" data-track-index="8" src="audio/narration.mp3" data-volume="1"></audio>
+  <video id="outro" data-start="{OUT_AT}" data-duration="{OUTRO}" data-track-index="0" src="assets/outro.mp4" muted playsinline></video>
+  <audio id="outro-audio" data-start="{OUT_AT}" data-duration="{OUTRO}" data-track-index="1" src="assets/outro.mp4" data-volume="0.85"></audio>
   <style>
     @font-face {{ font-family:'NSC Heavy'; font-weight:900; src:url('assets/nsc-heavy.woff2') format('woff2'); }}
     #vid {{ background:#06112a; overflow:hidden; font-family:'NSC Heavy',sans-serif; }}
