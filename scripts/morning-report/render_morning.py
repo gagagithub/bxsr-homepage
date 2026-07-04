@@ -76,8 +76,13 @@ for i, sec in enumerate(S.get("sections", []), 1):
 pub_date = os.environ.get("MX_PUB_DATE") or datetime.now().strftime("%Y-%m-%d")
 data_date = D.get("data_date") or pub_date
 
+hook = S.get("hook", {}) or {}
+if isinstance(hook, str):
+    hook = {"big": hook}
+
 ctx = dict(
     pub_date=pub_date, data_date=data_date,
+    hook=hook,
     trend=S.get("trend", ""),
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
     indices=indices, chips=chips, sections=sections,

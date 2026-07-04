@@ -31,7 +31,18 @@
   .meta b{ color:#fff; }
   .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
 
-  /* TREND */
+  /* HERO 大字钩子 */
+  .hero{ margin:14px; background:linear-gradient(135deg,#0e2f63 0%,#1a59ab 100%); border-radius:15px; padding:19px 19px 17px; color:#fff; box-shadow:0 6px 20px rgba(20,50,110,.18); position:relative; overflow:hidden; }
+  .hero::after{ content:""; position:absolute; right:-46px; top:-40px; width:180px; height:180px; background:radial-gradient(circle,rgba(255,207,122,.22),transparent 70%); }
+  .hero .kbadge{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:2px; color:#0e2f63; background:#ffcf7a; padding:3px 10px; border-radius:20px; position:relative; z-index:2; }
+  .hero .big{ font-size:25px; font-weight:900; line-height:1.34; letter-spacing:.5px; margin-top:12px; position:relative; z-index:2; }
+  .hero .big .g{ color:#ffcf7a; }
+  .hero .sub{ font-size:14.5px; color:#dcebff; margin-top:10px; line-height:1.62; position:relative; z-index:2; }
+  .hero .tr{ font-size:12.5px; color:#a9c4ec; margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,.15); line-height:1.6; position:relative; z-index:2; }
+  .hero .tr .lab{ color:#ffcf7a; font-weight:800; margin-right:5px; }
+  .hero .tr b{ color:#ffdca6; }
+
+  /* TREND (无 hook 时回退) */
   .trend{ margin:14px; background:#fff; border-left:4px solid var(--gold); border-radius:10px; padding:13px 15px; box-shadow:0 3px 12px rgba(20,50,110,.06); font-size:14.5px; line-height:1.65; }
   .trend .lab{ color:var(--gold); font-weight:800; margin-right:6px; }
   .trend b{ color:var(--navy); }
@@ -115,11 +126,31 @@
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
-  {% if trend %}
+  <!-- 大字钩子(hook) / 无 hook 时回退今日风向 -->
+  {% if hook and hook.big %}
+  <div class="hero">
+    <span class="kbadge">今日看点</span>
+    <div class="big">{{ hook.big|safe }}</div>
+    {% if hook.sub %}<div class="sub">{{ hook.sub|safe }}</div>{% endif %}
+    {% if trend %}<div class="tr"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>{% endif %}
+  </div>
+  {% elif trend %}
   <div class="trend"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>
   {% endif %}
 
-  <!-- 行情数据 -->
+  <!-- 今日关注(提到行情前: 先给最抓人的新闻, 再摆数据) -->
+  {% if highlights %}
+  <div class="hl">
+    <div class="ht">⭐ 今日关注 · 头条精选</div>
+    <ul>
+      {% for h in highlights %}
+      <li>{% if h.label %}<b class="hsrc">{{ h.label }}</b>　{% endif %}{{ (h.text or h.title)|safe }}{% if h.link %} <a class="lk" href="{{ h.link }}" target="_blank">详情›</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- 行情数据(移到头条之后, 作参考区) -->
   <div class="sec-lab">行情数据 · 隔夜全球</div>
   <div class="idx-row">
     {% for x in indices %}
@@ -139,18 +170,6 @@
     </div>
     {% endfor %}
   </div>
-
-  <!-- 今日关注 -->
-  {% if highlights %}
-  <div class="hl">
-    <div class="ht">⭐ 今日关注 · 头条精选</div>
-    <ul>
-      {% for h in highlights %}
-      <li>{% if h.label %}<b class="hsrc">{{ h.label }}</b>　{% endif %}{{ (h.text or h.title)|safe }}{% if h.link %} <a class="lk" href="{{ h.link }}" target="_blank">详情›</a>{% endif %}</li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
 
   <!-- 板块 -->
   {% for s in sections %}

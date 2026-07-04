@@ -69,9 +69,28 @@ w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
-# ---------- 导读 trend ----------
+# ---------- 大字钩子 hook (抓眼球, 放最前) ----------
+hook = S.get("hook", {}) or {}
+if isinstance(hook, str):
+    hook = {"big": hook}
 trend = S.get("trend", "").strip()
-if trend:
+big = strip_tags(hook.get("big", "")).strip()
+sub = strip_tags(hook.get("sub", "")).strip()
+if big:
+    w(f'<section style="margin:6px 4px 16px;padding:20px 18px 17px;'
+      f'background:linear-gradient(135deg,#0e2f63,#1a59ab);border-radius:12px;">')
+    w(f'<p style="margin:0 0 10px;display:inline-block;font-size:12px;font-weight:800;letter-spacing:2px;'
+      f'color:#0e2f63;background:#ffcf7a;padding:3px 11px;border-radius:20px;">今日看点</p>')
+    w(f'<p style="margin:0;font-size:25px;font-weight:900;line-height:1.35;color:#fff;">{big}</p>')
+    if sub:
+        w(f'<p style="margin:10px 0 0;font-size:15px;line-height:1.65;color:#dcebff;">{sub}</p>')
+    if trend:
+        w(f'<p style="margin:12px 0 0;padding-top:11px;border-top:1px solid rgba(255,255,255,.15);'
+          f'font-size:13px;line-height:1.6;color:#a9c4ec;">'
+          f'<span style="color:#ffcf7a;font-weight:800;">🔥 今日风向 </span>{strip_tags(trend)}</p>')
+    w('</section>')
+elif trend:
+    # 无 hook 时回退旧的导读框
     w(f'<section style="margin:10px 4px 16px;padding:14px 16px;background:#fffdf7;'
       f'border-left:5px solid {GOLD};border-radius:2px;">')
     w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">'
@@ -104,13 +123,9 @@ def market_rows():
         rows.append(("美元指数", f"{fx['DXY']['cur']:.2f}", fmt_pct(fx['DXY'].get("day_pct")), fx['DXY'].get("day_pct")))
     return rows
 
-rows = market_rows()
-if rows:
-    # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
-    # 服务器侧把 market.png 上传微信图床后替换为 <img>。
-    w("{{MR_IMG:market}}")
+rows = market_rows()  # 供文末生成 market.png 用; 图片本身移到头条之后再插
 
-# ---------- 头条 highlights ----------
+# ---------- 头条 highlights(先给最抓人的新闻) ----------
 highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
 if highlights:
     w(f'<section style="margin:18px 4px;">')
@@ -125,6 +140,12 @@ if highlights:
         w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">{body}</p>')
         w('</section>')
     w('</section>')
+
+# ---------- 行情速览(移到头条之后, 作参考区) ----------
+if rows:
+    # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
+    # 服务器侧把 market.png 上传微信图床后替换为 <img>。
+    w("{{MR_IMG:market}}")
 
 # ---------- 8 板块 ----------
 SEC_ICON = {"宏观经济": "🏛️", "地产动态": "🏙️", "股市盘点": "📊", "财富聚焦": "💰",
