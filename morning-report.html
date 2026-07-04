@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
-<title>财经晨报 · 2026-07-04 · 保心上人</title>
+<title>财经晨报 · 2026-07-05 · 保心上人</title>
 <style>
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
   :root{
@@ -31,7 +31,30 @@
   .meta b{ color:#fff; }
   .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
 
-  /* TREND */
+  /* 三大主题 健康/养老/传承 */
+  .theme{ margin:16px 14px 0; background:#fff; border-radius:14px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
+  .theme .th{ display:flex; align-items:center; gap:9px; padding:14px 16px; }
+  .theme .th .tic{ font-size:22px; }
+  .theme .th .tnm{ font-size:19px; font-weight:900; letter-spacing:2px; }
+  .theme .th .tsub{ font-size:11.5px; color:#fff; opacity:.9; margin-left:auto; background:rgba(255,255,255,.22); padding:3px 9px; border-radius:20px; letter-spacing:.5px; }
+  .theme ol{ list-style:none; counter-reset:item; padding:4px 16px 6px; }
+  .theme li{ counter-increment:item; padding:10px 0; border-bottom:1px dashed #eef2f8; font-size:14px; line-height:1.74; text-align:justify; color:#2c3a52; }
+  .theme li:last-child{ border-bottom:none; }
+  .theme li::before{ content:counter(item) "、"; color:#c8801f; font-weight:900; font-style:italic; margin-right:1px; }
+  .theme li b.src{ color:#c8801f; font-weight:800; font-style:normal; }
+  .theme li b{ color:var(--up); font-weight:800; }
+  .theme li .lk{ color:var(--blue); font-size:11px; white-space:nowrap; margin-left:2px; opacity:.85; }
+  .theme .tinsight{ margin:6px 14px 15px; padding:12px 14px; border-radius:10px; font-size:13.6px; line-height:1.75; color:#25405f; }
+  .theme .tinsight .tilab{ display:block; font-weight:800; margin-bottom:5px; letter-spacing:.5px; }
+  /* 每主题一套色: 健康绿 / 养老金橙 / 传承墨绿 */
+  .theme-1 .th{ background:linear-gradient(100deg,#0f7a4a,#17a06a); } .theme-1 .th .tnm{ color:#fff; }
+  .theme-1 .tinsight{ background:#f1f9f4; border-left:4px solid #17a06a; } .theme-1 .tinsight .tilab{ color:#0f7a4a; } .theme-1 .tinsight b{ color:#0f7a4a; }
+  .theme-2 .th{ background:linear-gradient(100deg,#b9791b,#e0a53a); } .theme-2 .th .tnm{ color:#fff; }
+  .theme-2 .tinsight{ background:#fdf6ea; border-left:4px solid #d99a2f; } .theme-2 .tinsight .tilab{ color:#b9791b; } .theme-2 .tinsight b{ color:#b9791b; }
+  .theme-3 .th{ background:linear-gradient(100deg,#1b6b57,#2a8f74); } .theme-3 .th .tnm{ color:#fff; }
+  .theme-3 .tinsight{ background:#eff7f3; border-left:4px solid #2a8f74; } .theme-3 .tinsight .tilab{ color:#1b6b57; } .theme-3 .tinsight b{ color:#1b6b57; }
+
+  /* TREND (无 hook 时回退) */
   .trend{ margin:14px; background:#fff; border-left:4px solid var(--gold); border-radius:10px; padding:13px 15px; box-shadow:0 3px 12px rgba(20,50,110,.06); font-size:14.5px; line-height:1.65; }
   .trend .lab{ color:var(--gold); font-weight:800; margin-right:6px; }
   .trend b{ color:var(--navy); }
@@ -111,15 +134,100 @@
       <div class="upd">每日 07:30 自动更新</div>
     </div>
     <h1 class="title"><span class="em">📰</span> 财经晨报</h1>
-    <div class="meta">📅 <b>2026-07-04</b> ｜ 数据截至前一交易日（2026-07-03）收盘 · 全球市场 + 内地财经</div>
+    <div class="meta">📅 <b>2026-07-05</b> ｜ 数据截至前一交易日（2026-07-03）收盘 · 全球市场 + 内地财经</div>
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
+  <!-- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) -->
   
-  <div class="trend"><span class="lab">🔥 今日风向</span>全球央行增持黄金与AI算力需求扩张成为主线，<b>黄金</b>与<b>算力</b>资产配置价值凸显。</div>
+  <div class="theme theme-1">
+    <div class="th">
+      <span class="tic">🏥</span>
+      <span class="tnm">健康</span>
+      <span class="tsub">看病住院 · 报销保障</span>
+    </div>
+    
+    <ol>
+      
+      <li><b class="src">康希诺：</b>康希诺研发的婴幼儿三组分百白破疫苗“盼康欣”预计<b>7月</b>可获得首批批签发，已在几个省份获得准入。家里有小孩的可以关注，百白破疫苗是常规接种，新疫苗上市后选择更多。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794196135.html" target="_blank">›</a></li>
+      
+      <li><b class="src">新华制药：</b>新华制药抗肺动脉高压1类创新药LXH-1211片I期临床试验启动。该药由新华制药与中南大学联合研发，具有双重作用机制，既能舒张血管降低肺动脉高压，又能阻止血管重构和纤维化。肺动脉高压是罕见病，新药研发对患者是希望，但离上市还早。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794142615.html" target="_blank">›</a></li>
+      
+      <li><b class="src">医疗数据：</b>2026全球数字经济大会医疗健康专题论坛在北京举办，聚焦医疗数据要素流通。国内在制度、技术、场景落地方面已有最新探索，医疗数据价值化有望提升诊疗效率，但个人隐私保护也得跟上。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794211754.html" target="_blank">›</a></li>
+      
+      <li><b class="src">香港患者：</b>深圳新风和睦家医院数据显示，肿瘤科中香港患者占比达<b>75%至80%</b>，其中约一半是肺癌患者。原因是内地集采靶向药价格便宜，部分抗癌药内地价格不到香港的<b>两成</b>。香港患者北上寻药，说明内地医保控费效果显著，但进口药和自费药差价仍是投保时需关注的。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794169517.html" target="_blank">›</a></li>
+      
+    </ol>
+    
+    
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天健康新闻不多，但有一条值得注意：香港患者北上买药，内地抗癌药价格不到香港两成。这说明医保集采压价厉害，但同时也意味着医院里进口药、原研药可能越来越少。50岁以后买重疾险太贵，不如用<b>百万医疗险+防癌险</b>替代。百万医疗险能报销住院费，但要注意条款里是否涵盖进口药、自费药——很多产品只报社保内，差价得自己掏。防癌险专门保癌症，核保宽松，有三高也能买。建议体检报告有结节的，趁早配好医疗险，别等查出问题再买。</div>
+    
+  </div>
+  
+  <div class="theme theme-2">
+    <div class="th">
+      <span class="tic">🌅</span>
+      <span class="tnm">养老</span>
+      <span class="tsub">养老钱 · 该往哪放</span>
+    </div>
+    
+    <ol>
+      
+      <li><b class="src">深交所：</b>深交所交易新规7月6日落地，三大变化：创业板股票协议大宗交易改成实时成交确认；扩大盘后固定价格交易范围；调整主板风险警示股票涨跌幅限制比例。这些调整主要影响机构和大户的交易方式，对普通散户影响不大，但说明市场规则在细化，养老钱炒股的朋友可以留意下流动性变化。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794176890.html" target="_blank">›</a></li>
+      
+      <li><b class="src">江波龙：</b>存储龙头江波龙发布半年业绩预告，预计上半年净利润<b>92亿至110亿元</b>，同比暴增<b>62204%至74394%</b>，去年全年净利润才14.23亿元。股价过去一年涨了<b>651%</b>。这种业绩爆发主要靠AI存储需求，但高增长能否持续不好说，养老钱追这类股票要小心波动。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794179496.html" target="_blank">›</a></li>
+      
+      <li><b class="src">多家公募：</b>平安基金、诺安基金等五家公募对下半年市场表态，普遍认为慢牛趋势可期，AI科技产业仍是中长期最确定的主线。机构看好AI，但养老钱配置不能全押一个赛道，均衡才是关键。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794036139.html" target="_blank">›</a></li>
+      
+      <li><b class="src">券商金股：</b>截至7月3日，已有39家券商发布7月金股，合计<b>267只</b>个股入选。配置方向集中在AI算力、高端制造等科技龙头，同时兼顾资源品和消费蓝筹。券商金股是参考，但养老钱跟风需谨慎，别只看推荐。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793941668.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国家统计局：</b>国家统计局数据显示，6月下旬与中旬相比，全国50种重要生产资料中<b>13种</b>价格上涨，<b>34种</b>下降，<b>3种</b>持平。工业品价格整体偏弱，反映经济复苏节奏不快，养老钱投周期股要留意。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794150166.html" target="_blank">›</a></li>
+      
+      <li><b class="src">国内航线：</b>国航、东航、南航等多家航司宣布，自7月5日起国内航线燃油附加费下调。这对暑期出行是利好，但养老钱省下的几十块钱不算啥，关键还是看长期理财收益。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794141094.html" target="_blank">›</a></li>
+      
+      <li><b class="src">快递业务量：</b>国家邮政局数据显示，截至6月30日，今年我国快递业务量已超<b>1000亿件</b>，比去年提前<b>9天</b>。消费市场平稳增长，经济有韧性，养老钱不用太悲观。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794185370.html" target="_blank">›</a></li>
+      
+    </ol>
+    
+    
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天市场消息偏暖，但养老钱配置别被短期业绩暴增冲昏头。江波龙这类股票涨幅惊人，可高增长背后是AI风口，一旦退潮风险不小。券商金股和公募看好AI，但养老钱讲究稳，建议别超过总资产的<b>20%</b>投权益类。利率下行趋势没变，想锁长期收益的朋友，可关注能锁定利率的保险产品，比如年金险，用现在利率锁定未来现金流。每月想领1万养老金，按<b>3%</b>利率倒推，本金大概需要<b>400万</b>，趁现在还能找到接近这个水平的产品，早点规划。</div>
+    
+  </div>
+  
+  <div class="theme theme-3">
+    <div class="th">
+      <span class="tic">🌳</span>
+      <span class="tnm">传承</span>
+      <span class="tsub">家底保值 · 稳稳传下去</span>
+    </div>
+    
+    <ol>
+      
+      <li><b class="src">深圳住建局：</b>深圳楼市上半年有点回暖的意思。6月深圳一二手住宅合计网签<b>8878套</b>，同比涨了<b>14.2%</b>。整个上半年加起来，一二手住宅网签<b>47378套</b>，比去年下半年涨了<b>10%</b>。有个豪宅盘单价超<b>18万</b>，开盘还是“日光”。房子还是硬通货，尤其核心地段的好房子，有钱人照样抢。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793878825.html" target="_blank">›</a></li>
+      
+      <li><b class="src">太盟系：</b>万达又在卖资产了。湛江开发区万达广场的股东悄悄换了，原股东万达商业退出了，新进来的叫上海安垚，背后是太盟系。法定代表人也从李大伟换成了宋敏。这已经不是太盟第一次接盘万达广场了，看来万达还在持续“瘦身”，商业地产的持有权在慢慢转移。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793868338.html" target="_blank">›</a></li>
+      
+      <li><b class="src">港交所：</b>中国平安继续加仓农业银行H股。6月30日，平安人寿在场内买了<b>1.7亿股</b>农行H股。算上之前平安系其他公司手里的，现在总共持有农行H股<b>81.14亿股</b>，占农行H股总数的比例已经超过<b>26%</b>。大资金还在往银行股里涌，看重的是稳定分红和资产安全。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794174527.html" target="_blank">›</a></li>
+      
+      <li><b class="src">成都国资：</b>成都国资出手买基金公司股权了。成都交子新兴集团一口气拿下了中海基金<b>58.409%</b>的股权，花了<b>2.67亿元</b>。卖方是国联民生证券和法国爱德蒙得洛希尔银行。地方国资正在通过收购金融牌照，把更多资产和资源攥在自己手里。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794160267.html" target="_blank">›</a></li>
+      
+      <li><b class="src">黑龙江金融监管局：</b>中融国际信托正式获批破产。黑龙江金融监管局发公告，同意中融信托依法进入破产程序。这家曾经的头部信托公司，因为资金池业务爆雷，最终走到了破产这一步。信托产品不再是“刚兑”的避风港，高收益背后就是高风险，选产品得擦亮眼。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794169043.html" target="_blank">›</a></li>
+      
+      <li><b class="src">财政部：</b>明年起，部分新能源车要开始交车船税了。财政部等三部门发公告，调整了节能和新能源车的车船税优惠。增程车也在缴税范围内，只有纯电乘用车继续免。车企说，车船税金额不大，更多是心理和政策导向上的压力，说明补贴在慢慢退坡，买车的成本会悄悄增加。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793870393.html" target="_blank">›</a></li>
+      
+      <li><b class="src">红星资本局：</b>手机靓号在拍卖市场上分化明显。最近一个含<b>7个1</b>的号码拍出了<b>38万元</b>高价，归属地四川绵阳，过户后无最低消费。但也有不少靓号<b>5万</b>起拍却没人出价直接流拍。稀缺数字组合还是有人愿意花大价钱，但普通靓号已经没那么吃香了。 <a class="lk" href="https://finance.eastmoney.com/a/202607043794164915.html" target="_blank">›</a></li>
+      
+      <li><b class="src">新华社：</b>黄金价格还在高位震荡。虽然今天没有直接的金价新闻，但近期国际金价一直在每盎司<b>2300美元</b>上下波动。家里有黄金的可以留意一下，金价高的时候是考虑变现或者调整配置的窗口。 <a class="lk" href="https://finance.eastmoney.com/a/202607053794218958.html" target="_blank">›</a></li>
+      
+    </ol>
+    
+    
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天这些新闻，跟咱们这个岁数、这个家底的人关系不小。楼市回暖、万达卖资产、平安加仓银行股、成都国资买基金公司——这些信号说明，有钱人还在往核心资产上堆，但资产形式在变：从自己持有商业地产，变成通过金融产品间接持有。中融信托破产是个警钟，信托、理财这类产品，以后得看底层资产靠不靠谱，不能光看牌子。手机靓号拍出38万，说明稀缺性还是有价值，但普通资产就不一定了。想给子女留东西，房子、股权、金融资产，怎么隔离、怎么过户、怎么避税，得提前规划。比如保单受益人指定，比遗嘱和过户更隐蔽、成本更低，还能防离婚分割。黄金作为压舱石，现在价格不低，可以看看是不是该调整比例了。</div>
+    
+  </div>
   
 
-  <!-- 行情数据 -->
+  <!-- 行情数据(移到三大主题之后、晨报纵览之前) -->
   <div class="sec-lab">行情数据 · 隔夜全球</div>
   <div class="idx-row">
     
@@ -164,12 +272,12 @@
     
     <div class="chip">
       <div class="l">人民币 USD/CNY</div>
-      <div class="v">6.7692<span class="nt flat">中行</span></div>
+      <div class="v">6.7702<span class="nt flat">中行</span></div>
     </div>
     
     <div class="chip">
       <div class="l">美元指数</div>
-      <div class="v">100.87<span class="nt down">-0.01%</span></div>
+      <div class="v">100.91<span class="nt up">+0.03%</span></div>
     </div>
     
     <div class="chip">
@@ -184,245 +292,16 @@
     
   </div>
 
-  <!-- 今日关注 -->
-  
-  <div class="hl">
-    <div class="ht">⭐ 今日关注 · 头条精选</div>
-    <ul>
-      
-      <li><b class="hsrc">世界黄金协会</b>　2026年5月，全球央行官方黄金储备净增加<b>41吨</b>，较4月重新回升，购金力量集中于波兰、中国、乌兹别克斯坦和哈萨克斯坦等新兴市场经济体。尽管国际金价经历连续数月调整，央行增持趋势未改。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793834430.html" target="_blank">详情›</a></li>
-      
-      <li><b class="hsrc">摩根大通</b>　摩根大通预计黄金短期震荡，2026年第三季度均价为<b>4300美元</b>/盎司，第四季度回升至<b>4500美元</b>/盎司，并指出若经济数据强劲导致美联储提前加息，预测面临下行风险。该行维持长期看涨观点，预计2027年金价延续涨势。</li>
-      
-      <li><b class="hsrc">证监会</b>　证监会就完善上市公司再融资规则公开征求意见，拟将沪深交易所上市公司小额快速融资上限从<b>3亿元</b>提升至<b>6亿元</b>，净资产超100亿元的特大型企业上限提升至<b>10亿元</b>；同时简化向控股股东定增条件，并将限售期延长至<b>36个月</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793715175.html" target="_blank">详情›</a></li>
-      
-      <li><b class="hsrc">江波龙</b>　国内头部存储模组厂商江波龙发布2026年半年度业绩预告，预计归母净利润<b>92亿元至110亿元</b>，同比增长<b>62204%至74394%</b>，上年同期仅1476.63万元；预计营业收入<b>220亿元至250亿元</b>，同比增长超一倍。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793700061.html" target="_blank">详情›</a></li>
-      
-      <li><b class="hsrc">OPEC</b>　据调查，石油输出国组织(OPEC)上月原油产量大幅增加<b>234万桶/日</b>，至<b>1875万桶/日</b>，增幅主要来自科威特、沙特阿拉伯和伊朗。尽管如此，产量仍明显低于战前水平，较2月水平低<b>730万桶/日</b>，幅度为<b>28%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793891972.html" target="_blank">详情›</a></li>
-      
-      <li><b class="hsrc">英伟达</b>　英伟达推出“算力换分成”新模式，为AI初创企业提供GPU资源支持。数据显示，今年英伟达Blackwell 200芯片租赁价格上涨约<b>20%</b>，旧款芯片过去一年涨幅超<b>20%</b>。存储紧缺推高GB300机架价格，部分核心零部件单周波动最高达<b>40%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793672583.html" target="_blank">详情›</a></li>
-      
-    </ul>
-  </div>
-  
-
-  <!-- 板块 -->
-  
-  <div class="sec">
-    <div class="sh"><span class="no">01</span><span class="ic">🏛️</span><span class="nm">宏观经济</span></div>
-    <ol>
-      
-      <li><b class="src">国务院：</b>国务院印发《美丽中国建设“十五五”规划》，明确到<b>2030年</b>生态环境质量全面改善，并提出强化财政支持、丰富绿色金融产品和服务，有序推进碳金融产品和衍生工具创新。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793946971.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国家发改委：</b>国家发改委、国家能源局印发《新型能源体系建设“十五五”规划》，将可控核聚变列为未来能源技术创新发展重点方向；国内“人造太阳”项目取得进展，两套聚变堆关键超导磁体完成研制验收与满参数测试，核心技术实现<b>100%国产化</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793951967.html" target="_blank">›</a></li>
-      
-      <li><b class="src">世界气象组织：</b>世界气象组织7月3日发表公报称，厄尔尼诺状态已在热带太平洋地区发展，预计未来数月将迅速加强，增加全球多地出现热浪、干旱、强降雨等极端天气事件的可能性。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793792427.html" target="_blank">›</a></li>
-      
-      <li><b class="src">商务部：</b>商务部党组召开会议，强调要以钉钉子精神推动扩消费、稳外贸、稳外资、多双边经贸合作等重点工作，部长王文涛主持会议并讲话。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793819828.html" target="_blank">›</a></li>
-      
-      <li><b class="src">交通运输部：</b>交通运输部党组书记刘伟主持召开部务会，审议通过《关于推动夜游船高质量发展促进消费的若干措施》，要求完善基础设施、提升服务品质，培育壮大夜游船经济，激发消费市场活力。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793729743.html" target="_blank">›</a></li>
-      
-      <li><b class="src">交通运输部：</b>交通运输部强调深入实施“人工智能+交通运输”行动，加快完善发展和治理体系，守牢人工智能安全底线，并落实《“十五五”碳达峰行动方案》涉交通运输工作。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793727743.html" target="_blank">›</a></li>
-      
-      <li><b class="src">农业农村部：</b>农业农村部部长张柱在浙江调研“千万工程”进展，强调深入学习运用“千万工程”经验，分类有序推进乡村全面振兴。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793846452.html" target="_blank">›</a></li>
-      
-      <li><b class="src">农业农村部：</b>农业农村部召开农产品品质提升工作推进会，强调守牢安全底线、加强标准引领、推进品质标准升级，增加绿色、有机、名特优新和地理标志农产品供给。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793683513.html" target="_blank">›</a></li>
-      
-      <li><b class="src">央行等三部门：</b>央行等三部门就《金融业网络安全管理办法》征求意见，拟对金融等重要行业和领域的关键信息基础设施实行重点保护，建立健全跨部门综合监管制度。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793677470.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国家电影局：</b>国家电影局、市场监管总局联合印发《关于促进电影院多样化经营的通知》，推动电影院多样化经营，繁荣电影院文化。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793751541.html" target="_blank">›</a></li>
-      
-      <li><b class="src">市场监管总局：</b>市场监管总局近日批准发布《平板式堆叠卫星星箭机械接口要求》等多项宇航领域国家标准，推动航天标准化建设。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793729170.html" target="_blank">›</a></li>
-      
-      <li><b class="src">市场监管总局：</b>市场监管总局就《眼镜制配经营者计量行为合规要求》公开征求意见，意见反馈截止至8月3日。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793696465.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">02</span><span class="ic">🏙️</span><span class="nm">地产动态</span></div>
-    <ol>
-      
-      <li><b class="src">海南省公积金局：</b>海南省住房公积金管理局通知，缴存人家庭在海南无未结清公积金贷款（或有贷款但账户余额足够偿还3个月贷款）的，每年可申请提取一次公积金支付省内一套自住住房物业费，合计提取额度每年不超过<b>1万元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793902058.html" target="_blank">›</a></li>
-      
-      <li><b class="src">加拿大：</b>加拿大6月温哥华基准住房价格同比下降<b>6%</b>，住房销售同比增长<b>9.6%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793878029.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">03</span><span class="ic">📊</span><span class="nm">股市盘点</span></div>
-    <ol>
-      
-      <li><b class="src">证监会：</b>证监会就完善上市公司再融资规则公开征求意见，拟将沪深交易所小额快速融资上限从<b>3亿元</b>提升至<b>6亿元</b>（净资产超100亿元的特大型企业上限提升至<b>10亿元</b>），北交所上限从<b>1亿元</b>提升至<b>2亿元</b>，并简化向控股股东定增条件，限售期延长至<b>36个月</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793715175.html" target="_blank">›</a></li>
-      
-      <li><b class="src">深交所：</b>深交所就修订《证券发行上市审核规则》征求意见，优化简易程序适用范围，明确保荐人或相关签字人员最近一年因同类业务受行政处罚或公开谴责的不得适用简易程序。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793727634.html" target="_blank">›</a></li>
-      
-      <li><b class="src">上交所：</b>上交所就《证券发行与承销业务实施细则》征求意见，新增储架发行的发行承销安排，提高再融资灵活性。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793723640.html" target="_blank">›</a></li>
-      
-      <li><b class="src">上交所：</b>上交所本周对中船特气、长盈通、昀冢科技等异常波动股票及财通福鑫LOF、全球芯片LOF等溢价基金进行重点监控，对<b>366起</b>异常交易行为采取自律监管措施，上报<b>2起</b>涉嫌违法违规线索。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793700126.html" target="_blank">›</a></li>
-      
-      <li><b class="src">深交所：</b>深交所本周对<b>263起</b>证券异常交易行为采取自律监管措施，涉及盘中拉抬打压、虚假申报等情形，对<b>8起</b>重大事项核查，上报证监会<b>4起</b>涉嫌违法违规线索。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793717948.html" target="_blank">›</a></li>
-      
-      <li><b class="src">江波龙：</b>江波龙发布半年度业绩预告，预计归母净利润<b>92亿元至110亿元</b>，同比增长<b>62204%至74394%</b>；扣非净利润<b>90亿元至105亿元</b>，营业收入<b>220亿元至250亿元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793864884.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国泰海通：</b>国泰海通预计上半年归母净利润<b>200.03亿元至205.11亿元</b>，同比增长<b>27%至30%</b>；扣非净利润<b>192.49亿元至197.57亿元</b>，同比增长<b>164%至171%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793697630.html" target="_blank">›</a></li>
-      
-      <li><b class="src">鹏鼎控股：</b>鹏鼎控股拟定增募资不超过<b>96亿元</b>，用于“庆鼎AI服务器和高速光模块高密度互连积层板项目”，计划总投资<b>127.3亿元</b>，新增约<b>65.56万平方米</b>高阶HDI年产能。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793708330.html" target="_blank">›</a></li>
-      
-      <li><b class="src">ST龙大：</b>ST龙大公告，“龙大转债”将于7月12日到期，兑付价格<b>115元/张</b>，但公司当前货币资金余额预计无法覆盖到期本息，存在无法按期兑付的重大风险。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793762651.html" target="_blank">›</a></li>
-      
-      <li><b class="src">聚石化学：</b>聚石化学公告，公司2025年净利润<b>-1.55亿元</b>，2026年一季度净利润<b>-0.6亿元</b>，仍处亏损状态；市净率<b>11.76倍</b>明显高于行业，光刻胶、氢能等项目仅早期研发，未产生收入。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793688993.html" target="_blank">›</a></li>
-      
-      <li><b class="src">南向资金：</b>南向资金今日净买入逾<b>45亿港元</b>，其中建滔积层板获净买入<b>9.04亿港元</b>，小米集团-W获净买入<b>8.63亿港元</b>，腾讯控股获净买入<b>2.98亿港元</b>；华虹宏力遭净卖出<b>9.97亿港元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793650017.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">04</span><span class="ic">📌</span><span class="nm">财富聚焦</span></div>
-    <ol>
-      
-      <li><b class="src">世界黄金协会：</b>世界黄金协会报告显示，2026年5月全球央行官方黄金储备净增加<b>41吨</b>，购金力量集中于波兰、中国、乌兹别克斯坦和哈萨克斯坦等新兴市场经济体。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793834430.html" target="_blank">›</a></li>
-      
-      <li><b class="src">摩根大通：</b>摩根大通预计黄金短期震荡，第三季度均价<b>4300美元/盎司</b>，第四季度回升至<b>4500美元/盎司</b>；同时指出若经济数据强劲导致美联储提前加息，预测面临下行风险。</li>
-      
-      <li><b class="src">摩根大通：</b>摩根大通报告显示，6月大模型调用量、API支出及非云厂商GPU租赁价格同步走强，AI基础设施需求仍在扩张，模型提供商的单位经济性总体改善。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793675491.html" target="_blank">›</a></li>
-      
-      <li><b class="src">英伟达：</b>英伟达推出“算力换分成”新模式，为AI初创企业、大模型开发商等提供新的算力获取渠道，通过收入分成和信贷支持计划降低客户算力成本。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793672583.html" target="_blank">›</a></li>
-      
-      <li><b class="src">德银：</b>德意志银行认为，Meta向外部客户出售AI算力及模型访问权限，更可能是将较旧或闲置算力变现，同时保留最新芯片用于内部训练，并非削弱前沿模型布局。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793676334.html" target="_blank">›</a></li>
-      
-      <li><b class="src">美银：</b>美国银行将欧洲电信行业评级从“中性”上调至“增持”，认为行业前景改善。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793676755.html" target="_blank">›</a></li>
-      
-      <li><b class="src">美银全球研究：</b>美银全球研究将英国市场评级从“中性”上调至“增持”，看好英国市场表现。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793675929.html" target="_blank">›</a></li>
-      
-      <li><b class="src">上半年A股：</b>上半年A股新开户数超<b>2000万户</b>，释放居民资产配置从“不动产+存款”向“多元化金融资产”迁移的结构性转变信号，反映市场对宏观经济与资本市场持续向好的共识。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793942755.html" target="_blank">›</a></li>
-      
-      <li><b class="src">充电模块厂商：</b>优优绿能、安世博、通合电子、易能时代等四家充电模块企业发布涨价函，因上游原材料采购成本明显提升，充电模块集体涨价<b>15%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793676124.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国家药监局：</b>国家药监局就优化细胞与基因治疗药品审评审批征求意见，拟将符合条件的品种纳入创新药临床试验审评审批<b>30日</b>通道，鼓励全球同步研发和国际多中心临床试验。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793670957.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">05</span><span class="ic">🔬</span><span class="nm">行业观察</span></div>
-    <ol>
-      
-      <li><b class="src">发改委/国家能源局：</b>国家发改委、国家能源局印发《新型能源体系建设“十五五”规划》，明确将可控核聚变列为未来能源技术创新发展重点方向。国内“人造太阳”项目取得最新进展，两套聚变堆关键超导磁体先后完成研制验收与满参数测试，核心技术实现<b>100%</b>国产化。资本层面，24家机构联合“入局”，星核聚变完成<b>8.3亿元</b>天使轮融资，刷新国内民营核聚变企业首轮融资规模纪录。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793951967.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国务院：</b>国务院印发《美丽中国建设“十五五”规划》，这是我国首个以“美丽中国”命名的五年规划。规划明确到<b>2030年</b>生态环境质量全面改善，并提出强化财政支持、丰富绿色金融产品和服务，积极推动气候投融资，有序推进碳金融产品和衍生工具创新。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793946971.html" target="_blank">›</a></li>
-      
-      <li><b class="src">证监会：</b>证监会就完善上市公司再融资规则公开征求意见，优化小额快速再融资制度：在拟融资规模不超过净资产<b>20%</b>的前提下，沪深交易所上市公司小额快速融资上限从<b>3亿元</b>提升至<b>6亿元</b>，净资产超过<b>100亿元</b>的特大型企业上限提升至<b>10亿元</b>；北交所上限从<b>1亿元</b>提升至<b>2亿元</b>。同时简化向控股股东定增条件，限售期延长至<b>36个月</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793715175.html" target="_blank">›</a></li>
-      
-      <li><b class="src">工信部：</b>工业和信息化部决定成立量子信息标准化技术委员会（编号MIIT/TC10），主要负责基础共性、量子计算、量子通信、量子精密测量等领域行业标准制修订工作。第一届委员会由<b>62名</b>委员组成，秘书处由中国信息通信研究院承担。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793705735.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国家药监局：</b>国家药监局就优化细胞与基因治疗药品审评审批公开征求意见，拟将符合条件的细胞与基因治疗药品纳入创新药临床试验审评审批<b>30日</b>通道，聚焦恶性肿瘤、罕见病、遗传性疾病、免疫系统疾病、神经退行性疾病等重点领域，鼓励全球同步研发和国际多中心临床试验。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793670957.html" target="_blank">›</a></li>
-      
-      <li><b class="src">交通运输部：</b>交通运输部党组书记、部长刘伟主持召开部务会，强调深入实施“人工智能+交通运输”行动，加快完善发展和治理体系，守牢人工智能安全底线。同时审议通过《关于推动夜游船高质量发展促进消费的若干措施》，推动夜游船经济，激发消费市场活力。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793727743.html" target="_blank">›</a></li>
-      
-      <li><b class="src">世界黄金协会：</b>世界黄金协会报告显示，<b>2026年5月</b>全球央行官方黄金储备净增加<b>41吨</b>，较4月重新回升。购金力量集中于波兰、中国、乌兹别克斯坦和哈萨克斯坦等新兴市场经济体，波兰依旧是最大买家。尽管国际金价经历连续数月调整，全球央行依然坚定增持黄金。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793834430.html" target="_blank">›</a></li>
-      
-      <li><b class="src">摩根大通：</b>摩根大通最新《数据中心观察》报告显示，<b>6月</b>大模型调用量、API支出及非云厂商GPU租赁价格同步走强，AI基础设施需求仍在扩张。尽管模型Token价格同比继续下滑，但使用量增长已明显覆盖降价影响，模型提供商的单位经济性总体呈改善趋势。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793675491.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">06</span><span class="ic">🏢</span><span class="nm">公司要闻</span></div>
-    <ol>
-      
-      <li><b class="src">江波龙：</b>江波龙发布2026年半年度业绩预告，预计归母净利润<b>92亿元至110亿元</b>，上年同期为<b>1476.63万元</b>，同比增长<b>62204%至74394%</b>；预计扣非净利润<b>90亿元至105亿元</b>，营业收入<b>220亿元至250亿元</b>，上年同期为<b>101.96亿元</b>。Q2净利润预计<b>53.38亿至71.38亿</b>，环比变动<b>38%至84%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793700061.html" target="_blank">›</a></li>
-      
-      <li><b class="src">鹏鼎控股：</b>鹏鼎控股发布2026年度向特定对象发行A股股票预案，拟募集资金总额不超过<b>96亿元</b>，用于“庆鼎AI服务器和高速光模块高密度互连积层板项目”。发行数量不超过发行前总股本的<b>10%</b>（约<b>2.32亿股</b>），募投项目计划总投资<b>127.3亿元</b>，将新增约<b>65.56万平方米</b>高阶HDI年产能。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793708330.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国泰海通：</b>国泰海通公告，2026年上半年预计实现归属于母公司所有者的净利润<b>200.03亿元至205.11亿元</b>，同比增加<b>27%至30%</b>（上年同期数据中包含合并产生的负商誉）；扣非净利润<b>192.49亿元至197.57亿元</b>，同比增加<b>164%至171%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793697630.html" target="_blank">›</a></li>
-      
-      <li><b class="src">亿纬锂能：</b>亿纬锂能公告，拟授权董事长在一年内择机减持全资孙公司EBIL持有的不超过思摩尔国际<b>3.5%</b>股票（约<b>21,684.71万股</b>），旨在增强市值管理，优化资产结构，满足研发投入资金需求。减持方式包括大宗交易和集中竞价。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793720921.html" target="_blank">›</a></li>
-      
-      <li><b class="src">神州数码：</b>神州数码公告，下属控股子公司北京神州鲲泰信息技术有限公司中标某国有大型商业银行的华为智算服务器采购项目，预估采购金额为<b>3.71亿元</b>（据实结算）。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793673221.html" target="_blank">›</a></li>
-      
-      <li><b class="src">申昊科技：</b>申昊科技公告，公司及子公司拟向多家供应商采购服务器，采购合同总金额预计不超过<b>20亿元</b>，主要用于为客户提供算力租赁服务。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793673480.html" target="_blank">›</a></li>
-      
-      <li><b class="src">中金岭南：</b>中金岭南预计2026年半年度归属于上市公司股东的净利润<b>10.50亿元至12.00亿元</b>，同比增长<b>87.89%至114.73%</b>。业绩变动主要系报告期内主要产品金属价格同比上升，交易性金融资产公允价值变动收益同比上升，以及子公司权益比例同比上升所致。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793664351.html" target="_blank">›</a></li>
-      
-      <li><b class="src">东岳硅材：</b>东岳硅材预计2026年半年度归属于上市公司股东的净利润<b>4.24亿元至4.44亿元</b>，同比增长<b>904.88%至952.28%</b>。业绩变动主要系有机硅产品价格上涨，原材料采购价格下降，毛利率提升，同时公司精细化管理有效控制成本费用。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793675580.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">07</span><span class="ic">🌍</span><span class="nm">环球视野</span></div>
-    <ol>
-      
-      <li><b class="src">北约：</b>据报道，北约盟国承诺在<b>2026年</b>向乌克兰提供<b>700亿欧元</b>的军事援助，并确认在<b>2027年</b>保持“至少同等水平”的承诺。北约领导人将重申对集体防御（第5条）的“铁的承诺”，并宣布伊朗绝不能拥有核武器，呼吁伊朗充分尊重霍尔木兹海峡的航行自由权。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793806283.html" target="_blank">›</a></li>
-      
-      <li><b class="src">伊朗议长：</b>据伊朗塔斯尼姆通讯社报道，伊朗伊斯兰议会议长卡利巴夫表示，霍尔木兹海峡应由伊朗和阿曼两国共同管理。此前，北约领导人将宣布伊朗绝不能拥有核武器，并呼吁伊朗尊重霍尔木兹海峡的航行自由权。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793812110.html" target="_blank">›</a></li>
-      
-      <li><b class="src">秘鲁全国选举委员会：</b>秘鲁全国选举委员会于当地时间<b>7月3日</b>正式宣布总统选举结果，人民力量党候选人藤森庆子在总统选举第二轮投票中获得<b>50.135%</b>的有效选票当选秘鲁新一届总统。当选总统将于本月<b>28日</b>宣誓就职，任期<b>5年</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793952952.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国际原子能机构：</b>国际原子能机构发布声明称，扎波罗热核电站在军事冲突期间第<b>21次</b>失去外部电源。核电站现场团队听到军事活动，导致连接核电站与电源线路的电气保护装置启动，其中包括一条在<b>6月</b>停火期间修复的线路。应急柴油发电机已启动运行，目前电力已恢复，但其中一条线路仍然无法使用。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793944087.html" target="_blank">›</a></li>
-      
-      <li><b class="src">世界气象组织：</b>世界气象组织发表新闻公报称，厄尔尼诺状态已在热带太平洋地区发展，预计未来几个月将迅速加强，从而增加世界许多地区出现热浪、干旱、强降雨和其他极端天气事件的可能性。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793792427.html" target="_blank">›</a></li>
-      
-      <li><b class="src">欧洲股市：</b>欧洲股市周五上涨，收于纪录新高，并连续第四周录得涨幅。斯托克欧洲600指数收盘上涨<b>0.7%</b>，科技股领涨。由于美国因假日休市，欧洲市场成交量较20日平均水平低近<b>40%</b>。周四公布的美国就业数据弱于预期，削弱了投资者对美联储进一步加息的押注，进一步提振了市场情绪。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793940071.html" target="_blank">›</a></li>
-      
-      <li><b class="src">OPEC：</b>据调查，在美国与伊朗达成和平协议后，石油输出国组织(OPEC)上月原油产量大幅增加<b>234万桶/日</b>，至<b>1875万桶/日</b>，增幅主要来自科威特、沙特阿拉伯和伊朗。尽管如此，产量仍明显低于战前水平，较<b>2月</b>水平低<b>730万桶/日</b>，幅度为<b>28%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793891972.html" target="_blank">›</a></li>
-      
-      <li><b class="src">美元：</b>美元周五下跌，势将创下12周来最大周线跌幅，周四公布的美国就业报告表现疲软，令市场对美联储近期加息的预期降温。美元指数下跌约<b>0.2%</b>，报<b>100.83</b>，本周下跌<b>0.5%</b>，创<b>4月初</b>以来最大单周跌幅。芝商所FedWatch工具显示，市场目前认为美联储<b>9月</b>会议加息的概率约为<b>45%</b>。</li>
-      
-    </ol>
-  </div>
-  
-  <div class="sec">
-    <div class="sh"><span class="no">08</span><span class="ic">📈</span><span class="nm">金融数据</span></div>
-    <ol>
-      
-      <li><b class="src">COMEX：</b>COMEX黄金期货收涨<b>1.49%</b>，报<b>4187.3美元/盎司</b>。COMEX白银期货收涨<b>2.87%</b>，报<b>62.815美元/盎司</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793953049.html" target="_blank">›</a></li>
-      
-      <li><b class="src">LME：</b>LME金属多数收涨：期铜收涨<b>40美元</b>，报<b>13366美元/吨</b>；期铝收跌<b>1美元</b>，报<b>3090美元/吨</b>；期锌收涨<b>54美元</b>，报<b>3541美元/吨</b>；期铅收涨<b>16美元</b>，报<b>1892美元/吨</b>；期镍收涨<b>174美元</b>，报<b>16424美元/吨</b>；期锡收涨<b>1668美元</b>，报<b>52628美元/吨</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793940457.html" target="_blank">›</a></li>
-      
-      <li><b class="src">ICE：</b>截至6月30日当周，布伦特原油期货投机者削减了<b>34,704手</b>净多头头寸至<b>55,634手</b>。ICE布伦特原油9月期货结算价<b>72.12美元/桶</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793953264.html" target="_blank">›</a></li>
-      
-      <li><b class="src">国内期货夜盘：</b>国内期货主力合约夜盘涨多跌少：沥青涨近<b>3%</b>，合成橡胶涨超<b>2%</b>，20号胶涨近<b>2%</b>，焦炭、橡胶、对二甲苯、PTA、燃料油涨超<b>1%</b>。跌幅方面，液化石油气（LPG）跌超<b>1%</b>。沪金主力合约收涨<b>0.81%</b>，报<b>913元/克</b>；沪银主力合约收涨<b>1.61%</b>，报<b>15294元/千克</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793899087.html" target="_blank">›</a></li>
-      
-      <li><b class="src">波罗的海干散货指数：</b>波罗的海干散货指数上涨<b>2.53%</b>，至<b>2717点</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793730352.html" target="_blank">›</a></li>
-      
-      <li><b class="src">比特币：</b>比特币涨至<b>62005.2美元</b>，过去24小时内涨<b>1.31%</b>；以太坊涨至<b>1746.46美元</b>，过去24小时内涨<b>6.19%</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793698831.html" target="_blank">›</a></li>
-      
-      <li><b class="src">南向资金：</b>南向资金净买逾<b>45亿港元</b>。十大成交股中，建滔积层板、小米集团-W、腾讯控股分别获净买入<b>9.04亿港元</b>、<b>8.63亿港元</b>、<b>2.98亿港元</b>。华虹宏力、中芯国际、优必选分别遭净卖出<b>9.97亿港元</b>、<b>8.03亿港元</b>、<b>5.51亿港元</b>。 <a class="lk" href="https://finance.eastmoney.com/a/202607033793650017.html" target="_blank">›</a></li>
-      
-      <li><b class="src">摩根大通：</b>摩根大通预计黄金交易区间在近期内仍将受限，之后才会出现回升，预计2026年第三季度平均价格为每盎司<b>4300美元</b>，而第四季度则将达到每盎司<b>4500美元</b>。该行表示，若经济数据强劲，美联储可能提前加息，预测面临下行风险。该行维持长期看涨观点，预计2027年金价可能延续涨势。 <a class="lk" href="https://finance.eastmoney.com/a/202607043793943743.html" target="_blank">›</a></li>
-      
-    </ol>
-  </div>
-  
-
   <!-- 晨报纵览 -->
   
   <div class="review">
-    <div class="rh">📌 晨报纵览 · 再融资松绑与AI基建热潮，全球央行增金避险</div>
+    <div class="rh">📌 晨报纵览 · 资产在搬家，传承要趁早</div>
     
-    <p>今日政策面释放多重信号：国务院印发首个以“美丽中国”命名的五年规划，明确绿色金融与碳金融创新方向；证监会大幅提升小额快速融资上限至<b>6亿元</b>（特大型企业<b>10亿元</b>），简化向控股股东定增条件，限售期延长至<b>36个月</b>，旨在提升资本市场制度包容性，支持科技创新与产业升级。同时，工信部成立量子信息标准化技术委员会，国家药监局拟将细胞与基因治疗药品纳入<b>30日</b>快速审评通道，政策对前沿技术领域的扶持力度持续加大。</p>
+    <p>今天几条新闻串起来看，核心就一句话：钱在从一种形式往另一种形式搬。深圳豪宅18万一平还日光，说明核心地段房产依然是富人的压舱石；但万达又在卖广场，太盟系接盘，说明商业地产的持有者正在从开发商变成资本方。平安还在买银行H股，成都国资花2.67亿拿下基金公司控股权——大资金都在往金融资产里涌，看重的是稳定和流动性。</p>
     
-    <p>全球市场方面，美元指数本周下跌<b>0.5%</b>创12周最大周线跌幅，美联储加息预期降温，欧洲股市再创历史新高。地缘风险持续：扎波罗热核电站第<b>21次</b>失去外部电源，北约承诺向乌克兰提供<b>700亿欧元</b>军事援助，伊朗与北约就霍尔木兹海峡管理权博弈升级。极端天气扰动全球，美国独立日庆典因热浪取消，世界气象组织警告厄尔尼诺将加剧极端天气。在此背景下，全球央行<b>5月</b>净购金<b>41吨</b>，波兰持续领跑，黄金避险需求凸显。</p>
+    <p>另一边，中融信托破产了，这是信托行业的一个标志性事件。以前大家觉得信托公司不会倒，现在看，高收益产品背后如果资产质量不行，照样爆雷。手机靓号拍出38万，但更多号码流拍，说明稀缺性才有价值，普通资产没人要。这些事对咱们这个岁数的人，提醒就是：资产配置不能只看收益，得看底层资产靠不靠谱，流动性好不好。</p>
     
-    <p>产业层面，AI基建需求持续扩张：摩根大通报告显示大模型调用量与GPU租赁价格齐升，英伟达推出“算力换分成”新模式；存储紧缺推高AI服务器价格，零部件单周波动最高<b>40%</b>。国内江波龙半年净利预增超<b>622倍</b>，鹏鼎控股拟募资<b>96亿元</b>加码AI服务器HDI项目。对中高净值客户而言，当前宏观环境建议关注三类配置方向：一是受益于再融资松绑与AI景气周期的权益资产；二是全球央行增持趋势下的黄金及挂钩黄金的保险产品；三是美元走弱背景下，以美元计价的分红储蓄险可对冲汇率风险，同时锁定长期收益。</p>
-    
-  </div>
-  
-
-  <!-- 保险配置视角 -->
-  
-  <div class="ins">
-    <div class="it">🛡️ 保险配置视角</div>
-    
-    <div class="row"><span class="e">💵</span><span>美元走弱、美联储加息预期降温，利好美元计价储蓄险的汇率成本。当前黄金与白银价格走高，全球央行持续增持黄金，建议关注以黄金为底层资产的保单配置，对冲货币波动风险。</span></div>
-    
-    <div class="row"><span class="e">📈</span><span>A股新开户数上半年超<b>2000万户</b>，居民资产从不动产向金融资产迁移趋势明显。再融资新规提升小额快速融资上限，利好优质企业扩张。养老储备可关注受益于AI基建、存储涨价等景气赛道的权益类资产。</span></div>
-    
-    <div class="row"><span class="e">🛡️</span><span>极端天气频发、地缘冲突持续，避险资产如黄金、美元保单仍具配置价值。全球央行净购金<b>41吨</b>，波兰持续增持，建议在组合中保留一定比例的稳健型保险产品以应对不确定性。</span></div>
+    <p>对40到60岁、家底殷实的朋友来说，今天这些消息最该琢磨的是传承。房子、股票、黄金、信托，这些资产将来怎么给到孩子？离婚会不会被分走？过户、遗嘱、保单受益人，三种方式成本差很多。比如保单指定受益人，私密、快捷、还能隔离债务和婚姻风险。现在利率还在往下走，能锁定长期利率的资产窗口越来越窄。趁现在市场还没大变，早点把传承的框架搭好，比到时候手忙脚乱强。</p>
     
   </div>
   
