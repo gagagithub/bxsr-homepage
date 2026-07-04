@@ -31,17 +31,15 @@
   .meta b{ color:#fff; }
   .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
 
-  /* HERO 大字钩子 */
+  /* 今日头条卡(今日风向 + 头条精选) */
   .hero{ margin:14px; background:linear-gradient(135deg,#0e2f63 0%,#1a59ab 100%); border-radius:15px; padding:19px 19px 17px; color:#fff; box-shadow:0 6px 20px rgba(20,50,110,.18); position:relative; overflow:hidden; }
   .hero::after{ content:""; position:absolute; right:-46px; top:-40px; width:180px; height:180px; background:radial-gradient(circle,rgba(255,207,122,.22),transparent 70%); }
-  .hero .kbadge{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:2px; color:#0e2f63; background:#ffcf7a; padding:3px 10px; border-radius:20px; position:relative; z-index:2; }
-  .hero .big{ font-size:25px; font-weight:900; line-height:1.34; letter-spacing:.5px; margin-top:12px; position:relative; z-index:2; }
-  .hero .big .g{ color:#ffcf7a; }
-  .hero .sub{ font-size:14.5px; color:#dcebff; margin-top:10px; line-height:1.62; position:relative; z-index:2; }
+  .hero .hero-h{ font-size:16px; font-weight:900; color:#fff; letter-spacing:1.5px; position:relative; z-index:2; }
   .hero .tr{ font-size:12.5px; color:#a9c4ec; margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,.15); line-height:1.6; position:relative; z-index:2; }
+  .hero .tr.tr-top{ margin-top:12px; }
   .hero .tr .lab{ color:#ffcf7a; font-weight:800; margin-right:5px; }
   .hero .tr b{ color:#ffdca6; }
-  /* 头条精选(并入今日看点卡内) */
+  /* 头条精选 */
   .hero .hl-list{ list-style:none; margin-top:13px; padding-top:12px; border-top:1px solid rgba(255,255,255,.15); position:relative; z-index:2; }
   .hero .hl-list li{ position:relative; padding:9px 0 9px 21px; border-top:1px solid rgba(255,255,255,.09); color:#e8f1ff; font-size:13.5px; line-height:1.62; }
   .hero .hl-list li:first-child{ border-top:none; }
@@ -157,15 +155,11 @@
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
-  <!-- 今日看点(大字钩子 + 头条精选 合并成一块) -->
-  {% if (hook and hook.big) or highlights or trend %}
+  <!-- 今日头条(今日风向 + 头条精选) -->
+  {% if highlights or trend %}
   <div class="hero">
-    <span class="kbadge">今日看点</span>
-    {% if hook and hook.big %}
-    <div class="big">{{ hook.big|safe }}</div>
-    {% if hook.sub %}<div class="sub">{{ hook.sub|safe }}</div>{% endif %}
-    {% endif %}
-    {% if trend %}<div class="tr"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>{% endif %}
+    <div class="hero-h">⭐ 今日头条</div>
+    {% if trend %}<div class="tr tr-top"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>{% endif %}
     {% if highlights %}
     <ul class="hl-list">
       {% for h in highlights %}

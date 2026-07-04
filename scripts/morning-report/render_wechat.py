@@ -69,39 +69,25 @@ w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
-# ---------- 今日看点(大字钩子 + 头条精选 合并成一块深蓝卡) ----------
-hook = S.get("hook", {}) or {}
-if isinstance(hook, str):
-    hook = {"big": hook}
+# ---------- 今日头条(今日风向 + 头条精选, 深蓝卡) ----------
 trend = S.get("trend", "").strip()
-big = strip_tags(hook.get("big", "")).strip()
-sub = strip_tags(hook.get("sub", "")).strip()
 highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
-if big or highlights or trend:
+if highlights or trend:
     w(f'<section style="margin:6px 4px 16px;padding:20px 18px 17px;'
       f'background:linear-gradient(135deg,#0e2f63,#1a59ab);border-radius:12px;">')
-    w(f'<p style="margin:0 0 12px;display:inline-block;font-size:12px;font-weight:800;letter-spacing:2px;'
-      f'color:#0e2f63;background:#ffcf7a;padding:3px 11px;border-radius:20px;">今日看点</p>')
-    if big:
-        w(f'<p style="margin:0;font-size:25px;font-weight:900;line-height:1.35;color:#fff;">{big}</p>')
-    if sub:
-        w(f'<p style="margin:10px 0 0;font-size:15px;line-height:1.65;color:#dcebff;">{sub}</p>')
+    w(f'<p style="margin:0 0 12px;font-size:18px;font-weight:900;color:#fff;letter-spacing:1px;">⭐ 今日头条</p>')
     if trend:
-        w(f'<p style="margin:12px 0 0;padding-top:11px;border-top:1px solid rgba(255,255,255,.15);'
+        w(f'<p style="margin:0 0 4px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.15);'
           f'font-size:13px;line-height:1.6;color:#a9c4ec;">'
           f'<span style="color:#ffcf7a;font-weight:800;">🔥 今日风向 </span>{strip_tags(trend)}</p>')
-    # 头条精选并入本卡
     if highlights:
-        w(f'<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.15);">')
-        w(f'<p style="margin:0 0 8px;font-size:13px;font-weight:800;color:#ffcf7a;letter-spacing:1px;">★ 头条精选</p>')
         for h in highlights:
             label = strip_tags(h.get("label", ""))
             # 深蓝底上 <b> 用金色(而非默认红)保证可读
             raw = h.get("text") or h.get("title") or ""
             body = raw.replace("<b>", '<span style="color:#ffd9a0;font-weight:800;">').replace("</b>", "</span>")
             lab = (f'<span style="color:#ffd9a0;font-weight:800;">{label} </span>' if label else "")
-            w(f'<p style="margin:0 0 10px;font-size:15px;line-height:1.85;color:#e8f1ff;">{lab}{body}</p>')
-        w('</div>')
+            w(f'<p style="margin:12px 0 0;font-size:15px;line-height:1.85;color:#e8f1ff;">{lab}{body}</p>')
     w('</section>')
 
 # ---------- 行情速览(可选) ----------
