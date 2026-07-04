@@ -174,12 +174,12 @@
   </div>
   {% endif %}
 
-  <!-- 保险配置视角 -->
+  <!-- 今日解读(按读者三大关注点: 健康/养老/传承+钱袋子) -->
   {% if insure %}
   <div class="ins">
-    <div class="it">🛡️ 保险配置视角</div>
+    <div class="it">🔍 今日解读 · 这些新闻跟咱有什么关系</div>
     {% for i in insure %}
-    <div class="row"><span class="e">{{ i.ic }}</span><span>{{ i.tx|safe }}</span></div>
+    <div class="row"><span class="e">{{ i.ic }}</span><span>{% if i.tt %}<b>【{{ i.tt }}】</b>{% endif %}{{ i.tx|safe }}</span></div>
     {% endfor %}
   </div>
   {% endif %}

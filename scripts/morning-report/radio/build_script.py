@@ -69,13 +69,19 @@ for sec in d.get("sections", []):
             S.append([para, line])
     para += 1
 
-# 保险视角
+# 今日解读(按读者关注点: 健康/养老/传承+钱袋子)
 ins = d.get("insure", [])
 if ins:
-    S.append([para, "最后是保险视角"])
+    S.append([para, "最后说说，今天这些新闻跟咱有什么关系"])
     for it in ins:
-        tx = it.get("tx", it.get("text", "")) if isinstance(it, dict) else it
-        S.append([para, first_sentence(tx, 50)])
+        if isinstance(it, dict):
+            tx = it.get("tx", it.get("text", ""))
+            tt = clean(it.get("tt", ""))
+        else:
+            tx, tt = it, ""
+        line = first_sentence(tx, 60)
+        if line:
+            S.append([para, f"{tt}方面。{line}" if tt else line])
     para += 1
 
 # 收尾

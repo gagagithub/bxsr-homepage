@@ -163,14 +163,18 @@ if paras:
         w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{emph(p)}</p>')
     w('</section>')
 
-# ---------- 保险配置视角 ----------
+# ---------- 今日解读(按读者三大关注点: 健康/养老/传承+钱袋子) ----------
 insure = [x for x in S.get("insure", []) if x.get("tx")]
 if insure:
     w(f'<section style="margin:22px 4px;padding:16px;background:#f3f6f4;border-left:5px solid #2e7d4f;border-radius:4px;">')
-    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:#2e7d4f;">🛡️ 保险配置视角</p>')
+    w(f'<p style="margin:0 0 4px;font-size:21px;font-weight:800;color:#2e7d4f;">🔍 今日解读</p>')
+    w(f'<p style="margin:0 0 12px;font-size:15px;color:{SUB};">这些新闻，跟咱有什么关系</p>')
     for x in insure:
         ic = x.get("ic", "•")
-        w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{ic} {emph(x.get("tx"))}</p>')
+        tt = strip_tags(x.get("tt", ""))
+        tag = (f'<span style="color:#2e7d4f;font-weight:800;">{ic}【{tt}】</span>' if tt
+               else f'{ic} ')
+        w(f'<p style="margin:0 0 14px;font-size:19px;line-height:2.0;color:{INK};">{tag}{emph(x.get("tx"))}</p>')
     w('</section>')
 
 # ---------- 文末入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
