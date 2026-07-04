@@ -69,19 +69,6 @@ w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
-# ---------- 视频版入口(封面海报 + 引导点阅读原文看视频; 占位符由服务器内嵌 video-poster.jpg) ----------
-# 微信图文正文不能内嵌外部 mp4 播放器, 故放一张带 ▶ 的视频封面 + 文末「阅读原文」跳视频页。
-# 仅当本次已成功生成视频(radio/renders/morning-radio.mp4 存在)才插入此块, 避免渲染失败的当天
-# 出现"有引导字但阅读原文其实是H5"的不一致。占位符 {{MR_IMG:video}} 由服务器内嵌 video-poster.jpg。
-if os.path.exists(f"{BASE}/radio/renders/morning-radio.mp4"):
-    w(f'<section style="margin:10px 4px 16px;">')
-    w('{{MR_IMG:video}}')
-    w(f'<p style="margin:8px 4px 2px;text-align:center;font-size:17px;font-weight:800;color:{ORANGE};">'
-      f'🎧 今日财经晨报 · 视频版（约9分钟）</p>')
-    w(f'<p style="margin:0 4px;text-align:center;font-size:14px;color:{SUB};">'
-      f'点击文末左下角「阅读原文」，边听边看今日全球市场速览</p>')
-    w('</section>')
-
 # ---------- 导读 trend ----------
 trend = S.get("trend", "").strip()
 if trend:
@@ -186,12 +173,24 @@ if insure:
         w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{ic} {emph(x.get("tx"))}</p>')
     w('</section>')
 
-# ---------- 看完整晨报入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
-w(f'<section style="margin:24px 4px 6px;padding:18px 16px;background:#11305f;border-radius:8px;text-align:center;">')
-w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整晨报</p>')
-w(f'<p style="margin:8px 0 0;font-size:16px;color:#cfe0f7;line-height:1.7;">'
-  f'点击文末左下角「阅读原文」，查看全球市场 · 内地财经一图全览</p>')
-w('</section>')
+# ---------- 文末入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
+# 有视频的当天(阅读原文跳视频页): 文末放视频封面海报(带▶) + 引导语, 图片应用户要求放文章最后。
+# 微信图文正文不能内嵌外部 mp4 播放器, 占位符 {{MR_IMG:video}} 由服务器内嵌 video-poster.jpg。
+# 没视频的当天(阅读原文跳H5一图全览): 放深蓝「看完整晨报」引导块。两者只出其一, 避免引导语和实际落地页不一致。
+if os.path.exists(f"{BASE}/radio/renders/morning-radio.mp4"):
+    w(f'<section style="margin:24px 4px 16px;">')
+    w('{{MR_IMG:video}}')
+    w(f'<p style="margin:8px 4px 2px;text-align:center;font-size:17px;font-weight:800;color:{ORANGE};">'
+      f'🎧 今日财经晨报 · 视频版（约9分钟）</p>')
+    w(f'<p style="margin:0 4px;text-align:center;font-size:14px;color:{SUB};">'
+      f'点击左下角「阅读原文」，边听边看今日全球市场速览</p>')
+    w('</section>')
+else:
+    w(f'<section style="margin:24px 4px 6px;padding:18px 16px;background:#11305f;border-radius:8px;text-align:center;">')
+    w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整晨报</p>')
+    w(f'<p style="margin:8px 0 0;font-size:16px;color:#cfe0f7;line-height:1.7;">'
+      f'点击文末左下角「阅读原文」，查看全球市场 · 内地财经一图全览</p>')
+    w('</section>')
 
 # ---------- 页脚 ----------
 w(f'<section style="margin:18px 4px 8px;padding-top:14px;border-top:3px double {GOLD};text-align:center;">')
