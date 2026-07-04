@@ -69,26 +69,8 @@ w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
-# ---------- 今日头条(今日风向 + 头条精选, 深蓝卡) ----------
-trend = S.get("trend", "").strip()
-highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
-if highlights or trend:
-    w(f'<section style="margin:6px 4px 16px;padding:20px 18px 17px;'
-      f'background:linear-gradient(135deg,#0e2f63,#1a59ab);border-radius:12px;">')
-    w(f'<p style="margin:0 0 12px;font-size:18px;font-weight:900;color:#fff;letter-spacing:1px;">⭐ 今日头条</p>')
-    if trend:
-        w(f'<p style="margin:0 0 4px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.15);'
-          f'font-size:13px;line-height:1.6;color:#a9c4ec;">'
-          f'<span style="color:#ffcf7a;font-weight:800;">🔥 今日风向 </span>{strip_tags(trend)}</p>')
-    if highlights:
-        for h in highlights:
-            label = strip_tags(h.get("label", ""))
-            # 深蓝底上 <b> 用金色(而非默认红)保证可读
-            raw = h.get("text") or h.get("title") or ""
-            body = raw.replace("<b>", '<span style="color:#ffd9a0;font-weight:800;">').replace("</b>", "</span>")
-            lab = (f'<span style="color:#ffd9a0;font-weight:800;">{label} </span>' if label else "")
-            w(f'<p style="margin:12px 0 0;font-size:15px;line-height:1.85;color:#e8f1ff;">{lab}{body}</p>')
-    w('</section>')
+# (今日头条卡已按崔伟要求删除, 报头之后直接进行情速览 + 三大主题)
+trend = S.get("trend", "").strip()  # 仍保留供 digest 摘要用
 
 # ---------- 行情速览(可选) ----------
 def market_rows():
@@ -116,13 +98,7 @@ def market_rows():
         rows.append(("美元指数", f"{fx['DXY']['cur']:.2f}", fmt_pct(fx['DXY'].get("day_pct")), fx['DXY'].get("day_pct")))
     return rows
 
-rows = market_rows()  # 供文末生成 market.png 用
-
-# ---------- 行情速览(看点之后, 作参考区) ----------
-if rows:
-    # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
-    # 服务器侧把 market.png 上传微信图床后替换为 <img>。
-    w("{{MR_IMG:market}}")
+rows = market_rows()  # 供文末生成 market.png 用; 图片本身移到三大主题之后再插
 
 # ---------- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) ----------
 THEME_ORDER = ["健康", "养老", "传承"]
@@ -170,6 +146,12 @@ for name in THEME_ORDER:
         w(f'<p style="margin:0;font-size:18px;line-height:2.0;color:{INK};">'
           f'{insight.replace("<b>", f"<span style=color:{dark};font-weight:700;>").replace("</b>", "</span>")}</p>')
         w('</section>')
+
+# ---------- 行情速览(三大主题之后、晨报纵览之前) ----------
+if rows:
+    # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
+    # 服务器侧把 market.png 上传微信图床后替换为 <img>。
+    w("{{MR_IMG:market}}")
 
 # ---------- 晨报纵览 review ----------
 review = S.get("review", {}) or {}
@@ -243,4 +225,4 @@ digest = strip_tags(S.get("moment_text") or trend).replace("\n", " ").strip()
 digest = re.sub(r"\s+", " ", digest)[:118]
 open(f"{BASE}/wechat_digest.txt", "w", encoding="utf-8").write(digest)
 
-print(f"已渲染 wechat.html  日期={pub_date}  字节={len(html)}  主题={len(_thmap)}  头条={len(highlights)}  digest={len(digest)}字")
+print(f"已渲染 wechat.html  日期={pub_date}  字节={len(html)}  主题={len(_thmap)}  digest={len(digest)}字")

@@ -31,23 +31,6 @@
   .meta b{ color:#fff; }
   .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
 
-  /* 今日头条卡(今日风向 + 头条精选) */
-  .hero{ margin:14px; background:linear-gradient(135deg,#0e2f63 0%,#1a59ab 100%); border-radius:15px; padding:19px 19px 17px; color:#fff; box-shadow:0 6px 20px rgba(20,50,110,.18); position:relative; overflow:hidden; }
-  .hero::after{ content:""; position:absolute; right:-46px; top:-40px; width:180px; height:180px; background:radial-gradient(circle,rgba(255,207,122,.22),transparent 70%); }
-  .hero .hero-h{ font-size:16px; font-weight:900; color:#fff; letter-spacing:1.5px; position:relative; z-index:2; }
-  .hero .tr{ font-size:12.5px; color:#a9c4ec; margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,.15); line-height:1.6; position:relative; z-index:2; }
-  .hero .tr.tr-top{ margin-top:12px; }
-  .hero .tr .lab{ color:#ffcf7a; font-weight:800; margin-right:5px; }
-  .hero .tr b{ color:#ffdca6; }
-  /* 头条精选 */
-  .hero .hl-list{ list-style:none; margin-top:13px; padding-top:12px; border-top:1px solid rgba(255,255,255,.15); position:relative; z-index:2; }
-  .hero .hl-list li{ position:relative; padding:9px 0 9px 21px; border-top:1px solid rgba(255,255,255,.09); color:#e8f1ff; font-size:13.5px; line-height:1.62; }
-  .hero .hl-list li:first-child{ border-top:none; }
-  .hero .hl-list li::before{ content:"★"; position:absolute; left:0; top:9px; color:#ffcf7a; font-size:12px; }
-  .hero .hl-list li b.hsrc{ color:#ffd9a0; font-weight:800; }
-  .hero .hl-list li b{ color:#ffd9a0; }
-  .hero .hl-list li .lk{ color:var(--sky); font-size:11px; margin-left:3px; }
-
   /* 三大主题 健康/养老/传承 */
   .theme{ margin:16px 14px 0; background:#fff; border-radius:14px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
   .theme .th{ display:flex; align-items:center; gap:9px; padding:14px 16px; }
@@ -155,42 +138,6 @@
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
-  <!-- 今日头条(今日风向 + 头条精选) -->
-  {% if highlights or trend %}
-  <div class="hero">
-    <div class="hero-h">⭐ 今日头条</div>
-    {% if trend %}<div class="tr tr-top"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>{% endif %}
-    {% if highlights %}
-    <ul class="hl-list">
-      {% for h in highlights %}
-      <li>{% if h.label %}<b class="hsrc">{{ h.label }}</b>　{% endif %}{{ (h.text or h.title)|safe }}{% if h.link %} <a class="lk" href="{{ h.link }}" target="_blank">详情›</a>{% endif %}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  <!-- 行情数据(移到看点之后, 作参考区) -->
-  <div class="sec-lab">行情数据 · 隔夜全球</div>
-  <div class="idx-row">
-    {% for x in indices %}
-    <div class="idx">
-      <div class="n">{{ x.name }}</div>
-      <div class="p">{{ x.pts }}</div>
-      <div class="d {{ x.cls }}">{{ x.ar }} {{ x.day }}</div>
-      <div class="y">YTD {{ x.ytd }}</div>
-    </div>
-    {% endfor %}
-  </div>
-  <div class="chips">
-    {% for c in chips %}
-    <div class="chip">
-      <div class="l">{{ c.lab }}</div>
-      <div class="v">{{ c.val }}<span class="nt {{ c.cls }}">{{ c.note }}</span></div>
-    </div>
-    {% endfor %}
-  </div>
-
   <!-- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) -->
   {% for t in themes %}
   <div class="theme theme-{{ loop.index }}">
@@ -211,6 +158,27 @@
     {% endif %}
   </div>
   {% endfor %}
+
+  <!-- 行情数据(移到三大主题之后、晨报纵览之前) -->
+  <div class="sec-lab">行情数据 · 隔夜全球</div>
+  <div class="idx-row">
+    {% for x in indices %}
+    <div class="idx">
+      <div class="n">{{ x.name }}</div>
+      <div class="p">{{ x.pts }}</div>
+      <div class="d {{ x.cls }}">{{ x.ar }} {{ x.day }}</div>
+      <div class="y">YTD {{ x.ytd }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="chips">
+    {% for c in chips %}
+    <div class="chip">
+      <div class="l">{{ c.lab }}</div>
+      <div class="v">{{ c.val }}<span class="nt {{ c.cls }}">{{ c.note }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
 
   <!-- 晨报纵览 -->
   {% if review and review.paras %}
