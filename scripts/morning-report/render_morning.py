@@ -63,15 +63,22 @@ if co.get("GOLD", {}).get("cur") is not None:
     chips.append(dict(lab="COMEX黄金", val=f"${co['GOLD']['cur']:,.2f}",
                       note=fmt_pct(co['GOLD'].get('day_pct')), cls=pct_cls(co['GOLD'].get('day_pct'))))
 
-# ---- 板块序号 + 配图标 ----
-SEC_ICON = {"宏观经济": "🏛️", "地产动态": "🏙️", "股市盘点": "📊", "行业观察": "🔬",
-            "公司要闻": "🏢", "环球视野": "🌍", "金融数据": "📈"}
-sections = []
-for i, sec in enumerate(S.get("sections", []), 1):
-    its = [it for it in sec.get("items", []) if it.get("text")]
-    if not its:
+# ---- 三大主题(健康/养老/传承): 每主题 = 相关新闻 + 一段解读 ----
+THEME_ORDER = ["健康", "养老", "传承"]
+THEME_ICON = {"健康": "🏥", "养老": "🌅", "传承": "🌳"}
+THEME_SUB = {"健康": "看病住院 · 报销保障", "养老": "养老钱 · 该往哪放", "传承": "家底保值 · 稳稳传下去"}
+_thmap = {t.get("name"): t for t in S.get("themes", []) if t.get("name")}
+themes = []
+for name in THEME_ORDER:
+    t = _thmap.get(name)
+    if not t:
         continue
-    sections.append(dict(no=f"{i:02d}", name=sec["name"], icon=SEC_ICON.get(sec["name"], "📌"), items=its))
+    its = [it for it in t.get("items", []) if it.get("text")]
+    insight = (t.get("insight") or "").strip()
+    if not its and not insight:
+        continue
+    themes.append(dict(name=name, icon=THEME_ICON.get(name, "📌"),
+                       sub=THEME_SUB.get(name, ""), items=its, insight=insight))
 
 pub_date = os.environ.get("MX_PUB_DATE") or datetime.now().strftime("%Y-%m-%d")
 data_date = D.get("data_date") or pub_date
@@ -85,9 +92,8 @@ ctx = dict(
     hook=hook,
     trend=S.get("trend", ""),
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
-    indices=indices, chips=chips, sections=sections,
+    indices=indices, chips=chips, themes=themes,
     review=S.get("review", {}),
-    insure=S.get("insure", []),
 )
 
 env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
@@ -95,7 +101,7 @@ env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["
 tpl = env.get_template("template_morning.html")
 html = tpl.render(**ctx)
 open(f"{BASE}/morning-report.html", "w", encoding="utf-8").write(html)
-print(f"已渲染 morning-report.html  日期={pub_date}  板块={len(sections)}  头条={len(ctx['highlights'])}  行情chips={len(chips)}")
+print(f"已渲染 morning-report.html  日期={pub_date}  主题={len(themes)}  头条={len(ctx['highlights'])}  行情chips={len(chips)}")
 
 # ---- 朋友圈封面图(cover.html → 截图在 run/workflow 里做) ----
 def strip_tags(s):

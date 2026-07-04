@@ -56,32 +56,24 @@ if hl:
         lab = clean(h.get("label", ""))
         S.append([2, f"{lab}。{first_sentence(h.get('text',''), 40)}"])
 
-# 全 8 板块
+# 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读)
+THEME_INTRO = {"健康": "先说健康", "养老": "再说养老", "传承": "最后说传承"}
 para = 3
-for sec in d.get("sections", []):
-    name = clean(sec.get("name", ""))
-    S.append([para, f"下面是{name}"])
-    for it in sec.get("items", []):
+for th in d.get("themes", []):
+    name = clean(th.get("name", ""))
+    S.append([para, THEME_INTRO.get(name, f"下面说说{name}")])
+    for it in th.get("items", []):
         lab = clean(it.get("label", ""))
         body = first_sentence(it.get("text", ""), 36)
         line = (f"{lab}，{body}" if lab else body).strip("，、 ")
         if line:
             S.append([para, line])
-    para += 1
-
-# 今日解读(按读者关注点: 健康/养老/传承+钱袋子)
-ins = d.get("insure", [])
-if ins:
-    S.append([para, "最后说说，今天这些新闻跟咱有什么关系"])
-    for it in ins:
-        if isinstance(it, dict):
-            tx = it.get("tx", it.get("text", ""))
-            tt = clean(it.get("tt", ""))
-        else:
-            tx, tt = it, ""
-        line = first_sentence(tx, 60)
-        if line:
-            S.append([para, f"{tt}方面。{line}" if tt else line])
+    insight = clean(th.get("insight", ""))
+    if insight:
+        S.append([para, "这跟咱的关系是"])
+        # 解读较长, 按句拆成 2-3 条字幕, 别一句太长
+        for seg in [x for x in re.split(r"[。；]", insight) if x.strip()][:3]:
+            S.append([para, seg.strip()])
     para += 1
 
 # 收尾

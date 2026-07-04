@@ -69,32 +69,39 @@ w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
-# ---------- 大字钩子 hook (抓眼球, 放最前) ----------
+# ---------- 今日看点(大字钩子 + 头条精选 合并成一块深蓝卡) ----------
 hook = S.get("hook", {}) or {}
 if isinstance(hook, str):
     hook = {"big": hook}
 trend = S.get("trend", "").strip()
 big = strip_tags(hook.get("big", "")).strip()
 sub = strip_tags(hook.get("sub", "")).strip()
-if big:
+highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
+if big or highlights or trend:
     w(f'<section style="margin:6px 4px 16px;padding:20px 18px 17px;'
       f'background:linear-gradient(135deg,#0e2f63,#1a59ab);border-radius:12px;">')
-    w(f'<p style="margin:0 0 10px;display:inline-block;font-size:12px;font-weight:800;letter-spacing:2px;'
+    w(f'<p style="margin:0 0 12px;display:inline-block;font-size:12px;font-weight:800;letter-spacing:2px;'
       f'color:#0e2f63;background:#ffcf7a;padding:3px 11px;border-radius:20px;">今日看点</p>')
-    w(f'<p style="margin:0;font-size:25px;font-weight:900;line-height:1.35;color:#fff;">{big}</p>')
+    if big:
+        w(f'<p style="margin:0;font-size:25px;font-weight:900;line-height:1.35;color:#fff;">{big}</p>')
     if sub:
         w(f'<p style="margin:10px 0 0;font-size:15px;line-height:1.65;color:#dcebff;">{sub}</p>')
     if trend:
         w(f'<p style="margin:12px 0 0;padding-top:11px;border-top:1px solid rgba(255,255,255,.15);'
           f'font-size:13px;line-height:1.6;color:#a9c4ec;">'
           f'<span style="color:#ffcf7a;font-weight:800;">🔥 今日风向 </span>{strip_tags(trend)}</p>')
-    w('</section>')
-elif trend:
-    # 无 hook 时回退旧的导读框
-    w(f'<section style="margin:10px 4px 16px;padding:14px 16px;background:#fffdf7;'
-      f'border-left:5px solid {GOLD};border-radius:2px;">')
-    w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">'
-      f'<span style="color:{GOLD};font-weight:700;">【今日导读】</span>{emph(trend)}</p>')
+    # 头条精选并入本卡
+    if highlights:
+        w(f'<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.15);">')
+        w(f'<p style="margin:0 0 8px;font-size:13px;font-weight:800;color:#ffcf7a;letter-spacing:1px;">★ 头条精选</p>')
+        for h in highlights:
+            label = strip_tags(h.get("label", ""))
+            # 深蓝底上 <b> 用金色(而非默认红)保证可读
+            raw = h.get("text") or h.get("title") or ""
+            body = raw.replace("<b>", '<span style="color:#ffd9a0;font-weight:800;">').replace("</b>", "</span>")
+            lab = (f'<span style="color:#ffd9a0;font-weight:800;">{label} </span>' if label else "")
+            w(f'<p style="margin:0 0 10px;font-size:15px;line-height:1.85;color:#e8f1ff;">{lab}{body}</p>')
+        w('</div>')
     w('</section>')
 
 # ---------- 行情速览(可选) ----------
@@ -123,44 +130,41 @@ def market_rows():
         rows.append(("美元指数", f"{fx['DXY']['cur']:.2f}", fmt_pct(fx['DXY'].get("day_pct")), fx['DXY'].get("day_pct")))
     return rows
 
-rows = market_rows()  # 供文末生成 market.png 用; 图片本身移到头条之后再插
+rows = market_rows()  # 供文末生成 market.png 用
 
-# ---------- 头条 highlights(先给最抓人的新闻) ----------
-highlights = [h for h in S.get("highlights", []) if h.get("text") or h.get("title")]
-if highlights:
-    w(f'<section style="margin:18px 4px;">')
-    w(f'<p style="margin:0 0 10px;font-size:22px;font-weight:800;color:{INK};'
-      f'border-left:7px solid {RED};padding-left:12px;">今日头条</p>')
-    for h in highlights:
-        label = strip_tags(h.get("label", ""))
-        body = emph(h.get("text") or h.get("title"))
-        w(f'<section style="margin:0 0 16px;padding:14px 16px;background:#fff;border:1px solid {LINE};border-radius:4px;">')
-        if label:
-            w(f'<p style="margin:0 0 8px;font-size:18px;font-weight:800;color:{ORANGE};">▎{label}</p>')
-        w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">{body}</p>')
-        w('</section>')
-    w('</section>')
-
-# ---------- 行情速览(移到头条之后, 作参考区) ----------
+# ---------- 行情速览(看点之后, 作参考区) ----------
 if rows:
     # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
     # 服务器侧把 market.png 上传微信图床后替换为 <img>。
     w("{{MR_IMG:market}}")
 
-# ---------- 8 板块 ----------
-SEC_ICON = {"宏观经济": "🏛️", "地产动态": "🏙️", "股市盘点": "📊", "财富聚焦": "💰",
-            "行业观察": "🔬", "公司要闻": "🏢", "环球视野": "🌍", "金融数据": "📈"}
-no = 0
-for sec in S.get("sections", []):
-    its = [it for it in sec.get("items", []) if it.get("text")]
-    if not its:
+# ---------- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) ----------
+THEME_ORDER = ["健康", "养老", "传承"]
+THEME_ICON = {"健康": "🏥", "养老": "🌅", "传承": "🌳"}
+THEME_SUB = {"健康": "看病住院 · 报销保障", "养老": "养老钱 · 该往哪放", "传承": "家底保值 · 稳稳传下去"}
+# 每主题一套色: 健康绿 / 养老金橙 / 传承墨绿
+THEME_CLR = {"健康": ("#0f7a4a", "#f1f9f4"), "养老": ("#b9791b", "#fdf6ea"), "传承": ("#1b6b57", "#eff7f3")}
+_thmap = {t.get("name"): t for t in S.get("themes", []) if t.get("name")}
+for name in THEME_ORDER:
+    t = _thmap.get(name)
+    if not t:
         continue
-    no += 1
-    name = sec.get("name", "")
-    icon = SEC_ICON.get(name, "📌")
-    w(f'<section style="margin:26px 4px 6px;">')
-    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:{INK};">'
-      f'<span style="color:{GOLD};">{no:02d}</span>&nbsp;&nbsp;{icon} {name}</p>')
+    its = [it for it in t.get("items", []) if it.get("text")]
+    insight = (t.get("insight") or "").strip()
+    if not its and not insight:
+        continue
+    dark, light = THEME_CLR.get(name, (GOLD, "#fffdf7"))
+    icon = THEME_ICON.get(name, "📌")
+    subt = THEME_SUB.get(name, "")
+    # 主题标题条(撞色底)
+    w(f'<section style="margin:26px 4px 10px;padding:12px 15px;border-radius:8px;'
+      f'background:{dark};display:flex;align-items:center;">')
+    w(f'<span style="font-size:22px;">{icon}</span>'
+      f'<span style="margin-left:8px;font-size:21px;font-weight:900;color:#fff;letter-spacing:2px;">{name}</span>')
+    if subt:
+        w(f'<span style="margin-left:auto;font-size:12px;color:#fff;opacity:.9;">{subt}</span>')
+    w('</section>')
+    # 该主题相关新闻
     for it in its:
         label = strip_tags(it.get("label", ""))
         src = strip_tags(it.get("src", ""))
@@ -172,7 +176,14 @@ for sec in S.get("sections", []):
         if src:
             w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
         w('</p>')
-    w('</section>')
+    # 该主题解读
+    if insight:
+        w(f'<section style="margin:6px 4px 4px;padding:13px 15px;background:{light};'
+          f'border-left:5px solid {dark};border-radius:6px;">')
+        w(f'<p style="margin:0 0 6px;font-size:15px;font-weight:800;color:{dark};">🔍 这跟咱有啥关系</p>')
+        w(f'<p style="margin:0;font-size:18px;line-height:2.0;color:{INK};">'
+          f'{insight.replace("<b>", f"<span style=color:{dark};font-weight:700;>").replace("</b>", "</span>")}</p>')
+        w('</section>')
 
 # ---------- 晨报纵览 review ----------
 review = S.get("review", {}) or {}
@@ -184,19 +195,7 @@ if paras:
         w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{emph(p)}</p>')
     w('</section>')
 
-# ---------- 今日解读(按读者三大关注点: 健康/养老/传承+钱袋子) ----------
-insure = [x for x in S.get("insure", []) if x.get("tx")]
-if insure:
-    w(f'<section style="margin:22px 4px;padding:16px;background:#f3f6f4;border-left:5px solid #2e7d4f;border-radius:4px;">')
-    w(f'<p style="margin:0 0 4px;font-size:21px;font-weight:800;color:#2e7d4f;">🔍 今日解读</p>')
-    w(f'<p style="margin:0 0 12px;font-size:15px;color:{SUB};">这些新闻，跟咱有什么关系</p>')
-    for x in insure:
-        ic = x.get("ic", "•")
-        tt = strip_tags(x.get("tt", ""))
-        tag = (f'<span style="color:#2e7d4f;font-weight:800;">{ic}【{tt}】</span>' if tt
-               else f'{ic} ')
-        w(f'<p style="margin:0 0 14px;font-size:19px;line-height:2.0;color:{INK};">{tag}{emph(x.get("tx"))}</p>')
-    w('</section>')
+# (今日解读已并入上面三大主题, 每个主题末尾各带一段「这跟咱有啥关系」)
 
 # ---------- 文末入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
 # 有视频的当天(阅读原文跳视频页): 文末放视频封面海报(带▶) + 引导语, 图片应用户要求放文章最后。
@@ -258,4 +257,4 @@ digest = strip_tags(S.get("moment_text") or trend).replace("\n", " ").strip()
 digest = re.sub(r"\s+", " ", digest)[:118]
 open(f"{BASE}/wechat_digest.txt", "w", encoding="utf-8").write(digest)
 
-print(f"已渲染 wechat.html  日期={pub_date}  字节={len(html)}  板块={no}  头条={len(highlights)}  digest={len(digest)}字")
+print(f"已渲染 wechat.html  日期={pub_date}  字节={len(html)}  主题={len(_thmap)}  头条={len(highlights)}  digest={len(digest)}字")

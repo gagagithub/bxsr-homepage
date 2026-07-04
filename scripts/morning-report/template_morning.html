@@ -41,6 +41,37 @@
   .hero .tr{ font-size:12.5px; color:#a9c4ec; margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,.15); line-height:1.6; position:relative; z-index:2; }
   .hero .tr .lab{ color:#ffcf7a; font-weight:800; margin-right:5px; }
   .hero .tr b{ color:#ffdca6; }
+  /* 头条精选(并入今日看点卡内) */
+  .hero .hl-list{ list-style:none; margin-top:13px; padding-top:12px; border-top:1px solid rgba(255,255,255,.15); position:relative; z-index:2; }
+  .hero .hl-list li{ position:relative; padding:9px 0 9px 21px; border-top:1px solid rgba(255,255,255,.09); color:#e8f1ff; font-size:13.5px; line-height:1.62; }
+  .hero .hl-list li:first-child{ border-top:none; }
+  .hero .hl-list li::before{ content:"★"; position:absolute; left:0; top:9px; color:#ffcf7a; font-size:12px; }
+  .hero .hl-list li b.hsrc{ color:#ffd9a0; font-weight:800; }
+  .hero .hl-list li b{ color:#ffd9a0; }
+  .hero .hl-list li .lk{ color:var(--sky); font-size:11px; margin-left:3px; }
+
+  /* 三大主题 健康/养老/传承 */
+  .theme{ margin:16px 14px 0; background:#fff; border-radius:14px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
+  .theme .th{ display:flex; align-items:center; gap:9px; padding:14px 16px; }
+  .theme .th .tic{ font-size:22px; }
+  .theme .th .tnm{ font-size:19px; font-weight:900; letter-spacing:2px; }
+  .theme .th .tsub{ font-size:11.5px; color:#fff; opacity:.9; margin-left:auto; background:rgba(255,255,255,.22); padding:3px 9px; border-radius:20px; letter-spacing:.5px; }
+  .theme ol{ list-style:none; counter-reset:item; padding:4px 16px 6px; }
+  .theme li{ counter-increment:item; padding:10px 0; border-bottom:1px dashed #eef2f8; font-size:14px; line-height:1.74; text-align:justify; color:#2c3a52; }
+  .theme li:last-child{ border-bottom:none; }
+  .theme li::before{ content:counter(item) "、"; color:#c8801f; font-weight:900; font-style:italic; margin-right:1px; }
+  .theme li b.src{ color:#c8801f; font-weight:800; font-style:normal; }
+  .theme li b{ color:var(--up); font-weight:800; }
+  .theme li .lk{ color:var(--blue); font-size:11px; white-space:nowrap; margin-left:2px; opacity:.85; }
+  .theme .tinsight{ margin:6px 14px 15px; padding:12px 14px; border-radius:10px; font-size:13.6px; line-height:1.75; color:#25405f; }
+  .theme .tinsight .tilab{ display:block; font-weight:800; margin-bottom:5px; letter-spacing:.5px; }
+  /* 每主题一套色: 健康绿 / 养老金橙 / 传承墨绿 */
+  .theme-1 .th{ background:linear-gradient(100deg,#0f7a4a,#17a06a); } .theme-1 .th .tnm{ color:#fff; }
+  .theme-1 .tinsight{ background:#f1f9f4; border-left:4px solid #17a06a; } .theme-1 .tinsight .tilab{ color:#0f7a4a; } .theme-1 .tinsight b{ color:#0f7a4a; }
+  .theme-2 .th{ background:linear-gradient(100deg,#b9791b,#e0a53a); } .theme-2 .th .tnm{ color:#fff; }
+  .theme-2 .tinsight{ background:#fdf6ea; border-left:4px solid #d99a2f; } .theme-2 .tinsight .tilab{ color:#b9791b; } .theme-2 .tinsight b{ color:#b9791b; }
+  .theme-3 .th{ background:linear-gradient(100deg,#1b6b57,#2a8f74); } .theme-3 .th .tnm{ color:#fff; }
+  .theme-3 .tinsight{ background:#eff7f3; border-left:4px solid #2a8f74; } .theme-3 .tinsight .tilab{ color:#1b6b57; } .theme-3 .tinsight b{ color:#1b6b57; }
 
   /* TREND (无 hook 时回退) */
   .trend{ margin:14px; background:#fff; border-left:4px solid var(--gold); border-radius:10px; padding:13px 15px; box-shadow:0 3px 12px rgba(20,50,110,.06); font-size:14.5px; line-height:1.65; }
@@ -126,31 +157,26 @@
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
-  <!-- 大字钩子(hook) / 无 hook 时回退今日风向 -->
-  {% if hook and hook.big %}
+  <!-- 今日看点(大字钩子 + 头条精选 合并成一块) -->
+  {% if (hook and hook.big) or highlights or trend %}
   <div class="hero">
     <span class="kbadge">今日看点</span>
+    {% if hook and hook.big %}
     <div class="big">{{ hook.big|safe }}</div>
     {% if hook.sub %}<div class="sub">{{ hook.sub|safe }}</div>{% endif %}
+    {% endif %}
     {% if trend %}<div class="tr"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>{% endif %}
-  </div>
-  {% elif trend %}
-  <div class="trend"><span class="lab">🔥 今日风向</span>{{ trend|safe }}</div>
-  {% endif %}
-
-  <!-- 今日关注(提到行情前: 先给最抓人的新闻, 再摆数据) -->
-  {% if highlights %}
-  <div class="hl">
-    <div class="ht">⭐ 今日关注 · 头条精选</div>
-    <ul>
+    {% if highlights %}
+    <ul class="hl-list">
       {% for h in highlights %}
       <li>{% if h.label %}<b class="hsrc">{{ h.label }}</b>　{% endif %}{{ (h.text or h.title)|safe }}{% if h.link %} <a class="lk" href="{{ h.link }}" target="_blank">详情›</a>{% endif %}</li>
       {% endfor %}
     </ul>
+    {% endif %}
   </div>
   {% endif %}
 
-  <!-- 行情数据(移到头条之后, 作参考区) -->
+  <!-- 行情数据(移到看点之后, 作参考区) -->
   <div class="sec-lab">行情数据 · 隔夜全球</div>
   <div class="idx-row">
     {% for x in indices %}
@@ -171,15 +197,24 @@
     {% endfor %}
   </div>
 
-  <!-- 板块 -->
-  {% for s in sections %}
-  <div class="sec">
-    <div class="sh"><span class="no">{{ s.no }}</span><span class="ic">{{ s.icon }}</span><span class="nm">{{ s.name }}</span></div>
+  <!-- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) -->
+  {% for t in themes %}
+  <div class="theme theme-{{ loop.index }}">
+    <div class="th">
+      <span class="tic">{{ t.icon }}</span>
+      <span class="tnm">{{ t.name }}</span>
+      {% if t.sub %}<span class="tsub">{{ t.sub }}</span>{% endif %}
+    </div>
+    {% if t['items'] %}
     <ol>
-      {% for it in s['items'] %}
+      {% for it in t['items'] %}
       <li>{% if it.label %}<b class="src">{{ it.label }}：</b>{% endif %}{{ it.text|safe }}{% if it.link %} <a class="lk" href="{{ it.link }}" target="_blank">›</a>{% endif %}</li>
       {% endfor %}
     </ol>
+    {% endif %}
+    {% if t.insight %}
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>{{ t.insight|safe }}</div>
+    {% endif %}
   </div>
   {% endfor %}
 
@@ -189,16 +224,6 @@
     <div class="rh">📌 晨报纵览{% if review.title %} · {{ review.title }}{% endif %}</div>
     {% for p in review.paras %}
     <p>{{ p|safe }}</p>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  <!-- 今日解读(按读者三大关注点: 健康/养老/传承+钱袋子) -->
-  {% if insure %}
-  <div class="ins">
-    <div class="it">🔍 今日解读 · 这些新闻跟咱有什么关系</div>
-    {% for i in insure %}
-    <div class="row"><span class="e">{{ i.ic }}</span><span>{% if i.tt %}<b>【{{ i.tt }}】</b>{% endif %}{{ i.tx|safe }}</span></div>
     {% endfor %}
   </div>
   {% endif %}
