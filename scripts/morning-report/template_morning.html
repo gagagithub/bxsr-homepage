@@ -31,11 +31,15 @@
   .meta b{ color:#fff; }
   .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
 
-  /* 视频版入口(当天有电台视频才出现, 点播放可听, 不打断下滑读图文) */
-  .vsec{ margin:16px 14px 0; background:linear-gradient(135deg,#0e2f63,#1a59ab); border-radius:14px; padding:13px 14px 14px; box-shadow:0 5px 16px rgba(20,50,110,.16); }
-  .vsec .vh{ display:flex; align-items:baseline; gap:8px; color:#fff; font-size:14.5px; font-weight:800; letter-spacing:1px; margin-bottom:10px; }
-  .vsec .vh .vtip{ margin-left:auto; font-size:11px; font-weight:600; color:var(--sky); letter-spacing:.3px; }
-  .vsec video{ display:block; width:100%; border-radius:10px; background:#000; }
+  /* 视频版入口(当天有电台视频才出现): 默认一条细入口条, 点了才展开播放器, 不挤占图文首屏 */
+  .vsec{ margin:14px 14px 0; background:linear-gradient(135deg,#0e2f63,#1a59ab); border-radius:12px; box-shadow:0 4px 14px rgba(20,50,110,.16); overflow:hidden; }
+  .vbar{ display:flex; align-items:center; gap:11px; padding:9px 12px; cursor:pointer; }
+  .vbar .vthumb{ width:44px; height:44px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1px solid rgba(255,255,255,.25); }
+  .vbar .vtx{ min-width:0; }
+  .vbar .vtx b{ display:block; color:#fff; font-size:14px; letter-spacing:.5px; }
+  .vbar .vtx span{ display:block; color:var(--sky); font-size:11px; margin-top:1px; }
+  .vbar .vplay{ margin-left:auto; flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--gold); color:#fff; font-size:13px; display:flex; align-items:center; justify-content:center; padding-left:3px; }
+  .vsec video{ display:none; width:100%; max-height:65vh; object-fit:contain; background:#000; }
 
   /* 三大主题 健康/养老/传承 */
   .theme{ margin:16px 14px 0; background:#fff; border-radius:14px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
@@ -144,11 +148,15 @@
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
-  <!-- 视频版入口: 当天有电台视频才渲染; 想听的点播放, 想看的直接往下滑 -->
+  <!-- 视频版入口: 当天有电台视频才渲染; 默认收起为一条入口, 点了才展开播放, 图文始终是主体 -->
   {% if has_video %}
-  <div class="vsec">
-    <div class="vh">🎧 视频版 · 一听速览<span class="vtip">想听点播放 · 想看往下滑</span></div>
-    <video controls preload="none" playsinline poster="morningReportVideoPoster" src="morningReportVideo"></video>
+  <div class="vsec" id="vsec">
+    <div class="vbar" onclick="var v=document.getElementById('mrv');this.style.display='none';v.style.display='block';v.play();">
+      <img class="vthumb" src="morningReportVideoPoster" alt="">
+      <div class="vtx"><b>🎧 视频版 · 一听速览</b><span>不方便看字？点这里连播收听，也可以直接往下滑读图文</span></div>
+      <div class="vplay">▶</div>
+    </div>
+    <video id="mrv" controls playsinline preload="none" poster="morningReportVideoPoster" src="morningReportVideo"></video>
   </div>
   {% endif %}
 
