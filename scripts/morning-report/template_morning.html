@@ -31,6 +31,12 @@
   .meta b{ color:#fff; }
   .slogan{ margin-top:9px; font-size:13px; color:var(--sky); letter-spacing:1.5px; font-weight:600; position:relative; z-index:2; }
 
+  /* 视频版入口(当天有电台视频才出现, 点播放可听, 不打断下滑读图文) */
+  .vsec{ margin:16px 14px 0; background:linear-gradient(135deg,#0e2f63,#1a59ab); border-radius:14px; padding:13px 14px 14px; box-shadow:0 5px 16px rgba(20,50,110,.16); }
+  .vsec .vh{ display:flex; align-items:baseline; gap:8px; color:#fff; font-size:14.5px; font-weight:800; letter-spacing:1px; margin-bottom:10px; }
+  .vsec .vh .vtip{ margin-left:auto; font-size:11px; font-weight:600; color:var(--sky); letter-spacing:.3px; }
+  .vsec video{ display:block; width:100%; border-radius:10px; background:#000; }
+
   /* 三大主题 健康/养老/传承 */
   .theme{ margin:16px 14px 0; background:#fff; border-radius:14px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
   .theme .th{ display:flex; align-items:center; gap:9px; padding:14px 16px; }
@@ -137,6 +143,14 @@
     <div class="meta">📅 <b>{{ pub_date }}</b> ｜ 数据截至前一交易日（{{ data_date }}）收盘 · 全球市场 + 内地财经</div>
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
+
+  <!-- 视频版入口: 当天有电台视频才渲染; 想听的点播放, 想看的直接往下滑 -->
+  {% if has_video %}
+  <div class="vsec">
+    <div class="vh">🎧 视频版 · 一听速览<span class="vtip">想听点播放 · 想看往下滑</span></div>
+    <video controls preload="none" playsinline poster="morningReportVideoPoster" src="morningReportVideo"></video>
+  </div>
+  {% endif %}
 
   <!-- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) -->
   {% for t in themes %}

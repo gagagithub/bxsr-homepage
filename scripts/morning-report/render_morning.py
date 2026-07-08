@@ -83,6 +83,9 @@ for name in THEME_ORDER:
 pub_date = os.environ.get("MX_PUB_DATE") or datetime.now().strftime("%Y-%m-%d")
 data_date = D.get("data_date") or pub_date
 
+# 当天电台视频版已生成 → H5 顶部嵌一个可选播放的视频入口(朋友圈链接卡固定指图文 H5, 视频入口内嵌其中)
+has_video = os.path.exists(f"{BASE}/radio/renders/morning-radio.mp4")
+
 hook = S.get("hook", {}) or {}
 if isinstance(hook, str):
     hook = {"big": hook}
@@ -94,6 +97,7 @@ ctx = dict(
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
     indices=indices, chips=chips, themes=themes,
     review=S.get("review", {}),
+    has_video=has_video,
 )
 
 env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
@@ -101,7 +105,7 @@ env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["
 tpl = env.get_template("template_morning.html")
 html = tpl.render(**ctx)
 open(f"{BASE}/morning-report.html", "w", encoding="utf-8").write(html)
-print(f"已渲染 morning-report.html  日期={pub_date}  主题={len(themes)}  头条={len(ctx['highlights'])}  行情chips={len(chips)}")
+print(f"已渲染 morning-report.html  日期={pub_date}  主题={len(themes)}  头条={len(ctx['highlights'])}  行情chips={len(chips)}  视频入口={'有' if has_video else '无'}")
 
 # ---- 朋友圈封面图(cover.html → 截图在 run/workflow 里做) ----
 def strip_tags(s):
