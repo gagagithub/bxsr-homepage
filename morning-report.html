@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
-<title>财经晨报 · 2026-07-11 · 保心上人</title>
+<title>财经晨报 · 2026-07-12 · 保心上人</title>
 <style>
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
   :root{
@@ -56,6 +56,13 @@
   .theme li .lk{ color:var(--blue); font-size:11px; white-space:nowrap; margin-left:2px; opacity:.85; }
   .theme .tinsight{ margin:6px 14px 15px; padding:12px 14px; border-radius:10px; font-size:13.6px; line-height:1.75; color:#25405f; }
   .theme .tinsight .tilab{ display:block; font-weight:800; margin-bottom:5px; letter-spacing:.5px; }
+  /* 健康小课堂(医保/三高/体检知识, 每日一讲, 只出现在健康主题) */
+  .theme .tipbox{ margin:6px 14px 15px; padding:12px 14px; border-radius:10px; background:#fff;
+                  border:1.5px dashed #17a06a; font-size:13.6px; line-height:1.8; color:#25405f; }
+  .theme .tipbox .tplab{ display:block; font-weight:800; margin-bottom:3px; letter-spacing:.5px; color:#0f7a4a; }
+  .theme .tipbox .tptit{ display:block; font-weight:800; font-size:15px; color:#132; margin-bottom:5px; }
+  .theme .tipbox p{ margin:0; }
+  .theme .tipbox b{ color:#0f7a4a; font-weight:800; }
   /* 每主题一套色: 健康绿 / 养老金橙 / 传承墨绿 */
   .theme-1 .th{ background:linear-gradient(100deg,#0f7a4a,#17a06a); } .theme-1 .th .tnm{ color:#fff; }
   .theme-1 .tinsight{ background:#f1f9f4; border-left:4px solid #17a06a; } .theme-1 .tinsight .tilab{ color:#0f7a4a; } .theme-1 .tinsight b{ color:#0f7a4a; }
@@ -144,11 +151,20 @@
       <div class="upd">每日 07:30 自动更新</div>
     </div>
     <h1 class="title"><span class="em">📰</span> 财经晨报</h1>
-    <div class="meta">📅 <b>2026-07-11</b> ｜ 数据截至前一交易日（2026-07-10）收盘 · 全球市场 + 内地财经</div>
+    <div class="meta">📅 <b>2026-07-12</b> ｜ 数据截至前一交易日（2026-07-10）收盘 · 全球市场 + 内地财经</div>
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
   <!-- 视频版入口: 当天有电台视频才渲染; 默认收起为一条入口, 点了才展开播放, 图文始终是主体 -->
+  
+  <div class="vsec" id="vsec">
+    <div class="vbar" onclick="var v=document.getElementById('mrv');this.style.display='none';v.style.display='block';v.play();">
+      <img class="vthumb" src="morningReportVideoPoster" alt="">
+      <div class="vtx"><b>🎧 视频版 · 一听速览</b><span>不方便看字？点这里连播收听，也可以直接往下滑读图文</span></div>
+      <div class="vplay">▶</div>
+    </div>
+    <video id="mrv" controls playsinline preload="none" poster="morningReportVideoPoster" src="morningReportVideo"></video>
+  </div>
   
 
   <!-- 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读) -->
@@ -162,16 +178,21 @@
     
     <ol>
       
-      <li><b class="src">美国FDA：</b>美国FDA批准了辉瑞的Padcev联合Keytruda，用于治疗肌层浸润性膀胱癌（MIBC）。这是一种新的联合疗法，给患者多了一个选择。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802199337.html" target="_blank">›</a></li>
+      <li><b class="src">公安部：</b>公安部公布，今年1至5月全国刑事案件同比下降<b>16.1%</b>，治安案件下降<b>10.6%</b>。治安好了，大家出门看病、遛弯更安心，但健康风险主要还是来自疾病本身，别因为治安好就放松体检和保障。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802537661.html" target="_blank">›</a></li>
       
-      <li><b class="src">国常会：</b>国务院常务会议审议通过了《全民健身计划（2026—2030年）》，说要多渠道增加健身场地设施，优化健身普及方式，创新发展健康产业。这对大家平时锻炼身体、预防疾病是个好消息。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802033872.html" target="_blank">›</a></li>
-      
-      <li><b class="src">九芝堂：</b>九芝堂预计2026年上半年归母净利润<b>2.41亿元–2.64亿元</b>，同比增长<b>67.63%-83.63%</b>。业绩增长主要是因为哈尔滨吉象隆生物技术公司去年11月并表，这家公司生产经营情况良好，带动了净利润。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802127784.html" target="_blank">›</a></li>
+      <li><b class="src">毕马威：</b>毕马威发布《康养50报告》指出，康养产业目前大面积亏损，多数养老机构在盈亏线挣扎。养老服务行业<b>重资产、长周期、高成本、低溢价</b>，前期投资大、回本慢。这对咱们选养老机构是个提醒：别光看宣传，得实地考察运营状况和资金链。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802505113.html" target="_blank">›</a></li>
       
     </ol>
     
     
-    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天健康方面的新闻不多，但有个信号值得注意：创新药审批和健康产业政策都在推进。FDA批了新药，国内也在推全民健身计划，说明从治疗到预防，健康管理的链条在拉长。对咱们这个岁数的人来说，除了关注医保能报多少、进口药自费差价，更要想办法把“防病”和“治病”的钱都规划好。比如，重疾险太贵了，50岁后可以用医疗险+防癌险来替代搭配，这样保费压力小，保障也够用。另外，像九芝堂这样的药企业绩增长，也反映出医药行业有活力，但具体到个人，还是得看自己手里的保单能不能覆盖新药、进口药的开销。</div>
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天健康相关的新闻不多，但毕马威那份报告点出了一个现实：<b>养老机构日子不好过</b>，很多在亏本运营。这对咱们意味着什么？如果你打算以后住养老社区，<b>别只看环境多好、服务多全</b>，得先搞清楚它<b>能不能撑下去</b>。万一机构资金链断了，你交的押金、会员费可能打水漂。所以，<b>选机构要看背后的资本实力和运营历史</b>，最好选那些有保险、地产等大集团背景的。另外，自己手里也得留一笔<b>医疗应急金</b>，因为很多机构的收费不包括高端护理和进口药，这些得自己掏。</div>
+    
+    
+    <div class="tipbox">
+      <span class="tplab">🩺 健康小课堂 · 每天懂一点</span>
+      <span class="tptit">住院天数变短，看病钱怎么省？</span>
+      <p>现在很多医院推行<b>DRG付费</b>，就是按病种打包收费，比如阑尾炎手术，医保给医院一个固定金额，超了医院自己贴。所以医院会尽量缩短住院天数，以前住7天的，现在可能<b>3-4天</b>就让你出院。这对病人来说，<b>好处是自费部分可能减少</b>，因为过度检查、用药被压缩了；<b>坏处是</b>，如果你觉得没恢复好，想多住两天，就得<b>自费</b>，医保不报销那部分。怎么办？第一，<b>出院前问清楚</b>：后续康复需要什么药、什么检查，能不能在门诊解决。第二，<b>提前买好商业医疗险</b>，选那种<b>包含院外特药责任</b>的，因为DRG下医院可能不开进口药，让你去外面药店买，医保不报。第三，<b>别硬扛</b>，如果医生评估可以出院但你不放心，可以签<b>自动出院</b>，回家后密切观察，有问题及时回门诊。记住，<b>DRG的核心是控费</b>，咱们得学会自己管理康复节奏。</p>
+    </div>
     
   </div>
   
@@ -184,24 +205,25 @@
     
     <ol>
       
-      <li><b class="src">央行：</b>下周央行公开市场将有<b>620亿元</b>逆回购到期，其中周一到周五分别到期70亿、100亿、150亿、100亿、200亿元。另外，周三还有<b>9000亿元</b>181天期买断式逆回购到期，周五有<b>1200亿元</b>国库现金定存到期。这些操作会影响市场资金面，间接影响理财产品的收益。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802000367.html" target="_blank">›</a></li>
+      <li><b class="src">中期协：</b>中国期货业协会公布，今年上半年全国期货市场累计成交额达到<b>482.7万亿元</b>，同比增长<b>42.08%</b>。6月单月成交额<b>80.62万亿元</b>，同比猛增<b>52.72%</b>。期货市场活跃，说明资金在寻找更高收益的渠道，但风险也大，养老钱别轻易往里冲。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802562227.html" target="_blank">›</a></li>
       
-      <li><b class="src">美联储：</b>美联储发布了半年期货币政策报告，说包括截尾均值在内的一些通胀指标有所下降，劳动力市场总体稳定，生产率强劲。报告重申了维持价格稳定的承诺。这暗示美国可能不会很快降息，对全球利率环境有影响。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802192769.html" target="_blank">›</a></li>
+      <li><b class="src">戴德梁行：</b>戴德梁行发布报告说，2026年上半年中国商业不动产REITs市场爆发式升温。政策持续扩容，优质商业资产的资本化通道被全面打通。对手里有商业房产、或者想通过REITs分一杯租金收益的人来说，这是个新方向，但得看清底层资产质量。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802550561.html" target="_blank">›</a></li>
       
-      <li><b class="src">欧洲央行：</b>欧洲央行管委Moulin说，人工智能对通胀的影响难以预测，可能导致价格波动加剧。短期内AI可能因为资本支出增加而推高通胀，但长期随着生产率提升，又可能抑制通胀。这对咱们判断未来利率走势是个新变量。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802221155.html" target="_blank">›</a></li>
+      <li><b class="src">大摩/瑞银：</b>多家外资机构集体看多中国股票。渣打给出A股超配评级；大摩说海外资金还低配，后续会加仓；高盛建议从韩国AI股切换到国内标的；瑞银预判存款搬家、两融、外资回流多路资金将持续进场。外资认准AI是下半年主线，养老钱如果配了A股，可以留意这个方向。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802472083.html" target="_blank">›</a></li>
       
-      <li><b class="src">纽约联储：</b>纽约联储的GDPNowcast模型预计美国二季度GDP增长<b>2.73%</b>，比之前的2.74%微降。经济增速小幅放缓，但还算稳。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802214446.html" target="_blank">›</a></li>
+      <li><b class="src">多机构：</b>多家研究机构预测，上半年GDP增速有望保持在<b>4.5%至4.7%</b>区间，二季度增速在<b>4.2%至4.5%</b>。下半年关键看出口和房地产，随着政策发力，三四季度经济可能小幅回升，全年GDP预计在<b>4.7%</b>左右。经济稳，养老钱的大盘子才稳。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802463154.html" target="_blank">›</a></li>
       
-      <li><b class="src">德国国债：</b>德国10年期国债收益率周五报<b>3.07%</b>，本周累计上升<b>13个基点</b>，创5月份以来最大单周升幅。英国2年期国债收益率报<b>4.23%</b>，本周累计上升<b>11个基点</b>。海外利率在涨，咱们的利率也可能受影响。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802206283.html" target="_blank">›</a></li>
+      <li><b class="src">桂浩明：</b>公募基金半年报显示，宽基ETF在上半年遭遇大规模赎回。曾经有5只沪深300ETF规模超千亿，现在一个都不剩了。说明很多资金在趁反弹离场，养老钱如果跟风买ETF，得想清楚是长期持有还是短线博弈。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802448337.html" target="_blank">›</a></li>
       
-      <li><b class="src">国际金融协会：</b>国际金融协会数据显示，新兴市场亚洲股票6月资金流出<b>405亿美元</b>。外资在撤，对A股和港股有压力，养老钱如果配了股票基金，短期波动可能加大。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802162763.html" target="_blank">›</a></li>
+      <li><b class="src">日本央行：</b>日元跌到近40年低位，一度跌破<b>162.80</b>日元兑1美元。日本政府加息又干预，还是没止住。手里有日元资产或者打算去日本养老的朋友，汇率波动会直接影响购买力，得盯紧了。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802442644.html" target="_blank">›</a></li>
       
-      <li><b class="src">紫金矿业：</b>紫金矿业公告2026年中期利润分配方案，拟每10股派发现金红利<b>4.20元</b>，预计派发总额约<b>111.36亿元</b>。高分红对喜欢收息的投资者是个参考。 <a class="lk" href="https://finance.eastmoney.com/a/202607103801995171.html" target="_blank">›</a></li>
+      <li><b class="src">英伟达：</b>周五美股收高，英伟达涨<b>4.03%</b>，市值重返<b>5万亿美元</b>。SK海力士在纳斯达克上市首日大涨<b>12.76%</b>。科技股依然是美股主力，但波动也大，养老钱配置美股的话，别把鸡蛋放一个篮子里。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802442280.html" target="_blank">›</a></li>
       
     </ol>
     
     
-    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天养老相关的新闻集中在利率和资金面。海外利率在涨，德国国债收益率创了单周最大升幅，美联储也说通胀有韧性，这意味着全球低利率环境可能回不去了。国内下周有大量逆回购和买断式逆回购到期，央行怎么操作直接影响短期理财收益。对咱们来说，养老钱最怕的就是利率一路下行，锁住长期利率的窗口越来越窄。比如，想退休后每月领1万，按现在3%的利率得准备400万本金，如果利率降到2%，就得600万。所以，趁现在还能找到锁定利率的产品，比如长期国债或年金类配置，值得认真考虑。另外，新兴市场股市资金流出，A股短期有压力，养老钱别全放股票里，分散到固收和保险产品上更稳。</div>
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天这些消息，对咱们40-60岁的人来说，核心就一句话：<b>养老钱既要找收益，更要防风险</b>。期货成交额猛增、外资看好A股AI主线，说明市场热钱在涌动，但宽基ETF被大量赎回、日元暴跌，又提醒我们<b>波动随时会来</b>。如果你每月想领1万块养老，按现在<b>2.5%</b>左右的低利率环境，得准备<b>480万</b>本金；如果利率再降，需要的本金更多。所以眼下最要紧的是：<b>趁利率还没到底，锁定一部分长期收益</b>，比如国债、年金类产品。股市可以配，但别超过总资产的<b>30%</b>，而且得选那些分红稳、波动小的标的。别光盯着涨得猛的AI概念，养老钱经不起大起大落。</div>
+    
     
   </div>
   
@@ -214,24 +236,25 @@
     
     <ol>
       
-      <li><b class="src">美元指数：</b>美元指数10日微涨<b>0.05%</b>，收于<b>100.953</b>。欧元、英镑对美元小幅贬值，1欧元兑<b>1.1416</b>美元，1英镑兑<b>1.3398</b>美元。日元升值，1美元兑<b>161.69</b>日元。美元走强意味着你手里的外币资产（比如美元存款或保单）相对更值钱了，但换汇成本也会变高。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802243266.html" target="_blank">›</a></li>
+      <li><b class="src">戴德梁行：</b>戴德梁行大中华区CEO赵锦权说，<b>2026年上半年</b>中国商业不动产REITs市场爆发式升温，政策端持续扩容、底层资产范畴稳步拓宽，优质商业资产的资本化通道被全面打通。这意味着手里有商业地产的人，多了一条变现和传承的路子。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802550561.html" target="_blank">›</a></li>
       
-      <li><b class="src">LME金属：</b>LME金属期货多数下跌。期铜收跌<b>5</b>美元，报<b>13484</b>美元/吨；期铝跌<b>61</b>美元，报<b>3140</b>美元/吨；期锌跌<b>10</b>美元，报<b>3616</b>美元/吨；期镍涨<b>154</b>美元，报<b>16741</b>美元/吨。铜铝价格波动直接影响你的装修、家电成本，也跟持有资源类股票的朋友有关。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802214676.html" target="_blank">›</a></li>
+      <li><b class="src">多家金店：</b>今天国内黄金饰品价格多数持稳，足金首饰最高报<b>1255元/克</b>。金价在高位盘整，对想给子女留点硬通货的家长来说，现在买金成本不低，但黄金作为传承工具，流动性好、分割方便，比房产过户省事。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802485031.html" target="_blank">›</a></li>
       
-      <li><b class="src">黄金持仓：</b>截至7月7日当周，COMEX黄金投机者净多头头寸减少<b>1,964</b>手至<b>114,854</b>手；白银净多头减少<b>616</b>手至<b>12,131</b>手；铜净多头减少<b>970</b>手至<b>60,397</b>手。说明机构对黄金短期走势偏谨慎，但黄金作为传承压舱石的地位没变。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802243090.html" target="_blank">›</a></li>
+      <li><b class="src">伊朗/阿曼：</b>伊朗外长阿拉格齐11日访问阿曼，双方讨论霍尔木兹海峡航运问题。阿曼提出设立两条受管控航道，船舶经阿曼水域可自由通行，经伊朗水域需获许可。海峡通航量连续两日下降，从<b>30艘</b>降至<b>22艘</b>。地缘紧张推高油价和航运成本，间接影响全球资产价格和你的财富传承规划。 <a class="lk" href="https://finance.eastmoney.com/a/202607123802564548.html" target="_blank">›</a></li>
       
-      <li><b class="src">SK海力士：</b>SK海力士CEO郭鲁正表示，从供应角度看，<b>2027年</b>将是内存短缺周期中最糟糕的一年，短缺可能延续至<b>2030年</b>之后。公司计划在韩国建设约<b>15吉瓦</b>的数据中心，海外还有<b>5吉瓦</b>。存储芯片长期紧缺，利好持有相关科技股或基金的朋友，但也要注意短期波动。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802229526.html" target="_blank">›</a></li>
+      <li><b class="src">特朗普：</b>特朗普10日说，<b>1000枚导弹</b>已瞄准伊朗，若他遭暗杀还会有数千枚导弹发射。美伊对峙升级，霍尔木兹海峡通航量连续下降。地缘风险推高黄金和原油价格，持有黄金或能源类资产的投资者需关注波动对传承资产价值的影响。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802461085.html" target="_blank">›</a></li>
       
-      <li><b class="src">英伟达：</b>英伟达股价上涨<b>2.3%</b>，报<b>207.4</b>美元/股，总市值重回<b>5.02万亿美元</b>。AI龙头市值反弹，如果你持有科技类基金或股票，这算是个好消息，但别追高。 <a class="lk" href="https://finance.eastmoney.com/a/202607103802162446.html" target="_blank">›</a></li>
+      <li><b class="src">克普勒公司：</b>国际市场服务机构克普勒公司数据显示，<b>7月9日</b>通过霍尔木兹海峡的船舶数量从前一天的<b>30艘</b>降至<b>22艘</b>，连续两日下降。海峡通航减少推高全球能源成本，间接影响你的投资组合和传承资产的实际购买力。 <a class="lk" href="https://finance.eastmoney.com/a/202607113802439890.html" target="_blank">›</a></li>
       
-      <li><b class="src">紫金矿业：</b>紫金矿业2026年中期拟每10股派发现金红利<b>4.20元</b>，预计派发总额约<b>111.36亿元</b>。高分红对看重现金流的投资者有吸引力，但要注意股价波动和资源行业周期。 <a class="lk" href="https://finance.eastmoney.com/a/202607103801995171.html" target="_blank">›</a></li>
+      <li><b class="src">美国商务部：</b>美国周五放宽对阿联酋出口管制，阿联酋升级为最受信赖的防务与技术合作伙伴之一，可直接获取先进AI芯片、军用技术等，无需出口许可。此举可能加速中东资本流向科技领域，影响全球资产配置格局，也为你考虑海外资产传承提供了新视角。</li>
       
-      <li><b class="src">保利发展：</b>保利发展6月签约金额<b>297.79亿元</b>，同比增加<b>2.65%</b>；1-6月累计签约金额<b>1351.06亿元</b>，同比减少<b>6.93%</b>。楼市有企稳迹象，但整体还在调整。如果你有房产传承计划，现在不是急着加杠杆的时候。 <a class="lk" href="https://finance.eastmoney.com/a/202607103801998156.html" target="_blank">›</a></li>
+      <li><b class="src">阿曼媒体：</b>阿曼与伊朗同意继续就霍尔木兹海峡航行问题开展技术和政治磋商，寻求根据国际法达成协议。海峡局势若缓和，油价和航运成本可能回落，利好持有能源相关资产的家庭，也降低全球通胀预期，让你的传承资产更保值。</li>
       
     </ol>
     
     
-    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天几条新闻对传承有直接启发：美元走强，持有美元资产（比如美元保单）的朋友可以关注汇率窗口，但别盲目换汇。黄金持仓下降，短期金价可能承压，但黄金作为传承的“压舱石”地位没变，逢低配置依然合理。铜铝等大宗商品波动，会影响你持有的资源类股票或基金收益。楼市方面，保利数据说明市场在缓慢回暖，但房产传承要考虑流动性，现在不是囤房的好时机。科技股（英伟达、SK海力士）长期看好，但短期波动大，想留给孩子的股票资产，建议用定投或保单来平滑风险。一句话：传承的核心是“稳”，别追热点，多考虑隔离和税务成本。</div>
+    <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>今天这几条新闻，核心就一个词：<b>地缘风险</b>。美伊对峙、霍尔木兹海峡通航下降，直接推高黄金和油价——黄金是你传承给子女最硬通的资产之一，油价涨则影响你持有的股票、基金甚至养老金账户的短期波动。同时，商业不动产REITs市场升温，说明优质房产的资本化通道打开了，想给子女留房子又怕过户麻烦的，可以关注这类工具。金价高位盘整，现在买金成本不低，但作为传承工具，黄金流动性好、分割方便，比房产过户省事。一句话：地缘乱局下，<b>硬资产（黄金、优质不动产）和流动性（REITs、现金）</b>两手抓，才是稳妥的传承思路。</div>
+    
     
   </div>
   
@@ -242,23 +265,23 @@
     
     <div class="idx">
       <div class="n">道琼斯指数</div>
-      <div class="p">52,487.41</div>
-      <div class="d up">▲ +0.27%</div>
-      <div class="y">YTD +9.20%</div>
+      <div class="p">52,637.01</div>
+      <div class="d up">▲ +0.29%</div>
+      <div class="y">YTD +9.52%</div>
     </div>
     
     <div class="idx">
       <div class="n">标普500指数</div>
-      <div class="p">7,543.64</div>
-      <div class="d up">▲ +0.81%</div>
-      <div class="y">YTD +10.20%</div>
+      <div class="p">7,575.39</div>
+      <div class="d up">▲ +0.42%</div>
+      <div class="y">YTD +10.66%</div>
     </div>
     
     <div class="idx">
       <div class="n">纳斯达克指数</div>
-      <div class="p">26,206.89</div>
-      <div class="d up">▲ +1.30%</div>
-      <div class="y">YTD +12.76%</div>
+      <div class="p">26,281.61</div>
+      <div class="d up">▲ +0.29%</div>
+      <div class="y">YTD +13.08%</div>
     </div>
     
   </div>
@@ -276,22 +299,22 @@
     
     <div class="chip">
       <div class="l">美债10年</div>
-      <div class="v">nan%<span class="nt flat">+nanbp</span></div>
+      <div class="v">4.560%<span class="nt up">+2.0bp</span></div>
     </div>
     
     <div class="chip">
       <div class="l">人民币 USD/CNY</div>
-      <div class="v">6.7644<span class="nt flat">中行</span></div>
+      <div class="v">6.7667<span class="nt flat">中行</span></div>
     </div>
     
     <div class="chip">
       <div class="l">WTI原油</div>
-      <div class="v">$71.44<span class="nt down">-0.88%</span></div>
+      <div class="v">$71.43<span class="nt down">-0.90%</span></div>
     </div>
     
     <div class="chip">
       <div class="l">COMEX黄金</div>
-      <div class="v">$4,123.27<span class="nt down">-0.42%</span></div>
+      <div class="v">$4,130.63<span class="nt down">-0.25%</span></div>
     </div>
     
   </div>
@@ -299,13 +322,13 @@
   <!-- 晨报纵览 -->
   
   <div class="review">
-    <div class="rh">📌 晨报纵览 · 美伊局势缓和，科技股反弹</div>
+    <div class="rh">📌 晨报纵览 · 地缘风险升温，黄金与不动产成传承焦点</div>
     
-    <p>今天最大的事是美伊局势出现转机。特朗普说美方同意继续和伊朗谈判，伊朗方面也释放了缓和信号。之前霍尔木兹海峡通航量暴跌到每天只有十几艘船，油价一度紧张，现在谈判重启，油价回落，WTI原油跌到<b>71.41美元</b>。这对咱们开车加油是好事，也缓解了全球通胀压力。</p>
+    <p>今天最大的事，是美伊对峙升级。特朗普说1000枚导弹已瞄准伊朗，霍尔木兹海峡通航量连续两天下降，从30艘降到22艘。伊朗外长跑去阿曼谈航道问题，阿曼提出分两条路走——经阿曼水域自由通行，经伊朗水域要许可。地缘一紧张，黄金和油价就往上蹿，今天金饰最高报1255元/克，还在高位。</p>
     
-    <p>科技股这边，SK海力士美股上市首日大涨，总市值冲到<b>1.25万亿美元</b>，英伟达也涨了<b>2.3%</b>，市值重回<b>5万亿美元</b>。存储芯片短缺的消息继续发酵，SK海力士CEO说<b>2027年</b>可能是最缺货的一年。如果你手里有科技类基金或股票，短期可以乐观点，但别追高，毕竟摩根士丹利也警告芯片股定价能力有限。</p>
+    <p>另一边，国内商业不动产REITs市场爆发了。戴德梁行说上半年政策扩容、资产范畴拓宽，优质商业资产的资本化通道被打通。这对手里有商铺、写字楼的人来说，多了一条变现和传承的路——不用卖房，也能把资产收益传给子女。同时，美国放宽对阿联酋出口管制，中东资本可能加速流向科技领域，全球资产配置格局在变。</p>
     
-    <p>对咱们40-60岁、家底殷实的朋友来说，今天这些消息提醒两件事：一是地缘风险缓和时，别急着押注黄金或石油，保持均衡配置；二是科技股长期看好，但养老钱和传承钱要分开，股票波动大，适合用保单或国债来锁定一部分收益。今天没有健康类大新闻，但提醒一句：台风“巴威”来了，注意人身安全，家里的应急药品和保单信息要放在顺手的地方。</p>
+    <p>对咱们40-60岁、家底殷实的读者来说，今天这些消息提醒两件事：一是地缘风险下，黄金和优质不动产这类硬资产更扛得住波动，适合作为传承的压舱石；二是REITs这类工具让房产传承更灵活，不用等过户、不用交高额税费。金价虽高，但黄金流动性好、分割方便，比房产过户省心。建议你盘点一下家庭资产，看看硬资产占比够不够，别光盯着股票基金。</p>
     
   </div>
   
