@@ -68,17 +68,20 @@ THEME_ORDER = ["健康", "养老", "传承"]
 THEME_ICON = {"健康": "🏥", "养老": "🌅", "传承": "🌳"}
 THEME_SUB = {"健康": "看病住院 · 报销保障", "养老": "养老钱 · 该往哪放", "传承": "家底保值 · 稳稳传下去"}
 _thmap = {t.get("name"): t for t in S.get("themes", []) if t.get("name")}
+# 健康小课堂(医保/三高/体检知识, 每日一讲): 挂在健康主题末尾; 当天健康档没新闻也靠它托底出块
+tip = S.get("tip", {}) or {}
+if isinstance(tip, str):
+    tip = {"body": tip}
 themes = []
 for name in THEME_ORDER:
-    t = _thmap.get(name)
-    if not t:
-        continue
+    t = _thmap.get(name) or {}
     its = [it for it in t.get("items", []) if it.get("text")]
     insight = (t.get("insight") or "").strip()
-    if not its and not insight:
+    ttip = tip if (name == "健康" and tip.get("body")) else {}
+    if not its and not insight and not ttip:
         continue
     themes.append(dict(name=name, icon=THEME_ICON.get(name, "📌"),
-                       sub=THEME_SUB.get(name, ""), items=its, insight=insight))
+                       sub=THEME_SUB.get(name, ""), items=its, insight=insight, tip=ttip))
 
 pub_date = os.environ.get("MX_PUB_DATE") or datetime.now().strftime("%Y-%m-%d")
 data_date = D.get("data_date") or pub_date

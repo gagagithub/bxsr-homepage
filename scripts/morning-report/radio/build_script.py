@@ -56,10 +56,16 @@ if hl:
         lab = clean(h.get("label", ""))
         S.append([2, f"{lab}。{first_sentence(h.get('text',''), 40)}"])
 
-# 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读)
+# 三大主题: 健康 / 养老 / 传承(每主题 = 相关新闻 + 一段解读; 健康主题末尾带每日健康小课堂)
 THEME_INTRO = {"健康": "先说健康", "养老": "再说养老", "传承": "最后说传承"}
+tip = d.get("tip", {}) or {}
+if isinstance(tip, str):
+    tip = {"body": tip}
+themes_in = d.get("themes", [])
+if tip.get("body") and not any(clean(t.get("name", "")) == "健康" for t in themes_in):
+    themes_in = [{"name": "健康", "items": [], "insight": ""}] + themes_in  # 健康档全空时也要播小课堂
 para = 3
-for th in d.get("themes", []):
+for th in themes_in:
     name = clean(th.get("name", ""))
     S.append([para, THEME_INTRO.get(name, f"下面说说{name}")])
     for it in th.get("items", []):
@@ -73,6 +79,12 @@ for th in d.get("themes", []):
         S.append([para, "这跟咱的关系是"])
         # 解读较长, 按句拆成 2-3 条字幕, 别一句太长
         for seg in [x for x in re.split(r"[。；]", insight) if x.strip()][:3]:
+            S.append([para, seg.strip()])
+    if name == "健康" and tip.get("body"):
+        S.append([para, "接下来是健康小课堂"])
+        if tip.get("title"):
+            S.append([para, clean(tip["title"])])
+        for seg in [x for x in re.split(r"[。；]", clean(tip["body"])) if x.strip()][:6]:
             S.append([para, seg.strip()])
     para += 1
 

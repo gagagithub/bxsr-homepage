@@ -56,6 +56,13 @@
   .theme li .lk{ color:var(--blue); font-size:11px; white-space:nowrap; margin-left:2px; opacity:.85; }
   .theme .tinsight{ margin:6px 14px 15px; padding:12px 14px; border-radius:10px; font-size:13.6px; line-height:1.75; color:#25405f; }
   .theme .tinsight .tilab{ display:block; font-weight:800; margin-bottom:5px; letter-spacing:.5px; }
+  /* 健康小课堂(医保/三高/体检知识, 每日一讲, 只出现在健康主题) */
+  .theme .tipbox{ margin:6px 14px 15px; padding:12px 14px; border-radius:10px; background:#fff;
+                  border:1.5px dashed #17a06a; font-size:13.6px; line-height:1.8; color:#25405f; }
+  .theme .tipbox .tplab{ display:block; font-weight:800; margin-bottom:3px; letter-spacing:.5px; color:#0f7a4a; }
+  .theme .tipbox .tptit{ display:block; font-weight:800; font-size:15px; color:#132; margin-bottom:5px; }
+  .theme .tipbox p{ margin:0; }
+  .theme .tipbox b{ color:#0f7a4a; font-weight:800; }
   /* 每主题一套色: 健康绿 / 养老金橙 / 传承墨绿 */
   .theme-1 .th{ background:linear-gradient(100deg,#0f7a4a,#17a06a); } .theme-1 .th .tnm{ color:#fff; }
   .theme-1 .tinsight{ background:#f1f9f4; border-left:4px solid #17a06a; } .theme-1 .tinsight .tilab{ color:#0f7a4a; } .theme-1 .tinsight b{ color:#0f7a4a; }
@@ -177,6 +184,13 @@
     {% endif %}
     {% if t.insight %}
     <div class="tinsight"><span class="tilab">🔍 这跟咱有啥关系</span>{{ t.insight|safe }}</div>
+    {% endif %}
+    {% if t.tip and t.tip.body %}
+    <div class="tipbox">
+      <span class="tplab">🩺 健康小课堂 · 每天懂一点</span>
+      {% if t.tip.title %}<span class="tptit">{{ t.tip.title }}</span>{% endif %}
+      <p>{{ t.tip.body|safe }}</p>
+    </div>
     {% endif %}
   </div>
   {% endfor %}
