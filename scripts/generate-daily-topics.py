@@ -303,11 +303,15 @@ def search_xigua(keyword):
 def search_bilibili(keyword):
     """搜索B站
     响应结构: data -> {code, message, ttl, data} -> data 里有 result[]"""
+    # 2026-07-13: 加 pubtime 窗口(近7天), 综合排序只在新内容里排, 不再被下游7天过滤杀光
+    now_ts = int(time.time())
     resp = tikhub_get("/api/v1/bilibili/web/fetch_general_search", {
         "keyword": keyword,
         "order": "totalrank",
         "page": 1,
         "page_size": 15,
+        "pubtime_begin_s": now_ts - 7 * 86400,
+        "pubtime_end_s": now_ts,
     })
     if not resp:
         return []
@@ -346,13 +350,16 @@ def search_bilibili(keyword):
 
 
 def search_douyin(keyword):
-    """搜索抖音（使用 POST /douyin/search/fetch_general_search_v2）"""
+    """搜索抖音（使用 POST /douyin/search/fetch_general_search_v2）。
+    2026-07-13: 加 publish_time=7(近一周)+sort_type=1(最多点赞)+content_type=1(视频)——
+    原综合排序返回的多是老热门, 全被下游7天过滤杀光(After filter: 0 的元凶之一)。"""
     url = f"{TIKHUB_BASE}/api/v1/douyin/search/fetch_general_search_v2"
     resp = _request_with_retry("POST", url, headers=HEADERS, json={
         "keyword": keyword,
-        "offset": 0,
-        "count": 15,
-        "sort_type": "0",
+        "cursor": 0,
+        "sort_type": "1",
+        "publish_time": "7",
+        "content_type": "1",
     })
     if resp is None:
         return []
@@ -410,10 +417,12 @@ def _xhs_publish_ts(note):
 
 
 def search_xiaohongshu(keyword):
-    """搜索小红书（App V2 接口；旧版 /xiaohongshu/app/ 于 2026-06-19 下线）"""
+    """搜索小红书（App V2 接口；旧版 /xiaohongshu/app/ 于 2026-06-19 下线）
+    2026-07-13: 加 time_filter=一周内, 原始结果即新, 不再被下游7天过滤杀光。"""
     data = tikhub_get("/api/v1/xiaohongshu/app_v2/search_notes", {
         "keyword": keyword,
         "page": 1,
+        "time_filter": "一周内",
     })
     if not data:
         return []
@@ -476,17 +485,24 @@ def search_xiaohongshu(keyword):
 
 
 def search_wechat_channels(keyword):
-    """搜索微信视频号(综合搜索)。
-    旧路径 /wechat_channels/fetch_search_ordinary, 2026-06-19 起迁 v2; 参数名是 keywords(复数)。
-    返回的 videoUrl 是腾讯 finder 直链(video/mp4, 浏览器可直接播放; 带签名当天有效),
-    用作编辑点击观看入口。接口偶发返回空, 内部重试几次。"""
-    raw_list = []
-    for attempt in range(3):
-        resp = tikhub_get("/api/v1/wechat_channels/fetch_search_ordinary", {"keywords": keyword})
-        raw_list = _find_list(resp, ("videoUrl", "title", "docID")) or []
-        if raw_list:
-            break
-        time.sleep(1.0)
+    """搜索微信视频号(wechat_search/v2/fetch_search_videos)。
+    旧端点 /wechat_channels/fetch_search_ordinary 已被 TikHub 下线(404), 2026-06-19 起
+    视频号搜索一直静默吞空——2026-07-13 专项修复迁到 v2。
+    sort=hot(点赞降序) + publish_time=week(近7天): 原始结果即新即热。
+    ⚠ v2 搜索结果不带可播链接(只有封面 image + exportId); 幸存条目在 collect_all_data
+    过滤后经 detail→share_url 换成 weixin.qq.com/sph 永久短链(每条 2 次计费调用)。"""
+    resp = _request_with_retry(
+        "POST", f"{TIKHUB_BASE}/api/v1/wechat_search/v2/fetch_search_videos",
+        headers=HEADERS, json={"keyword": keyword, "sort": "hot",
+                               "publish_time": "week", "offset": 0, "raw": False})
+    if resp is None:
+        return []
+    try:
+        data = (resp.json() or {}).get("data") or {}
+    except Exception as e:
+        print(f"  JSON parse failed: {e}")
+        return []
+    raw_list = data.get("items") or []
     items = []
     for v in raw_list[:15]:
         if not isinstance(v, dict):
@@ -505,12 +521,13 @@ def search_wechat_channels(keyword):
             ct = 0
         items.append({
             "title": title,
-            "url": v.get("videoUrl") or "",          # 直链, 点开即播放
+            "url": "",                                 # 幸存条目稍后统一换永久短链
             "play": 0,                                 # 视频号搜索不返播放量
             "like": like,
             "comment": 0,
             "create_time": ct,
             "cid": v.get("docID") or v.get("exportId") or "",
+            "_export_id": v.get("exportId") or "",     # detail→share_url 换链用
         })
     return items
 
@@ -578,6 +595,28 @@ def collect_all_data():
 
 
 # ── 后处理：去重 / 归一化 / LLM enrich ──────────────────
+
+WECHAT_LINK_TOP_N = 5   # 每话题最多给前 N 条视频号搜索结果换永久短链(每条 2 次计费调用)
+
+
+def resolve_wechat_search_links(data):
+    """视频号 v2 搜索结果不带可播链接, 对去重后幸存的条目按点赞取每话题 top N,
+    经 fetch_video_detail→fetch_video_share_url 换成 weixin.qq.com/sph 永久短链。
+    放在全局去重之后调, 避免给注定被丢的条目白花计费调用。失败留空(渲染成不可点文字)。"""
+    converted = 0
+    for topic in data:
+        items = topic["platforms"].get("wechat_channels") or []
+        for item in sorted(items, key=lambda i: i.get("like", 0) or 0,
+                           reverse=True)[:WECHAT_LINK_TOP_N]:
+            export_id = item.get("_export_id")
+            if not export_id or item.get("url"):
+                continue
+            url = _get_channel_share_url_by_export(export_id)
+            if url:
+                item["url"] = url
+                converted += 1
+    print(f"  Resolved {converted} wechat_channels share links")
+
 
 def _normalize_title(title):
     """去掉标点/空白/常见装饰字符后取前 30 字, 作为去重 key。"""
@@ -1107,6 +1146,25 @@ def _get_channel_share_url(object_id):
             url = su.strip()
     _CHANNEL_SHARE_MEMO[object_id] = url
     return url
+
+
+def _get_channel_share_url_by_export(export_id):
+    """视频号搜索结果只有 exportId, 换永久短链要两步:
+    fetch_video_detail(export_id) → data.id(纯数字 object_id) → fetch_video_share_url。
+    ⚠ 每条 2 次计费调用, 只对过滤后真正要展示的搜索结果调。失败返回 ""。"""
+    export_id = str(export_id or "").strip()
+    if not export_id:
+        return ""
+    resp = _request_with_retry(
+        "POST", f"{TIKHUB_BASE}/api/v1/wechat_channels/v2/fetch_video_detail",
+        headers=HEADERS, json={"export_id": export_id, "raw": False})
+    if resp is None:
+        return ""
+    try:
+        oid = ((resp.json() or {}).get("data") or {}).get("id")
+    except Exception:
+        oid = None
+    return _get_channel_share_url(oid) if oid else ""
 
 
 def _extract_finder_username(data):
@@ -1826,6 +1884,9 @@ def main():
 
     print("Step 2: Dedupe across topics/platforms...")
     dedupe_across_topics(data)
+
+    print("Step 2.5: Resolve 视频号永久短链...")
+    resolve_wechat_search_links(data)
 
     print("Step 3: Normalize heat scores...")
     normalize_heat(data)
