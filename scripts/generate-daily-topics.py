@@ -1813,12 +1813,14 @@ def main():
     total = sum(len(items) for t in data for items in t["platforms"].values())
     print(f"  Collected {total} raw items")
 
-    if total == 0:
-        # 采到 0 条 = 上游异常(TikHub 余额耗尽 / API Key 失效 / 接口变更)。
-        # 1) 绝不用空页面覆盖上一次的好数据, 否则页面直接变白;保留 daily-topics.html 原样。
-        # 2) 以非 0 退出码 raise, 让 GitHub Action 标红报警, 杜绝"采到0条仍报成功"的静默断更。
+    # 采集量异常低 = 上游异常(TikHub 余额耗尽 / API Key 失效 / 接口变更)。
+    # 阈值不能用 ==0: 2026-07-13 余额耗尽日仍漏采到 1 条, 绕过保护把空页推上了生产。
+    # 正常日基线 7~20 条, 低于 5 条按上游故障处理:
+    # 1) 绝不用空/残页面覆盖上一次的好数据;保留 daily-topics.html 原样(也不推送)。
+    # 2) 以非 0 退出码 raise, 让 GitHub Action 标红报警, 杜绝静默断更。
+    if total < 5:
         raise SystemExit(
-            "ERROR: 全平台合计采到 0 条 —— 疑似 TikHub 余额耗尽 / API Key 失效 / 接口变更。"
+            f"ERROR: 全平台合计仅采到 {total} 条(<5) —— 疑似 TikHub 余额耗尽 / API Key 失效 / 接口变更。"
             "已保留上一次的 daily-topics.html(不覆盖), 请检查 TikHub 账号与接口。"
         )
 
