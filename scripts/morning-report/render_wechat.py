@@ -69,8 +69,34 @@ w(f'<section style="font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\
 w(f'<p style="margin:6px 4px 14px;text-align:center;font-size:15px;color:{SUB};letter-spacing:1px;">'
   f'{date_cn} · {week_cn} · 让天下人老有所养</p>')
 
-# (今日头条卡已按崔伟要求删除, 报头之后直接进行情速览 + 三大主题)
+# (今日头条卡已按崔伟要求删除)
 trend = S.get("trend", "").strip()  # 仍保留供 digest 摘要用
+
+# ---------- 今日主打(标题钩子对应的那条新闻, 进文章第一眼兑现标题) ----------
+lead = S.get("lead", {}) or {}
+if isinstance(lead, str):
+    lead = {"text": lead}
+if lead.get("text"):
+    dk = "#11305f"
+    w(f'<section style="margin:4px 4px 8px;padding:16px 15px;background:#fffdf7;'
+      f'border:2px solid {GOLD};border-radius:10px;">')
+    w(f'<p style="margin:0 0 8px;font-size:14px;font-weight:800;color:{GOLD};letter-spacing:2px;">📌 今日主打</p>')
+    if lead.get("title"):
+        w(f'<p style="margin:0 0 10px;font-size:23px;line-height:1.5;font-weight:900;color:{dk};">{strip_tags(lead["title"])}</p>')
+    w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">')
+    if lead.get("label"):
+        w(f'<span style="color:{ORANGE};font-weight:700;">【{strip_tags(lead["label"])}】</span>')
+    w(emph(lead["text"]))
+    if lead.get("src"):
+        w(f'<span style="color:{SUB};font-size:14px;">（{strip_tags(lead["src"])}）</span>')
+    w('</p>')
+    if lead.get("relate"):
+        w(f'<section style="margin:12px 0 0;padding:11px 13px;background:#f4f7fc;'
+          f'border-left:5px solid {dk};border-radius:6px;">')
+        w(f'<p style="margin:0 0 4px;font-size:14px;font-weight:800;color:{dk};">🔍 这跟咱有啥关系</p>')
+        w(f'<p style="margin:0;font-size:18px;line-height:2.0;color:{INK};">{emph(lead["relate"])}</p>')
+        w('</section>')
+    w('</section>')
 
 # ---------- 行情速览(可选) ----------
 def market_rows():
@@ -233,9 +259,39 @@ if rows:
     open(f"{BASE}/market_h.txt", "w", encoding="utf-8").write(str(mh))
     print(f"已渲染 market.html  行数={len(mrows)}  截图高度={mh}")
 
-# digest 摘要(公众号文章列表/分享摘要, ≤120 字, 纯文本)
-digest = strip_tags(S.get("moment_text") or trend).replace("\n", " ").strip()
-digest = re.sub(r"\s+", " ", digest)[:118]
+# digest 摘要(公众号文章列表/分享摘要, ≤120 字, 纯文本): 优先用钩子(比朋友圈长文案更抓点开)
+hook = S.get("hook", {}) or {}
+if isinstance(hook, str):
+    hook = {"big": hook}
+digest = ""
+if hook.get("big"):
+    digest = strip_tags(hook["big"]).strip()
+    if hook.get("sub"):
+        digest += " " + strip_tags(hook["sub"]).strip()
+if not digest:
+    digest = strip_tags(S.get("moment_text") or trend)
+digest = re.sub(r"\s+", " ", digest.replace("\n", " ")).strip()[:118]
 open(f"{BASE}/wechat_digest.txt", "w", encoding="utf-8").write(digest)
+
+# 公众号文章标题(AI 爆款式标题 + 晨报品牌后缀; 服务器缺该文件/为空时自动回退「财经晨报 X月X日」)
+wtitle = strip_tags(S.get("wechat_title") or "").strip()
+if wtitle:
+    try:
+        _d = datetime.strptime(pub_date, "%Y-%m-%d")
+        suffix = f"｜财经晨报{_d.month}.{_d.day}"
+    except Exception:
+        suffix = "｜财经晨报"
+    full = wtitle + suffix
+    if len(full) > 64:                      # 微信标题上限 64 字, 超长砍正文部分保后缀
+        full = wtitle[:64 - len(suffix) - 1].rstrip("，。、；,. ") + "…" + suffix
+    open(f"{BASE}/wechat_title.txt", "w", encoding="utf-8").write(full)
+    print(f"公众号标题：{full}")
+else:
+    # 不留旧文件, 防止今天的草稿用了昨天的标题
+    try:
+        os.remove(f"{BASE}/wechat_title.txt")
+    except OSError:
+        pass
+    print("⚠ AI 未产出 wechat_title, 公众号标题回退日期版")
 
 print(f"已渲染 wechat.html  日期={pub_date}  字节={len(html)}  主题={len(_thmap)}  digest={len(digest)}字")

@@ -92,10 +92,13 @@ has_video = os.path.exists(f"{BASE}/radio/renders/morning-radio.mp4")
 hook = S.get("hook", {}) or {}
 if isinstance(hook, str):
     hook = {"big": hook}
+lead = S.get("lead", {}) or {}
+if isinstance(lead, str):
+    lead = {"text": lead}
 
 ctx = dict(
     pub_date=pub_date, data_date=data_date,
-    hook=hook,
+    hook=hook, lead=(lead if lead.get("text") else {}),
     trend=S.get("trend", ""),
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
     indices=indices, chips=chips, themes=themes,
@@ -116,10 +119,20 @@ def strip_tags(s):
 def shorten(s, n):
     s = strip_tags(s)
     return s if len(s) <= n else s[:n].rstrip("，。、；,. ") + "…"
+# 封面大字优先用 hook; hook 被溯源校验丢弃时用主打小标题兜底(它过了最严校验), 都没有回退通用版
+hook_big = shorten(hook.get("big", ""), 16) or shorten(lead.get("title", ""), 16)
+hook_sub = shorten(hook.get("sub", ""), 30)
+# 钩子大字版占空间大, 头条精选最多带 2 条; 无钩子回退老版带 4 条
 cover_items = []
-for h in ctx["highlights"][:4]:
+for h in ctx["highlights"][:(2 if hook_big else 4)]:
     cover_items.append(dict(label=strip_tags(h.get("label", "")), tx=shorten(h.get("text") or h.get("title"), 34)))
-cover_ctx = dict(pub_date=pub_date, trend=ctx["trend"], trend_plain=shorten(ctx["trend"], 46), cover_items=cover_items)
+try:
+    _pd = datetime.strptime(pub_date, "%Y-%m-%d")
+    date_cn = f"{_pd.month}月{_pd.day}日"
+except Exception:
+    date_cn = pub_date
+cover_ctx = dict(pub_date=pub_date, date_cn=date_cn, trend=ctx["trend"], trend_plain=shorten(ctx["trend"], 46),
+                 cover_items=cover_items, hook_big=hook_big, hook_sub=hook_sub)
 cover_html = env.get_template("template_cover.html").render(**cover_ctx)
 open(f"{BASE}/cover.html", "w", encoding="utf-8").write(cover_html)
 # 朋友圈文案落地一份纯文本(供后端 add_moment_task 取用)

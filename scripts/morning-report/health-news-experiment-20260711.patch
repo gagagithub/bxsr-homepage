@@ -1,0 +1,59 @@
+diff --git a/.github/workflows/daily-morning-report.yml b/.github/workflows/daily-morning-report.yml
+index 986a123..d1f858e 100644
+--- a/.github/workflows/daily-morning-report.yml
++++ b/.github/workflows/daily-morning-report.yml
+@@ -39,6 +39,12 @@ jobs:
+         working-directory: scripts/morning-report
+         run: python -u fetch_news.py
+ 
++      - name: Fetch 民生健康新闻 (千问联网检索, 失败自动回退不阻塞)
++        working-directory: scripts/morning-report
++        env:
++          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
++        run: python -u fetch_health_news.py
++
+       - name: AI organize into morning report (DeepSeek, 3-call)
+         working-directory: scripts/morning-report
+         env:
+@@ -105,7 +111,8 @@ jobs:
+           git config user.name "github-actions"
+           git config user.email "actions@github.com"
+           cp scripts/morning-report/morning-report.html morning-report.html
+-          git add morning-report.html scripts/morning-report/sections.json || true
++          # health_news.json 必须随仓库留底: 次日 CI checkout 带回, 作为联网检索的"昨天已报道"排除清单
++          git add -f morning-report.html scripts/morning-report/sections.json scripts/morning-report/health_news.json || true
+           git commit -m "财经晨报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
+           git push || echo "push 跳过"
+ 
+diff --git a/scripts/morning-report/llm_morning.py b/scripts/morning-report/llm_morning.py
+index e488fbf..054b610 100644
+--- a/scripts/morning-report/llm_morning.py
++++ b/scripts/morning-report/llm_morning.py
+@@ -39,11 +39,26 @@ for i, it in enumerate(kept):
+     indexed.append({"id": i, "t": it["text"][:460]})
+ print(f"预过滤后喂给 AI {len(indexed)} 条 (原始 {len(items)} 条)")
+ 
++# 健康档民生新闻(fetch_health_news.py 千问联网检索): 财经电报里没有"看病报销"向的新闻,
++# 这批带【健康民生】标记并入喂料, AI 优先用于健康档; 无原文链接, src 显示"媒体名·日期"
++try:
++    _hn = json.load(open(f"{BASE}/health_news.json")).get("items", [])
++except Exception:
++    _hn = []
++for h in _hn:
++    nid = len(indexed)
++    items.append({"text": h["text"], "link": "",
++                  "src": (h.get("src", "") + (" " + h["date"] if h.get("date") else "")).strip()})
++    idmap[nid] = len(items) - 1
++    indexed.append({"id": nid, "t": "【健康民生】" + h["text"][:460]})
++if _hn:
++    print(f"并入联网检索民生健康新闻 {len(_hn)} 条 (id {len(indexed)-len(_hn)}~{len(indexed)-1})")
++
+ # 正文只按读者最关心的三大主题组织(每主题=当天相关新闻 + 一段解读), 不再按财经板块分类
+ THEMES = ["健康", "养老", "传承"]
+ THEME_ICON = {"健康": "🏥", "养老": "🌅", "传承": "🌳"}
+ THEME_GUIDE = """【三大主题怎么归类当天新闻(把每条真实新闻挑到最贴的一档, 与本主题无关的新闻直接丢掉不要硬塞)】
+-① 健康：只挑【跟老百姓看病、吃药、报销直接相关】的新闻——医保政策、药品集采/降价、进口药/创新药获批或进医保(落点是患者能不能用上、自费多少)、门诊住院报销、疫苗、体检筛查、慢病防治。⚠药企业绩/净利润/股价/融资这类"上市公司视角"的新闻【不要】放进健康档：除非它直接影响看病花钱，且必须改写成患者视角(别写利润涨多少，写这药治什么病、患者能省多少)；纯资本市场的医药消息归养老档(股市)或直接丢弃。这一档宁缺毋滥，当天确实没有民生向健康新闻就把 items 留空(每天固定有「健康小课堂」托底，不怕空)、insight 可留空字符串。
++① 健康：只挑【跟老百姓看病、吃药、报销直接相关】的新闻——医保政策、药品集采/降价、进口药/创新药获批或进医保(落点是患者能不能用上、自费多少)、门诊住院报销、疫苗、体检筛查、慢病防治。开头标了【健康民生】的条目是按读者需求专门联网检索来的民生健康新闻，【优先用它们填健康档】(同样要口语化改写、保留全部数字，它们没有原文链接属正常)；【健康民生】条目只能进健康档，不要挪去别档。⚠药企业绩/净利润/股价/融资这类"上市公司视角"的新闻【不要】放进健康档：除非它直接影响看病花钱，且必须改写成患者视角(别写利润涨多少，写这药治什么病、患者能省多少)；纯资本市场的医药消息归养老档(股市)或直接丢弃。这一档宁缺毋滥，当天确实没有民生向健康新闻就把 items 留空(每天固定有「健康小课堂」托底，不怕空)、insight 可留空字符串。
+ ② 养老：利率/降息/LPR、存款、国债、养老金/社保、人口老龄化、A股/基金/股市(养老钱怎么配)、宏观经济景气 —— 关联"养老钱往哪放、锁利率窗口、每月领1万得备多少本金"。这是最宽的一档, 多数宏观和市场新闻都从'影响养老钱'的角度归这里。
+ ③ 传承：汇率、黄金、房产/楼市、高端资产价格、财富、税费、企业股权、境外资产 —— 关联"家底保值、离婚隔离、过户vs遗嘱vs保单受益人、想给又不想现在给"。"""
+ 

@@ -108,6 +108,15 @@ TIP_TOPICS = [
     "脑梗抢救黄金4.5小时：记住这几个识别动作",
     "阿司匹林不是人人都要吃",
     "50岁上下该做的癌症筛查清单，一次列全",
+    # —— 女性健康(公众号读者六成是女性) ——
+    "更年期潮热失眠不用硬扛：哪些情况该去看医生",
+    "甲状腺功能异常偏爱中年女性：怕冷、乏力、变胖别只当衰老",
+    "乳腺癌筛查：钼靶和B超怎么选、多久查一次",
+    "宫颈癌筛查做到几岁可以停：TCT和HPV检查怎么安排",
+    "绝经后补钙就晚了吗：骨质疏松要从什么时候防",
+    "带娃看孙辈累出的腱鞘炎、腰痛：怎么护理、医保怎么报",
+    "给老伴管药的学问：几种慢病药同吃，最该注意什么",
+    "体检报告上的子宫肌瘤：绝大多数不用手术",
 ]
 import datetime as _dt
 _bj_today = _dt.datetime.utcnow() + _dt.timedelta(hours=8)   # Action 在 UTC runner 上跑, 取北京日期轮转
@@ -117,7 +126,9 @@ print(f"今日健康小课堂主题：{TIP_TOPIC}")
 SYS = """你是「保心上人」的财经晨报主笔，为保险规划师及其客户编每日《财经晨报》。
 
 【读者画像 + 兴趣罗盘，所有解读都对着这群人、往这些角度上靠】
-40-60岁，住一二线城市(京沪、长三角、珠三角为主)，家底殷实但不是金融从业者。股票、基金几乎人人在买，这是跟他们对话的共同语言。
+45-65岁为主(46-60岁占四成、60岁以上占四分之一)，**六成多是女性**，广东、江苏、山东、京沪浙一带，家底殷实但不是金融从业者。股票、基金几乎人人在买，这是跟他们对话的共同语言；存款、大额存单、国债更是人人都有，利率一动他们最有感。
+女性读者多，意味着解读多用**家庭视角**的口吻：自己的退休金、老伴的药费报销、爸妈的养老安排、留给孩子的钱——"我们家这笔钱怎么办"永远比"市场怎么走"更抓人。
+他们对**具体金额的场景**最敏感："100万存款到期该怎么办""每月多领2000块养老金""进口药自费差3万"这种带真数字的身边事，远比宏观大词有吸引力。名人财富故事(遗产纠纷、大佬患病、明星理财翻车)也爱看，能借势时就借势。
 他们真正爱看的是这些具体角度——
 ① 健康：结节/三高怎么核保、带病怎么投保；重疾太贵了，50岁后医疗+防癌怎么替代搭配；理赔到底能报多少、进口药自费差价(真数字最戳人)。
    少写：险种百科、条款讲解、拿发病率吓人。
@@ -159,7 +170,9 @@ def build_user(themes=None, want_meta=False, want_review=False, tip_topic=None):
 {{""")
     parts = []
     if want_meta:
-        parts.append('''  "hook": {"big":"≤14字大字钩子(必须是对象不是字符串)。抓40-60岁读者的眼，从今天真实新闻里提炼，且必须落到他们的钱/养老/健康/传承上(哪怕今天头条是科技股，也从'该不该追、跟我的养老钱有啥关系'切入)，可用设问或点破利害(如'利率又降了，养老钱往哪放?')，别标题党、别承诺收益", "sub":"≤28字副标题，承接大字，说清今天到底发生了啥、跟他们的钱有啥关系"}''')
+        parts.append('''  "wechat_title": "公众号文章标题，18-28字，这是全篇最重要的一个字段，决定有没有人点开。第一步：从【今天给定的真实新闻】里挑对读者钱包冲击最大的一条(就是下面 lead 要写的那条)。第二步：套这几个句式之一做成标题(方括号处必须填今天那条新闻里的真实内容，句式只是壳、内容全部来自原文)：①金额/利率场景+身份代入『手里有[金额]存款的注意，[什么]又变了』②悬念设问『[机构]刚宣布[动作]，咱的钱该挪窝吗?』③政策+切身利害『[政策变化]，以后[看病/领钱]能[具体变化]』④名人故事+启示『[人名][事件]，给咱提了个醒』。硬要求：标题里的每一个数字、机构名、事件都必须出自你挑的那条原文，一个字都不许从句式示例里搬、更不许自己编；『身份代入』部分必须跟这条新闻真实相关(新闻讲汇率就写'要换外汇/有日元资产的'，讲医保就写'常吃药的'，不许跟内容无关地硬套'有存款的注意')；口语化像邻居大姐转发时会说的话；禁止'震惊/速看/必看'式恶俗词；禁止'收益翻倍/高好几倍'式收益暗示；纯文本不带任何标签、不带日期"''')
+        parts.append('''  "lead": {"label":"机构/主体(2-8字)", "title":"≤20字小标题，和 wechat_title 说的是同一件事，进文章第一眼看到它", "text":"把 wechat_title 对应的那条新闻当【今日主打】写透：3-5句、180-260字，先一句点破为什么这事跟读者的钱直接相关，再把来龙去脉和全部关键数字讲清楚，口语化，关键数据<b>标红</b>。⚠只许用 id 指向的那条原文里已有的数字，不许自己换算举例、不许从别条新闻拼数字", "relate":"80-140字，单独一段说透这条新闻对这群45-65岁读者【具体该怎么办/怎么看】，往兴趣罗盘上靠，给得出场景就给场景(如'手里正好有笔定期到期的，这几天可以…')，中性不荐品、禁止拿任何产品类别做收益对比", "id": 原文id}''')
+        parts.append('''  "hook": {"big":"≤14字大字钩子(必须是对象不是字符串)。和 wechat_title 同一件事的压缩版，抓眼，落到读者的钱/养老/健康/传承上，可用设问或点破利害(如'利率又降了，养老钱往哪放?')，别恶俗、别承诺收益", "sub":"≤28字副标题，承接大字，说清今天到底发生了啥、跟他们的钱有啥关系"}''')
         parts.append('  "trend": "40字内今日风向，口语化，像跟同事说\'今天就盯这一两件事\'，关键词<b>加粗</b>"')
         parts.append('''  "moment_text": "一段适合规划师发【客户朋友圈】的文案，4-6行、每行短句、可用1-2个emoji，开头点出今日财经看点(用真实数字)，结尾引导'点开看完整晨报'。务必合规：不承诺收益、不出现'稳赚/保本/存款搬家'、不荐具体产品，纯财经资讯分享口吻，专业可信"''')
         parts.append('''  "highlights": [
@@ -190,7 +203,8 @@ def build_user(themes=None, want_meta=False, want_review=False, tip_topic=None):
             "- 每条新闻都必须是「label(机构/主体) + 完整一段(含全部数字)」，**不允许只有一句话、丢失数字的干瘪条目**。",
             "- 通篇口语化：短句、说人话、零新闻腔；但数字和细节一个不丢。"]
     if want_meta:
-        reqs.append("- highlights 给 **5-6 条**当天最重磅的，每条写成完整一段(这块会作为开头「今日看点」下的头条精选)。")
+        reqs.append("- wechat_title、lead、hook 三者必须围绕【同一条新闻】(当天对读者钱包冲击最大的那条)，标题把人骗进来、lead 第一眼就兑现标题，不许货不对板。")
+        reqs.append("- highlights 给 **5-6 条**当天最重磅的，每条写成完整一段(这块会作为开头「今日看点」下的头条精选)；lead 已经写透的那条**不要**再出现在 highlights 里。")
     if themes:
         reqs.append(THEME_GUIDE)
         reqs.append(f"- 本次只产出这些主题：{'、'.join(themes)}。每个主题：items 挑 **3-8 条**当天最相关的真实新闻(健康档新闻少、可少可空)，每条写满；insight 一段必给(仅健康档 items 为空时 insight 可留空字符串)。与三大主题都无关的新闻(如纯个股盘口)直接丢弃，不要硬塞。")
@@ -250,8 +264,58 @@ def call(user, tries=3):
             import time as _t; _t.sleep(2)
     raise last
 
+# ---- 数字溯源校验(防 AI 把标题示例句式里的数字/事件当成真新闻写进标题和主打) ----
+def _tokens(s):
+    """提取文本里的数字 token(含小数)。"""
+    return set(re.findall(r"\d+(?:\.\d+)?", re.sub(r"<[^>]+>", "", str(s or ""))))
+
+ALL_NEWS_TOKENS = _tokens(" ".join(it["text"] for it in items))
+
+def lead_provenance_ok(d):
+    """lead/wechat_title 里的每个数字必须能在其引用的那条原文里找到；relate 的数字放宽到全部给定新闻。
+    校验不过=AI 编数字/引错原文, 一律判废。没有 lead 视为不通过(交给重试/回退)。"""
+    lead = d.get("lead") or {}
+    if isinstance(lead, str) or not lead.get("text"):
+        return False, "无lead"
+    i = lead.get("id")
+    oi = idmap.get(i) if isinstance(i, int) else None
+    if oi is None or not (0 <= oi < len(items)):
+        return False, "lead引用了不存在的原文id"
+    orig_tokens = _tokens(items[oi]["text"])
+    # 标题(含lead小标题)最严: 数字必须出自其引用的那条原文(防"标题讲A事、正文引B文"的货不对板+编造)
+    wt = d.get("wechat_title")
+    wt = (wt.get("title") or wt.get("text") or "") if isinstance(wt, dict) else (wt or "")
+    if not _tokens(wt) <= orig_tokens:
+        return False, f"标题「{re.sub(chr(60)+'[^'+chr(62)+']+'+chr(62), '', str(wt))[:30]}」数字不在所引原文里: {sorted(_tokens(wt) - orig_tokens)[:5]}"
+    if not (_tokens(lead.get("title")) <= orig_tokens):
+        return False, f"lead小标题数字不在所引原文里: {sorted(_tokens(lead.get('title')) - orig_tokens)[:5]}"
+    # 正文/relate 放宽到全部给定新闻(晨报允许同主题多条合并), 仍拦纯编造的数字
+    if not _tokens(lead.get("text")) <= ALL_NEWS_TOKENS:
+        return False, f"lead正文数字不在任何给定新闻里: {sorted(_tokens(lead.get('text')) - ALL_NEWS_TOKENS)[:5]}"
+    if not _tokens(lead.get("relate")) <= ALL_NEWS_TOKENS:
+        return False, f"relate数字不在任何给定新闻里: {sorted(_tokens(lead.get('relate')) - ALL_NEWS_TOKENS)[:5]}"
+    return True, "ok"
+
 # 三次调用：①看点(hook/风向/头条/朋友圈) ②养老+健康主题+健康小课堂 ③传承主题+纵览(各自都在 8K 输出上限内，保证 JSON 完整)
 d0 = call(build_user(want_meta=True))                              # hook + trend + moment + highlights
+_ok, _why = lead_provenance_ok(d0)
+if not _ok:
+    print(f"⚠ 主打/标题溯源校验不过({_why})，重试一次 d0", file=sys.stderr)
+    d0_retry = call(build_user(want_meta=True))
+    _ok2, _why2 = lead_provenance_ok(d0_retry)
+    if _ok2:
+        d0 = d0_retry
+    else:
+        # 两次都不干净: 丢弃 lead+爆款标题(渲染端自动回退无主打+日期标题), 其余字段保留
+        print(f"⚠ 重试仍不过({_why2})，今天放弃主打/爆款标题，回退日期版", file=sys.stderr)
+        d0.pop("lead", None)
+        d0.pop("wechat_title", None)
+# hook 大字也做数字校验(只对全部新闻放宽校验, 不过就丢, 封面回退通用版)
+_hk = d0.get("hook")
+_hk_txt = (_hk.get("big", "") + " " + _hk.get("sub", "")) if isinstance(_hk, dict) else str(_hk or "")
+if not _tokens(_hk_txt) <= ALL_NEWS_TOKENS:
+    print("⚠ hook 含无溯源数字，丢弃(封面回退通用版)", file=sys.stderr)
+    d0.pop("hook", None)
 d1 = call(build_user(themes=["养老", "健康"], tip_topic=TIP_TOPIC))  # 养老(最宽) + 健康 + 小课堂
 d2 = call(build_user(themes=["传承"], want_review=True))          # 传承 + 纵览
 
@@ -267,7 +331,16 @@ _tip = d1.get("tip", {}) or {}
 if isinstance(_tip, str):             # 同 hook, 归一成 {body}
     _tip = {"body": _tip}
 _tip["topic"] = TIP_TOPIC
+_wtitle = d0.get("wechat_title", "")
+if isinstance(_wtitle, dict):         # 防 DeepSeek 偶发包一层对象
+    _wtitle = _wtitle.get("title") or _wtitle.get("text") or ""
+_wtitle = re.sub(r"<[^>]+>", "", str(_wtitle)).strip()
+_lead = d0.get("lead", {}) or {}
+if isinstance(_lead, str):
+    _lead = {"text": _lead}
 data = {
+    "wechat_title": _wtitle,
+    "lead": _lead if _lead.get("text") else {},
     "hook": _hook,
     "trend": d0.get("trend", ""),
     "moment_text": d0.get("moment_text", ""),
@@ -289,6 +362,8 @@ def attach(obj):
     obj.pop("id", None)
     return obj
 
+if data.get("lead"):
+    attach(data["lead"])
 for h in data.get("highlights", []):
     attach(h)
 for th in data.get("themes", []):
@@ -300,4 +375,5 @@ rv = data.get("review", {})
 json.dump(data, open(f"{BASE}/sections.json", "w"), ensure_ascii=False, indent=2)
 print(f"AI 整理完成 sections.json：头条 {len(data.get('highlights', []))} 条 / "
       f"{len(data.get('themes', []))} 主题 / 正文 {cnt} 条 / 纵览 {len(rv.get('paras', []))} 段 / "
-      f"健康小课堂 {'有' if data.get('tip') else '⚠无'}")
+      f"健康小课堂 {'有' if data.get('tip') else '⚠无'} / "
+      f"主打 {'有' if data.get('lead') else '⚠无'} / 标题「{data.get('wechat_title') or '⚠无(回退日期标题)'}」")

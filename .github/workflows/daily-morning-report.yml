@@ -121,6 +121,9 @@ jobs:
           # 行情图存在才带上(行情取数失败时无 market.png, 正文则不含行情图)
           MARKET_ARG=()
           [ -f market.png ] && MARKET_ARG=(-F "marketImg=@market.png;type=image/png")
+          # AI 爆款标题存在才带上(缺省服务端回退「财经晨报 X月X日」)
+          TITLE_ARG=()
+          [ -f wechat_title.txt ] && TITLE_ARG=(-F "wechatTitle=<wechat_title.txt")
           # 视频版存在才带上(渲染失败时无 mp4, 服务端自动回退 H5 链接卡)
           VIDEO_ARG=()
           [ -f radio/renders/morning-radio.mp4 ] && VIDEO_ARG+=(-F "video=@radio/renders/morning-radio.mp4;type=video/mp4")
@@ -132,6 +135,7 @@ jobs:
             -F "momentText=<moment_text.txt" \
             -F "wechatHtml=@wechat.html;type=text/html" \
             -F "wechatDigest=<wechat_digest.txt" \
+            "${TITLE_ARG[@]}" \
             "${MARKET_ARG[@]}" \
             "${VIDEO_ARG[@]}" \
             https://214club.com.cn/creation/morningReportUpload)

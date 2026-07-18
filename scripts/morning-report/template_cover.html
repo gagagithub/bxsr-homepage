@@ -17,6 +17,12 @@
   h1 .em{ font-size:78px; }
   .date{ margin-top:26px; font-size:30px; color:#dbe8fb; position:relative; z-index:2; letter-spacing:1px; }
   .date b{ color:#fff; }
+  /* 钩子大字版(有 hook 时替代通用报头): 大字要落在图片中央正方形区内, 次条小缩略图裁方后仍看得清 */
+  .kicker{ margin-top:34px; display:inline-block; font-size:26px; font-weight:700; letter-spacing:2px; color:#dbe8fb; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25); padding:9px 22px; border-radius:28px; position:relative; z-index:2; }
+  .kicker b{ color:#fff; }
+  .hookbig{ margin-top:44px; font-size:96px; font-weight:900; line-height:1.24; letter-spacing:2px; position:relative; z-index:2; color:#fff; text-shadow:0 4px 18px rgba(0,0,0,.25); }
+  .hookbig .g{ color:var(--gold); }
+  .hooksub{ margin-top:30px; font-size:36px; line-height:1.5; color:#dbe8fb; position:relative; z-index:2; font-weight:600; }
   .trend{ margin-top:34px; background:rgba(255,255,255,.10); border-left:6px solid var(--gold); border-radius:14px; padding:24px 28px; font-size:27px; line-height:1.55; position:relative; z-index:2; color:#eef5ff; }
   .trend .l{ color:var(--gold); font-weight:800; }
   .trend b{ color:#ffe39c; }
@@ -40,6 +46,20 @@
     <div class="upd">每日 07:30</div>
   </div>
 
+  {% if hook_big %}
+  <!-- 钩子大字版: 当天最扎心的一句占满画面, 小缩略图上也看得清 -->
+  <div class="kicker">📰 财经晨报　<b>{{ date_cn or pub_date }}</b></div>
+  <div class="hookbig">{{ hook_big }}</div>
+  {% if hook_sub %}<div class="hooksub">{{ hook_sub }}</div>{% endif %}
+  {% if cover_items %}
+  <div class="hl" style="margin-top:52px;">
+    <div class="t">⭐ 今天还有这些事</div>
+    {% for h in cover_items %}
+    <div class="row"><span class="star">★</span><span class="tx">{% if h.label %}<span class="src">{{ h.label }}　</span>{% endif %}{{ h.tx }}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% else %}
   <h1><span class="em">📰</span> 财经晨报</h1>
   <div class="date">📅 <b>{{ pub_date }}</b>　全球市场 · 内地财经 · 一图速览</div>
 
@@ -53,6 +73,7 @@
     <div class="row"><span class="star">★</span><span class="tx">{% if h.label %}<span class="src">{{ h.label }}　</span>{% endif %}{{ h.tx }}</span></div>
     {% endfor %}
   </div>
+  {% endif %}
 
   <div class="foot">
     <div class="sl">保心上人 · 让天下人老有所养</div>

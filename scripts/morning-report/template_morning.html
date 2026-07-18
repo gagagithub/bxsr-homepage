@@ -41,6 +41,17 @@
   .vbar .vplay{ margin-left:auto; flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--gold); color:#fff; font-size:13px; display:flex; align-items:center; justify-content:center; padding-left:3px; }
   .vsec video{ display:none; width:100%; max-height:65vh; object-fit:contain; background:#000; }
 
+  /* 今日主打(标题钩子对应的那条新闻, 首屏兑现标题) */
+  .lead{ margin:14px 14px 0; background:#fff; border:2px solid var(--gold); border-radius:14px; padding:15px 16px; box-shadow:0 4px 14px rgba(20,50,110,.08); }
+  .lead .llab{ font-size:12px; font-weight:800; color:var(--gold); letter-spacing:2px; margin-bottom:7px; }
+  .lead .ltit{ font-size:21px; font-weight:900; line-height:1.45; color:var(--navy); margin-bottom:9px; }
+  .lead .ltx{ font-size:14.5px; line-height:1.8; color:#2c3a52; text-align:justify; }
+  .lead .ltx b.src{ color:#c8801f; font-weight:800; }
+  .lead .ltx b{ color:var(--up); font-weight:800; }
+  .lead .lrel{ margin-top:11px; padding:11px 13px; background:#f4f7fc; border-left:4px solid var(--navy2); border-radius:8px; font-size:13.6px; line-height:1.75; color:#25405f; }
+  .lead .lrel .rlab{ display:block; font-weight:800; color:var(--navy2); margin-bottom:4px; }
+  .lead .lrel b{ color:var(--navy2); font-weight:800; }
+
   /* 三大主题 健康/养老/传承 */
   .theme{ margin:16px 14px 0; background:#fff; border-radius:14px; box-shadow:0 3px 12px rgba(20,50,110,.06); overflow:hidden; border:1px solid var(--line); }
   .theme .th{ display:flex; align-items:center; gap:9px; padding:14px 16px; }
@@ -164,6 +175,18 @@
       <div class="vplay">▶</div>
     </div>
     <video id="mrv" controls playsinline preload="none" poster="morningReportVideoPoster" src="morningReportVideo"></video>
+  </div>
+  {% endif %}
+
+  <!-- 今日主打: 当天对读者钱包冲击最大的一条, 写透 -->
+  {% if lead and lead.text %}
+  <div class="lead">
+    <div class="llab">📌 今日主打</div>
+    {% if lead.title %}<div class="ltit">{{ lead.title }}</div>{% endif %}
+    <div class="ltx">{% if lead.label %}<b class="src">{{ lead.label }}：</b>{% endif %}{{ lead.text|safe }}{% if lead.link %} <a class="lk" href="{{ lead.link }}" target="_blank">›</a>{% endif %}</div>
+    {% if lead.relate %}
+    <div class="lrel"><span class="rlab">🔍 这跟咱有啥关系</span>{{ lead.relate|safe }}</div>
+    {% endif %}
   </div>
   {% endif %}
 
