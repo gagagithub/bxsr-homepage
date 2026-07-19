@@ -103,6 +103,7 @@ ctx = dict(
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
     indices=indices, chips=chips, themes=themes,
     review=S.get("review", {}),
+    briefs=S.get("briefs", []) or [],
     has_video=has_video,
 )
 

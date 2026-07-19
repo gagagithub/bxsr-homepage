@@ -204,6 +204,22 @@ if paras:
 
 # (今日解读已并入上面三大主题, 每个主题末尾各带一段「这跟咱有啥关系」)
 
+# ---------- 其他要闻速览(≤12条一句话, 三主题落选新闻按 股市/楼市/宏观/公司/环球 归组; 紧凑扫读区恢复一站式覆盖) ----------
+briefs = S.get("briefs") or []
+if briefs:
+    w(f'<section style="margin:24px 4px;padding:14px 15px 8px;background:#f7f9fc;border:1px solid #dfe6f0;border-radius:4px;">')
+    w(f'<p style="margin:0 0 4px;font-size:20px;font-weight:800;color:{INK};">⚡ 其他要闻速览</p>')
+    last_cat = None
+    for b in briefs:
+        cat = b.get("cat", "")
+        if cat != last_cat:
+            w(f'<p style="margin:12px 0 6px;font-size:15px;font-weight:800;color:{GOLD};letter-spacing:1px;">■ {cat}</p>')
+            last_cat = cat
+        lab = str(b.get("label", "")).strip()
+        pre = f'<span style="font-weight:700;color:#6b7a94;">【{lab}】</span>' if lab else ""
+        w(f'<p style="margin:0 0 8px;font-size:16px;line-height:1.8;color:{INK};">{pre}{b.get("text", "")}</p>')
+    w('</section>')
+
 # ---------- 文末入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
 # 有视频的当天(阅读原文跳视频页): 文末放视频封面海报(带▶) + 引导语, 图片应用户要求放文章最后。
 # 微信图文正文不能内嵌外部 mp4 播放器, 占位符 {{MR_IMG:video}} 由服务器内嵌 video-poster.jpg。

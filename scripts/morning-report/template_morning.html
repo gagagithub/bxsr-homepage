@@ -143,6 +143,11 @@
   .ins .row b{ color:#147a4a; }
 
   /* FOOTER */
+  .briefs{ margin:18px 14px 0; background:#f7f9fc; border:1px solid var(--line); border-radius:13px; padding:13px 15px 7px; }
+  .briefs .bh{ font-size:15px; font-weight:800; color:var(--navy); letter-spacing:1px; }
+  .briefs .bcat{ font-size:12.5px; font-weight:800; color:#b9791b; letter-spacing:1px; margin:10px 0 4px; }
+  .briefs p{ font-size:13.5px; line-height:1.75; color:#33425c; margin:0 0 6px; text-align:justify; }
+  .briefs .blab{ font-weight:700; color:#6b7a94; }
   .footer{ margin:22px 14px 0; padding:15px 16px; background:var(--navy); border-radius:13px; color:#cfe0fa; }
   .footer .fb{ font-size:13px; font-weight:800; color:#fff; letter-spacing:2px; }
   .footer .fs{ font-size:11px; color:var(--sky); margin-top:3px; letter-spacing:1px; }
@@ -245,6 +250,17 @@
     <div class="rh">📌 晨报纵览{% if review.title %} · {{ review.title }}{% endif %}</div>
     {% for p in review.paras %}
     <p>{{ p|safe }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 其他要闻速览(≤12条一句话, 紧凑扫读区) -->
+  {% if briefs %}
+  <div class="briefs">
+    <div class="bh">⚡ 其他要闻速览</div>
+    {% for b in briefs %}
+    {% if loop.first or b.cat != loop.previtem.cat %}<div class="bcat">■ {{ b.cat }}</div>{% endif %}
+    <p>{% if b.label %}<span class="blab">【{{ b.label }}】</span>{% endif %}{{ b.text }}</p>
     {% endfor %}
   </div>
   {% endif %}

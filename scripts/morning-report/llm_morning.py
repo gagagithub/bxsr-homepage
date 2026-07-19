@@ -389,6 +389,18 @@ def attach(obj):
     obj.pop("id", None)
     return obj
 
+# 先记下正文已用的原文 id(供文末「其他要闻速览」排除, attach 会把 id 弹掉所以必须先收)
+_used_ids = set()
+if isinstance(data.get("lead", {}).get("id"), int):
+    _used_ids.add(data["lead"]["id"])
+for h in data.get("highlights", []):
+    if isinstance(h.get("id"), int):
+        _used_ids.add(h["id"])
+for th in data.get("themes", []):
+    for it in th.get("items", []):
+        if isinstance(it.get("id"), int):
+            _used_ids.add(it["id"])
+
 if data.get("lead"):
     attach(data["lead"])
 for h in data.get("highlights", []):
@@ -427,10 +439,65 @@ for th in data.get("themes", []):
     for it in th.get("items", []):
         attach(it)
 
+# ---------- 文末「其他要闻速览」(崔伟拍板≤12条)：三主题/头条/主打没用到的新闻压成一句话, 恢复一站式覆盖 ----------
+BRIEF_CATS = ["股市", "楼市", "宏观", "公司", "环球"]
+def gen_briefs():
+    unused = [e for e in indexed if e["id"] not in _used_ids]
+    if not unused:
+        return []
+    # 正文已覆盖的主体清单：防止同一件事换个信源/id 再进速览(如茅台批价另一条电报)
+    used_labels = []
+    for _src in ([data.get("lead", {})] + data.get("highlights", [])
+                 + [it for t in data.get("themes", []) for it in t.get("items", [])]):
+        _l = re.sub(r"\s+", "", str(_src.get("label", "")))
+        if _l and _l not in used_labels:
+            used_labels.append(_l)
+    user = (
+        "下面是今天【已在晨报正文用过的新闻之外】剩下的真实新闻电报(JSON 数组, id 为编号):\n"
+        + json.dumps(unused, ensure_ascii=False)
+        + '\n\n请挑最多 12 条做成文末「其他要闻速览」。严格输出如下 JSON(不要多余文字、不要 markdown 代码块):\n'
+          '{"briefs": [{"cat":"分类, 只能从这些里选: 股市/楼市/宏观/公司/环球", "label":"机构/主体(2-8字)", '
+          '"text":"压成一句话(40字内, 口语化, 保留最关键的那个数字, 纯文本不要任何标签)", "id": 原文id}]}\n\n'
+          "要求:\n"
+          "- 按可谈论性挑：具体金额/惊人数字/画面感身边事/名人热闹事优先；纯个股盘口异动、文件复读型不选。\n"
+          f"- ⚠晨报正文已经覆盖了这些主体/事件：{('、'.join(used_labels)) or '无'}。跟它们说的是同一件事的新闻(哪怕信源不同、说法不同)一律不要再选。\n"
+          "- 同一话题(如同一场冲突/同一只酒的价格)最多出 1 条，挑信息量最大的那条，别把一件事的多个侧面拆成几条。\n"
+          "- 一条新闻只出一次；贴题的不足 12 条就少给，不许硬凑。\n"
+          "- 只用给定新闻，数字一个不许改、不许编。"
+    )
+    d3 = call(user)
+    out, seen = [], set()
+    _used_lab_set = set(used_labels)
+    for b in d3.get("briefs", []):
+        i = b.get("id")
+        if not isinstance(i, int) or i in _used_ids or i in seen:
+            continue
+        if re.sub(r"\s+", "", str(b.get("label", ""))) in _used_lab_set:  # 同名主体兜底剔除
+            continue
+        if not str(b.get("text", "")).strip():
+            continue
+        b["cat"] = b.get("cat") if b.get("cat") in BRIEF_CATS else "宏观"
+        b["text"] = re.sub(r"<[^>]+>", "", str(b["text"])).strip()
+        seen.add(i)
+        out.append(b)
+        if len(out) >= 12:
+            break
+    out.sort(key=lambda x: BRIEF_CATS.index(x["cat"]))  # 按 股市/楼市/宏观/公司/环球 归组, 组内保持AI给的顺序
+    return out
+
+try:
+    data["briefs"] = gen_briefs()
+except Exception as e:
+    print(f"⚠ 其他要闻速览生成失败(不阻塞晨报): {e}")
+    data["briefs"] = []
+for b in data.get("briefs", []):
+    attach(b)
+
 cnt = sum(len(t.get("items", [])) for t in data.get("themes", []))
 rv = data.get("review", {})
 json.dump(data, open(f"{BASE}/sections.json", "w"), ensure_ascii=False, indent=2)
 print(f"AI 整理完成 sections.json：头条 {len(data.get('highlights', []))} 条 / "
-      f"{len(data.get('themes', []))} 主题 / 正文 {cnt} 条 / 纵览 {len(rv.get('paras', []))} 段 / "
+      f"{len(data.get('themes', []))} 主题 / 正文 {cnt} 条 / 速览 {len(data.get('briefs', []))} 条 / "
+      f"纵览 {len(rv.get('paras', []))} 段 / "
       f"健康小课堂 {'有' if data.get('tip') else '⚠无'} / "
       f"主打 {'有' if data.get('lead') else '⚠无'} / 标题「{data.get('wechat_title') or '⚠无(回退日期标题)'}」")
