@@ -288,10 +288,32 @@ def _tokens(s):
     """提取文本里的数字 token(含小数)。"""
     return set(re.findall(r"\d+(?:\.\d+)?", re.sub(r"<[^>]+>", "", str(s or ""))))
 
+def _isnum(s):
+    try:
+        float(s); return True
+    except (TypeError, ValueError):
+        return False
+
 ALL_NEWS_TOKENS = _tokens(" ".join(it["text"] for it in items))
 
+def _unsourced(text, source_tokens):
+    """返回 text 里无法在 source_tokens 溯源的数字集合(空=全部有源)。
+    ⚠整数容许四舍五入/取整命中原文小数(标题「油价涨6%」↔原文「6.17%」、「40年新低」↔「39.8」都算有源),
+    但标题里写成小数就必须精确命中原文,不给编造留口子。"""
+    src_floats = [float(o) for o in source_tokens if _isnum(o)]
+    bad = set()
+    for t in _tokens(text):
+        if t in source_tokens:
+            continue
+        if "." not in t and _isnum(t):
+            tv = float(t)
+            if any(round(o) == tv or int(o) == tv for o in src_floats):
+                continue  # 原文小数四舍五入/取整后=标题整数, 视为口语化后的真数字
+        bad.add(t)
+    return bad
+
 def lead_provenance_ok(d):
-    """lead/wechat_title 里的每个数字必须能在其引用的那条原文里找到；relate 的数字放宽到全部给定新闻。
+    """lead/wechat_title 里的每个数字必须能在其引用的那条原文里找到(整数容许四舍五入)；relate 放宽到全部给定新闻。
     校验不过=AI 编数字/引错原文, 一律判废。没有 lead 视为不通过(交给重试/回退)。"""
     lead = d.get("lead") or {}
     if isinstance(lead, str) or not lead.get("text"):
@@ -304,15 +326,19 @@ def lead_provenance_ok(d):
     # 标题(含lead小标题)最严: 数字必须出自其引用的那条原文(防"标题讲A事、正文引B文"的货不对板+编造)
     wt = d.get("wechat_title")
     wt = (wt.get("title") or wt.get("text") or "") if isinstance(wt, dict) else (wt or "")
-    if not _tokens(wt) <= orig_tokens:
-        return False, f"标题「{re.sub(chr(60)+'[^'+chr(62)+']+'+chr(62), '', str(wt))[:30]}」数字不在所引原文里: {sorted(_tokens(wt) - orig_tokens)[:5]}"
-    if not (_tokens(lead.get("title")) <= orig_tokens):
-        return False, f"lead小标题数字不在所引原文里: {sorted(_tokens(lead.get('title')) - orig_tokens)[:5]}"
+    bad = _unsourced(wt, orig_tokens)
+    if bad:
+        return False, f"标题「{re.sub(chr(60)+'[^'+chr(62)+']+'+chr(62), '', str(wt))[:30]}」数字不在所引原文里: {sorted(bad)[:5]}"
+    bad = _unsourced(lead.get("title"), orig_tokens)
+    if bad:
+        return False, f"lead小标题数字不在所引原文里: {sorted(bad)[:5]}"
     # 正文/relate 放宽到全部给定新闻(晨报允许同主题多条合并), 仍拦纯编造的数字
-    if not _tokens(lead.get("text")) <= ALL_NEWS_TOKENS:
-        return False, f"lead正文数字不在任何给定新闻里: {sorted(_tokens(lead.get('text')) - ALL_NEWS_TOKENS)[:5]}"
-    if not _tokens(lead.get("relate")) <= ALL_NEWS_TOKENS:
-        return False, f"relate数字不在任何给定新闻里: {sorted(_tokens(lead.get('relate')) - ALL_NEWS_TOKENS)[:5]}"
+    bad = _unsourced(lead.get("text"), ALL_NEWS_TOKENS)
+    if bad:
+        return False, f"lead正文数字不在任何给定新闻里: {sorted(bad)[:5]}"
+    bad = _unsourced(lead.get("relate"), ALL_NEWS_TOKENS)
+    if bad:
+        return False, f"relate数字不在任何给定新闻里: {sorted(bad)[:5]}"
     return True, "ok"
 
 # 三次调用：①看点(hook/风向/头条/朋友圈) ②养老+健康主题+健康小课堂 ③传承主题+纵览(各自都在 8K 输出上限内，保证 JSON 完整)
@@ -332,7 +358,7 @@ if not _ok:
 # hook 大字也做数字校验(只对全部新闻放宽校验, 不过就丢, 封面回退通用版)
 _hk = d0.get("hook")
 _hk_txt = (_hk.get("big", "") + " " + _hk.get("sub", "")) if isinstance(_hk, dict) else str(_hk or "")
-if not _tokens(_hk_txt) <= ALL_NEWS_TOKENS:
+if _unsourced(_hk_txt, ALL_NEWS_TOKENS):
     print("⚠ hook 含无溯源数字，丢弃(封面回退通用版)", file=sys.stderr)
     d0.pop("hook", None)
 d1 = call(build_user(themes=["养老", "健康"], tip_topic=TIP_TOPIC))  # 养老(最宽) + 健康 + 小课堂
