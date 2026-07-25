@@ -63,7 +63,7 @@ if not key:
     print("!! 未找到 DeepSeek key", file=sys.stderr); sys.exit(1)
 
 payload = json.dumps({
-    "model": "deepseek-chat",
+    "model": "deepseek-v4-pro",  # 2026-07-25: DeepSeek 下线 deepseek-chat, 改用 deepseek-v4-pro
     "messages": [{"role": "system", "content": SYS}, {"role": "user", "content": USER}],
     "temperature": 0.5, "max_tokens": 1500,
 }).encode("utf-8")

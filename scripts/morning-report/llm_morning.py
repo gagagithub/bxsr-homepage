@@ -246,7 +246,7 @@ if not key:
 
 def _call_once(user):
     payload = json.dumps({
-        "model": "deepseek-chat",
+        "model": "deepseek-v4-pro",  # 2026-07-25: DeepSeek 下线 deepseek-chat, 只认 deepseek-v4-pro / deepseek-v4-flash
         "messages": [{"role": "system", "content": SYS}, {"role": "user", "content": user}],
         "temperature": 0.3, "max_tokens": 8000,
         "response_format": {"type": "json_object"},  # DeepSeek 强制返回合法 JSON, 杜绝偶发语法错
