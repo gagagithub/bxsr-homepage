@@ -24,17 +24,26 @@ def fmt_pct(v):
     if v is None: return "—"
     return f"{v:+.2f}%"
 
-# ---- 行情：三大指数 ----
-IDX_NAME = {"DJI": "道琼斯指数", "GSPC": "标普500指数", "IXIC": "纳斯达克指数"}
-indices = []
-for k in ["DJI", "GSPC", "IXIC"]:
-    v = D["indices"].get(k, {})
-    indices.append(dict(
-        name=IDX_NAME[k],
+def idx_row(v, name):
+    return dict(
+        name=name,
         pts=f"{v['cur']:,.2f}" if v.get("cur") is not None else "—",
         day=fmt_pct(v.get("day_pct")), ytd=fmt_pct(v.get("ytd_pct")),
         cls=pct_cls(v.get("day_pct")), ar=arrow(v.get("day_pct")),
-    ))
+    )
+
+# ---- 行情：A股三大指数(今日收盘, 日报首位) ----
+# 下午发放, 读者最关心今天A股怎么收的; 老 data.json 没有 cn_indices 时整块不渲染(优雅降级)
+CN_IDX_NAME = {"SH": "上证指数", "SZ": "深证成指", "CYB": "创业板指"}
+cn_indices = []
+for k in ["SH", "SZ", "CYB"]:
+    v = (D.get("cn_indices") or {}).get(k)
+    if v and v.get("cur") is not None:
+        cn_indices.append(idx_row(v, CN_IDX_NAME[k]))
+
+# ---- 行情：美股三大指数(隔夜) ----
+IDX_NAME = {"DJI": "道琼斯指数", "GSPC": "标普500指数", "IXIC": "纳斯达克指数"}
+indices = [idx_row(D["indices"].get(k, {}), IDX_NAME[k]) for k in ["DJI", "GSPC", "IXIC"]]
 
 # ---- 行情：关键数据条(利率/汇率/商品) ----
 chips = []
@@ -101,7 +110,7 @@ ctx = dict(
     hook=hook, lead=(lead if lead.get("text") else {}),
     trend=S.get("trend", ""),
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
-    indices=indices, chips=chips, themes=themes,
+    cn_indices=cn_indices, indices=indices, chips=chips, themes=themes,
     review=S.get("review", {}),
     briefs=S.get("briefs", []) or [],
     has_video=has_video,
@@ -112,7 +121,7 @@ env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["
 tpl = env.get_template("template_morning.html")
 html = tpl.render(**ctx)
 open(f"{BASE}/morning-report.html", "w", encoding="utf-8").write(html)
-print(f"已渲染 morning-report.html  日期={pub_date}  主题={len(themes)}  头条={len(ctx['highlights'])}  行情chips={len(chips)}  视频入口={'有' if has_video else '无'}")
+print(f"已渲染 morning-report.html  日期={pub_date}  主题={len(themes)}  头条={len(ctx['highlights'])}  A股={len(cn_indices)}  行情chips={len(chips)}  视频入口={'有' if has_video else '无'}")
 
 # ---- 朋友圈封面图(cover.html → 截图在 run/workflow 里做) ----
 def strip_tags(s):

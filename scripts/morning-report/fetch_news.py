@@ -65,14 +65,29 @@ if sina is not None and len(sina):
         add += 1
     print(f"新浪补充 {add} 条")
 
-# 只保留近 ~30 小时内(覆盖隔夜+今早), 无法解析时间的保留
-def within(ts):
+# ---- 时间窗: 只保留【今天(北京)】的新闻 ----
+# ⚠2026-07-28 由晨报(凌晨02:30跑, 窗口"近30小时=隔夜+今早")改为日报(17:05跑, 窗口"今天全天")。
+# 时区: Action 跑在 UTC runner, 而东财/新浪的时间戳是北京时间, 必须换算后再比, 否则差 8 小时。
+BJ_NOW = datetime.utcnow() + timedelta(hours=8)
+BJ_TODAY0 = BJ_NOW.replace(hour=0, minute=0, second=0, microsecond=0)
+
+def parse_ts(ts):
+    """东财/新浪都给 'YYYY-MM-DD HH:MM:SS'(北京时间); 解析不了返回 None(无法判断, 一律保留)。"""
     try:
-        t = datetime.strptime(ts[:19], "%Y-%m-%d %H:%M:%S")
-        return (datetime.now() - t) <= timedelta(hours=30)
+        return datetime.strptime(str(ts)[:19], "%Y-%m-%d %H:%M:%S")
     except Exception:
-        return True
-fresh = [it for it in items if within(it["time"])]
+        return None
+
+def after(cutoff):
+    return [it for it in items
+            if (parse_ts(it["time"]) is None) or (parse_ts(it["time"]) >= cutoff)]
+
+fresh = after(BJ_TODAY0)
+
+# 兜底: 今天条数太少(节假日/取数异常/时间戳格式变化)时放宽到近 24 小时, 宁可多给 AI 一点料也别开天窗
+if len(fresh) < 60:
+    print(f"⚠ 今日条数仅 {len(fresh)} 条, 放宽到近24小时")
+    fresh = after(BJ_NOW - timedelta(hours=24))
 
 out = {
     "generated_utc": datetime.now(timezone.utc).isoformat(),

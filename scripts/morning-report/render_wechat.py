@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""财经晨报·微信公众号图文渲染：sections.json(+data.json 行情) → wechat.html。
+"""财经日报·微信公众号图文渲染：sections.json(+data.json 行情) → wechat.html。
 
 输出的是公众号 draft/add 的「正文 content 片段」(不是完整 H5)：
 - 全部内联 style(公众号会过滤 <style>/class/<script>/iframe/外链CSS)
@@ -99,29 +99,38 @@ if lead.get("text"):
     w('</section>')
 
 # ---------- 行情速览(可选) ----------
+CN_GRP = "A股 · 今日收盘"
+OS_GRP = "隔夜外盘 · 利率汇率商品"
+
 def market_rows():
     rows = []
+    # A股今日收盘排最前(日报下午发, 读者最先想看的就是这个); 老 data.json 无 cn_indices 时自动跳过
+    CN_IDX = {"SH": "上证指数", "SZ": "深证成指", "CYB": "创业板指"}
+    for k in ["SH", "SZ", "CYB"]:
+        v = (D.get("cn_indices") or {}).get(k) or {}
+        if v.get("cur") is not None:
+            rows.append((CN_IDX[k], f"{v['cur']:,.0f}", fmt_pct(v.get("day_pct")), v.get("day_pct"), CN_GRP))
     IDX = {"DJI": "道琼斯", "GSPC": "标普500", "IXIC": "纳斯达克"}
     for k in ["DJI", "GSPC", "IXIC"]:
         v = (D.get("indices") or {}).get(k, {})
         if v.get("cur") is not None:
-            rows.append((IDX[k], f"{v['cur']:,.0f}", fmt_pct(v.get("day_pct")), v.get("day_pct")))
+            rows.append((IDX[k], f"{v['cur']:,.0f}", fmt_pct(v.get("day_pct")), v.get("day_pct"), OS_GRP))
     cb = D.get("cn_bond", {})
     if cb.get("cn10") is not None:
-        rows.append(("中国10年国债", f"{cb['cn10']:.3f}%", f"{cb.get('cn10_bp',0):+.1f}bp", cb.get("cn10_bp")))
+        rows.append(("中国10年国债", f"{cb['cn10']:.3f}%", f"{cb.get('cn10_bp',0):+.1f}bp", cb.get("cn10_bp"), OS_GRP))
     y = (D.get("yields") or {}).get("Y10", {})
     if y.get("level") is not None:
-        rows.append(("美债10年", f"{y['level']:.3f}%", f"{y.get('bp',0):+.1f}bp", y.get("bp")))
+        rows.append(("美债10年", f"{y['level']:.3f}%", f"{y.get('bp',0):+.1f}bp", y.get("bp"), OS_GRP))
     co = D.get("commodities", {})
     if (co.get("GOLD") or {}).get("cur") is not None:
-        rows.append(("COMEX黄金", f"${co['GOLD']['cur']:,.0f}", fmt_pct(co['GOLD'].get("day_pct")), co['GOLD'].get("day_pct")))
+        rows.append(("COMEX黄金", f"${co['GOLD']['cur']:,.0f}", fmt_pct(co['GOLD'].get("day_pct")), co['GOLD'].get("day_pct"), OS_GRP))
     if (co.get("WTI") or {}).get("cur") is not None:
-        rows.append(("WTI原油", f"${co['WTI']['cur']:.2f}", fmt_pct(co['WTI'].get("day_pct")), co['WTI'].get("day_pct")))
+        rows.append(("WTI原油", f"${co['WTI']['cur']:.2f}", fmt_pct(co['WTI'].get("day_pct")), co['WTI'].get("day_pct"), OS_GRP))
     fx = D.get("forex", {})
     if (fx.get("CNH") or {}).get("cur") is not None:
-        rows.append(("离岸人民币", f"{fx['CNH']['cur']:.4f}", "", None))
+        rows.append(("离岸人民币", f"{fx['CNH']['cur']:.4f}", "", None, OS_GRP))
     if (fx.get("DXY") or {}).get("cur") is not None:
-        rows.append(("美元指数", f"{fx['DXY']['cur']:.2f}", fmt_pct(fx['DXY'].get("day_pct")), fx['DXY'].get("day_pct")))
+        rows.append(("美元指数", f"{fx['DXY']['cur']:.2f}", fmt_pct(fx['DXY'].get("day_pct")), fx['DXY'].get("day_pct"), OS_GRP))
     return rows
 
 rows = market_rows()  # 供文末生成 market.png 用; 图片本身移到三大主题之后再插
@@ -186,18 +195,18 @@ for name in THEME_ORDER:
           f'{tip["body"].replace("<b>", f"<span style=color:{dark};font-weight:800;>").replace("</b>", "</span>")}</p>')
         w('</section>')
 
-# ---------- 行情速览(三大主题之后、晨报纵览之前) ----------
+# ---------- 行情速览(三大主题之后、日报纵览之前) ----------
 if rows:
     # 行情速览改成一张「大字+红绿涨跌箭头」的图片(适老),正文里放占位符,
     # 服务器侧把 market.png 上传微信图床后替换为 <img>。
     w("{{MR_IMG:market}}")
 
-# ---------- 晨报纵览 review ----------
+# ---------- 日报纵览 review ----------
 review = S.get("review", {}) or {}
 paras = review.get("paras") or []
 if paras:
     w(f'<section style="margin:24px 4px;padding:16px;background:#fffdf7;border:1px dashed {GOLD};border-radius:4px;">')
-    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:{GOLD};">📰 {review.get("title","晨报纵览")}</p>')
+    w(f'<p style="margin:0 0 12px;font-size:21px;font-weight:800;color:{GOLD};">📰 {review.get("title","日报纵览")}</p>')
     for p in paras:
         w(f'<p style="margin:0 0 12px;font-size:19px;line-height:2.0;color:{INK};">{emph(p)}</p>')
     w('</section>')
@@ -223,18 +232,18 @@ if briefs:
 # ---------- 文末入口(公众号正文不能放可点外链, 引导点左下角「阅读原文」) ----------
 # 有视频的当天(阅读原文跳视频页): 文末放视频封面海报(带▶) + 引导语, 图片应用户要求放文章最后。
 # 微信图文正文不能内嵌外部 mp4 播放器, 占位符 {{MR_IMG:video}} 由服务器内嵌 video-poster.jpg。
-# 没视频的当天(阅读原文跳H5一图全览): 放深蓝「看完整晨报」引导块。两者只出其一, 避免引导语和实际落地页不一致。
+# 没视频的当天(阅读原文跳H5一图全览): 放深蓝「看完整日报」引导块。两者只出其一, 避免引导语和实际落地页不一致。
 if os.path.exists(f"{BASE}/radio/renders/morning-radio.mp4"):
     w(f'<section style="margin:24px 4px 16px;">')
     w('{{MR_IMG:video}}')
     w(f'<p style="margin:8px 4px 2px;text-align:center;font-size:17px;font-weight:800;color:{ORANGE};">'
-      f'🎧 今日财经晨报 · 视频版（约9分钟）</p>')
+      f'🎧 今日财经日报 · 视频版（约9分钟）</p>')
     w(f'<p style="margin:0 4px;text-align:center;font-size:14px;color:{SUB};">'
       f'点击左下角「阅读原文」，边听边看今日全球市场速览</p>')
     w('</section>')
 else:
     w(f'<section style="margin:24px 4px 6px;padding:18px 16px;background:#11305f;border-radius:8px;text-align:center;">')
-    w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整晨报</p>')
+    w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整日报</p>')
     w(f'<p style="margin:8px 0 0;font-size:16px;color:#cfe0f7;line-height:1.7;">'
       f'点击文末左下角「阅读原文」，查看全球市场 · 内地财经一图全览</p>')
     w('</section>')
@@ -244,7 +253,7 @@ w(f'<section style="margin:18px 4px 8px;padding-top:14px;border-top:3px double {
 w(f'<p style="margin:0 0 6px;font-size:17px;font-weight:700;color:{INK};">保 · 心上人</p>')
 w(f'<p style="margin:0;font-size:15px;color:{SUB};line-height:1.8;">健康 · 养老 · 传承&nbsp;&nbsp;|&nbsp;&nbsp;让天下人老有所养</p>')
 w(f'<p style="margin:10px 0 0;font-size:13px;color:{SUB};line-height:1.7;">'
-  f'本晨报内容综合公开财经资讯整理，仅供参考，不构成任何投资建议。市场有风险，决策需谨慎。</p>')
+  f'本日报内容综合公开财经资讯整理，仅供参考，不构成任何投资建议。市场有风险，决策需谨慎。</p>')
 w('</section>')
 
 w('</section>')
@@ -264,14 +273,19 @@ def _arrow(raw):
     return "▲ " if raw > 0 else "▼ "
 
 if rows:
-    mrows = [dict(name=n, val=v, note=(note or "持平"), cls=_cls(raw), ar=_arrow(raw))
-             for (n, v, note, raw) in rows]
+    # A股是今天收盘、外盘是隔夜, 混在一张表里读者(尤其50+)容易误读成同一时点,
+    # 故按 group 插一行小标题分开; group 变化时才渲染标题。
+    mrows, _lastg = [], None
+    for (n, v, note, raw, g) in rows:
+        mrows.append(dict(name=n, val=v, note=(note or "持平"), cls=_cls(raw), ar=_arrow(raw),
+                          grp=(g if g != _lastg else "")))
+        _lastg = g
     env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
-    mhtml = env.get_template("template_market.html").render(
-        data_date=(D.get("data_date") or pub_date), rows=mrows)
+    # 日期用 pub_date(今天): 表里主体是A股今日收盘, 用中债 asof 的 data_date 会显示成前一交易日
+    mhtml = env.get_template("template_market.html").render(data_date=pub_date, rows=mrows)
     open(f"{BASE}/market.html", "w", encoding="utf-8").write(mhtml)
-    # Chrome 截图窗口高度: 头部~150 + 每行~100 + 页脚~96(随行数变化, workflow 读此值)
-    mh = 150 + len(mrows) * 100 + 96
+    # Chrome 截图窗口高度: 头部~150 + 每行~100 + 分组标题~56 + 页脚~96(随行数变化, workflow 读此值)
+    mh = 150 + len(mrows) * 100 + sum(56 for r in mrows if r["grp"]) + 96
     open(f"{BASE}/market_h.txt", "w", encoding="utf-8").write(str(mh))
     print(f"已渲染 market.html  行数={len(mrows)}  截图高度={mh}")
 
@@ -289,14 +303,14 @@ if not digest:
 digest = re.sub(r"\s+", " ", digest.replace("\n", " ")).strip()[:118]
 open(f"{BASE}/wechat_digest.txt", "w", encoding="utf-8").write(digest)
 
-# 公众号文章标题(AI 爆款式标题 + 晨报品牌后缀; 服务器缺该文件/为空时自动回退「财经晨报 X月X日」)
+# 公众号文章标题(AI 爆款式标题 + 日报品牌后缀; 服务器缺该文件/为空时自动回退「财经日报 X月X日」)
 wtitle = strip_tags(S.get("wechat_title") or "").strip()
 if wtitle:
     try:
         _d = datetime.strptime(pub_date, "%Y-%m-%d")
-        suffix = f"｜财经晨报{_d.month}.{_d.day}"
+        suffix = f"｜财经日报{_d.month}.{_d.day}"
     except Exception:
-        suffix = "｜财经晨报"
+        suffix = "｜财经日报"
     full = wtitle + suffix
     if len(full) > 64:                      # 微信标题上限 64 字, 超长砍正文部分保后缀
         full = wtitle[:64 - len(suffix) - 1].rstrip("，。、；,. ") + "…" + suffix

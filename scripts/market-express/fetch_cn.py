@@ -64,6 +64,36 @@ for k, sym in SINA_IDX.items():
     out["indices"][k] = dict(cur=cur, day_pct=day, ytd_pct=ytd)
     print(f"指数 {k}: cur={cur} day={day} ytd={ytd}")
 
+# ---- 2b. A股三大指数(当日收盘) ----
+# 2026-07-28 由「财经晨报」改「财经日报」(下午18:00发放)后新增: 下午读者最关心【今天A股收盘】,
+# 原管线只有隔夜美股。源走新浪(spot 拿今日收盘+涨跌幅, daily 拿去年末基准算 YTD):
+# 东财 index_global_spot_em 不含 A 股, 且东财在部分网络下会拒连, 新浪这两个接口稳定。
+# ⚠只新增 out["cn_indices"], 不动 out["indices"], market-express 那条老管线不受影响。
+CN_IDX = {"SH": ("sh000001", "上证指数"), "SZ": ("sz399001", "深证成指"), "CYB": ("sz399006", "创业板指")}
+cn_spot = retry("stock_zh_index_spot_sina", lambda: ak.stock_zh_index_spot_sina())
+out["cn_indices"] = {}
+for k, (sym, nm) in CN_IDX.items():
+    cur = day = ytd = None
+    if cn_spot is not None and len(cn_spot):
+        r = cn_spot[cn_spot["代码"] == sym]
+        if len(r):
+            cur = float(r["最新价"].iloc[0]); day = float(r["涨跌幅"].iloc[0])
+    h = retry(f"stock_zh_index_daily {sym}", lambda s=sym: ak.stock_zh_index_daily(symbol=s), tries=2)
+    if h is not None and len(h):
+        pairs = [(str(d)[:10], float(c)) for d, c in zip(h["date"], h["close"]) if c == c and c is not None]
+        if pairs:
+            if cur is None:                       # spot 取不到就退回历史末值
+                cur = pairs[-1][1]
+                if len(pairs) >= 2:
+                    day = (cur - pairs[-2][1]) / pairs[-2][1] * 100
+            cy = int(pairs[-1][0][:4])
+            prior = [c for d, c in pairs if int(d[:4]) < cy]
+            base = prior[-1] if prior else pairs[0][1]
+            if base and cur:                      # YTD 用今日 cur 对去年最后收盘, 不用历史末值(会差一天)
+                ytd = (cur - base) / base * 100
+    out["cn_indices"][k] = dict(cur=cur, day_pct=day, ytd_pct=ytd, name=nm)
+    print(f"A股 {nm}: cur={cur} day={day} ytd={ytd}")
+
 # ---- 3. 中美国债收益率(含中国10年) ----
 bd = retry("bond_zh_us_rate", lambda: ak.bond_zh_us_rate())
 out["yields"] = {}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
-<title>财经晨报 · {{ pub_date }} · 保心上人</title>
+<title>财经日报 · {{ pub_date }} · 保心上人</title>
 <style>
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
   :root{
@@ -164,10 +164,10 @@
         <div class="bname">保心上人</div>
         <div class="bsub">PROTECT · WEALTH · ADVISORY</div>
       </div>
-      <div class="upd">每日 07:30 自动更新</div>
+      <div class="upd">每日 18:00 自动更新</div>
     </div>
-    <h1 class="title"><span class="em">📰</span> 财经晨报</h1>
-    <div class="meta">📅 <b>{{ pub_date }}</b> ｜ 数据截至前一交易日（{{ data_date }}）收盘 · 全球市场 + 内地财经</div>
+    <h1 class="title"><span class="em">📰</span> 财经日报</h1>
+    <div class="meta">📅 <b>{{ pub_date }}</b> ｜ A股今日收盘 + 全球隔夜市场 · 内地财经</div>
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
@@ -223,8 +223,22 @@
   </div>
   {% endfor %}
 
-  <!-- 行情数据(移到三大主题之后、晨报纵览之前) -->
-  <div class="sec-lab">行情数据 · 隔夜全球</div>
+  <!-- 行情数据(移到三大主题之后、日报纵览之前) -->
+  {% if cn_indices %}
+  <div class="sec-lab">行情数据 · A股今日收盘</div>
+  <div class="idx-row">
+    {% for x in cn_indices %}
+    <div class="idx">
+      <div class="n">{{ x.name }}</div>
+      <div class="p">{{ x.pts }}</div>
+      <div class="d {{ x.cls }}">{{ x.ar }} {{ x.day }}</div>
+      <div class="y">YTD {{ x.ytd }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="sec-lab">隔夜全球 · 美股</div>
   <div class="idx-row">
     {% for x in indices %}
     <div class="idx">
@@ -244,10 +258,10 @@
     {% endfor %}
   </div>
 
-  <!-- 晨报纵览 -->
+  <!-- 日报纵览 -->
   {% if review and review.paras %}
   <div class="review">
-    <div class="rh">📌 晨报纵览{% if review.title %} · {{ review.title }}{% endif %}</div>
+    <div class="rh">📌 日报纵览{% if review.title %} · {{ review.title }}{% endif %}</div>
     {% for p in review.paras %}
     <p>{{ p|safe }}</p>
     {% endfor %}
@@ -268,7 +282,7 @@
   <div class="footer">
     <div class="fb">保 心 上 人</div>
     <div class="fs">健康 · 养老 · 传承　HEALTH · RETIREMENT · LEGACY</div>
-    <div class="disc">本晨报由真实公开财经资讯（东方财富/新浪财经等）自动汇编整理，仅供学习参考，不构成任何投资建议或保险产品销售要约，不代表本机构观点。市场有风险，决策需谨慎。数据若有出入以官方信源为准。</div>
+    <div class="disc">本日报由真实公开财经资讯（东方财富/新浪财经等）自动汇编整理，仅供学习参考，不构成任何投资建议或保险产品销售要约，不代表本机构观点。市场有风险，决策需谨慎。数据若有出入以官方信源为准。</div>
   </div>
 
 </div>

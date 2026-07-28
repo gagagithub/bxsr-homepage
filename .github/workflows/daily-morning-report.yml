@@ -1,10 +1,11 @@
-name: 财经晨报 - 每日生成 + 推送规划师朋友圈
+name: 财经日报 - 每日生成 + 推送规划师朋友圈
 
 on:
   schedule:
-    # 每天北京时间 02:30 (UTC 18:30 前一日) 运行 —— 凌晨错峰避开整点高峰, 降低 GitHub schedule 被延迟/跳过的概率;
-    # 02:30 生成完毕, 到早上 07:30 规划师查看时一定已就绪 (页面文案"每日07:30自动更新"由目标变事实)
-    - cron: '30 18 * * *'
+    # 每天北京时间 17:05 (UTC 09:05) 运行 —— A股 15:00 收盘后取当日收盘行情, 18:00 前发放。
+    # 分钟数取 :05 而非整点: GitHub schedule 在整点最拥挤, 错峰降低被延迟/跳过的概率。
+    # 全流程约 8-10 分钟(取数 2 + AI 整理 3 + 渲染截图 1 + 上传), 留 ~55 分钟缓冲给 GitHub 排队延迟。
+    - cron: '5 9 * * *'
   workflow_dispatch:
 
 permissions:
@@ -32,7 +33,7 @@ jobs:
       - name: Fetch market data (akshare 行情, 复用 market-express)
         working-directory: scripts/market-express
         run: |
-          python -u fetch_cn.py || echo "⚠ 行情取数部分失败, 晨报行情板块按缺省渲染"
+          python -u fetch_cn.py || echo "⚠ 行情取数部分失败, 日报行情板块按缺省渲染"
           cp -f data.json ../morning-report/data.json || true
 
       - name: Fetch real news telegraph (东方财富快讯)
@@ -45,31 +46,9 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: python -u llm_morning.py
 
-      - name: Set up Node (hyperframes 渲染视频用)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install ffmpeg + 视频生成 Python 依赖
-        run: |
-          sudo apt-get install -y -qq ffmpeg
-          pip install dashscope Pillow
-
-      - name: 生成财经晨报·电台视频版 (在渲染图文之前, 失败不阻塞晨报)
-        id: makevideo
-        continue-on-error: true
-        working-directory: scripts/morning-report/radio
-        env:
-          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
-        run: |
-          if [ -z "${DASHSCOPE_API_KEY}" ]; then
-            echo "⚠ 缺 secret DASHSCOPE_API_KEY, 跳过视频生成 (晨报照常推送)"; exit 1
-          fi
-          mkdir -p ~/.aliyun
-          printf 'DASHSCOPE_API_KEY=%s\nDASHSCOPE_VOICE=longxiang\n' "${DASHSCOPE_API_KEY}" > ~/.aliyun/nls.env
-          export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
-          bash make_video.sh "${MX_PUB_DATE}"
-          ls -la renders/
+      # ⚠ 2026-07-28 改下午发放时砍掉电台视频版(崔伟拍板): CI 渲染 9 分钟视频要 30-45 分钟,
+      # 是 18:00 前交付的最大不确定项。radio/ 脚本与 Java 端 morningReportVideo* 端点全部保留,
+      # 三端渲染本来就按"当天有没有 mp4"优雅降级, 不生成即自动回退纯图文。要恢复=把这几步加回来。
 
       - name: Render H5 + cover + moment text + 公众号图文 (pub_date = 北京当天)
         working-directory: scripts/morning-report
@@ -106,7 +85,7 @@ jobs:
           git config user.email "actions@github.com"
           cp scripts/morning-report/morning-report.html morning-report.html
           git add morning-report.html scripts/morning-report/sections.json || true
-          git commit -m "财经晨报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
+          git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
           git push || echo "push 跳过"
 
       - name: Push to production (H5 + cover + moment文案, 自动下发客户朋友圈)
@@ -121,13 +100,11 @@ jobs:
           # 行情图存在才带上(行情取数失败时无 market.png, 正文则不含行情图)
           MARKET_ARG=()
           [ -f market.png ] && MARKET_ARG=(-F "marketImg=@market.png;type=image/png")
-          # AI 爆款标题存在才带上(缺省服务端回退「财经晨报 X月X日」)
+          # AI 爆款标题存在才带上(缺省服务端回退「财经日报 X月X日」)
           TITLE_ARG=()
           [ -f wechat_title.txt ] && TITLE_ARG=(-F "wechatTitle=<wechat_title.txt")
-          # 视频版存在才带上(渲染失败时无 mp4, 服务端自动回退 H5 链接卡)
+          # 视频版已停(见上), 保留空数组占位: 恢复视频只需把 radio 生成步骤和这两行加回来
           VIDEO_ARG=()
-          [ -f radio/renders/morning-radio.mp4 ] && VIDEO_ARG+=(-F "video=@radio/renders/morning-radio.mp4;type=video/mp4")
-          [ -f radio/renders/poster.jpg ] && VIDEO_ARG+=(-F "poster=@radio/renders/poster.jpg;type=image/jpeg")
           RESP=$(curl -sS --max-time 600 \
             -F "token=${MORNING_REPORT_TOKEN}" \
             -F "html=@morning-report.html;type=text/html" \
@@ -141,4 +118,4 @@ jobs:
             https://214club.com.cn/creation/morningReportUpload)
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
-          echo "✓ 已推送今日财经晨报到生产 + 触发客户朋友圈下发 + 公众号草稿"
+          echo "✓ 已推送今日财经日报到生产 + 触发客户朋友圈下发 + 公众号草稿"
