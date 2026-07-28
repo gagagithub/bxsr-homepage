@@ -7,8 +7,12 @@
 - 不放可点外链(非白名单域名 <a> 不可跳转), 来源以纯文字标注
 - 封面走草稿 thumb_media_id, 不嵌正文
 
-内容 = 当天养老档新闻 + 那段「这跟咱有啥关系」解读 + 速览里跟养老钱有关的几条,
-不含健康/传承档, 不含股市行情表(读者是 50-70 岁关心退休金的人, 不是炒股的)。
+结构(崔伟 2026-07-28 定): 财经日报按【健康/养老/传承】分, 养老日报按读者自己的钱分——
+  💰退休金   养老金调整/退休待遇/社保
+  🏦存款国债 存款挂牌利率/大额存单/国债/理财
+  🩺健康小课堂 复用日报每天那一讲(62 主题按日轮转), 不依赖当天有没有新闻, 是全篇托底
+两档都归不进的(楼市/汇率/大宗)一律丢弃, 不当垃圾桶; 某档当天没料就整块不出。
+不含股市行情表, 投资向条目(ETF/大盘/券商观点)另有硬闸剔除——读者是 50-70 岁关心退休金的人。
 标题/导语走 sections.json 的 pension 字段(llm_morning 单独出的, 带溯源校验);
 没有就回退「养老日报 X月X日」。
 
@@ -81,23 +85,52 @@ def keep_for_pension(it):
 items = [it for it in raw_items if keep_for_pension(it)]
 dropped = len(raw_items) - len(items)
 
-# 标题对应的那条置顶: 读者是被标题点进来的, 第一屏必须就是它, 否则扑空(7-25 完读率教训)。
+# ---------- 分档: 退休金 / 存款国债 (崔伟 7-28 定的养老日报结构) ----------
+# 财经日报按 健康/养老/传承 分; 养老日报按读者自己的钱分: 退休金、存款国债、健康小课堂。
+# 归不进这两档的(楼市、汇率、大宗等)一律丢弃 —— 不是垃圾桶, 宁可少发。
+_TUIXIU_RE = re.compile(
+    r"养老金|退休金|社保|人社部|基础养老金|缴费年限|工龄|延迟退休|资格认证|"
+    r"养老保险|待遇调整|个人账户|社保卡|长护险|长期护理")
+_CUNKUAN_RE = re.compile(
+    r"存款|定存|定期|大额存单|挂牌利率|存款利率|国债|理财|LPR|降息|加息|利率|货基|货币基金")
+
+def bucket(it):
+    t = strip_tags(it.get("label", "")) + strip_tags(it.get("text", ""))
+    if _TUIXIU_RE.search(t):
+        return "退休金"
+    if _CUNKUAN_RE.search(t):
+        return "存款国债"
+    return None
+
+BUCKETS = ["退休金", "存款国债"]
+by_bucket = {b: [] for b in BUCKETS}
+for it in items:
+    b = bucket(it)
+    if b:
+        by_bucket[b].append(it)
+unbucketed = len(items) - sum(len(v) for v in by_bucket.values())
+
+# 健康小课堂: 复用日报每天生成的那一讲(62 主题按日轮转), 不依赖当天有没有新闻
+tip = S.get("tip", {}) or {}
+if isinstance(tip, str):
+    tip = {"body": tip}
+
+# 标题对应的那条在其所属档内置顶: 读者是被标题点进来的, 第一屏必须就是它(7-25 完读率教训)。
 # 匹配靠 label + 导语共有的数字, 不依赖 AI 再报一次 id。
 _lead_txt = strip_tags(pension.get("lead", ""))
-if _lead_txt and len(items) > 1:
+if _lead_txt:
     def _score(it):
         lab = strip_tags(it.get("label", ""))
         s = 2 if (lab and lab in _lead_txt) else 0
         nums = set(re.findall(r"\d+(?:\.\d+)?", strip_tags(it.get("text", ""))))
         s += len(nums & set(re.findall(r"\d+(?:\.\d+)?", _lead_txt)))
         return s
-    best = max(items, key=_score)
-    if _score(best) > 0:
-        items = [best] + [it for it in items if it is not best]
-
-# 速览里跟养老钱直接相关的补充条目(楼市/宏观), 最多 5 条
-BRIEF_OK = {"楼市", "宏观"}
-briefs = [b for b in (S.get("briefs") or []) if b.get("cat") in BRIEF_OK and str(b.get("text", "")).strip()][:5]
+    for b in BUCKETS:
+        lst = by_bucket[b]
+        if len(lst) > 1:
+            best = max(lst, key=_score)
+            if _score(best) > 0:
+                by_bucket[b] = [best] + [x for x in lst if x is not best]
 
 # ---------- 「大家最关心的」栏目: 养老金调整 ----------
 # 事实卡(人工核定) + 网络讨论(联网检索, 通篇标注非官方)。
@@ -200,13 +233,27 @@ if FACTS_OK:
         w(f'<p style="margin:0 0 6px;font-size:15px;font-weight:800;color:#8c3b2f;">🔎 怎么查自己的</p>')
         w(f'<p style="margin:0 0 6px;font-size:19px;line-height:2.0;color:{INK};">{strip_tags(wt)}</p>')
 
-# ---------- 养老要闻 ----------
-if items:
-    w(f'<section style="margin:24px 4px 10px;padding:12px 15px;border-radius:8px;background:{WARM};">')
-    w(f'<span style="font-size:22px;">🌅</span>'
-      f'<span style="margin-left:8px;font-size:21px;font-weight:900;color:#fff;letter-spacing:2px;">今日养老要闻</span>')
+# ---------- 三大板块: 退休金 / 存款国债 / 健康小课堂 ----------
+SEC_STYLE = {
+    "退休金":   ("💰", "#b9791b", "#fdf6ea", "养老金 · 退休待遇"),
+    "存款国债": ("🏦", "#1b6b57", "#eff7f3", "养老钱 · 该往哪放"),
+}
+
+def sec_head(icon, dark, name, sub):
+    w(f'<section style="margin:24px 4px 10px;padding:12px 15px;border-radius:8px;background:{dark};">')
+    w(f'<span style="font-size:22px;">{icon}</span>'
+      f'<span style="margin-left:8px;font-size:21px;font-weight:900;color:#fff;letter-spacing:2px;">{name}</span>')
+    if sub:
+        w(f'<span style="margin-left:auto;font-size:12px;color:#fff;opacity:.9;">　{sub}</span>')
     w('</section>')
-    for it in items:
+
+for b in BUCKETS:
+    lst = by_bucket[b]
+    if not lst:
+        continue                      # 当天这一档没料就整块不出, 不硬凑
+    icon, dark, light, sub = SEC_STYLE[b]
+    sec_head(icon, dark, b, sub)
+    for it in lst:
         label = strip_tags(it.get("label", ""))
         src = strip_tags(it.get("src", ""))
         w(f'<p style="margin:0 0 16px;font-size:19px;line-height:2.0;color:{INK};">')
@@ -217,7 +264,7 @@ if items:
             w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
         w('</p>')
 
-# ---------- 这跟咱的养老钱有啥关系 ----------
+# ---------- 这跟咱的养老钱有啥关系(两档新闻之后的整体解读) ----------
 if insight:
     w(f'<section style="margin:14px 4px 4px;padding:14px 15px;background:{WARMBG};'
       f'border-left:5px solid {WARM};border-radius:6px;">')
@@ -225,15 +272,16 @@ if insight:
     w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">{emph(insight)}</p>')
     w('</section>')
 
-# ---------- 其他要闻(楼市/宏观, 一句话) ----------
-if briefs:
-    w(f'<section style="margin:24px 4px;padding:14px 15px 8px;background:#f7f9fc;'
-      f'border:1px solid #dfe6f0;border-radius:4px;">')
-    w(f'<p style="margin:0 0 8px;font-size:20px;font-weight:800;color:{INK};">⚡ 其他要闻</p>')
-    for b in briefs:
-        lab = strip_tags(b.get("label", ""))
-        pre = f'<span style="font-weight:700;color:#6b7a94;">【{lab}】</span>' if lab else ""
-        w(f'<p style="margin:0 0 8px;font-size:17px;line-height:1.9;color:{INK};">{pre}{strip_tags(b.get("text"))}</p>')
+# ---------- 健康小课堂(每天一讲, 62 主题轮转; 不依赖当天有没有新闻, 是这档的托底) ----------
+if tip.get("body"):
+    HDARK, HLIGHT = "#0f7a4a", "#f1f9f4"
+    sec_head("🩺", HDARK, "健康小课堂", "每天懂一点")
+    if tip.get("title"):
+        w(f'<p style="margin:0 0 8px;font-size:21px;font-weight:800;color:{INK};">{strip_tags(tip["title"])}</p>')
+    w(f'<section style="margin:0 4px;padding:14px 15px;background:{HLIGHT};'
+      f'border-left:5px solid {HDARK};border-radius:6px;">')
+    w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">'
+      f'{str(tip["body"]).replace("<b>", f"<span style=color:{HDARK};font-weight:800;>").replace("</b>", "</span>")}</p>')
     w('</section>')
 
 # ---------- 页脚 ----------
@@ -281,8 +329,10 @@ cover_ctx = dict(
 cover_html = env.get_template("template_cover.html").render(**cover_ctx)
 open(f"{BASE}/pension_cover.html", "w", encoding="utf-8").write(cover_html)
 
-print(f"已渲染 pension.html  日期={pub_date}  要闻={len(items)}条(投资向硬闸剔除{dropped}条)  "
-      f"解读={'有' if insight else '无'}  其他要闻={len(briefs)}条  字节={len(html)}")
+print(f"已渲染 pension.html  日期={pub_date}  "
+      f"退休金={len(by_bucket['退休金'])}条  存款国债={len(by_bucket['存款国债'])}条  "
+      f"健康小课堂={'有' if tip.get('body') else '无'}  解读={'有' if insight else '无'}  "
+      f"(投资向剔除{dropped}条, 归不进两档丢弃{unbucketed}条)  字节={len(html)}")
 if not FACTS_OK:
     print("⚠ 事实卡未经人工核对(pension_facts.json 的 verified_by 为空), 「大家最关心的」栏目未渲染")
 elif buzz_held:
