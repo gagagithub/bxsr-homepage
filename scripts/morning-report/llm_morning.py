@@ -591,12 +591,17 @@ def gen_pension():
           '禁止"震惊/速看/必看"式恶俗词; 禁止收益暗示; 不带日期不带标签。⚠标题里每个数字都必须出自上面条目原文, 一个字都不许编",\n'
           '  "lead": "导语 150-220字, 承接标题那条讲透: 先一句把标题的钩子接住, 再把关键数字讲清, 最后一句落到"这跟您的养老钱有什么关系"。'
           '大白话短句, 一句不超30字。⚠只许用上面条目里已有的数字",\n'
+          '  "insight": "一段 150-220字的整体解读, 放在正文末尾。⚠⚠只许谈这两类事:①养老金/退休待遇/社保 ②存款利率/大额存单/国债/理财收益。'
+          '**绝对不许提楼市房价、黄金、基金、股市、汇率**——这份养老日报的正文里只留了上面那两类内容, '
+          '解读里提别的, 读者会发现在聊自己没读到的新闻。如果上面条目里这两类都没什么可说的, 就只就手头有的那条展开, 宁短勿凑。'
+          '口吻是跟老朋友唠, 落点是"咱这个岁数, 这笔钱该怎么打算", 中性不荐产品不承诺收益",\n'
           '  "i": 你做标题所依据的那个条目编号\n'
           '}'
     )
     d4 = call(user)
     title = re.sub(r"<[^>]+>", "", str(d4.get("title", ""))).strip()
     lead = str(d4.get("lead", "")).strip()
+    pinsight = str(d4.get("insight", "")).strip()
     i = d4.get("i")
     if not title or not lead:
         return {}
@@ -605,10 +610,30 @@ def gen_pension():
     bad_t = _unsourced(title, _tokens(one) if one else _tokens(" ".join(s["t"] for s in src)))
     bad_l = _unsourced(lead, _tokens(" ".join(s["t"] for s in src)))
     if bad_t or bad_l:
-        print(f"⚠ 养老日报溯源校验不过(标题野数字{sorted(bad_t)} 导语{sorted(bad_l)}), 丢弃标题回退日期版")
-        return {}
-    print(f"养老日报标题「{title}」")
-    return {"title": title, "lead": lead}
+        # 重试一次再判废(同 d0 主打的做法): 常见触发是 AI 顺手做了换算(每月20元→一年240元),
+        # 闸门分不清"正确换算"和"编造"只能一律拦, 但换个说法往往就不用算术了。
+        print(f"⚠ 养老日报溯源不过(标题{sorted(bad_t)} 导语{sorted(bad_l)}), 重试一次")
+        d4 = call(user + "\n\n⚠上一版出现了原文里没有的数字, 被判废。请重写: "
+                         "只用上面条目里出现过的数字原样引用, **不要做任何加减乘除换算**"
+                         "(比如别把每月多少元乘12算成一年多少元), 也不要举例推算。")
+        title = re.sub(r"<[^>]+>", "", str(d4.get("title", ""))).strip()
+        lead = str(d4.get("lead", "")).strip()
+        pinsight = str(d4.get("insight", "")).strip()
+        i = d4.get("i")
+        if not title or not lead:
+            return {}
+        one = src[i - 1]["t"] if isinstance(i, int) and 1 <= i <= len(src) else ""
+        bad_t = _unsourced(title, _tokens(one) if one else _tokens(" ".join(s["t"] for s in src)))
+        bad_l = _unsourced(lead, _tokens(" ".join(s["t"] for s in src)))
+        if bad_t or bad_l:
+            print(f"⚠ 重试仍不过(标题{sorted(bad_t)} 导语{sorted(bad_l)}), 丢弃标题回退日期版")
+            return {}
+    # 解读单独校验: 不过关只丢解读, 不牵连标题(渲染端会回退用日报养老档的 insight)
+    if pinsight and _unsourced(pinsight, _tokens(" ".join(s["t"] for s in src))):
+        print("⚠ 养老日报解读有野数字, 丢弃(回退日报养老档解读)")
+        pinsight = ""
+    print(f"养老日报标题「{title}」解读{'有' if pinsight else '无'}")
+    return {"title": title, "lead": lead, "insight": pinsight}
 
 try:
     data["pension"] = gen_pension()

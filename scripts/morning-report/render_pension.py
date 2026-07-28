@@ -59,10 +59,14 @@ except Exception:
 # ---------- 取养老档 ----------
 theme = next((t for t in S.get("themes", []) if t.get("name") == "养老"), {}) or {}
 raw_items = [it for it in theme.get("items", []) if it.get("text")]
+# 解读优先用养老日报专属那段(只谈退休金/存款国债两档, 与本报正文一致);
+# 没有才回退日报养老档的 —— ⚠那段是给含楼市/黄金/基金的 7 条写的, 会聊到本报没登的新闻。
 insight = (theme.get("insight") or "").strip()
 pension = S.get("pension", {}) or {}
 if isinstance(pension, str):
     pension = {"title": pension}
+if pension.get("insight"):
+    insight = str(pension["insight"]).strip()
 
 # ---------- 投资向条目硬闸 ----------
 # 养老档是按"影响养老钱"选的, 里面混着大量炒股视角的条目(大盘涨跌/ETF成交/券商观点)。
@@ -125,12 +129,21 @@ if _lead_txt:
         nums = set(re.findall(r"\d+(?:\.\d+)?", strip_tags(it.get("text", ""))))
         s += len(nums & set(re.findall(r"\d+(?:\.\d+)?", _lead_txt)))
         return s
+    _best_b, _best_s = None, 0
     for b in BUCKETS:
         lst = by_bucket[b]
-        if len(lst) > 1:
-            best = max(lst, key=_score)
-            if _score(best) > 0:
-                by_bucket[b] = [best] + [x for x in lst if x is not best]
+        if not lst:
+            continue
+        best = max(lst, key=_score)
+        s = _score(best)
+        if s > 0:
+            by_bucket[b] = [best] + [x for x in lst if x is not best]   # 档内置顶
+            if s > _best_s:
+                _best_b, _best_s = b, s
+    # ⚠档的顺序也要跟着标题走: 标题讲存款利率、正文却先摆养老金, 读者进来照样扑空。
+    # 把标题所在的那一档整体提到最前(退休金默认在前, 只有标题确实落在存款档时才换)。
+    if _best_b and BUCKETS[0] != _best_b:
+        BUCKETS = [_best_b] + [b for b in BUCKETS if b != _best_b]
 
 # ---------- 「大家最关心的」栏目: 养老金调整 ----------
 # 事实卡(人工核定) + 网络讨论(联网检索, 通篇标注非官方)。

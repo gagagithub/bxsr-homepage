@@ -87,6 +87,8 @@ FORMAT_USER = """把下面这份检索结果整理成 JSON(不要多余文字、
 official 的判断: 部委、官方媒体、银行等主体【正式发布】的事实 = true;
 财经媒体的分析解读、专家观点、自媒体说法、对未公布事项的推测 = false。
 要求: 最多6条, 按对退休老人的实际影响排序; 说不清出处的一律不要;
+⚠**绝对不要收录具体个人的故事和案例**(如"河南商丘的张阿姨这个月到账238元""李大爷多领了多少") ——
+这类内容多出自自媒体, 人物和金额都可能是编的, 无法核实。只要政策、标准、数据本身。
 检索结果说没搜到就输出 {"items": []}; 绝不添加检索结果里没有的信息。
 
 检索结果如下:
@@ -131,12 +133,27 @@ for k in range(3):
 if data is None:
     bail("千问联网检索3次均失败")
 
+# ⚠个人案例硬闸(程序化, 提示词不可靠 —— 7-28 首跑就搜回"河南商丘的张阿姨,62岁,社保卡到账238元",
+# 被判成 official=true 进了正文, 下一轮 AI 甚至把"张阿姨"写进了标题)。
+# 这类带人名的故事多是自媒体编的, 人物金额都无法核实, 我们转述等于替它背书 —— 整条丢弃。
+_PERSON_RE = re.compile(r"[一-龥]{1,2}(阿姨|大爷|大妈|大叔|叔叔|婶|老太太|老爷子|老伯|奶奶|爷爷)")
+
 items = []
 for it in (data.get("items") or [])[:6]:
     text = str(it.get("text") or "").strip()
     src = str(it.get("src") or "").strip()
     if len(text) < 40 or not src:      # 无出处一律丢弃(红线)
         continue
+    m = _PERSON_RE.search(text)
+    if m:
+        # 只切掉含人名的那一句, 保住同条里的政策与数据(整条丢会连"基础养老金涨到163元"一起损失)
+        sents = [x for x in re.split(r"(?<=[。！？；;])", text) if x.strip()]
+        keep = [x for x in sents if not _PERSON_RE.search(x)]
+        cut = "".join(keep).strip()
+        print(f"⚠ 剔除个人案例句(疑似自媒体虚构人物「{m.group(0)}」)，保留其余政策内容", file=sys.stderr)
+        if len(cut) < 40:      # 删完剩不下什么, 整条放弃
+            continue
+        text = cut
     items.append({
         "text": text,
         "src": src[:30],
