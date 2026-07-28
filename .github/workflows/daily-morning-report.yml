@@ -41,6 +41,15 @@ jobs:
         working-directory: scripts/morning-report
         run: python -u fetch_news.py
 
+      # 养老民生素材(联网检索): 东财电报出不来养老金/退休金/存款利率/大额存单这类内容,
+      # 单独搜一轮并入新闻池。失败不阻塞日报(脚本内部自己写空 items 并 exit 0)。
+      - name: Fetch 养老民生素材 (千问联网检索)
+        continue-on-error: true
+        working-directory: scripts/morning-report
+        env:
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+        run: python -u fetch_pension_news.py
+
       - name: AI organize into morning report (DeepSeek, 3-call)
         working-directory: scripts/morning-report
         env:
@@ -57,6 +66,7 @@ jobs:
           export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
           python -u render_morning.py
           python -u render_wechat.py
+          python -u render_pension.py || echo "⚠ 养老日报渲染失败, 不阻塞财经日报"
 
       - name: Screenshot cover image (headless Chrome)
         run: |
@@ -88,7 +98,7 @@ jobs:
           # ⚠sections.json 在 scripts/morning-report/.gitignore 里, 不加 -f 这行是静默 no-op,
           # 导致出问题时事后无法复现当天内容(runner 用完即毁)。-f 强制留底。
           git add morning-report.html || true
-          git add -f scripts/morning-report/sections.json || true
+          git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json || true
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
           git push || echo "push 跳过"
 

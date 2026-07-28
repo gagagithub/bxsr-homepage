@@ -42,13 +42,13 @@
 <div class="card">
   <div class="brandbar">
     <div class="logo">保</div>
-    <div><div class="bname">保心上人</div><div class="bsub">PROTECT · WEALTH · ADVISORY</div></div>
+    <div><div class="bname">{{ bname or '保心上人' }}</div><div class="bsub">{{ bsub or 'PROTECT · WEALTH · ADVISORY' }}</div></div>
     <div class="upd">每日 07:30</div>
   </div>
 
   {% if hook_big %}
   <!-- 钩子大字版: 当天最扎心的一句占满画面, 小缩略图上也看得清 -->
-  <div class="kicker">📰 财经日报　<b>{{ date_cn or pub_date }}</b></div>
+  <div class="kicker">📰 {{ brand or '财经日报' }}　<b>{{ date_cn or pub_date }}</b></div>
   <div class="hookbig">{{ hook_big }}</div>
   {% if hook_sub %}<div class="hooksub">{{ hook_sub }}</div>{% endif %}
   {% if cover_items %}
@@ -60,7 +60,7 @@
   </div>
   {% endif %}
   {% else %}
-  <h1><span class="em">📰</span> 财经日报</h1>
+  <h1><span class="em">📰</span> {{ brand or '财经日报' }}</h1>
   <div class="date">📅 <b>{{ pub_date }}</b>　全球市场 · 内地财经 · 一图速览</div>
 
   {% if trend %}
@@ -76,8 +76,8 @@
   {% endif %}
 
   <div class="foot">
-    <div class="sl">保心上人 · 让天下人老有所养</div>
-    <div class="cta">点开看完整日报 ›</div>
+    <div class="sl">{{ brand_sub or '保心上人 · 让天下人老有所养' }}</div>
+    <div class="cta">{{ cta or '点开看完整日报 ›' }}</div>
   </div>
 </div>
 </body>

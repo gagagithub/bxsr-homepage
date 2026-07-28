@@ -39,6 +39,31 @@ for i, it in enumerate(kept):
     indexed.append({"id": i, "t": it["text"][:460]})
 print(f"预过滤后喂给 AI {len(indexed)} 条 (原始 {len(items)} 条)")
 
+# ---------- 养老民生素材(fetch_pension_news.py 联网检索, 崔伟 2026-07-28 要求) ----------
+# 东财/新浪财经电报是给炒股的人看的, 出不来养老金/退休金/存款利率/大额存单这类内容
+# (7-28 实测: 当天养老档 7 条里 0 条是这类)。这些素材单独联网搜回来, 并进新闻池供选材。
+# ⚠非官方的必须带标注: 崔伟明确要求"写明非官方"。前缀直接写进喂给 AI 的正文里,
+#   并在 THEME_GUIDE 里要求改写时保留出处、不许当成定论。
+PENSION_SRC = {}   # id -> {"src","official"}
+try:
+    _pn = json.load(open(f"{BASE}/pension_news.json", encoding="utf-8")).get("items", [])
+except Exception:
+    _pn = []
+for it in _pn:
+    t = str(it.get("text") or "").strip()
+    if len(t) < 40:
+        continue
+    nid = len(indexed)
+    tag = "【养老民生·官方发布】" if it.get("official") else "【养老民生·非官方，仅为他人说法】"
+    src = str(it.get("src") or "").strip()
+    indexed.append({"id": nid, "t": f"{tag}（据{src}）{t}"[:460]})
+    PENSION_SRC[nid] = {"src": src, "official": bool(it.get("official"))}
+    # 不进 idmap: 这些素材没有东财原文链接, attach() 会自动给空 link, 渲染端本就兼容
+if _pn:
+    print(f"并入养老民生素材 {len(PENSION_SRC)} 条"
+          f"(官方 {sum(1 for v in PENSION_SRC.values() if v['official'])} / "
+          f"非官方 {sum(1 for v in PENSION_SRC.values() if not v['official'])})")
+
 # 传承档禁入名单：公司资本运作类新闻(提示词拦不住 DeepSeek 硬塞, 改程序化硬闸——
 # 提示词里给白名单, 合并时强制剔除违规 id)。纵览/头条/养老档不受此限。
 _CAPMKT_RE = _re.compile(r"IPO|上市|退市|挂牌|分拆|增发|配股|申购|保荐|发行价|打新|"
@@ -53,7 +78,7 @@ THEMES = ["健康", "养老", "传承"]
 THEME_ICON = {"健康": "🏥", "养老": "🌅", "传承": "🌳"}
 THEME_GUIDE = """【三大主题怎么归类当天新闻(把每条真实新闻挑到最贴的一档, 与本主题无关的新闻直接丢掉不要硬塞)】
 ① 健康：只挑【跟老百姓看病、吃药、报销直接相关】的新闻——医保政策、药品集采/降价、进口药/创新药获批或进医保(落点是患者能不能用上、自费多少)、门诊住院报销、疫苗、体检筛查、慢病防治。⚠药企业绩/净利润/股价/融资这类"上市公司视角"的新闻【不要】放进健康档：除非它直接影响看病花钱，且必须改写成患者视角(别写利润涨多少，写这药治什么病、患者能省多少)；纯资本市场的医药消息归养老档(股市)或直接丢弃。这一档宁缺毋滥，当天确实没有民生向健康新闻就把 items 留空(每天固定有「健康小课堂」托底，不怕空)、insight 可留空字符串。
-② 养老：利率/降息/LPR、存款、国债、养老金/社保、人口老龄化、A股/基金/股市(养老钱怎么配)、**房地产/楼市(房价、二手房、租金、房贷利率、楼市新政、收储/城市更新、以房养老)——很多读者的养老底子就是手里那套房，楼市新闻优先往养老档放**。关联"养老钱往哪放、锁利率窗口、每月领1万得备多少本金、房子还值多少钱/租金能不能养老"。⚠这一档宽但不是垃圾桶：AI/算力/数据中心/芯片/能源电力/产业数据这类纯科技产业新闻【不要】塞进来——除非能直接落到读者的钱上(如机构明确说往哪类资产配、影响股市基金怎么配)，落不到就丢弃或只进头条；"数据集建了多少个、用电负荷创新高"这种跟养老钱无关的，宁可不要。
+② 养老：⚠⚠**凡是标了【养老民生·官方发布】或【养老民生·非官方】前缀的条目, 全部优先进养老档并排在最前**——那是专门为这一档联网找回来的材料(养老金调整、退休金、存款挂牌利率、大额存单、储蓄国债、医保报销、长护险、适老化改造), 正是读者最关心的, 财经电报里没有, 一条都别浪费。⚠标【非官方】的条目改写时必须在正文里写明是谁说的(如"据某某媒体分析""有专家认为"), 绝不能写成板上钉钉的结论; 今年养老金调不调、几月调、调多少, 在人社部正式公布前一律只能转述, 不许下结论。其余可选题材: 利率/降息/LPR、存款、国债、养老金/社保、人口老龄化、A股/基金/股市(养老钱怎么配)、**房地产/楼市(房价、二手房、租金、房贷利率、楼市新政、收储/城市更新、以房养老)——很多读者的养老底子就是手里那套房，楼市新闻优先往养老档放**。关联"养老钱往哪放、锁利率窗口、每月领1万得备多少本金、房子还值多少钱/租金能不能养老"。⚠这一档宽但不是垃圾桶：AI/算力/数据中心/芯片/能源电力/产业数据这类纯科技产业新闻【不要】塞进来——除非能直接落到读者的钱上(如机构明确说往哪类资产配、影响股市基金怎么配)，落不到就丢弃或只进头条；"数据集建了多少个、用电负荷创新高"这种跟养老钱无关的，宁可不要。
 ③ 传承：汇率、黄金、高端资产价格、财富、税费、家族企业股权传承、境外资产、房产的【过户/继承/赠与/房产税】话题、名人遗产/财富故事 —— 关联"家底保值、离婚隔离、过户vs遗嘱vs保单受益人、想给又不想现在给"。(楼市行情/房价类新闻归养老档，别两头放。)⚠公司资本运作类新闻(IPO/上市/退市/分拆/增发/监管处罚/高管被查/券商业绩/个体工商户政策)【不是】传承：跟"把家底传给孩子"没关系，一律不准进传承档。这一档同样宁缺毋滥：当天贴题的新闻就 2-3 条甚至没有都完全正常，items 少放或留空即可(insight 仍可基于当天汇率/黄金走势正常写)，绝不要拿不贴题的新闻凑数。
 ⚠同一条新闻全篇只能出现在一个主题里一次，绝不允许同一件事在一个主题里写两条、或两个主题里各写一条。"""
 
@@ -298,7 +323,11 @@ def _isnum(s):
     except (TypeError, ValueError):
         return False
 
-ALL_NEWS_TOKENS = _tokens(" ".join(it["text"] for it in items))
+# ⚠溯源的"源"必须覆盖【所有喂给 AI 的条目】, 不能只有东财 items ——
+# 养老民生素材(联网检索来的)不在 items 里, 漏掉它们会让引用这些素材的主打/标题被误判成编造数字而丢弃
+# (而"基础养老金涨20元"这类恰恰最该做主打)。
+TEXT_BY_ID = {e["id"]: e["t"] for e in indexed}
+ALL_NEWS_TOKENS = _tokens(" ".join(TEXT_BY_ID.values()))
 
 def _unsourced(text, source_tokens):
     """返回 text 里无法在 source_tokens 溯源的数字集合(空=全部有源)。
@@ -324,9 +353,16 @@ def lead_provenance_ok(d):
         return False, "无lead"
     i = lead.get("id")
     oi = idmap.get(i) if isinstance(i, int) else None
-    if oi is None or not (0 <= oi < len(items)):
+    # 东财条目走 items; 养老民生素材不在 items 里, 回退到 TEXT_BY_ID(喂给 AI 的原文)
+    src_txt = items[oi]["text"] if (oi is not None and 0 <= oi < len(items)) \
+              else (TEXT_BY_ID.get(i) if isinstance(i, int) else None)
+    if not src_txt:
         return False, "lead引用了不存在的原文id"
-    orig_tokens = _tokens(items[oi]["text"])
+    # ⚠非官方的养老民生素材(媒体分析/专家观点/自媒体说法)不许占主打和标题位置 ——
+    # 那是全篇最显眼的地方, 只能放官方正式发布的事实; 非官方内容进正文并注明出处即可。
+    if isinstance(i, int) and i in PENSION_SRC and not PENSION_SRC[i]["official"]:
+        return False, f"主打引用了非官方素材(据{PENSION_SRC[i]['src']}), 不许做标题"
+    orig_tokens = _tokens(src_txt)
     # 标题(含lead小标题)最严: 数字必须出自其引用的那条原文(防"标题讲A事、正文引B文"的货不对板+编造)
     wt = d.get("wechat_title")
     wt = (wt.get("title") or wt.get("text") or "") if isinstance(wt, dict) else (wt or "")
@@ -414,6 +450,10 @@ def attach(obj):
     if oi is not None and 0 <= oi < len(items):
         obj["link"] = items[oi].get("link", "")
         obj["src"] = items[oi].get("src", "")
+    elif isinstance(i, int) and i in PENSION_SRC:
+        # 养老民生素材: 无原文链接, 但要把出处带出来给渲染端显示(据人社部…)
+        obj["link"] = ""
+        obj["src"] = PENSION_SRC[i]["src"] + ("" if PENSION_SRC[i]["official"] else "，非官方")
     else:
         obj["link"] = ""; obj["src"] = ""
     obj.pop("id", None)
@@ -523,6 +563,59 @@ except Exception as e:
 for b in data.get("briefs", []):
     attach(b)
 
+# ---------- 养老日报(发「崔伟说养老」公众号): 复用养老档已整理好的新闻, 单独出标题+导语 ----------
+# 为什么单独出一次: 全局 wechat_title/lead 是按"当天对钱包冲击最大"挑的, 不保证落在养老话题上
+# (今天就落在土拍)。养老号的标题必须从养老档里挑, 否则文不对题。
+# 输入是养老档【已整理成稿的条目】而不是原始电报: 数字已经过一轮溯源, 这里再校验一次防二次编造。
+def gen_pension():
+    th = next((t for t in data.get("themes", []) if t.get("name") == "养老"), None)
+    its = [it for it in (th or {}).get("items", []) if it.get("text")]
+    if len(its) < 2:
+        print("⚠ 养老档不足 2 条, 跳过养老日报 meta")
+        return {}
+    src = [{"i": n, "label": str(it.get("label", "")), "t": re.sub(r"<[^>]+>", "", str(it["text"]))}
+           for n, it in enumerate(its, 1)]
+    user = (
+        "下面是今天《财经日报》养老档已经整理好的新闻条目(JSON 数组, i 为编号):\n"
+        + json.dumps(src, ensure_ascii=False)
+        + "\n\n这些内容今天还要单独发一份《养老日报》到面向中老年读者的公众号。"
+          "读者是 50-70 岁、关心自己退休金和养老钱的普通人(不是炒股的)。"
+          "请严格输出如下 JSON(不要多余文字、不要 markdown 代码块):\n"
+          '{\n'
+          '  "title": "公众号标题, 18-28字。挑哪一条做, 判据只有一个:【这条能不能落到一个退休老人自己的账本上】。'
+          '✅优先: 存款/大额存单利率变动、养老金退休金调整、房价房租房贷、物价、医保报销、养老服务收费。'
+          '❌绝不许做标题: ①行业总规模类数字(理财存续多少万亿、发行多少万只、成交多少亿——这种钱读者看不见摸不着, 毫无代入感, 是最差的标题) '
+          '②大盘涨跌与ETF成交 ③公司回购/业绩/融资 ④券商机构的观点和预测。'
+          '如果上面条目里实在没有一条能落到个人账本, 就挑最贴近生活的那条写个平实标题, 不许硬凑代入感、不许标题党。'
+          '口语化、像邻居大姐会转发的话, 可用身份代入(如"手里有定期存款的注意")或设问; '
+          '禁止"震惊/速看/必看"式恶俗词; 禁止收益暗示; 不带日期不带标签。⚠标题里每个数字都必须出自上面条目原文, 一个字都不许编",\n'
+          '  "lead": "导语 150-220字, 承接标题那条讲透: 先一句把标题的钩子接住, 再把关键数字讲清, 最后一句落到"这跟您的养老钱有什么关系"。'
+          '大白话短句, 一句不超30字。⚠只许用上面条目里已有的数字",\n'
+          '  "i": 你做标题所依据的那个条目编号\n'
+          '}'
+    )
+    d4 = call(user)
+    title = re.sub(r"<[^>]+>", "", str(d4.get("title", ""))).strip()
+    lead = str(d4.get("lead", "")).strip()
+    i = d4.get("i")
+    if not title or not lead:
+        return {}
+    # 溯源: 标题按其引用的那条校验(最严), 导语放宽到整个养老档(允许同主题合并)
+    one = src[i - 1]["t"] if isinstance(i, int) and 1 <= i <= len(src) else ""
+    bad_t = _unsourced(title, _tokens(one) if one else _tokens(" ".join(s["t"] for s in src)))
+    bad_l = _unsourced(lead, _tokens(" ".join(s["t"] for s in src)))
+    if bad_t or bad_l:
+        print(f"⚠ 养老日报溯源校验不过(标题野数字{sorted(bad_t)} 导语{sorted(bad_l)}), 丢弃标题回退日期版")
+        return {}
+    print(f"养老日报标题「{title}」")
+    return {"title": title, "lead": lead}
+
+try:
+    data["pension"] = gen_pension()
+except Exception as e:
+    print(f"⚠ 养老日报 meta 生成失败(不阻塞日报): {e}")
+    data["pension"] = {}
+
 cnt = sum(len(t.get("items", [])) for t in data.get("themes", []))
 rv = data.get("review", {})
 json.dump(data, open(f"{BASE}/sections.json", "w"), ensure_ascii=False, indent=2)
@@ -530,4 +623,5 @@ print(f"AI 整理完成 sections.json：头条 {len(data.get('highlights', []))}
       f"{len(data.get('themes', []))} 主题 / 正文 {cnt} 条 / 速览 {len(data.get('briefs', []))} 条 / "
       f"纵览 {len(rv.get('paras', []))} 段 / "
       f"健康小课堂 {'有' if data.get('tip') else '⚠无'} / "
-      f"主打 {'有' if data.get('lead') else '⚠无'} / 标题「{data.get('wechat_title') or '⚠无(回退日期标题)'}」")
+      f"主打 {'有' if data.get('lead') else '⚠无'} / 标题「{data.get('wechat_title') or '⚠无(回退日期标题)'}」/ "
+      f"养老日报 {'「' + data['pension']['title'] + '」' if data.get('pension', {}).get('title') else '⚠无(回退日期标题)'}")
