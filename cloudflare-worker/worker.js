@@ -96,19 +96,42 @@ async function searchBilibili(keyword, apiKey) {
 
 async function searchDouyin(keyword, apiKey) {
   try {
-    const resp = await fetch(`${TIKHUB_BASE}/api/v1/douyin/search/fetch_general_search_v2`, {
+    // 用纯视频搜索 fetch_video_search_v2 而不是综合搜索 general_search_v2：同价 $0.01，
+    // 但综合搜索单次吐 ~1MB(混着直播/用户卡片/评论列表)，常被上游在 ~434KB 处截断成坏 JSON；
+    // 视频搜索约 430KB 且支持 publish_time 只取近半年，配合下游 3 个月过滤能剩下更多结果。
+    const resp = await fetch(`${TIKHUB_BASE}/api/v1/douyin/search/fetch_video_search_v2`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ keyword, offset: 0, count: 15, sort_type: "0" }),
+      body: JSON.stringify({
+        keyword,
+        cursor: 0,
+        sort_type: "0",
+        publish_time: "180",
+        content_type: "1",
+      }),
     });
     if (!resp.ok) return [];
-    const data = await resp.json();
+    // ⚠ 这个端点单次返回 ~1MB。直接 resp.json() 会在 ~434KB 处抛
+    // "Unterminated string in JSON"(上游 gzip + Content-Length 不一致导致提前截断)，
+    // 整个抖音板块因此恒 0 条。先读成 ArrayBuffer 再自行解码解析可绕开。
+    const buf = await resp.arrayBuffer();
+    const text = new TextDecoder("utf-8").decode(buf);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("Douyin JSON parse failed, bytes=", buf.byteLength, e);
+      return [];
+    }
     const d = data?.data || {};
-    let results = d.data || d.aweme_list || d.items || d.results || [];
-    if (!Array.isArray(results)) {
+    // 抖音 general_search_v2 现在的结构是 data.business_data[]，上面几个键都取不到，
+    // 兜底扫描必须把「空数组」也算没取到——否则 results 停在 [] 上(空数组是 truthy 且
+    // 确实是 Array)，扫描不触发、整平台恒返回 0 条。
+    let results = d.data || d.aweme_list || d.items || d.results || d.business_data || [];
+    if (!Array.isArray(results) || results.length === 0) {
       for (const v of Object.values(d)) {
         if (Array.isArray(v) && v.length > 0 && typeof v[0] === "object") { results = v; break; }
       }
@@ -147,7 +170,8 @@ async function searchXiaohongshu(keyword, apiKey) {
     const d = data?.data || {};
     const inner = d.data || d;
     let results = inner.items || inner.notes || inner.note_list || inner.data || [];
-    if (!Array.isArray(results)) {
+    // 同抖音: 空数组也要触发兜底扫描, 否则接口一改结构就恒 0 条
+    if (!Array.isArray(results) || results.length === 0) {
       for (const v of Object.values(inner)) {
         if (Array.isArray(v) && v.length > 0 && typeof v[0] === "object") { results = v; break; }
       }
