@@ -2,12 +2,22 @@
  * Cloudflare Worker - TikHub 搜索代理
  * 接收关键词，并发搜索4个平台，过滤后返回结果
  *
- * 环境变量: TIKHUB_API_KEY
- * 调用方式: GET /search?keyword=存钱
+ * 环境变量(都是 Cloudflare 后台 secret，wrangler deploy 不会覆盖):
+ *   TIKHUB_API_KEY - TikHub 的 key
+ *   SEARCH_TOKEN   - 访问口令，未配置则一律拒绝(fail-closed)
+ * 调用方式: GET /search?keyword=存钱&token=xxx
+ *
+ * ⚠ 每次 /search 都会真金白银打 4 个平台(抖音+小红书各 $0.01、西瓜+B站各 $0.001 ≈ $0.022/次)，
+ * 且没有缓存。裸奔在公网时任何人都能刷余额，故加 token + Origin 双重闸门。
  */
 
 const TIKHUB_BASE = "https://api.tikhub.io";
 const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
+
+// 允许发起跨域请求的站点(GitHub Pages 上的内部工作台)。留空数组=不限制来源。
+const ALLOWED_ORIGINS = [
+  "https://gagagithub.github.io",
+];
 
 // 平台配置
 const PLATFORMS = {
@@ -178,27 +188,64 @@ function filterResults(platform, items) {
 
 // ── CORS 响应头 ─────────────────────────────────────
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Content-Type": "application/json; charset=utf-8",
-};
+function corsHeaders(request) {
+  const origin = request.headers.get("Origin") || "";
+  // 白名单内的来源回显自身；其它情况不发 A-C-A-O，浏览器侧自然被挡
+  const allow = ALLOWED_ORIGINS.length === 0 || ALLOWED_ORIGINS.includes(origin);
+  const h = {
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json; charset=utf-8",
+  };
+  if (allow && origin) h["Access-Control-Allow-Origin"] = origin;
+  return h;
+}
+
+/** 来源校验：浏览器请求必须来自白名单；非浏览器请求(无 Origin/Referer)只凭 token 放行。 */
+function originAllowed(request) {
+  if (ALLOWED_ORIGINS.length === 0) return true;
+  const origin = request.headers.get("Origin");
+  if (origin) return ALLOWED_ORIGINS.includes(origin);
+  const referer = request.headers.get("Referer");
+  if (referer) return ALLOWED_ORIGINS.some((o) => referer.startsWith(o));
+  return true;
+}
 
 // ── 主入口 ──────────────────────────────────────────
 
 export default {
   async fetch(request, env) {
+    const CORS = corsHeaders(request);
+
     // 处理 CORS preflight
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: CORS_HEADERS });
+      return new Response(null, { headers: CORS });
     }
 
     const url = new URL(request.url);
     if (url.pathname !== "/search") {
-      return new Response(JSON.stringify({ error: "Use /search?keyword=xxx" }), {
+      return new Response(JSON.stringify({ error: "Use /search?keyword=xxx&token=xxx" }), {
         status: 404,
-        headers: CORS_HEADERS,
+        headers: CORS,
+      });
+    }
+
+    // ── 闸门①: 访问口令 ────────────────────────────────
+    // SEARCH_TOKEN 没配 = 拒绝所有请求(fail-closed)，绝不因为漏配 secret 就退回裸奔状态
+    const expected = env.SEARCH_TOKEN;
+    const provided = url.searchParams.get("token") || request.headers.get("X-Search-Token") || "";
+    if (!expected || provided !== expected) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: CORS,
+      });
+    }
+
+    // ── 闸门②: 来源站点 ────────────────────────────────
+    if (!originAllowed(request)) {
+      return new Response(JSON.stringify({ error: "Forbidden origin" }), {
+        status: 403,
+        headers: CORS,
       });
     }
 
@@ -206,7 +253,7 @@ export default {
     if (!keyword) {
       return new Response(JSON.stringify({ error: "Missing keyword parameter" }), {
         status: 400,
-        headers: CORS_HEADERS,
+        headers: CORS,
       });
     }
 
@@ -214,7 +261,7 @@ export default {
     if (!apiKey) {
       return new Response(JSON.stringify({ error: "API key not configured" }), {
         status: 500,
-        headers: CORS_HEADERS,
+        headers: CORS,
       });
     }
 
@@ -239,7 +286,7 @@ export default {
     };
 
     return new Response(JSON.stringify(result, null, 2), {
-      headers: CORS_HEADERS,
+      headers: CORS,
     });
   },
 };

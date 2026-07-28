@@ -4,3 +4,4 @@ sdk/
 *.tgz
 *.log
 cloudflare-worker/.wrangler/
+cloudflare-worker/.dev.vars

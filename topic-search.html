@@ -232,6 +232,9 @@
 <script>
 // ⚠️ 部署 Worker 后，将此 URL 替换为你的 Worker 地址
 const WORKER_URL = "https://tikhub-search.firefox-cui.workers.dev";
+// 访问口令：与 Worker 的 SEARCH_TOKEN secret 一致。每次搜索都真扣 TikHub 余额(≈$0.022/次)，
+// 没有这个 token 的请求 Worker 直接 401，防止地址泄露后被人刷钱。换 token 时两边同步改。
+const SEARCH_TOKEN = "592fb527d57eac3ac2f0dc04719b83c52e847ff3";
 
 const PLATFORM_CONFIG = {
   xigua:       { name: "西瓜视频", color: "#F04142" },
@@ -272,7 +275,10 @@ async function doSearch() {
   results.innerHTML = "";
 
   try {
-    const resp = await fetch(`${WORKER_URL}/search?keyword=${encodeURIComponent(keyword)}`);
+    const resp = await fetch(
+      `${WORKER_URL}/search?keyword=${encodeURIComponent(keyword)}&token=${encodeURIComponent(SEARCH_TOKEN)}`
+    );
+    if (resp.status === 401) throw new Error("访问口令无效，请联系管理员");
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
 
