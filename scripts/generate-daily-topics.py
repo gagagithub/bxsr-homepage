@@ -815,6 +815,11 @@ results 数组长度必须等于输入条目数, 每条包含:
         "temperature": 0.3,
         "response_format": {"type": "json_object"},
         "max_tokens": 4000,
+        # ⚠ deepseek-v4-pro 默认开思维链, reasoning_tokens 与正文共用 max_tokens 额度,
+        # 思考一长就把额度吃光 → finish_reason=length、content 空串/半截 JSON,
+        # 表现为"DeepSeek enrich failed: Expecting value: line 1 column 1"。
+        # 打标/挑选/概括都是不需要推理的任务, 一律显式关掉(实测 content 立刻正常)。
+        "thinking": {"type": "disabled"},
     }
 
     last_err = ""
@@ -1457,7 +1462,10 @@ def curate_news(news):
             json={"model": DEEPSEEK_MODEL,
                   "messages": [{"role": "system", "content": sys_msg},
                                {"role": "user", "content": user_msg}],
-                  "temperature": 0.3, "response_format": {"type": "json_object"}, "max_tokens": 1200},
+                  "temperature": 0.3, "response_format": {"type": "json_object"}, "max_tokens": 2000,
+                  # 同 enrich: 关思维链, 否则 reasoning 吃光额度只吐半截 JSON
+                  # (2026-07-28 要闻板块整块空掉就是这个原因)
+                  "thinking": {"type": "disabled"}},
             timeout=60,
         )
         if resp.status_code != 200:
@@ -1532,7 +1540,8 @@ def synthesize_insight(data):
             json={"model": DEEPSEEK_MODEL,
                   "messages": [{"role": "system", "content": sys_msg},
                                {"role": "user", "content": user_msg}],
-                  "temperature": 0.4, "max_tokens": 200},
+                  # 200 tokens 全被思维链吃掉, "今日风向"横幅长期是空的; 关推理 + 抬到 500
+                  "temperature": 0.4, "max_tokens": 500, "thinking": {"type": "disabled"}},
             timeout=60,
         )
         if resp.status_code == 200:
