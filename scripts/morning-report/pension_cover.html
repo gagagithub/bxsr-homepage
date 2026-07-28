@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root{ --navy:#0b2552; --navy2:#123b78; --blue:#1769c0; --sky:#9ecbff; --gold:#e3b65a; --up:#ff6b6b; }
+  html,body{ width:900px; height:1125px; font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif; }
+  .card{ width:900px; height:1125px; background:linear-gradient(160deg,#08204b 0%,#103365 45%,#1a5bb0 100%); position:relative; overflow:hidden; color:#fff; padding:64px 60px; }
+  .card::after{ content:""; position:absolute; right:-120px; top:-120px; width:460px; height:460px; background:radial-gradient(circle,rgba(158,203,255,.28),transparent 70%); }
+  .brandbar{ display:flex; align-items:center; gap:16px; position:relative; z-index:2; }
+  .logo{ width:60px; height:60px; border:3px solid rgba(255,255,255,.9); border-radius:13px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:30px; background:rgba(255,255,255,.08); }
+  .bname{ font-size:26px; font-weight:800; letter-spacing:3px; }
+  .bsub{ font-size:13px; letter-spacing:4px; color:#aecbf0; margin-top:3px; }
+  .upd{ margin-left:auto; font-size:16px; background:rgba(255,255,255,.16); padding:7px 16px; border-radius:24px; color:#dbe8fb; }
+  h1{ font-size:96px; font-weight:900; letter-spacing:8px; margin-top:60px; position:relative; z-index:2; line-height:1.05; }
+  h1 .em{ font-size:78px; }
+  .date{ margin-top:26px; font-size:30px; color:#dbe8fb; position:relative; z-index:2; letter-spacing:1px; }
+  .date b{ color:#fff; }
+  /* 钩子大字版(有 hook 时替代通用报头): 大字要落在图片中央正方形区内, 次条小缩略图裁方后仍看得清 */
+  .kicker{ margin-top:34px; display:inline-block; font-size:26px; font-weight:700; letter-spacing:2px; color:#dbe8fb; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25); padding:9px 22px; border-radius:28px; position:relative; z-index:2; }
+  .kicker b{ color:#fff; }
+  .hookbig{ margin-top:44px; font-size:96px; font-weight:900; line-height:1.24; letter-spacing:2px; position:relative; z-index:2; color:#fff; text-shadow:0 4px 18px rgba(0,0,0,.25); }
+  .hookbig .g{ color:var(--gold); }
+  .hooksub{ margin-top:30px; font-size:36px; line-height:1.5; color:#dbe8fb; position:relative; z-index:2; font-weight:600; }
+  .trend{ margin-top:34px; background:rgba(255,255,255,.10); border-left:6px solid var(--gold); border-radius:14px; padding:24px 28px; font-size:27px; line-height:1.55; position:relative; z-index:2; color:#eef5ff; }
+  .trend .l{ color:var(--gold); font-weight:800; }
+  .trend b{ color:#ffe39c; }
+  .hl{ margin-top:34px; position:relative; z-index:2; }
+  .hl .t{ font-size:24px; color:var(--sky); font-weight:800; letter-spacing:2px; margin-bottom:18px; }
+  .hl .row{ display:flex; gap:16px; padding:17px 0; border-top:1px solid rgba(255,255,255,.14); font-size:26px; line-height:1.45; align-items:flex-start; }
+  .hl .row:first-of-type{ border-top:none; }
+  .hl .row .star{ color:var(--gold); font-size:22px; margin-top:3px; }
+  .hl .row .src{ color:#ffd9a0; font-weight:800; flex-shrink:0; }
+  .hl .row .tx{ color:#f0f6ff; }
+  .foot{ position:absolute; left:60px; right:60px; bottom:54px; z-index:2; display:flex; align-items:center; }
+  .foot .sl{ font-size:24px; color:var(--sky); letter-spacing:2px; font-weight:600; }
+  .foot .cta{ margin-left:auto; font-size:25px; font-weight:800; color:#08204b; background:var(--gold); padding:13px 26px; border-radius:30px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brandbar">
+    <div class="logo">保</div>
+    <div><div class="bname">崔伟说养老</div><div class="bsub">RETIREMENT · WEALTH · CARE</div></div>
+    <div class="upd">每日 07:30</div>
+  </div>
+
+  
+  <!-- 钩子大字版: 当天最扎心的一句占满画面, 小缩略图上也看得清 -->
+  <div class="kicker">📰 养老日报　<b>7月28日</b></div>
+  <div class="hookbig">城乡居民养老金最低标准再涨20元…</div>
+  <div class="hooksub">今天要跟您说个实在的好消息。今年全国两会定了，城乡居民基础养…</div>
+  
+  <div class="hl" style="margin-top:52px;">
+    <div class="t">⭐ 今天还有这些事</div>
+    
+    <div class="row"><span class="star">★</span><span class="tx"><span class="src">国务院　</span>今年全国两会政府工作报告明确，城乡居民基础养老金全国最低标准每月提高…</span></div>
+    
+    <div class="row"><span class="star">★</span><span class="tx"><span class="src">人社部/财政部　</span>截至今天，人社部、财政部联合印发的《关于2026年调整退休人员基本养…</span></div>
+    
+  </div>
+  
+  
+
+  <div class="foot">
+    <div class="sl">崔伟说养老 · 让天下人老有所养</div>
+    <div class="cta">点开看完整内容 ›</div>
+  </div>
+</div>
+</body>
+</html>

@@ -119,6 +119,23 @@ tip = S.get("tip", {}) or {}
 if isinstance(tip, str):
     tip = {"body": tip}
 
+# 健康档里跟【中国老百姓看病吃药】直接相关的, 并进这一档打头(小课堂在其后)。
+# 崔伟 7-28 反馈"内容有点少": 财经日报健康档每天都有内容, 对 50-70 岁读者完全对口, 白扔可惜。
+# ⚠但要滤掉对读者没用的: 国外疫情/国外审批/医疗科技产品(美国麻疹、欧盟视网膜芯片这类)。
+_HEALTH_OK = re.compile(
+    r"医保|报销|集采|药价|降价|门诊|住院|挂号|疫苗|接种|防护|流感|新冠|检测|"
+    r"体检|筛查|慢病|三高|长护险|创新药|仿制药|药品目录|自费")
+_HEALTH_FOREIGN = re.compile(r"美国|欧盟|FDA|CDC|英国|日本|韩国|初创公司|获准在.{0,4}上市")
+
+def keep_health(it):
+    t = strip_tags(it.get("label", "")) + strip_tags(it.get("text", ""))
+    if _HEALTH_FOREIGN.search(t) and not re.search(r"中国|国内|我国|医保", t):
+        return False
+    return bool(_HEALTH_OK.search(t))
+
+_htheme = next((t for t in S.get("themes", []) if t.get("name") == "健康"), {}) or {}
+health_items = [it for it in _htheme.get("items", []) if it.get("text") and keep_health(it)]
+
 # 标题对应的那条在其所属档内置顶: 读者是被标题点进来的, 第一屏必须就是它(7-25 完读率教训)。
 # 匹配靠 label + 导语共有的数字, 不依赖 AI 再报一次 id。
 _lead_txt = strip_tags(pension.get("lead", ""))
@@ -285,10 +302,21 @@ if insight:
     w(f'<p style="margin:0;font-size:19px;line-height:2.0;color:{INK};">{emph(insight)}</p>')
     w('</section>')
 
-# ---------- 健康小课堂(每天一讲, 62 主题轮转; 不依赖当天有没有新闻, 是这档的托底) ----------
-if tip.get("body"):
-    HDARK, HLIGHT = "#0f7a4a", "#f1f9f4"
+# ---------- 健康小课堂(当天健康民生新闻 + 每天一讲; 小课堂 62 主题轮转, 是没新闻时的托底) ----------
+HDARK, HLIGHT = "#0f7a4a", "#f1f9f4"
+if tip.get("body") or health_items:
     sec_head("🩺", HDARK, "健康小课堂", "每天懂一点")
+    for it in health_items:
+        label = strip_tags(it.get("label", ""))
+        src = strip_tags(it.get("src", ""))
+        w(f'<p style="margin:0 0 16px;font-size:19px;line-height:2.0;color:{INK};">')
+        if label:
+            w(f'<span style="color:{ORANGE};font-weight:700;">【{label}】</span>')
+        w(emph(it.get("text")))
+        if src:
+            w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
+        w('</p>')
+if tip.get("body"):
     if tip.get("title"):
         w(f'<p style="margin:0 0 8px;font-size:21px;font-weight:800;color:{INK};">{strip_tags(tip["title"])}</p>')
     w(f'<section style="margin:0 4px;padding:14px 15px;background:{HLIGHT};'
@@ -344,7 +372,7 @@ open(f"{BASE}/pension_cover.html", "w", encoding="utf-8").write(cover_html)
 
 print(f"已渲染 pension.html  日期={pub_date}  "
       f"退休金={len(by_bucket['退休金'])}条  存款国债={len(by_bucket['存款国债'])}条  "
-      f"健康小课堂={'有' if tip.get('body') else '无'}  解读={'有' if insight else '无'}  "
+      f"健康={len(health_items)}条+小课堂{'有' if tip.get('body') else '无'}  解读={'有' if insight else '无'}  "
       f"(投资向剔除{dropped}条, 归不进两档丢弃{unbucketed}条)  字节={len(html)}")
 if not FACTS_OK:
     print("⚠ 事实卡未经人工核对(pension_facts.json 的 verified_by 为空), 「大家最关心的」栏目未渲染")

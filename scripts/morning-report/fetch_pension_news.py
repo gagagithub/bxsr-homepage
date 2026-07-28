@@ -59,34 +59,47 @@ if prev:
     EXCLUDE = "\n\n以下是昨天日报已经用过的内容, 不要重复(除非今天有新进展):\n" + \
               "\n".join(f"- {p}…" for p in prev)
 
+
+# ---------- 多路专项检索(崔伟 7-28: "扩大线索源") ----------
+# 原来一次问 5 大类, qwen 每类只摊得到一两条; 拆成各问各的, 每路 2-4 条, 总量翻几倍,
+# 且都限定"今天或最近1-2天" —— 日报就该是当天的, 靠放宽天数凑数会变成旧闻。
+TOPICS = [
+    ("养老金", "①{year}年基本养老金调整的最新进展(通知发布了没有、各省落地到哪一步、有没有官方辟谣);\n"
+             "②城乡居民基础养老金标准调整; ③养老金资格认证; ④延迟退休政策落地情况。"),
+    ("存款理财", "①银行存款挂牌利率调整(哪些银行、降了多少个基点); ②大额存单发行与利率变化;\n"
+               "③储蓄国债发行安排与票面利率; ④银行理财收益变化 —— 都要跟普通储户直接相关的。"),
+    ("医保养老服务", "①医保报销政策变化、门诊住院待遇调整; ②医保个人账户/家庭共济/异地就医新规;\n"
+                 "③长期护理保险试点进展; ④养老服务补贴、助餐、居家养老、适老化改造。"),
+    ("防骗提醒", "针对老年人的养老诈骗、非法集资、理财骗局的官方提示或已查处的典型案例"
+              "(要有办案机关或官方媒体出处, 讲清套路和涉案金额)。"),
+]
+
 # ⚠两步走(实测教训, 见 fetch_health_news.py): 用户消息里塞 JSON schema 会污染联网检索词、
 # 直接交白卷; 第一步自由文本搜, 第二步不联网纯整理成 JSON(不引入新信息)。
-SEARCH_USER = f"""今天是{TODAY}(北京时间)。请联网搜索最近1-3天中国跟【退休老人的钱】直接相关的消息, 重点是这几类:
-1. 养老金/退休金: {YEAR}年基本养老金调整的进展(通知发了没有、各省落地情况)、城乡居民基础养老金、
-   养老金资格认证、延迟退休相关政策落地。
-2. 存款和理财: 银行存款挂牌利率调整、大额存单发行与利率、国债(尤其储蓄国债)发行、
-   银行理财收益变化——要跟普通储户直接相关的。
-3. 医保与养老服务: 医保报销政策、门诊住院待遇、长期护理保险、养老服务补贴、老旧小区适老化改造。
+SEARCH_TMPL = """今天是{today}(北京时间)。请联网搜索**今天或最近1-2天**中国跟【退休老人的钱】直接相关的消息:
+{topic_q}
 
 对每一条, 必须给出: 内容(保留报道里的具体数字、金额、比例、时间)、是谁发布或是谁说的、日期。
 ⚠严格要求:
 - 只报告真实检索到的内容, 一个字都不许编。搜不到就明说搜不到。
 - 必须分清: 哪些是部委/官方媒体正式发布的, 哪些只是财经媒体分析、专家观点或自媒体说法。
 - 说不出是谁说的、找不到出处的传言, 不要收录。
-- 不要给出你自己的预测或判断。特别是{YEAR}年养老金调不调、几月调、调多少,
+- 不要给出你自己的预测或判断。特别是{year}年养老金调不调、几月调、调多少,
   在人社部正式公布前, 只能转述别人怎么说的, 不许自己下结论。
-列出 4-6 条。{EXCLUDE}"""
+每条必须真实、有出处, 搜不到就明说。{exclude}"""
 
 FORMAT_USER = """把下面这份检索结果整理成 JSON(不要多余文字、不要 markdown 代码块):
 {"items": [
   {"text": "内容完整一段(100-180字), 只用检索结果里已有的事实和数字, 不做评论",
-   "src": "发布单位或说话人(如 人力资源社会保障部 / 某某银行 / 某财经媒体 / 某专家及其单位)",
+   "src": "⚠只填【发布方的名称】, 8字以内最好, 如 人社部 / 中国银行 / 国家医保局 / 江苏省检察院 / 财新。"
+          "绝不要把文章标题填进来(如《2026年7月中国大额存单最新调整…》这种一长条); "
+          "如果只查到文章、说不清发布方, 就填 网络文章",
    "date": "YYYY-MM-DD",
    "official": true 或 false}
 ]}
 official 的判断: 部委、官方媒体、银行等主体【正式发布】的事实 = true;
 财经媒体的分析解读、专家观点、自媒体说法、对未公布事项的推测 = false。
-要求: 最多6条, 按对退休老人的实际影响排序; 说不清出处的一律不要;
+要求: 最多4条, 按对退休老人的实际影响排序; 说不清出处的一律不要;
 ⚠**绝对不要收录具体个人的故事和案例**(如"河南商丘的张阿姨这个月到账238元""李大爷多领了多少") ——
 这类内容多出自自媒体, 人物和金额都可能是编的, 无法核实。只要政策、标准、数据本身。
 检索结果说没搜到就输出 {"items": []}; 绝不添加检索结果里没有的信息。
@@ -108,12 +121,13 @@ def call_qwen(messages, enable_search):
         resp = json.loads(r.read().decode())
     return resp["output"]["choices"][0]["message"]["content"].strip()
 
-def call_once():
+def call_once(topic_q):
     found = call_qwen([
         {"role": "system", "content": "你是新闻检索助手, 只报告真实检索到的内容, 宁缺毋滥, 严禁编造。"},
-        {"role": "user", "content": SEARCH_USER},
+        {"role": "user", "content": SEARCH_TMPL.format(today=TODAY, year=YEAR,
+                                                       topic_q=topic_q, exclude=EXCLUDE)},
     ], enable_search=True)
-    print(f"—— 第一步联网检索返回 {len(found)} 字")
+    print(f"   第一步联网检索返回 {len(found)} 字")
     content = call_qwen([{"role": "user", "content": FORMAT_USER + found}], enable_search=False)
     content = re.sub(r"^```(json)?|```$", "", content, flags=re.MULTILINE).strip()
     if not content.startswith("{"):
@@ -122,16 +136,28 @@ def call_once():
             content = m.group(0)
     return json.loads(content)
 
-data = None
-for k in range(3):
-    try:
-        data = call_once()
-        break
-    except Exception as e:
-        print(f"!! 千问检索第{k+1}次失败({type(e).__name__}: {str(e)[:80]}), 重试", file=sys.stderr)
-        import time as _t; _t.sleep(3)
-if data is None:
-    bail("千问联网检索3次均失败")
+# 逐主题检索(某一路失败不影响其他路, 全空才 bail)
+raw_items, seen_head = [], set()
+for tname, tq in TOPICS:
+    print(f"—— 检索【{tname}】")
+    d = None
+    for k in range(2):
+        try:
+            d = call_once(tq); break
+        except Exception as e:
+            print(f"!! 【{tname}】第{k+1}次失败({type(e).__name__}: {str(e)[:60]})", file=sys.stderr)
+            import time as _t; _t.sleep(2)
+    if not d:
+        continue
+    got = 0
+    for it in (d.get("items") or []):
+        head = str(it.get("text") or "")[:24]
+        if head and head not in seen_head:      # 跨主题去重(同一件事可能被两路都搜到)
+            seen_head.add(head); it["topic"] = tname; raw_items.append(it); got += 1
+    print(f"   【{tname}】收 {got} 条")
+data = {"items": raw_items}
+if not raw_items:
+    bail("四路联网检索均无结果")
 
 # ⚠个人案例硬闸(程序化, 提示词不可靠 —— 7-28 首跑就搜回"河南商丘的张阿姨,62岁,社保卡到账238元",
 # 被判成 official=true 进了正文, 下一轮 AI 甚至把"张阿姨"写进了标题)。
@@ -139,7 +165,7 @@ if data is None:
 _PERSON_RE = re.compile(r"[一-龥]{1,2}(阿姨|大爷|大妈|大叔|叔叔|婶|老太太|老爷子|老伯|奶奶|爷爷)")
 
 items = []
-for it in (data.get("items") or [])[:6]:
+for it in (data.get("items") or [])[:14]:
     text = str(it.get("text") or "").strip()
     src = str(it.get("src") or "").strip()
     if len(text) < 40 or not src:      # 无出处一律丢弃(红线)
@@ -154,12 +180,42 @@ for it in (data.get("items") or [])[:6]:
         if len(cut) < 40:      # 删完剩不下什么, 整条放弃
             continue
         text = cut
+    # src 要的是"谁发布的", 不是文章标题 —— 千问偶尔把整篇标题塞进来
+    # (如《2026年7月，中国大额存单最新调整：全新存款利率利息》), 渲染出来一长条很难看
+    src = re.sub(r"[《》]", "", src)
+    src = re.split(r"[:：]", src)[0].strip(" ，,、")
+    if len(src) > 16:
+        src = src[:16] + "…"
     items.append({
         "text": text,
-        "src": src[:30],
+        "src": src or "网络来源",
         "date": str(it.get("date") or "").strip()[:10],
         "official": bool(it.get("official")),
     })
+
+# ---------- 补充源: 财新主要新闻(akshare, 免费) ----------
+# 联网检索之外再挂一个真实信源。命中率不高(实测 2/100), 但捞到的往往是别处没有的,
+# 如 7-28 那条"以快乐养老为名非法集资244亿、36万人受损"——正是老年读者最该看的。
+_CX_KW = re.compile(r"养老|退休|社保|医保|老年|长护|存款利率|大额存单|储蓄国债|"
+                    r"非法集资|养老诈骗|理财骗局|保健品")
+try:
+    import akshare as ak
+    cx = ak.stock_news_main_cx()
+    got = 0
+    for _, r in cx.iterrows():
+        txt = str(r.get("summary") or "").strip()
+        if len(txt) < 30 or not _CX_KW.search(txt):
+            continue
+        if txt[:24] in seen_head:
+            continue
+        seen_head.add(txt[:24])
+        items.append({"text": txt, "src": "财新", "date": "", "official": False})
+        got += 1
+        if got >= 3:
+            break
+    print(f"财新补充 {got} 条")
+except Exception as e:
+    print(f"⚠ 财新源取数失败(不阻塞): {type(e).__name__}: {str(e)[:60]}", file=sys.stderr)
 
 json.dump({"items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
 n_off = sum(1 for it in items if it["official"])
