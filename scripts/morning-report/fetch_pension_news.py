@@ -168,11 +168,43 @@ if not raw_items:
 # 这类带人名的故事多是自媒体编的, 人物金额都无法核实, 我们转述等于替它背书 —— 整条丢弃。
 _PERSON_RE = re.compile(r"[一-龥]{1,2}(阿姨|大爷|大妈|大叔|叔叔|婶|老太太|老爷子|老伯|奶奶|爷爷)")
 
-items = []
+# ⚠旧闻硬闸(崔伟 2026-07-29: "中行大额存单已经是老新闻了" —— 7月1日发售的产品,
+# 7月29日被当成日报主打发出去)。
+# **千问返回的 date 字段不可信**: 上面那三条大额存单(中行7月1日/建行7月10日/农行7月8日)
+# 它全部标成了 2026-07-29(检索当天), 光看 date 字段一条都拦不住。
+# 真正的时点信号在正文里 —— "2026年7月1日起""7月10日起"。规则: 把正文提到的月日全抽出来,
+# 若**全部**都比今天早 STALE_DAYS 天以上 → 判旧闻整条丢弃; 只要有一个是近几天的
+# 或者是未来的(如"8月1日起施行") → 保留。正文里一个日期都没有的(政策现状类)不拦。
+# 宁可某一档当天没料整块不出, 也不拿上个月的事冒充今天 —— 这是日报, 不是资料库。
+STALE_DAYS = 3
+_MD_RE = re.compile(r"(\d{1,2})月(\d{1,2})日")
+
+def stale_dates(text):
+    """返回 (是否旧闻, 正文里最早的那个日期字符串) —— 便于日志说清楚为什么丢。"""
+    found = []
+    today = datetime(bj_now.year, bj_now.month, bj_now.day)
+    for m in _MD_RE.finditer(text):
+        try:
+            d = datetime(bj_now.year, int(m.group(1)), int(m.group(2)))
+        except ValueError:
+            continue
+        found.append(d)
+    if not found:
+        return False, ""
+    if all((today - d).days > STALE_DAYS for d in found):
+        return True, min(found).strftime("%-m月%-d日")
+    return False, ""
+
+items, n_stale = [], 0
 for it in (data.get("items") or [])[:14]:
     text = str(it.get("text") or "").strip()
     src = str(it.get("src") or "").strip()
     if len(text) < 40 or not src:      # 无出处一律丢弃(红线)
+        continue
+    old, when = stale_dates(text)
+    if old:
+        print(f"⚠ 旧闻丢弃(正文里最早日期 {when}, 已过 {STALE_DAYS} 天): {text[:40]}…", file=sys.stderr)
+        n_stale += 1
         continue
     m = _PERSON_RE.search(text)
     if m:
@@ -223,6 +255,7 @@ except Exception as e:
 
 json.dump({"items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
 n_off = sum(1 for it in items if it["official"])
-print(f"已写 {OUT}：{len(items)} 条(官方 {n_off} / 非官方 {len(items) - n_off})")
+print(f"已写 {OUT}：{len(items)} 条(官方 {n_off} / 非官方 {len(items) - n_off}"
+      f"{f', 旧闻丢弃 {n_stale} 条' if n_stale else ''})")
 for it in items:
     print(f"  [{'官方' if it['official'] else '非官方'}] {it['src']}：{it['text'][:45]}…")
