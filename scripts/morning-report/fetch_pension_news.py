@@ -93,6 +93,8 @@ FORMAT_USER = """把下面这份检索结果整理成 JSON(不要多余文字、
   {"text": "内容完整一段(100-180字), 只用检索结果里已有的事实和数字, 不做评论",
    "src": "⚠只填【发布方的名称】, 8字以内最好, 如 人社部 / 中国银行 / 国家医保局 / 江苏省检察院 / 财新。"
           "绝不要把文章标题填进来(如《2026年7月中国大额存单最新调整…》这种一长条); "
+          "⚠**要填最先报道的那家媒体, 不要填转载的地方门户**(如实际是21世纪经济报道/新浪财经首发、"
+          "被某某新闻网转载的, src 填 21世纪经济报道, 不填某某新闻网); "
           "如果只查到文章、说不清发布方, 就填 网络文章",
    "date": "YYYY-MM-DD",
    "official": true 或 false}
@@ -201,11 +203,15 @@ for it in (data.get("items") or [])[:14]:
     src = str(it.get("src") or "").strip()
     if len(text) < 40 or not src:      # 无出处一律丢弃(红线)
         continue
+    # ⚠2026-07-29 崔伟纠偏: 旧闻不再整条丢弃 —— "事情什么时候发生"旧, 不等于"什么时候成为新闻"旧
+    # (三家大行 5 年期大额存单发行于 7/1、7/8、7/10, 但 7-28/7-29 才被新浪财经/21世纪经济报道
+    #  集中报道成热点, 正好是本号爆款命门题材)。改为标 stale: 可以进正文(必须写明发生日期),
+    # 但不许占主打和标题位 —— 那才是 7-28 第1期被否的真正原因。
     old, when = stale_dates(text)
     if old:
-        print(f"⚠ 旧闻丢弃(正文里最早日期 {when}, 已过 {STALE_DAYS} 天): {text[:40]}…", file=sys.stderr)
+        print(f"ⓘ 旧闻标记(正文里最早日期 {when}, 已过 {STALE_DAYS} 天, 只进正文不做主打): {text[:40]}…",
+              file=sys.stderr)
         n_stale += 1
-        continue
     m = _PERSON_RE.search(text)
     if m:
         # 只切掉含人名的那一句, 保住同条里的政策与数据(整条丢会连"基础养老金涨到163元"一起损失)
@@ -227,6 +233,8 @@ for it in (data.get("items") or [])[:14]:
         "src": src or "网络来源",
         "date": str(it.get("date") or "").strip()[:10],
         "official": bool(it.get("official")),
+        "stale": bool(old),          # 事情发生在 STALE_DAYS 之前 → 只进正文, 不做主打/标题
+        "stale_when": when,
     })
 
 # ---------- 补充源: 财新主要新闻(akshare, 免费) ----------
@@ -256,6 +264,8 @@ except Exception as e:
 json.dump({"items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
 n_off = sum(1 for it in items if it["official"])
 print(f"已写 {OUT}：{len(items)} 条(官方 {n_off} / 非官方 {len(items) - n_off}"
-      f"{f', 旧闻丢弃 {n_stale} 条' if n_stale else ''})")
+      f"{f', 其中旧闻标记 {n_stale} 条(只进正文)' if n_stale else ''})")
 for it in items:
-    print(f"  [{'官方' if it['official'] else '非官方'}] {it['src']}：{it['text'][:45]}…")
+    print(f"  [{'官方' if it['official'] else '非官方'}"
+          f"{'·旧闻' + it.get('stale_when', '') if it.get('stale') else ''}] "
+          f"{it['src']}：{it['text'][:45]}…")
