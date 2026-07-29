@@ -357,12 +357,20 @@ def shorten(s, n):
     s = strip_tags(s)
     return s if len(s) <= n else s[:n].rstrip("，。、；,. ") + "…"
 
+def cover_hook(s):
+    """封面大字 96px, 一行只放得下 7-8 个字 —— 整条标题塞进去会排到三行,
+    撑得下面的条目跟页脚叠在一起(7-29 实测)。只取标题第一个分句, 再兜个上限。"""
+    s = strip_tags(s).strip()
+    seg = re.split(r"[，,。！!？?：:；;、]", s)[0].strip() or s
+    return seg if len(seg) <= 12 else seg[:12] + "…"
+
 env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
 cover_ctx = dict(
     pub_date=pub_date, date_cn=title_date,
     brand="养老日报", brand_sub="崔伟说养老 · 让天下人老有所养",
     bname="崔伟说养老", bsub="RETIREMENT · WEALTH · CARE", cta="点开看完整内容 ›",
-    hook_big=shorten(title, 16),
+    upd="每日下午",
+    hook_big=cover_hook(title),
     hook_sub=shorten(pension.get("lead") or insight, 30),
     trend="", trend_plain="",
     cover_items=[dict(label=strip_tags(it.get("label", "")), tx=shorten(it.get("text"), 34)) for it in items[:2]],
