@@ -43,6 +43,8 @@ jobs:
 
       # 养老民生素材(联网检索): 东财电报出不来养老金/退休金/存款利率/大额存单这类内容,
       # 单独搜一轮并入新闻池。失败不阻塞日报(脚本内部自己写空 items 并 exit 0)。
+      # ⚠ 2026-07-30 「崔伟说养老」的养老日报停做后, 这一步照旧保留 —— 它喂的是
+      # 《财经日报》三主题里的【养老档】(健康/养老/传承), 跟养老日报是两件事, 别一起砍。
       - name: Fetch 养老民生素材 (千问联网检索)
         continue-on-error: true
         working-directory: scripts/morning-report
@@ -66,7 +68,11 @@ jobs:
           export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
           python -u render_morning.py
           python -u render_wechat.py
-          python -u render_pension.py || echo "⚠ 养老日报渲染失败, 不阻塞财经日报"
+          # ⚠ 2026-07-30 崔伟拍板: 「崔伟说养老」的养老日报不做了, 故不再渲染 pension.*。
+          # render_pension.py / template 及 llm_morning 的 gen_pension() 全部保留;
+          # 要恢复 = 把下面这行取消注释 + 设环境变量 PENSION_DAILY=1(见 llm_morning.py 末尾)
+          # + 把下面「留底」步骤里 pension.* 那几行加回来。
+          # python -u render_pension.py || echo "⚠ 养老日报渲染失败, 不阻塞财经日报"
 
       - name: Screenshot cover image (headless Chrome)
         run: |
@@ -99,10 +105,9 @@ jobs:
           # 导致出问题时事后无法复现当天内容(runner 用完即毁)。-f 强制留底。
           git add morning-report.html || true
           git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json || true
-          # 养老日报(「崔伟说养老」)前几期手动发: 成品不上传生产、runner 用完即毁,
-          # 必须随仓库留底, 否则每天要重跑一遍管线才能拿到当天的稿子。
-          git add -f scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
-                    scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
+          # ⚠ 2026-07-30 养老日报停做, 不再留底 pension.*(要恢复就把这两行取消注释):
+          # git add -f scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
+          #           scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
           git push || echo "push 跳过"
 

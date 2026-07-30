@@ -700,10 +700,16 @@ def gen_pension():
     print(f"养老日报标题「{title}」解读{'有' if pinsight else '无'}")
     return {"title": title, "lead": lead, "insight": pinsight}
 
-try:
-    data["pension"] = gen_pension()
-except Exception as e:
-    print(f"⚠ 养老日报 meta 生成失败(不阻塞日报): {e}")
+# ⚠ 2026-07-30 崔伟拍板: 「崔伟说养老」的养老日报不做了 → 这次 DeepSeek 调用默认不跑
+# (省一次调用和一两分钟 CI 时间)。gen_pension() 与全部闸门原样保留,
+# 要恢复 = 跑之前 export PENSION_DAILY=1 (workflow 里同步把 render_pension.py 那步取消注释)。
+if os.environ.get("PENSION_DAILY") == "1":
+    try:
+        data["pension"] = gen_pension()
+    except Exception as e:
+        print(f"⚠ 养老日报 meta 生成失败(不阻塞日报): {e}")
+        data["pension"] = {}
+else:
     data["pension"] = {}
 
 cnt = sum(len(t.get("items", [])) for t in data.get("themes", []))
@@ -714,4 +720,4 @@ print(f"AI 整理完成 sections.json：头条 {len(data.get('highlights', []))}
       f"纵览 {len(rv.get('paras', []))} 段 / "
       f"健康小课堂 {'有' if data.get('tip') else '⚠无'} / "
       f"主打 {'有' if data.get('lead') else '⚠无'} / 标题「{data.get('wechat_title') or '⚠无(回退日期标题)'}」/ "
-      f"养老日报 {'「' + data['pension']['title'] + '」' if data.get('pension', {}).get('title') else '⚠无(回退日期标题)'}")
+      f"养老日报 {'「' + data['pension']['title'] + '」' if data.get('pension', {}).get('title') else ('已停做' if os.environ.get('PENSION_DAILY') != '1' else '⚠无(回退日期标题)')}")
