@@ -75,10 +75,14 @@ for it in _pn:
     stale = bool(it.get("stale"))
     if stale:
         tag += f"【发生于{it.get('stale_when') or '数日前'}，只进正文不做主打】"
+    # 地方性(省市级)消息: 可以进正文, 但本号面向全国, 不能拿一个省的事当全国读者的主打/标题
+    local = bool(it.get("local"))
+    if local:
+        tag += "【地方性消息，只进正文不做主打，正文必须写清是哪个省市】"
     indexed.append({"id": nid, "t": f"{tag}（据{src}）{t}"[:460]})
     # official 放宽: 部委正式发布 or 正规财经媒体报道 → 允许做主打/标题
     PENSION_SRC[nid] = {"src": src, "official": off or trusted,
-                        "trusted": trusted and not off, "stale": stale}
+                        "trusted": trusted and not off, "stale": stale, "local": local}
     # 不进 idmap: 这些素材没有东财原文链接, attach() 会自动给空 link, 渲染端本就兼容
 if _pn:
     print(f"并入养老民生素材 {len(PENSION_SRC)} 条"
@@ -387,6 +391,10 @@ def lead_provenance_ok(d):
     # 旧闻(事情发生在数日前)可以进正文, 但不能当今天的主打/爆款标题 —— 7-28 第1期被否的真因
     if isinstance(i, int) and i in PENSION_SRC and PENSION_SRC[i].get("stale"):
         return False, f"主打引用了旧闻(据{PENSION_SRC[i]['src']}, 事情发生在数日前), 不许做标题"
+    # 地方性消息同理: 本号读者遍布全国, 拿某省某市的事做爆款标题, 大多数人点进来发现跟自己无关
+    # (7-29 就把标题挑成了「湖南两病取消起付线」)
+    if isinstance(i, int) and i in PENSION_SRC and PENSION_SRC[i].get("local"):
+        return False, f"主打引用了地方性消息(据{PENSION_SRC[i]['src']}), 全国号不许拿它做标题"
     orig_tokens = _tokens(src_txt)
     # 标题(含lead小标题)最严: 数字必须出自其引用的那条原文(防"标题讲A事、正文引B文"的货不对板+编造)
     wt = d.get("wechat_title")
@@ -592,6 +600,29 @@ for b in data.get("briefs", []):
 # 为什么单独出一次: 全局 wechat_title/lead 是按"当天对钱包冲击最大"挑的, 不保证落在养老话题上
 # (今天就落在土拍)。养老号的标题必须从养老档里挑, 否则文不对题。
 # 输入是养老档【已整理成稿的条目】而不是原始电报: 数字已经过一轮溯源, 这里再校验一次防二次编造。
+# ⚠地方性标题硬闸(2026-07-30): 「崔伟说养老」是面向全国的号, 拿"湖南两病取消起付线"
+#   "上海高龄医保"这种一个省的政策做标题, 外省读者点进来发现跟自己无关 —— 7-29 已经吃过一次。
+#   fetch_pension_news 那边已经按发布方给素材标了 local, 但那个标记到不了这里(gen_pension 的
+#   输入是 DeepSeek 已成稿的条目, 标签早被剥掉了), 所以这里按【标题里出现省市名 + 它引用的
+#   那条原文没有全国性字样】独立再判一次。提示词里也写了这条, 但重要口径不能只靠提示词(7-19 教训)。
+_PROV_RE = re.compile(
+    r"北京|天津|上海|重庆|河北|山西|辽宁|吉林|黑龙江|江苏|浙江|安徽|福建|江西|山东|河南|"
+    r"湖北|湖南|广东|海南|四川|贵州|云南|陕西|甘肃|青海|内蒙古|广西|西藏|宁夏|新疆|"
+    r"深圳|广州|杭州|南京|成都|武汉|西安|苏州|青岛|长沙|郑州|合肥|济南|福州|厦门|宁波")
+_NATIONWIDE_RE = re.compile(
+    r"全国|各地|多地|多省|各省|31个省|人社部|财政部|国家医保局|国家卫健委|民政部|国务院|"
+    r"中国人民银行|央行|金融监管总局|国家金融监督管理总局|国家发展改革委|国家税务总局|"
+    r"中办|国办|中共中央")   # ⚠别漏中办/国办: 少了它, "长护险全国铺开"这种全国性头条会被误拦
+
+def _title_is_local(title, one):
+    """标题挑了地方性政策 → 返回地名; 否则返回 ''。"""
+    m = _PROV_RE.search(title or "")
+    if not m:
+        return ""
+    if _NATIONWIDE_RE.search(one or ""):      # 原文本身就是全国性的, 标题顺带提个省份不算
+        return ""
+    return m.group(0)
+
 def gen_pension():
     th = next((t for t in data.get("themes", []) if t.get("name") == "养老"), None)
     its = [it for it in (th or {}).get("items", []) if it.get("text")]
@@ -610,7 +641,9 @@ def gen_pension():
           '  "title": "公众号标题, 18-28字。挑哪一条做, 判据只有一个:【这条能不能落到一个退休老人自己的账本上】。'
           '✅优先: 存款/大额存单利率变动、养老金退休金调整、房价房租房贷、物价、医保报销、养老服务收费。'
           '❌绝不许做标题: ①行业总规模类数字(理财存续多少万亿、发行多少万只、成交多少亿——这种钱读者看不见摸不着, 毫无代入感, 是最差的标题) '
-          '②大盘涨跌与ETF成交 ③公司回购/业绩/融资 ④券商机构的观点和预测。'
+          '②大盘涨跌与ETF成交 ③公司回购/业绩/融资 ④券商机构的观点和预测 '
+          '⑤**只在某一个省/市执行的地方性政策**(本号读者遍布全国, 拿一个省的事做标题, 外省读者点进来发现跟自己无关)——'
+          '这类内容可以写进正文, 但标题要挑全国范围的事。'
           '如果上面条目里实在没有一条能落到个人账本, 就挑最贴近生活的那条写个平实标题, 不许硬凑代入感、不许标题党。'
           '口语化、像邻居大姐会转发的话, 可用身份代入(如"手里有定期存款的注意")或设问; '
           '禁止"震惊/速看/必看"式恶俗词; 禁止收益暗示; 不带日期不带标签。⚠标题里每个数字都必须出自上面条目原文, 一个字都不许编",\n'
@@ -634,13 +667,18 @@ def gen_pension():
     one = src[i - 1]["t"] if isinstance(i, int) and 1 <= i <= len(src) else ""
     bad_t = _unsourced(title, _tokens(one) if one else _tokens(" ".join(s["t"] for s in src)))
     bad_l = _unsourced(lead, _tokens(" ".join(s["t"] for s in src)))
-    if bad_t or bad_l:
+    bad_loc = _title_is_local(title, one)
+    if bad_t or bad_l or bad_loc:
         # 重试一次再判废(同 d0 主打的做法): 常见触发是 AI 顺手做了换算(每月20元→一年240元),
         # 闸门分不清"正确换算"和"编造"只能一律拦, 但换个说法往往就不用算术了。
-        print(f"⚠ 养老日报溯源不过(标题{sorted(bad_t)} 导语{sorted(bad_l)}), 重试一次")
+        print(f"⚠ 养老日报溯源不过(标题{sorted(bad_t)} 导语{sorted(bad_l)}"
+              f"{f' 地方性「{bad_loc}」' if bad_loc else ''}), 重试一次")
         d4 = call(user + "\n\n⚠上一版出现了原文里没有的数字, 被判废。请重写: "
                          "只用上面条目里出现过的数字原样引用, **不要做任何加减乘除换算**"
-                         "(比如别把每月多少元乘12算成一年多少元), 也不要举例推算。")
+                         "(比如别把每月多少元乘12算成一年多少元), 也不要举例推算。"
+                 + (f"\n⚠另外, 上一版标题挑的是只在「{bad_loc}」执行的地方性政策, 外省读者点进来跟自己无关。"
+                    "请换一条【全国范围】的做标题(部委发布、全国统一执行、或多地同步的); "
+                    "实在没有全国性的条目, 就挑一条不带地名、讲普遍现象的写。" if bad_loc else ""))
         title = re.sub(r"<[^>]+>", "", str(d4.get("title", ""))).strip()
         lead = str(d4.get("lead", "")).strip()
         pinsight = str(d4.get("insight", "")).strip()
@@ -650,8 +688,10 @@ def gen_pension():
         one = src[i - 1]["t"] if isinstance(i, int) and 1 <= i <= len(src) else ""
         bad_t = _unsourced(title, _tokens(one) if one else _tokens(" ".join(s["t"] for s in src)))
         bad_l = _unsourced(lead, _tokens(" ".join(s["t"] for s in src)))
-        if bad_t or bad_l:
-            print(f"⚠ 重试仍不过(标题{sorted(bad_t)} 导语{sorted(bad_l)}), 丢弃标题回退日期版")
+        bad_loc = _title_is_local(title, one)
+        if bad_t or bad_l or bad_loc:
+            print(f"⚠ 重试仍不过(标题{sorted(bad_t)} 导语{sorted(bad_l)}"
+                  f"{f' 地方性「{bad_loc}」' if bad_loc else ''}), 丢弃标题回退日期版")
             return {}
     # 解读单独校验: 不过关只丢解读, 不牵连标题(渲染端会回退用日报养老档的 insight)
     if pinsight and _unsourced(pinsight, _tokens(" ".join(s["t"] for s in src))):

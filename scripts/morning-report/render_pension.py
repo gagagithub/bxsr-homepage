@@ -92,9 +92,15 @@ dropped = len(raw_items) - len(items)
 # ---------- 分档: 退休金 / 存款国债 (崔伟 7-28 定的养老日报结构) ----------
 # 财经日报按 健康/养老/传承 分; 养老日报按读者自己的钱分: 退休金、存款国债、健康小课堂。
 # 归不进这两档的(楼市、汇率、大宗等)一律丢弃 —— 不是垃圾桶, 宁可少发。
+# ⚠2026-07-30 扩线索源(fetch_pension_news 由 4 路扩到 7 路)后同步补词: 新增的【养老服务】
+#   【个人养老金】两路捞回的是 长护险待遇/高龄津贴/助餐/适老化改造/加装电梯/养老院收费/
+#   个人养老金账户/惠民保 这类, 原来一个都归不进两档, 会被 bucket() 当"归不进"直接丢掉 ——
+#   捞得再多也白捞。这些都是"国家和政策给到手里的钱和服务", 与退休金同族, 并入退休金档。
 _TUIXIU_RE = re.compile(
     r"养老金|退休金|社保|人社部|基础养老金|缴费年限|工龄|延迟退休|资格认证|"
-    r"养老保险|待遇调整|个人账户|社保卡|长护险|长期护理")
+    r"养老保险|待遇调整|个人账户|社保卡|长护险|长期护理|"
+    r"养老服务|适老化|助餐|老年食堂|居家养老|养老院|护理院|养老床位|高龄津贴|"
+    r"老年补贴|加装电梯|老旧小区|惠民保|税优健康险")
 _CUNKUAN_RE = re.compile(
     r"存款|定存|定期|大额存单|挂牌利率|存款利率|国债|理财|LPR|降息|加息|利率|货基|货币基金")
 
@@ -108,10 +114,13 @@ def bucket(it):
 
 BUCKETS = ["退休金", "存款国债"]
 by_bucket = {b: [] for b in BUCKETS}
+spill_health = []      # 养老档里归不进两档、但明显是看病吃药的 → 见下, 转投健康档而不是丢掉
 for it in items:
     b = bucket(it)
     if b:
         by_bucket[b].append(it)
+    else:
+        spill_health.append(it)
 unbucketed = len(items) - sum(len(v) for v in by_bucket.values())
 
 # 健康小课堂: 复用日报每天生成的那一讲(62 主题按日轮转), 不依赖当天有没有新闻
@@ -135,6 +144,17 @@ def keep_health(it):
 
 _htheme = next((t for t in S.get("themes", []) if t.get("name") == "健康"), {}) or {}
 health_items = [it for it in _htheme.get("items", []) if it.get("text") and keep_health(it)]
+
+# ⚠2026-07-30 补漏: 【医保待遇】现在是一条独立检索路(每天稳定 2-3 条), 但 llm_morning 的
+#   THEME_GUIDE 要求所有养老民生素材一律进养老档 —— 于是"职工门诊报销新规""居民医保缴费标准"
+#   这类到了这里既不是退休金也不是存款国债, 被 bucket() 当"归不进"整条丢掉, 一整路白捞。
+#   它们本来就是看病吃药的事, 转投健康档(该档已有 _HEALTH_OK 口径和渲染位)。按正文去重。
+_seen_h = {strip_tags(it.get("text", ""))[:30] for it in health_items}
+for it in spill_health:
+    if keep_health(it) and strip_tags(it.get("text", ""))[:30] not in _seen_h:
+        _seen_h.add(strip_tags(it.get("text", ""))[:30])
+        health_items.append(it)
+        unbucketed -= 1
 
 # 标题对应的那条在其所属档内置顶: 读者是被标题点进来的, 第一屏必须就是它(7-25 完读率教训)。
 # 匹配靠 label + 导语共有的数字, 不依赖 AI 再报一次 id。
