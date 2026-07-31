@@ -111,7 +111,14 @@ jobs:
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
           git push || echo "push 跳过"
 
-      - name: Push to production (H5 + cover + moment文案, 自动下发客户朋友圈)
+      # ⚠2026-07-31 崔伟拍板改流程: CI 只「生成 + 存盘 + 留底」, 不再自动对外分发。
+      #   起因=生成完就自动推朋友圈+建草稿, 等人核出内容问题(旧闻/幻觉/标题回退)时朋友圈已经发出去改不回了。
+      #   现在: 上传带 pushMoment=false(不推朋友圈) + 服务器 .draft-enabled 已改名 .draft-enabled.off(不建草稿),
+      #   人工核稿后再各打一条 curl 分发(token 取自服务器 D:/morning-report/.token):
+      #     建公众号草稿: curl -X POST https://214club.com.cn/creation/morningReportPushDraft  -d "token=<TOKEN>"
+      #     推规划师朋友圈: curl -X POST https://214club.com.cn/creation/morningReportPushMoment -d "token=<TOKEN>"
+      #   要恢复全自动 = 这里删掉 pushMoment=false + 服务器把 .draft-enabled.off 改回 .draft-enabled。
+      - name: Push to production (H5 + cover + moment文案; ⚠只存盘, 不外发)
         env:
           MORNING_REPORT_TOKEN: ${{ secrets.MORNING_REPORT_TOKEN }}
         run: |
@@ -130,6 +137,7 @@ jobs:
           VIDEO_ARG=()
           RESP=$(curl -sS --max-time 600 \
             -F "token=${MORNING_REPORT_TOKEN}" \
+            -F "pushMoment=false" \
             -F "html=@morning-report.html;type=text/html" \
             -F "cover=@cover.png;type=image/png" \
             -F "momentText=<moment_text.txt" \
@@ -141,4 +149,4 @@ jobs:
             https://214club.com.cn/creation/morningReportUpload)
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
-          echo "✓ 已推送今日财经日报到生产 + 触发客户朋友圈下发 + 公众号草稿"
+          echo "✓ 今日财经日报已生成并存到生产(H5 可直接看)。⚠尚未对外分发 —— 人工核稿后再打 morningReportPushDraft / morningReportPushMoment"

@@ -357,16 +357,21 @@ ALL_NEWS_TOKENS = _tokens(" ".join(TEXT_BY_ID.values()))
 
 def _unsourced(text, source_tokens):
     """返回 text 里无法在 source_tokens 溯源的数字集合(空=全部有源)。
-    ⚠整数容许四舍五入/取整命中原文小数(标题「油价涨6%」↔原文「6.17%」、「40年新低」↔「39.8」都算有源),
-    但标题里写成小数就必须精确命中原文,不给编造留口子。"""
+    ⚠两档放宽,都要求「数值真的对得上」,不给编造留口子:
+    ①同一个数的不同写法: 标题「1.6%」↔原文「1.60%」、「7.0元」↔「7元」——数值相等即有源
+      (2026-07-31 加: 少了这档, 当天标题写 1.6 而原文写 1.60 被误判成编造, 标题回退成日期版);
+    ②整数容许四舍五入/取整命中原文小数: 「油价涨6%」↔「6.17%」、「40年新低」↔「39.8」;
+    但小数 vs 小数仍须数值相等(6.78 ↔ 6.7801 照样拦)。"""
     src_floats = [float(o) for o in source_tokens if _isnum(o)]
     bad = set()
     for t in _tokens(text):
         if t in source_tokens:
             continue
-        if "." not in t and _isnum(t):
+        if _isnum(t):
             tv = float(t)
-            if any(round(o) == tv or int(o) == tv for o in src_floats):
+            if any(o == tv for o in src_floats):
+                continue  # 同一个数的不同写法(1.6↔1.60), 数值相等
+            if "." not in t and any(round(o) == tv or int(o) == tv for o in src_floats):
                 continue  # 原文小数四舍五入/取整后=标题整数, 视为口语化后的真数字
         bad.add(t)
     return bad
