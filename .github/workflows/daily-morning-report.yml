@@ -2,11 +2,13 @@ name: 财经日报 - 每日生成 + 推送规划师朋友圈
 
 on:
   schedule:
-    # 每天北京时间 16:05 (UTC 08:05) 运行 —— A股 15:00 收盘, 收盘后的新闻这一小时也出得差不多了;
-    # 编辑通常 18:00 前后发放, 16:20 左右就已就绪, 留出近 2 小时缓冲扛 GitHub schedule 的排队延迟。
-    # 分钟数取 :05 而非整点: GitHub schedule 在整点最拥挤, 错峰降低被延迟/跳过的概率。
-    # 全流程约 8-10 分钟(取数 2 + AI 整理 3 + 渲染截图 1 + 上传)。
-    - cron: '5 8 * * *'
+    # ⚠2026-08-04 崔伟拍板: 北京 16:05 → **北京 14:00** (UTC 06:00)。
+    #   原因=GitHub schedule 白天排队延迟实测越来越大(8-01 拖到 18:06 / 8-02 18:04 / 8-03 19:36,
+    #   延迟 2~3.5 小时), 按 16:05 排已经赶不上编辑 18:00 前后发放。提前到 14:00 起排,
+    #   即便再拖 3.5 小时也在 17:30 前就绪。代价=A股(15:00)当天收盘数据取不到当日收盘价,
+    #   行情块拿到的是盘中/前一交易日值 —— 崔伟已知悉并接受(时效优先)。
+    # 全流程约 8-15 分钟(取数 2 + AI 整理 3-8 + 渲染截图 1 + 上传)。
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -111,14 +113,17 @@ jobs:
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
           git push || echo "push 跳过"
 
-      # ⚠2026-07-31 崔伟拍板改流程: CI 只「生成 + 存盘 + 留底」, 不再自动对外分发。
-      #   起因=生成完就自动推朋友圈+建草稿, 等人核出内容问题(旧闻/幻觉/标题回退)时朋友圈已经发出去改不回了。
-      #   现在: 上传带 pushMoment=false(不推朋友圈) + 服务器 .draft-enabled 已改名 .draft-enabled.off(不建草稿),
-      #   人工核稿后再各打一条 curl 分发(token 取自服务器 D:/morning-report/.token):
+      # ⚠2026-08-04 崔伟拍板**恢复全自动**: 上传即分发(推5规划师朋友圈 + 建公众号草稿)。
+      #   (2026-07-31 曾改成"CI 只生成不外发、人工核稿后手动分发", 因连日没人核稿导致实际一天也没发出去。)
+      #   全自动两个开关必须同时开, 缺一不发:
+      #     ① 这里**不带** pushMoment=false (带了就不推朋友圈)
+      #     ② 服务器 D:/morning-report/.draft-enabled 必须存在(改名成 .draft-enabled.off 就不建草稿)
+      #   要再改回人工分发 = 加回 -F "pushMoment=false" + 服务器 ren .draft-enabled .draft-enabled.off,
+      #   然后人工核稿后各打一条 curl(token 取自服务器 D:/morning-report/.token):
       #     建公众号草稿: curl -X POST https://214club.com.cn/creation/morningReportPushDraft  -d "token=<TOKEN>"
       #     推规划师朋友圈: curl -X POST https://214club.com.cn/creation/morningReportPushMoment -d "token=<TOKEN>"
-      #   要恢复全自动 = 这里删掉 pushMoment=false + 服务器把 .draft-enabled.off 改回 .draft-enabled。
-      - name: Push to production (H5 + cover + moment文案; ⚠只存盘, 不外发)
+      #   ⚠全自动下内容出问题(旧闻/幻觉)时朋友圈已发出去改不回, 只能重出公众号草稿 + H5。
+      - name: Push to production (H5 + cover + moment文案 + 自动分发)
         env:
           MORNING_REPORT_TOKEN: ${{ secrets.MORNING_REPORT_TOKEN }}
         run: |
@@ -137,7 +142,6 @@ jobs:
           VIDEO_ARG=()
           RESP=$(curl -sS --max-time 600 \
             -F "token=${MORNING_REPORT_TOKEN}" \
-            -F "pushMoment=false" \
             -F "html=@morning-report.html;type=text/html" \
             -F "cover=@cover.png;type=image/png" \
             -F "momentText=<moment_text.txt" \

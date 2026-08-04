@@ -99,7 +99,9 @@ if lead.get("text"):
     w('</section>')
 
 # ---------- 行情速览(可选) ----------
-CN_GRP = "A股 · 今日收盘"
+# A股时点标签跟着取数时刻走(fetch_cn.py 写入), 14:00 跑时是"今日盘中 HH:MM"不是收盘; 老 data.json 无此字段则回退
+CN_ASOF = (D.get("cn_asof") or "今日收盘")
+CN_GRP = f"A股 · {CN_ASOF}"
 OS_GRP = "隔夜外盘 · 利率汇率商品"
 
 def market_rows():
@@ -282,7 +284,7 @@ if rows:
         _lastg = g
     env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
     # 日期用 pub_date(今天): 表里主体是A股今日收盘, 用中债 asof 的 data_date 会显示成前一交易日
-    mhtml = env.get_template("template_market.html").render(data_date=pub_date, rows=mrows)
+    mhtml = env.get_template("template_market.html").render(data_date=pub_date, rows=mrows, cn_asof=CN_ASOF)
     open(f"{BASE}/market.html", "w", encoding="utf-8").write(mhtml)
     # Chrome 截图窗口高度: 头部~150 + 每行~100 + 分组标题~56 + 页脚~96(随行数变化, workflow 读此值)
     mh = 150 + len(mrows) * 100 + sum(56 for r in mrows if r["grp"]) + 96

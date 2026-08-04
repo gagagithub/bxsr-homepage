@@ -32,7 +32,7 @@
 <div class="card">
   <div class="hd">
     <div class="t">📈 今日行情速览</div>
-    <div class="d">{{ data_date }}　A股今日收盘 · 全球隔夜 · 一图看涨跌</div>
+    <div class="d">{{ data_date }}　A股{{ cn_asof or '今日收盘' }} · 全球隔夜 · 一图看涨跌</div>
   </div>
   <div class="rows">
     {% for r in rows %}

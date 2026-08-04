@@ -111,6 +111,8 @@ ctx = dict(
     trend=S.get("trend", ""),
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
     cn_indices=cn_indices, indices=indices, chips=chips, themes=themes,
+    # A股时点标签跟着取数时刻走(fetch_cn.py 写入): 14:00 跑时 A股还没收盘, 不能写"今日收盘"
+    cn_asof=(D.get("cn_asof") or "今日收盘"),
     review=S.get("review", {}),
     briefs=S.get("briefs", []) or [],
     has_video=has_video,

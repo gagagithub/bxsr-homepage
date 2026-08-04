@@ -94,6 +94,22 @@ for k, (sym, nm) in CN_IDX.items():
     out["cn_indices"][k] = dict(cur=cur, day_pct=day, ytd_pct=ytd, name=nm)
     print(f"A股 {nm}: cur={cur} day={day} ytd={ytd}")
 
+# ⚠2026-08-04 A股行情的时点标签必须按取数时刻说实话。起因=财经日报 cron 从北京16:05
+# 提前到14:00(GitHub schedule 白天延迟越来越大), 而 A股 15:00 才收盘 —— 新浪 spot 的
+# 「最新价」这时候是**盘中价**, 三个渲染端再写死"今日收盘"就是错的口径(50+读者会当收盘价看)。
+# 周末/节假日 spot 返回的是最近交易日收盘价, 故周末单列。节假日检测不了(接受: 会写成"今日盘中",
+# 数值仍是最近收盘价)。三个渲染端(H5/公众号正文/行情图)统一读这个字段, 口径单一来源。
+_bj = datetime.now(timezone(timedelta(hours=8)))
+if _bj.weekday() >= 5:
+    out["cn_asof"] = "最新收盘"
+elif (_bj.hour, _bj.minute) < (9, 30):
+    out["cn_asof"] = "上一交易日收盘"
+elif (_bj.hour, _bj.minute) >= (15, 0):
+    out["cn_asof"] = "今日收盘"
+else:
+    out["cn_asof"] = f"今日盘中 {_bj:%H:%M}"
+print(f"A股时点标签: {out['cn_asof']}")
+
 # ---- 3. 中美国债收益率(含中国10年) ----
 bd = retry("bond_zh_us_rate", lambda: ak.bond_zh_us_rate())
 out["yields"] = {}
