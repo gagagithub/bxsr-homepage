@@ -420,25 +420,18 @@ def lead_provenance_ok(d):
     return True, "ok"
 
 # 三次调用：①看点(hook/风向/头条/朋友圈) ②养老+健康主题+健康小课堂 ③传承主题+纵览(各自都在 8K 输出上限内，保证 JSON 完整)
+# ⚠2026-08-05 崔伟拍板撤掉溯源拦截("不要加阀门了""我会自己检查的"):
+#   闸门连续误杀(7-24 四舍五入 6↔6.17、8-05 中文数字 五年期↔5年期)导致标题老回退日期版,
+#   改为只在日志报警供人工核对, 不重试不丢弃 —— 发布前由崔伟人工检查标题/主打/封面。
 d0 = call(build_user(want_meta=True))                              # hook + trend + moment + highlights
 _ok, _why = lead_provenance_ok(d0)
 if not _ok:
-    print(f"⚠ 主打/标题溯源校验不过({_why})，重试一次 d0", file=sys.stderr)
-    d0_retry = call(build_user(want_meta=True))
-    _ok2, _why2 = lead_provenance_ok(d0_retry)
-    if _ok2:
-        d0 = d0_retry
-    else:
-        # 两次都不干净: 丢弃 lead+爆款标题(渲染端自动回退无主打+日期标题), 其余字段保留
-        print(f"⚠ 重试仍不过({_why2})，今天放弃主打/爆款标题，回退日期版", file=sys.stderr)
-        d0.pop("lead", None)
-        d0.pop("wechat_title", None)
-# hook 大字也做数字校验(只对全部新闻放宽校验, 不过就丢, 封面回退通用版)
+    print(f"⚠ [仅报警不拦截] 主打/标题有疑似无源数字, 发布前人工核对: {_why}", file=sys.stderr)
 _hk = d0.get("hook")
 _hk_txt = (_hk.get("big", "") + " " + _hk.get("sub", "")) if isinstance(_hk, dict) else str(_hk or "")
-if _unsourced(_hk_txt, ALL_NEWS_TOKENS):
-    print("⚠ hook 含无溯源数字，丢弃(封面回退通用版)", file=sys.stderr)
-    d0.pop("hook", None)
+_hk_bad = _unsourced(_hk_txt, ALL_NEWS_TOKENS)
+if _hk_bad:
+    print(f"⚠ [仅报警不拦截] hook 有疑似无源数字, 发布前人工核对: {sorted(_hk_bad)[:5]}", file=sys.stderr)
 d1 = call(build_user(themes=["养老", "健康"], tip_topic=TIP_TOPIC))  # 养老(最宽) + 健康 + 小课堂
 def _theme_items(d, name):
     for _t in d.get("themes", []):
