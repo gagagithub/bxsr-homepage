@@ -1,14 +1,15 @@
 name: 养老日报 - 每日生成 + 建「崔伟说养老」公众号草稿
 
-# ⚠2026-08-07 崔伟拍板恢复养老日报(7-30 曾停做), 拆成独立管线每天中午 12:00 跑;
-# 财经日报维持 14:00 那条 workflow 不动。两条管线共用 fetch_pension_news.py 的检索结果
-# (当天谁先跑谁检索并留底, 后跑的直接复用, 见 fetch_pension_news.py 里的复用逻辑)。
-# ⚠GitHub schedule 白天有 1-3.5 小时排队延迟(财经日报 8-01~8-03 实测), 12:00 起排,
-# 拖 3 小时也在 15:00 前就绪; 赶时间可手动: gh workflow run daily-pension-report.yml
+# ⚠2026-08-07 崔伟拍板恢复养老日报(7-30 曾停做), 独立管线, 与财经日报同为北京 16:00。
+# ⚠定时不走 GitHub schedule(白天排队延迟 1~3.5 小时不可控), 改由生产服务器计划任务
+#   PensionReportDispatch(每天北京 16:00, SYSTEM)准点 workflow_dispatch 触发, 实测延迟约 12 秒。
+#   触发脚本=服务器 D:\morning-report\trigger_pension_report.bat, 日志 dispatch-trigger.log。
+#   ⚠schedule 必须保持删除态, 加回去=服务器和 GitHub 各触发一次, 一天双跑出两篇草稿。
+#   手动兜底: gh workflow run daily-pension-report.yml
+# ⚠两条管线现在同点起跑, 各自独立检索养老素材(原"谁先跑谁留底、后跑复用"的省钱机制因同时
+#   起跑而失效, 代价仅多一次千问检索; 反而不会再出现同日结果被当成排除清单的老坑)。
 
 on:
-  schedule:
-    - cron: '0 4 * * *'   # 北京 12:00 (UTC 04:00)
   workflow_dispatch:
 
 permissions:
@@ -66,7 +67,7 @@ jobs:
           ls -la "$GITHUB_WORKSPACE/scripts/morning-report/pension_cover.png"
 
       # 留底: runner 用完即毁, 不留底就得重跑整条管线才拿得到当天稿子(7-01 sections.json 丢失教训)。
-      # ⚠pension_news.json 也留底 —— 财经日报 14:00 那条管线靠它复用今天的检索结果。
+      # ⚠pension_news.json 留底供次日当排除清单(防连日选到同一条素材)。
       - name: Commit 留底 (成品 + 素材 + 中间结果)
         run: |
           git config user.name "github-actions"
@@ -75,8 +76,12 @@ jobs:
                      scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
                      scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
           git commit -m "养老日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
-          git pull --rebase || true
-          git push || echo "push 跳过"
+          # ⚠财经日报现在同为 16:00 起跑, 两条几乎同时 push → 后到的必被拒。重试 3 次,
+          #   否则当天留底静默丢失(次日排除清单少一批, 可能连日选到同一条素材)。
+          for i in 1 2 3; do
+            git pull --rebase || true
+            git push && { echo "push ok (第 $i 次)"; break; } || { echo "push 被拒, 5s 后重试"; sleep 5; }
+          done
 
       # 推生产 + 自动建「崔伟说养老」草稿(服务端读 .gzh-credentials-pension, 走独立 appid 的 token 缓存)。
       # 只建草稿不群发 —— 群发由崔伟在公众号后台人工核对后点(内容真实性人工兜底, 8-05 拍板口径)。

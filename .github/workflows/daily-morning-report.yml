@@ -106,8 +106,12 @@ jobs:
           git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json || true
           # (养老日报的 pension.* 留底在 daily-pension-report.yml 那条独立管线里做)
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
-          git pull --rebase || true
-          git push || echo "push 跳过"
+          # ⚠养老日报现在同为 16:00 起跑, 两条几乎同时 push → 后到的必被拒。重试 3 次,
+          #   否则当天 sections.json 静默丢失(事后无法复现当天内容, 7-01 踩过)。
+          for i in 1 2 3; do
+            git pull --rebase || true
+            git push && { echo "push ok (第 $i 次)"; break; } || { echo "push 被拒, 5s 后重试"; sleep 5; }
+          done
 
       # ⚠2026-08-04 崔伟拍板**恢复全自动**: 上传即分发(推5规划师朋友圈 + 建公众号草稿)。
       #   (2026-07-31 曾改成"CI 只生成不外发、人工核稿后手动分发", 因连日没人核稿导致实际一天也没发出去。)

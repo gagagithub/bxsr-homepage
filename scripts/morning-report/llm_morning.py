@@ -272,6 +272,13 @@ def call(user, tries=3):
 # ---- 数字溯源校验(防 AI 把标题示例句式里的数字/事件当成真新闻写进标题和主打) ----
 from mr_common import _tokens, _isnum, _unsourced
 
+# ⚠溯源的"源"必须覆盖【所有喂给 AI 的条目】, 不能只有东财 items ——
+# 养老民生素材(联网检索来的)不在 items 里, 漏掉它们会让引用这些素材的主打/标题被误判成编造数字
+# (而"基础养老金涨20元"这类恰恰最该做主打)。
+# ⚠2026-08-07 抽 mr_common 时这两行被漏迁, 导致 llm_morning 直接 NameError 跑不完, 别再删。
+TEXT_BY_ID = {e["id"]: e["t"] for e in indexed}
+ALL_NEWS_TOKENS = _tokens(" ".join(TEXT_BY_ID.values()))
+
 def lead_provenance_ok(d):
     """lead/wechat_title 里的每个数字必须能在其引用的那条原文里找到(整数容许四舍五入)；relate 放宽到全部给定新闻。
     校验不过=AI 编数字/引错原文, 一律判废。没有 lead 视为不通过(交给重试/回退)。"""
