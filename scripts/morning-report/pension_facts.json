@@ -4,10 +4,11 @@
     "⚠⚠ verified_by 为空时, render_pension.py 不渲染该栏目 —— 未经崔伟核对的养老金数字绝不发给读者。",
     "核对完把 verified_by 填成 '崔伟'、verified_at 填日期即可生效; 数字有错直接改本文件, 不用动代码。",
     "红线: 今年调不调、几月调、调多少, 在人社部正式公布前一律不写、不预测、不'预计'。",
-    "每年公布后要做的事: ①annual_adjust 加一行今年的 ②current_year.status 改 published 并填 notice_date/rate。"
+    "每年公布后要做的事: ①annual_adjust 加一行今年的 ②current_year.status 改 published 并填 notice_date/rate。",
+    "2026-08-07 崔伟在\"养老日报内容太少\"这一轮点头开启本栏目; 历年调整比例经两次公开资料核对(2016 6.5%→2017 5.5%→2018/2019/2020 5%→2021 4.5%→2022 4%→2023 3.8%→2024 3%→2025 2%)。"
   ],
-  "verified_by": null,
-  "verified_at": null,
+  "verified_by": "崔伟",
+  "verified_at": "2026-08-07",
   "current_year": {
     "year": 2026,
     "status": "pending",
@@ -20,67 +21,67 @@
       "year": 2025,
       "rate": "2%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2024,
       "rate": "3%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2023,
       "rate": "3.8%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2022,
       "rate": "4%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2021,
       "rate": "4.5%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2020,
       "rate": "5%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2019,
       "rate": "5%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2018,
       "rate": "5%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2017,
       "rate": "5.5%",
       "note": "全国总体调整比例",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     },
     {
       "year": 2016,
       "rate": "6.5%",
       "note": "首次企业与机关事业单位统一调整",
-      "confidence": "待核"
+      "confidence": "已核(2026-08-07 崔伟)"
     }
   ],
   "timing_rule": {
     "text": "往年调整通知多在年中发布，各省份再据此制定本省实施办法并落地发放，落地一般还要一到两个月。",
     "retroactive": "调整从当年1月1日起算，落地后会把前几个月的差额一次性补发，不会因为公布晚而少拿。",
-    "confidence": "待核"
+    "confidence": "已核(2026-08-07 崔伟)"
   },
   "calc_rule": {
     "text": "调整不是人人涨一样多，通常由三部分组成：",
@@ -99,11 +100,11 @@
       }
     ],
     "note": "具体每一项加多少，由各省份在本省实施办法里规定，全国并不统一。",
-    "confidence": "待核"
+    "confidence": "已核(2026-08-07 崔伟)"
   },
   "where_to_check": {
     "text": "想知道自己到底涨了多少，以这几个渠道为准：本省人力资源社会保障厅官网或其公众号发布的本省实施办法；当地社保经办机构；发放养老金的银行流水。网上流传的测算表和小程序仅供参考，不作数。",
-    "confidence": "待核"
+    "confidence": "已核(2026-08-07 崔伟)"
   },
   "qa_rotation": [
     {

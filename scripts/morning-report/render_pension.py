@@ -98,23 +98,47 @@ dropped = len(raw_items) - len(items)
 #   【个人养老金】两路捞回的是 长护险待遇/高龄津贴/助餐/适老化改造/加装电梯/养老院收费/
 #   个人养老金账户/惠民保 这类, 原来一个都归不进两档, 会被 bucket() 当"归不进"直接丢掉 ——
 #   捞得再多也白捞。这些都是"国家和政策给到手里的钱和服务", 与退休金同族, 并入退休金档。
+#
+# ⚠2026-08-07 崔伟"养老日报内容太少", 两档扩成四档(同日 fetch 由 7 路扩到 11 路):
+#   · 🛡️防骗提醒 —— 8-07 当天财新那条「以"快乐养老"名义非法集资 244 亿、36 万人受害」
+#     AI 已经写好了, 却因为归不进两档被这里整条丢掉。防骗是 50-70 岁读者最该看、
+#     最可能转发到家族群的题材(补"分享近乎为零"那个短板), 而且 fetch 侧本来就有一路专门检索它。
+#   · 🛒物价开销 —— 新增【物价开销】那一路(菜价/水电燃气/供暖/公交)的落点。
+#     养老金涨没涨是收入端, 这是支出端, 对退休家庭是同一本账。
 _TUIXIU_RE = re.compile(
     r"养老金|退休金|社保|人社部|基础养老金|缴费年限|工龄|延迟退休|资格认证|"
     r"养老保险|待遇调整|个人账户|社保卡|长护险|长期护理|"
     r"养老服务|适老化|助餐|老年食堂|居家养老|养老院|护理院|养老床位|高龄津贴|"
-    r"老年补贴|加装电梯|老旧小区|惠民保|税优健康险")
+    r"老年补贴|加装电梯|老旧小区|惠民保|税优健康险|"
+    # 【老年优待】路: 不去问就没人告诉你的那些钱和优惠
+    r"敬老卡|老年证|老年优待|免费乘车|乘车优惠|票价优待|免费体检|取暖补贴|供暖补贴|"
+    # 【遗属待遇】路: 遇到才知道去问的事
+    r"遗属|丧葬费|丧葬补助|抚恤金|供养亲属|余额继承")
 _CUNKUAN_RE = re.compile(
     r"存款|定存|定期|大额存单|挂牌利率|存款利率|国债|理财|LPR|降息|加息|利率|货基|货币基金")
+# 防骗必须最先判: 「养老理财骗局」「以养老名义非法集资」这类文本同时命中上面两档的词,
+# 先判退休金/存款就会被错分到那两档里, 混在正经政策中间读者反而看不出是警示。
+_FANGPIAN_RE = re.compile(
+    r"诈骗|骗局|被骗|受骗|骗取|非法集资|集资诈骗|涉嫌集资|传销|洗钱|涉案|受害人|上当|"
+    r"以房养老|保健品|冒充|假冒|反诈|电信网络诈骗|养老骗|套路贷|荐股|虚假宣传|"
+    r"高额返利|高息返利|承诺高息|预付卡跑路|养老床位卡")
+_WUJIA_RE = re.compile(
+    r"CPI|居民消费价格|物价|菜价|肉价|蛋价|粮油|水价|电价|燃气费|天然气价|供暖费|采暖费|"
+    r"自来水|阶梯电价|阶梯气价|票价|资费|生活成本|涨价|降价潮")
 
 def bucket(it):
     t = strip_tags(it.get("label", "")) + strip_tags(it.get("text", ""))
+    if _FANGPIAN_RE.search(t):
+        return "防骗提醒"
     if _TUIXIU_RE.search(t):
         return "退休金"
     if _CUNKUAN_RE.search(t):
         return "存款国债"
+    if _WUJIA_RE.search(t):
+        return "物价开销"
     return None
 
-BUCKETS = ["退休金", "存款国债"]
+BUCKETS = ["退休金", "存款国债", "物价开销", "防骗提醒"]
 by_bucket = {b: [] for b in BUCKETS}
 spill_health = []      # 养老档里归不进两档、但明显是看病吃药的 → 见下, 转投健康档而不是丢掉
 for it in items:
@@ -280,6 +304,22 @@ if FACTS_OK:
         cells = "　".join(f'{y["year"]}年 <b style="color:{RED};">{y["rate"]}</b>' for y in yrs[:6])
         w(f'<p style="margin:0 0 16px;padding:10px 12px;background:{WARMBG};border-radius:6px;'
           f'font-size:18px;line-height:2.0;color:{INK};">历年调整比例：{cells}</p>')
+    # ④ 涨的钱是怎么算出来的(事实卡里本来就有 calc_rule, 之前一直没渲染, 白放着)
+    # —— "同样是退休, 为啥老张涨得比我多" 是这个岁数的人年年问、年年问不明白的事,
+    #    讲清定额/挂钩/倾斜三块, 是不依赖当天有没有新闻的常驻干货。
+    cr = FACTS.get("calc_rule", {}) or {}
+    if cr.get("text") and cr.get("parts"):
+        w(f'<p style="margin:0 0 6px;font-size:15px;font-weight:800;color:#8c3b2f;">🧮 涨的钱是怎么算的</p>')
+        w(f'<p style="margin:0 0 10px;font-size:19px;line-height:2.0;color:{INK};">{strip_tags(cr["text"])}</p>')
+        for i, p in enumerate(cr["parts"], 1):
+            w(f'<p style="margin:0 0 10px;padding:10px 12px;background:{WARMBG};border-radius:6px;'
+              f'font-size:18px;line-height:1.95;color:{INK};">'
+              f'<b style="color:#8c3b2f;">{i}. {strip_tags(p.get("name", ""))}</b>　'
+              f'{strip_tags(p.get("desc", ""))}</p>')
+        if cr.get("note"):
+            w(f'<p style="margin:0 0 16px;font-size:17px;line-height:1.9;color:{SUB};">'
+              f'{strip_tags(cr["note"])}</p>')
+
     wt = (FACTS.get("where_to_check") or {}).get("text")
     if wt:
         w(f'<p style="margin:0 0 6px;font-size:15px;font-weight:800;color:#8c3b2f;">🔎 怎么查自己的</p>')
@@ -289,6 +329,8 @@ if FACTS_OK:
 SEC_STYLE = {
     "退休金":   ("💰", "#b9791b", "#fdf6ea", "养老金 · 退休待遇"),
     "存款国债": ("🏦", "#1b6b57", "#eff7f3", "养老钱 · 该往哪放"),
+    "物价开销": ("🛒", "#2f5d8c", "#eef4fa", "买菜交费 · 花出去的钱"),
+    "防骗提醒": ("🛡️", "#a8322a", "#fdf0ee", "别让骗子惦记您的养老钱"),
 }
 
 def sec_head(icon, dark, name, sub):
@@ -299,6 +341,32 @@ def sec_head(icon, dark, name, sub):
         w(f'<span style="margin-left:auto;font-size:12px;color:#fff;opacity:.9;">　{sub}</span>')
     w('</section>')
 
+# 每条正文后面跟一句「这对您意味着什么」(llm_pension 的 means 字段, 2026-08-07 加)。
+# 起因: 崔伟嫌内容少。读者是 50-70 岁, 看完一条政策最想知道的是"那我该干啥" ——
+# 让 AI 每条都替读者落一句到自己账本上, 篇幅厚一截, 也真的比多堆一条新闻有用。
+# ⚠老数据/财经日报兜底路径(直接读 sections.json)没有 means 字段, 缺了就不出这一行。
+def w_item(it, dark=None, box=None):
+    label = strip_tags(it.get("label", ""))
+    src = strip_tags(it.get("src", ""))
+    if box:
+        w(f'<section style="margin:0 4px 14px;padding:13px 15px;background:{box};'
+          f'border-left:5px solid {dark};border-radius:6px;">')
+    w(f'<p style="margin:0 0 {"6" if it.get("means") else "16"}px;'
+      f'font-size:19px;line-height:2.0;color:{INK};">')
+    if label:
+        w(f'<span style="color:{ORANGE};font-weight:700;">【{label}】</span>')
+    w(emph(it.get("text")))
+    if src:
+        w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
+    w('</p>')
+    if it.get("means"):
+        w(f'<p style="margin:0 0 18px;padding:9px 12px;background:{WARMBG};border-radius:6px;'
+          f'font-size:18px;line-height:1.9;color:{INK};">'
+          f'<span style="color:{WARM};font-weight:800;">👉 这对您意味着　</span>'
+          f'{emph(it["means"])}</p>')
+    if box:
+        w('</section>')
+
 for b in BUCKETS:
     lst = by_bucket[b]
     if not lst:
@@ -306,15 +374,8 @@ for b in BUCKETS:
     icon, dark, light, sub = SEC_STYLE[b]
     sec_head(icon, dark, b, sub)
     for it in lst:
-        label = strip_tags(it.get("label", ""))
-        src = strip_tags(it.get("src", ""))
-        w(f'<p style="margin:0 0 16px;font-size:19px;line-height:2.0;color:{INK};">')
-        if label:
-            w(f'<span style="color:{ORANGE};font-weight:700;">【{label}】</span>')
-        w(emph(it.get("text")))
-        if src:
-            w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
-        w('</p>')
+        # 防骗那一档整条套浅色警示框 —— 这是最该被转发到家族群的内容, 视觉上要一眼认出来
+        w_item(it, dark, light if b == "防骗提醒" else None)
 
 # ---------- 这跟咱的养老钱有啥关系(两档新闻之后的整体解读) ----------
 if insight:
@@ -329,15 +390,7 @@ HDARK, HLIGHT = "#0f7a4a", "#f1f9f4"
 if tip.get("body") or health_items:
     sec_head("🩺", HDARK, "健康小课堂", "每天懂一点")
     for it in health_items:
-        label = strip_tags(it.get("label", ""))
-        src = strip_tags(it.get("src", ""))
-        w(f'<p style="margin:0 0 16px;font-size:19px;line-height:2.0;color:{INK};">')
-        if label:
-            w(f'<span style="color:{ORANGE};font-weight:700;">【{label}】</span>')
-        w(emph(it.get("text")))
-        if src:
-            w(f'<span style="color:{SUB};font-size:14px;">（{src}）</span>')
-        w('</p>')
+        w_item(it, HDARK)
 if tip.get("body"):
     if tip.get("title"):
         w(f'<p style="margin:0 0 8px;font-size:21px;font-weight:800;color:{INK};">{strip_tags(tip["title"])}</p>')
@@ -410,9 +463,10 @@ cover_html = env.get_template("template_pension_cover.html").render(**cover_ctx)
 open(f"{BASE}/pension_cover.html", "w", encoding="utf-8").write(cover_html)
 
 print(f"已渲染 pension.html  日期={pub_date}  "
-      f"退休金={len(by_bucket['退休金'])}条  存款国债={len(by_bucket['存款国债'])}条  "
+      + "  ".join(f"{b}={len(by_bucket[b])}条" for b in BUCKETS) + "  "
       f"健康={len(health_items)}条+小课堂{'有' if tip.get('body') else '无'}  解读={'有' if insight else '无'}  "
-      f"(投资向剔除{dropped}条, 归不进两档丢弃{unbucketed}条)  字节={len(html)}")
+      f"「这对您意味着」{sum(1 for v in by_bucket.values() for x in v if x.get('means')) + sum(1 for x in health_items if x.get('means'))}条  "
+      f"(投资向剔除{dropped}条, 四档都归不进丢弃{unbucketed}条)  字节={len(html)}")
 if not FACTS_OK:
     print("⚠ 事实卡未经人工核对(pension_facts.json 的 verified_by 为空), 「大家最关心的」栏目未渲染")
 elif buzz_held:
