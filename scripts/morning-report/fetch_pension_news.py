@@ -48,6 +48,19 @@ if not key:
 bj_now = datetime.now(timezone.utc) + timedelta(hours=8)
 TODAY = f"{bj_now.year}年{bj_now.month}月{bj_now.day}日"
 YEAR = bj_now.year
+TODAY_ISO = bj_now.strftime("%Y-%m-%d")
+
+# ⚠2026-08-07 养老日报恢复后一天会有两条管线跑到这里(养老日报 12:00 / 财经日报 14:00)。
+# 若当天已经检索过(12:00 那次会 commit 留底), 后一次直接复用, 不再重新联网检索 ——
+# 否则 14:00 那次会把 12:00 的结果当"上一期已用过"的排除清单, 财经日报养老档当天素材凭空清零
+# (与 7-29「跑了没发要清空排除清单」是同一族坑)。两条管线谁先跑到都成立, 顺序无所谓。
+try:
+    _prev_doc = json.load(open(OUT))
+except Exception:
+    _prev_doc = {}
+if _prev_doc.get("fetched_date") == TODAY_ISO and _prev_doc.get("items"):
+    print(f"ⓘ 今天({TODAY_ISO})已检索过({len(_prev_doc['items'])} 条, 另一条管线留底), 直接复用不重搜")
+    sys.exit(0)
 
 # 上一期的检索结果当排除清单, 防止同一件事天天重复上报。
 # ⚠**按路隔离**(2026-07-30 扩到 7 路时改): 原来把全部历史条目一股脑塞进每一路的检索提示词,
@@ -368,7 +381,7 @@ try:
 except Exception as e:
     print(f"⚠ 财新源取数失败(不阻塞): {type(e).__name__}: {str(e)[:60]}", file=sys.stderr)
 
-json.dump({"items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
+json.dump({"fetched_date": TODAY_ISO, "items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
 n_off = sum(1 for it in items if it["official"])
 print(f"已写 {OUT}：{len(items)} 条(官方 {n_off} / 非官方 {len(items) - n_off}"
       f"{f', 旧闻标记 {n_stale}' if n_stale else ''}"

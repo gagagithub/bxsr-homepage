@@ -1,0 +1,101 @@
+name: 养老日报 - 每日生成 + 建「崔伟说养老」公众号草稿
+
+# ⚠2026-08-07 崔伟拍板恢复养老日报(7-30 曾停做), 拆成独立管线每天中午 12:00 跑;
+# 财经日报维持 14:00 那条 workflow 不动。两条管线共用 fetch_pension_news.py 的检索结果
+# (当天谁先跑谁检索并留底, 后跑的直接复用, 见 fetch_pension_news.py 里的复用逻辑)。
+# ⚠GitHub schedule 白天有 1-3.5 小时排队延迟(财经日报 8-01~8-03 实测), 12:00 起排,
+# 拖 3 小时也在 15:00 前就绪; 赶时间可手动: gh workflow run daily-pension-report.yml
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 北京 12:00 (UTC 04:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chinese fonts (CJK for cover image)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra
+
+      - name: Install Python dependencies
+        run: pip install -r scripts/morning-report/requirements.txt
+
+      # 7 路千问联网检索 + 财新补充。失败不阻塞(脚本内部写空 items 并 exit 0),
+      # 空素材时养老日报仍会出「健康小课堂」托底版。
+      - name: Fetch 养老民生素材 (千问联网检索)
+        continue-on-error: true
+        working-directory: scripts/morning-report
+        env:
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+        run: python -u fetch_pension_news.py
+
+      - name: AI organize 养老日报 (DeepSeek)
+        working-directory: scripts/morning-report
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python -u llm_pension.py
+
+      - name: Render 公众号图文 + 封面 (pub_date = 北京当天)
+        working-directory: scripts/morning-report
+        env:
+          PENSION_SECTIONS_JSON: pension_sections.json
+        run: |
+          export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
+          python -u render_pension.py
+
+      # 2350×1000 横版首屏封面(崔伟 2026-08-07 要求: 养老日报作为公众号头条首屏发布)
+      - name: Screenshot cover image (headless Chrome, 2350x1000)
+        run: |
+          google-chrome --headless=new --disable-gpu --hide-scrollbars \
+            --window-size=2350,1000 \
+            --screenshot="$GITHUB_WORKSPACE/scripts/morning-report/pension_cover.png" \
+            "file://$GITHUB_WORKSPACE/scripts/morning-report/pension_cover.html"
+          ls -la "$GITHUB_WORKSPACE/scripts/morning-report/pension_cover.png"
+
+      # 留底: runner 用完即毁, 不留底就得重跑整条管线才拿得到当天稿子(7-01 sections.json 丢失教训)。
+      # ⚠pension_news.json 也留底 —— 财经日报 14:00 那条管线靠它复用今天的检索结果。
+      - name: Commit 留底 (成品 + 素材 + 中间结果)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -f scripts/morning-report/pension_news.json scripts/morning-report/pension_sections.json \
+                     scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
+                     scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
+          git commit -m "养老日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
+          git pull --rebase || true
+          git push || echo "push 跳过"
+
+      # 推生产 + 自动建「崔伟说养老」草稿(服务端读 .gzh-credentials-pension, 走独立 appid 的 token 缓存)。
+      # 只建草稿不群发 —— 群发由崔伟在公众号后台人工核对后点(内容真实性人工兜底, 8-05 拍板口径)。
+      - name: Push to production (建公众号草稿)
+        env:
+          MORNING_REPORT_TOKEN: ${{ secrets.MORNING_REPORT_TOKEN }}
+        run: |
+          if [ -z "${MORNING_REPORT_TOKEN}" ]; then
+            echo "::error::缺少 secret MORNING_REPORT_TOKEN"
+            exit 1
+          fi
+          cd "$GITHUB_WORKSPACE/scripts/morning-report"
+          RESP=$(curl -sS --max-time 300 \
+            -F "token=${MORNING_REPORT_TOKEN}" \
+            -F "html=@pension.html;type=text/html" \
+            -F "cover=@pension_cover.png;type=image/png" \
+            -F "title=<pension_title.txt" \
+            -F "digest=<pension_digest.txt" \
+            https://214club.com.cn/creation/pensionReportUpload)
+          echo "server response: ${RESP}"
+          echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常; 若 Java 端尚未换包上线 pensionReportUpload 端点, 本步会失败但上面已留底)"; exit 1; }
+          echo "✓ 今日养老日报已生成并建草稿。发布前请人工核对内容(标题/数字/旧闻), 后台手动群发。"

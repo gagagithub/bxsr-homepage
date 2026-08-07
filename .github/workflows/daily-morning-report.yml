@@ -45,8 +45,9 @@ jobs:
 
       # 养老民生素材(联网检索): 东财电报出不来养老金/退休金/存款利率/大额存单这类内容,
       # 单独搜一轮并入新闻池。失败不阻塞日报(脚本内部自己写空 items 并 exit 0)。
-      # ⚠ 2026-07-30 「崔伟说养老」的养老日报停做后, 这一步照旧保留 —— 它喂的是
-      # 《财经日报》三主题里的【养老档】(健康/养老/传承), 跟养老日报是两件事, 别一起砍。
+      # ⚠ 2026-08-07 养老日报恢复为独立管线(daily-pension-report.yml, 北京12:00): 通常 12:00
+      # 那条已检索并留底当天 pension_news.json, 这里脚本会检测到"今天已检索过"直接复用不重搜
+      # (不复用的话, 12:00 的结果会被当成排除清单, 财经日报养老档当天素材凭空清零)。
       - name: Fetch 养老民生素材 (千问联网检索)
         continue-on-error: true
         working-directory: scripts/morning-report
@@ -70,11 +71,9 @@ jobs:
           export MX_PUB_DATE="$(TZ='Asia/Shanghai' date +%Y-%m-%d)"
           python -u render_morning.py
           python -u render_wechat.py
-          # ⚠ 2026-07-30 崔伟拍板: 「崔伟说养老」的养老日报不做了, 故不再渲染 pension.*。
-          # render_pension.py / template 及 llm_morning 的 gen_pension() 全部保留;
-          # 要恢复 = 把下面这行取消注释 + 设环境变量 PENSION_DAILY=1(见 llm_morning.py 末尾)
-          # + 把下面「留底」步骤里 pension.* 那几行加回来。
-          # python -u render_pension.py || echo "⚠ 养老日报渲染失败, 不阻塞财经日报"
+          # ⚠ 2026-08-07 养老日报已恢复, 但走独立管线 daily-pension-report.yml(北京12:00),
+          # 不在这条 workflow 里渲染(llm_morning 的 gen_pension()/PENSION_DAILY 开关是
+          # 7-30 停做前的旧路径, 保留不用)。别在这里把 render_pension 加回来。
 
       - name: Screenshot cover image (headless Chrome)
         run: |
@@ -107,10 +106,9 @@ jobs:
           # 导致出问题时事后无法复现当天内容(runner 用完即毁)。-f 强制留底。
           git add morning-report.html || true
           git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json || true
-          # ⚠ 2026-07-30 养老日报停做, 不再留底 pension.*(要恢复就把这两行取消注释):
-          # git add -f scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
-          #           scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
+          # (养老日报的 pension.* 留底在 daily-pension-report.yml 那条独立管线里做)
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
+          git pull --rebase || true
           git push || echo "push 跳过"
 
       # ⚠2026-08-04 崔伟拍板**恢复全自动**: 上传即分发(推5规划师朋友圈 + 建公众号草稿)。

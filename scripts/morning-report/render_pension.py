@@ -23,7 +23,9 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-S = json.load(open(f"{BASE}/sections.json", encoding="utf-8"))
+# ⚠2026-08-07 养老日报恢复并拆成独立管线(12:00 跑): 数据源改为 llm_pension.py 产的
+# pension_sections.json(与 sections.json 同形)。不设环境变量则回退旧行为(读财经日报 sections.json)。
+S = json.load(open(os.environ.get("PENSION_SECTIONS_JSON") or f"{BASE}/sections.json", encoding="utf-8"))
 
 # 象牙金报刊风配色(与财经日报一致, 保持两个号视觉同源)
 RED    = "#b23b2e"
@@ -372,30 +374,39 @@ open(f"{BASE}/pension_title.txt", "w", encoding="utf-8").write(full)
 digest = strip_tags(pension.get("lead") or insight or "")[:110]
 open(f"{BASE}/pension_digest.txt", "w", encoding="utf-8").write(digest)
 
-# ---------- 封面(复用日报封面模板, 文案换成养老口径) ----------
+# ---------- 封面(2350×1000 横版, 崔伟 2026-08-07 要求: 养老日报作为公众号头条首屏发布) ----------
+# 首屏头条封面公众号完整展示 2.35:1; 转发到聊天时会裁中央方形 → 大字水平居中放, 裁方后仍完整。
 def shorten(s, n):
     s = strip_tags(s)
     return s if len(s) <= n else s[:n].rstrip("，。、；,. ") + "…"
 
-def cover_hook(s):
-    """封面大字 96px, 一行只放得下 7-8 个字 —— 整条标题塞进去会排到三行,
-    撑得下面的条目跟页脚叠在一起(7-29 实测)。只取标题第一个分句, 再兜个上限。"""
+def cover_lines(s):
+    """标题按标点拆成 1-2 行大字; 每行超 14 字截断(模板里超 12 字的行会自动降字号)。"""
     s = strip_tags(s).strip()
-    seg = re.split(r"[，,。！!？?：:；;、]", s)[0].strip() or s
-    return seg if len(seg) <= 12 else seg[:12] + "…"
+    segs = [x.strip() for x in re.split(r"[，,。！!？?：:；;、]", s) if x.strip()]
+    return [(l if len(l) <= 14 else l[:14] + "…") for l in segs[:2]]
+
+def hl_nums(s):
+    """大字里的数字(含%)标金红色。"""
+    return re.sub(r"(\d[\d.]*[%％]?)", r'<span class="num">\1</span>', s)
+
+def cover_sub(s, n=32):
+    """副标一行: 在句读处收尾, 别把半句话切在中间。"""
+    s = strip_tags(s)
+    out = ""
+    for seg in re.split(r"(?<=[，。！？；,!?;])", s):
+        if len(out) + len(seg) > n:
+            break
+        out += seg
+    return (out or s[:n]).rstrip("，,；;。")
 
 env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
 cover_ctx = dict(
-    pub_date=pub_date, date_cn=title_date,
-    brand="养老日报", brand_sub="崔伟说养老 · 让天下人老有所养",
-    bname="崔伟说养老", bsub="RETIREMENT · WEALTH · CARE", cta="点开看完整内容 ›",
-    upd="每日下午",
-    hook_big=cover_hook(title),
-    hook_sub=shorten(pension.get("lead") or insight, 30),
-    trend="", trend_plain="",
-    cover_items=[dict(label=strip_tags(it.get("label", "")), tx=shorten(it.get("text"), 34)) for it in items[:2]],
+    date_cn=date_cn, week_cn=week_cn,
+    lines=[hl_nums(l) for l in (cover_lines(title) or [f"养老日报 {title_date}"])],
+    sub=cover_sub(pension.get("lead") or insight),
 )
-cover_html = env.get_template("template_cover.html").render(**cover_ctx)
+cover_html = env.get_template("template_pension_cover.html").render(**cover_ctx)
 open(f"{BASE}/pension_cover.html", "w", encoding="utf-8").write(cover_html)
 
 print(f"已渲染 pension.html  日期={pub_date}  "
