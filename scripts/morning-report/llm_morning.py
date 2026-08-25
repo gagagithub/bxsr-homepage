@@ -234,13 +234,24 @@ def _call_once(user):
     payload = json.dumps({
         "model": "deepseek-v4-pro",  # 2026-07-25: DeepSeek 下线 deepseek-chat, 只认 deepseek-v4-pro / deepseek-v4-flash
         "messages": [{"role": "system", "content": SYS}, {"role": "user", "content": user}],
-        "temperature": 0.3, "max_tokens": 8000,
+        # ⚠2026-08-25: deepseek-v4-pro 是【推理模型】, 思维链(reasoning_tokens)也算进 max_tokens。
+        #   实测一次调用光思考就烧 6000-8300 token, 正文其实只要 ~1200 token —— 原来的 8000 额度
+        #   在正文写完前就被思考吃光: 要么返回空串(JSONDecodeError char 0), 要么正文写一半被腰斩
+        #   (Unterminated string), 三次重试全废 → 8-20~8-24 财经日报连挂 5 天。别再往下调。
+        "temperature": 0.3, "max_tokens": 32000,
         "response_format": {"type": "json_object"},  # DeepSeek 强制返回合法 JSON, 杜绝偶发语法错
     }).encode("utf-8")
     req = urllib.request.Request("https://api.deepseek.com/v1/chat/completions", data=payload,
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=200) as r:
+    with urllib.request.urlopen(req, timeout=300) as r:   # 32000 额度下思考更久, 实测单次 110-140s
         resp = json.loads(r.read().decode())
+    _fr = resp["choices"][0].get("finish_reason")
+    if _fr == "length":   # 只报警, 不拦截/不改内容
+        _u = resp.get("usage") or {}
+        print(f"!! DeepSeek 输出被 max_tokens 截断(finish_reason=length, "
+              f"completion={_u.get('completion_tokens')} reasoning="
+              f"{(_u.get('completion_tokens_details') or {}).get('reasoning_tokens')}), 请调大 max_tokens",
+              file=sys.stderr)
     content = resp["choices"][0]["message"]["content"].strip()
     content = re.sub(r"^```(json)?|```$", "", content, flags=re.MULTILINE).strip()
     try:
