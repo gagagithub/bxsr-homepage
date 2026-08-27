@@ -75,6 +75,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -f scripts/morning-report/pension_news.json scripts/morning-report/pension_news_history.json \
+                     scripts/morning-report/pension_title_history.json \
                      scripts/morning-report/pension_sections.json \
                      scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
                      scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
