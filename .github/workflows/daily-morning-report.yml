@@ -103,7 +103,8 @@ jobs:
           # ⚠sections.json 在 scripts/morning-report/.gitignore 里, 不加 -f 这行是静默 no-op,
           # 导致出问题时事后无法复现当天内容(runner 用完即毁)。-f 强制留底。
           git add morning-report.html || true
-          git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json || true
+          git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json \
+                     scripts/morning-report/pension_news_history.json || true
           # (养老日报的 pension.* 留底在 daily-pension-report.yml 那条独立管线里做)
           git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
           # ⚠养老日报现在同为 16:00 起跑, 两条几乎同时 push → 后到的必被拒。重试 3 次,

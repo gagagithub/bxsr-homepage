@@ -68,11 +68,14 @@ jobs:
 
       # 留底: runner 用完即毁, 不留底就得重跑整条管线才拿得到当天稿子(7-01 sections.json 丢失教训)。
       # ⚠pension_news.json 留底供次日当排除清单(防连日选到同一条素材)。
+      # ⚠pension_news_history.json(14 天滚动)是跨天去重和每路排除清单的唯一依据 ——
+      #   runner 用完即毁, 不 commit 它历史窗口就永远是空的, 等于退回"只回看一期"。
       - name: Commit 留底 (成品 + 素材 + 中间结果)
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add -f scripts/morning-report/pension_news.json scripts/morning-report/pension_sections.json \
+          git add -f scripts/morning-report/pension_news.json scripts/morning-report/pension_news_history.json \
+                     scripts/morning-report/pension_sections.json \
                      scripts/morning-report/pension.html scripts/morning-report/pension_title.txt \
                      scripts/morning-report/pension_digest.txt scripts/morning-report/pension_cover.html || true
           git commit -m "养老日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
