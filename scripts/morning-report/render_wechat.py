@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""财经日报·微信公众号图文渲染：sections.json(+data.json 行情) → wechat.html。
+"""财经晨报·微信公众号图文渲染：sections.json(+data.json 行情) → wechat.html。
 
 输出的是公众号 draft/add 的「正文 content 片段」(不是完整 H5)：
 - 全部内联 style(公众号会过滤 <style>/class/<script>/iframe/外链CSS)
@@ -100,13 +100,13 @@ if lead.get("text"):
 
 # ---------- 行情速览(可选) ----------
 # A股时点标签跟着取数时刻走(fetch_cn.py 写入), 14:00 跑时是"今日盘中 HH:MM"不是收盘; 老 data.json 无此字段则回退
-CN_ASOF = (D.get("cn_asof") or "今日收盘")
+CN_ASOF = (D.get("cn_asof") or "上一交易日收盘")
 CN_GRP = f"A股 · {CN_ASOF}"
 OS_GRP = "隔夜外盘 · 利率汇率商品"
 
 def market_rows():
     rows = []
-    # A股今日收盘排最前(日报下午发, 读者最先想看的就是这个); 老 data.json 无 cn_indices 时自动跳过
+    # A股排最前(读者最关心的就是这个; 晨报 07:00 跑, 标签自动是"上一交易日收盘"); 老 data.json 无 cn_indices 时自动跳过
     CN_IDX = {"SH": "上证指数", "SZ": "深证成指", "CYB": "创业板指"}
     for k in ["SH", "SZ", "CYB"]:
         v = (D.get("cn_indices") or {}).get(k) or {}
@@ -239,13 +239,13 @@ if os.path.exists(f"{BASE}/radio/renders/morning-radio.mp4"):
     w(f'<section style="margin:24px 4px 16px;">')
     w('{{MR_IMG:video}}')
     w(f'<p style="margin:8px 4px 2px;text-align:center;font-size:17px;font-weight:800;color:{ORANGE};">'
-      f'🎧 今日财经日报 · 视频版（约9分钟）</p>')
+      f'🎧 今日财经晨报 · 视频版（约9分钟）</p>')
     w(f'<p style="margin:0 4px;text-align:center;font-size:14px;color:{SUB};">'
       f'点击左下角「阅读原文」，边听边看今日全球市场速览</p>')
     w('</section>')
 else:
     w(f'<section style="margin:24px 4px 6px;padding:18px 16px;background:#11305f;border-radius:8px;text-align:center;">')
-    w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整日报</p>')
+    w(f'<p style="margin:0;font-size:21px;font-weight:800;color:#fff;letter-spacing:1px;">▶ 看今日完整晨报</p>')
     w(f'<p style="margin:8px 0 0;font-size:16px;color:#cfe0f7;line-height:1.7;">'
       f'点击文末左下角「阅读原文」，查看全球市场 · 内地财经一图全览</p>')
     w('</section>')
@@ -275,7 +275,7 @@ def _arrow(raw):
     return "▲ " if raw > 0 else "▼ "
 
 if rows:
-    # A股是今天收盘、外盘是隔夜, 混在一张表里读者(尤其50+)容易误读成同一时点,
+    # A股是上一交易日收盘、外盘是隔夜, 混在一张表里读者(尤其50+)容易误读成同一时点,
     # 故按 group 插一行小标题分开; group 变化时才渲染标题。
     mrows, _lastg = [], None
     for (n, v, note, raw, g) in rows:
@@ -283,7 +283,7 @@ if rows:
                           grp=(g if g != _lastg else "")))
         _lastg = g
     env = Environment(loader=FileSystemLoader(BASE), autoescape=select_autoescape(["html"]))
-    # 日期用 pub_date(今天): 表里主体是A股今日收盘, 用中债 asof 的 data_date 会显示成前一交易日
+    # 日期用 pub_date(今天=出报当天): 用中债 asof 的 data_date 会显示成前一交易日, 读者会以为是旧数据
     mhtml = env.get_template("template_market.html").render(data_date=pub_date, rows=mrows, cn_asof=CN_ASOF)
     open(f"{BASE}/market.html", "w", encoding="utf-8").write(mhtml)
     # Chrome 截图窗口高度: 头部~150 + 每行~100 + 分组标题~56 + 页脚~96(随行数变化, workflow 读此值)
@@ -305,14 +305,14 @@ if not digest:
 digest = re.sub(r"\s+", " ", digest.replace("\n", " ")).strip()[:118]
 open(f"{BASE}/wechat_digest.txt", "w", encoding="utf-8").write(digest)
 
-# 公众号文章标题(AI 爆款式标题 + 日报品牌后缀; 服务器缺该文件/为空时自动回退「财经日报 X月X日」)
+# 公众号文章标题(AI 爆款式标题 + 晨报品牌后缀; 服务器缺该文件/为空时自动回退「财经晨报 X月X日」)
 wtitle = strip_tags(S.get("wechat_title") or "").strip()
 if wtitle:
     try:
         _d = datetime.strptime(pub_date, "%Y-%m-%d")
-        suffix = f"｜财经日报{_d.month}.{_d.day}"
+        suffix = f"｜财经晨报{_d.month}.{_d.day}"
     except Exception:
-        suffix = "｜财经日报"
+        suffix = "｜财经晨报"
     full = wtitle + suffix
     if len(full) > 64:                      # 微信标题上限 64 字, 超长砍正文部分保后缀
         full = wtitle[:64 - len(suffix) - 1].rstrip("，。、；,. ") + "…" + suffix

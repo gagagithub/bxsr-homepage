@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
-<title>财经日报 · {{ pub_date }} · 保心上人</title>
+<title>财经晨报 · {{ pub_date }} · 保心上人</title>
 <style>
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
   :root{
@@ -164,10 +164,10 @@
         <div class="bname">保心上人</div>
         <div class="bsub">PROTECT · WEALTH · ADVISORY</div>
       </div>
-      <div class="upd">每日 16:00 自动更新</div>
+      <div class="upd">每日 07:00 自动更新</div>
     </div>
-    <h1 class="title"><span class="em">📰</span> 财经日报</h1>
-    <div class="meta">📅 <b>{{ pub_date }}</b> ｜ A股{{ cn_asof or '今日收盘' }} + 全球隔夜市场 · 内地财经</div>
+    <h1 class="title"><span class="em">📰</span> 财经晨报</h1>
+    <div class="meta">📅 <b>{{ pub_date }}</b> ｜ A股{{ cn_asof or '上一交易日收盘' }} + 全球隔夜市场 · 内地财经</div>
     <div class="slogan">保心上人 · 让天下人老有所养</div>
   </div>
 
@@ -225,7 +225,7 @@
 
   <!-- 行情数据(移到三大主题之后、日报纵览之前) -->
   {% if cn_indices %}
-  <div class="sec-lab">行情数据 · A股{{ cn_asof or '今日收盘' }}</div>
+  <div class="sec-lab">行情数据 · A股{{ cn_asof or '上一交易日收盘' }}</div>
   <div class="idx-row">
     {% for x in cn_indices %}
     <div class="idx">

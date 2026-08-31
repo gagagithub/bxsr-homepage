@@ -1,11 +1,14 @@
-name: 财经日报 - 每日生成 + 推送规划师朋友圈
+name: 财经晨报 - 每日生成 + 推送规划师朋友圈
 
 on:
-  # ⚠2026-08-07 起改由生产服务器计划任务 DailyReportDispatch(每天北京 14:00)准点
-  #   curl workflow_dispatch 触发, 替代 GitHub schedule(白天排队延迟 2~3.5 小时不可控)。
+  # ⚠2026-08-07 起改由生产服务器计划任务 DailyReportDispatch 准点 curl workflow_dispatch 触发,
+  #   替代 GitHub schedule(白天排队延迟 2~3.5 小时不可控)。
+  #   ⚠2026-08-31 崔伟把「崔伟说投资」公众号发送时间从晚上改到早上, 这条随之由日报改回**晨报**:
+  #   计划任务时刻 16:00 → **北京 07:00**(养老日报 PensionReportDispatch 仍 16:00, 不动)。
+  #   连带口径全部翻回晨报: fetch_news 窗口="昨天全天+今早"、A股 cn_asof 自动="上一交易日收盘"、
+  #   AI 时间措辞改"昨天/昨夜/今早"、三端品牌名与报头时刻。改时刻务必同步这几处。
   #   触发脚本=服务器 D:\morning-report\trigger_daily_report.bat(+.ps1), 日志 dispatch-trigger.log。
   #   服务器触发失败时手动兜底: gh workflow run daily-morning-report.yml
-  # 代价不变=A股(15:00)当天收盘数据取不到当日收盘价 —— 崔伟已知悉并接受(时效优先)。
   # 全流程约 8-15 分钟(取数 2 + AI 整理 3-8 + 渲染截图 1 + 上传)。
   workflow_dispatch:
 
@@ -43,9 +46,9 @@ jobs:
 
       # 养老民生素材(联网检索): 东财电报出不来养老金/退休金/存款利率/大额存单这类内容,
       # 单独搜一轮并入新闻池。失败不阻塞日报(脚本内部自己写空 items 并 exit 0)。
-      # ⚠ 2026-08-07 养老日报恢复为独立管线(daily-pension-report.yml, 北京12:00): 通常 12:00
-      # 那条已检索并留底当天 pension_news.json, 这里脚本会检测到"今天已检索过"直接复用不重搜
-      # (不复用的话, 12:00 的结果会被当成排除清单, 财经日报养老档当天素材凭空清零)。
+      # ⚠ 养老日报是独立管线(daily-pension-report.yml, 北京16:00)。两条都会跑这一步, 当天留底
+      # 在 REUSE_HOURS(4小时)内复用不重搜。⚠2026-08-31 晨报改 07:00 后两条相隔 9 小时, 养老那次
+      # 必然超窗重搜 —— 这是要的: 否则养老号会吃早上 7 点的素材, 白天的养老新闻全丢。
       - name: Fetch 养老民生素材 (千问联网检索)
         continue-on-error: true
         working-directory: scripts/morning-report
@@ -106,9 +109,9 @@ jobs:
           git add -f scripts/morning-report/sections.json scripts/morning-report/pension_news.json \
                      scripts/morning-report/pension_news_history.json || true
           # (养老日报的 pension.* 留底在 daily-pension-report.yml 那条独立管线里做)
-          git commit -m "财经日报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
-          # ⚠养老日报现在同为 16:00 起跑, 两条几乎同时 push → 后到的必被拒。重试 3 次,
-          #   否则当天 sections.json 静默丢失(事后无法复现当天内容, 7-01 踩过)。
+          git commit -m "财经晨报 $(TZ='Asia/Shanghai' date +%Y-%m-%d)" || echo "无变更"
+          # ⚠两条管线同天各 push 一次, 撞上就会被拒(8-31 起晨报 07:00 / 养老 16:00, 已错开,
+          #   但手动补跑仍可能撞)。重试 3 次, 否则当天 sections.json 静默丢失(7-01 踩过)。
           for i in 1 2 3; do
             git pull --rebase || true
             git push && { echo "push ok (第 $i 次)"; break; } || { echo "push 被拒, 5s 后重试"; sleep 5; }
@@ -154,4 +157,4 @@ jobs:
             https://214club.com.cn/creation/morningReportUpload)
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
-          echo "✓ 今日财经日报已生成并存到生产(H5 可直接看)。⚠尚未对外分发 —— 人工核稿后再打 morningReportPushDraft / morningReportPushMoment"
+          echo "✓ 今日财经晨报已生成并存到生产(H5 可看), 且已按全自动口径分发(规划师朋友圈 + 公众号草稿) —— 见上面 server response 里的 momentResult / draftResult"

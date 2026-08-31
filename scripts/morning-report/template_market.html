@@ -22,7 +22,7 @@
   .pill.up{ color:var(--up); }
   .pill.down{ color:var(--down); }
   .pill.flat{ color:var(--sub); font-weight:600; }
-  /* 分组小标: A股(今天收盘) vs 隔夜外盘, 防止读者把两个时点的涨跌看成同一天 */
+  /* 分组小标: A股(上一交易日收盘) vs 隔夜外盘, 防止读者把两个时点的涨跌看成同一天 */
   .grp{ margin:14px 0 2px; font-size:24px; font-weight:800; color:#11305f; letter-spacing:2px; }
   .grp::before{ content:"■ "; color:#c79a4b; }
   .ft{ text-align:center; margin-top:22px; font-size:22px; color:var(--sub); letter-spacing:1px; }
@@ -32,7 +32,7 @@
 <div class="card">
   <div class="hd">
     <div class="t">📈 今日行情速览</div>
-    <div class="d">{{ data_date }}　A股{{ cn_asof or '今日收盘' }} · 全球隔夜 · 一图看涨跌</div>
+    <div class="d">{{ data_date }}　A股{{ cn_asof or '上一交易日收盘' }} · 全球隔夜 · 一图看涨跌</div>
   </div>
   <div class="rows">
     {% for r in rows %}

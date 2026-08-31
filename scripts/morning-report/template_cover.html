@@ -43,12 +43,12 @@
   <div class="brandbar">
     <div class="logo">保</div>
     <div><div class="bname">{{ bname or '保心上人' }}</div><div class="bsub">{{ bsub or 'PROTECT · WEALTH · ADVISORY' }}</div></div>
-    <div class="upd">{{ upd or '每日 16:00' }}</div>
+    <div class="upd">{{ upd or '每日 07:00' }}</div>
   </div>
 
   {% if hook_big %}
   <!-- 钩子大字版: 当天最扎心的一句占满画面, 小缩略图上也看得清 -->
-  <div class="kicker">📰 {{ brand or '财经日报' }}　<b>{{ date_cn or pub_date }}</b></div>
+  <div class="kicker">📰 {{ brand or '财经晨报' }}　<b>{{ date_cn or pub_date }}</b></div>
   <div class="hookbig">{{ hook_big }}</div>
   {% if hook_sub %}<div class="hooksub">{{ hook_sub }}</div>{% endif %}
   {% if cover_items %}
@@ -60,7 +60,7 @@
   </div>
   {% endif %}
   {% else %}
-  <h1><span class="em">📰</span> {{ brand or '财经日报' }}</h1>
+  <h1><span class="em">📰</span> {{ brand or '财经晨报' }}</h1>
   <div class="date">📅 <b>{{ pub_date }}</b>　全球市场 · 内地财经 · 一图速览</div>
 
   {% if trend %}

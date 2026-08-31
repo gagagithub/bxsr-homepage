@@ -50,17 +50,32 @@ TODAY = f"{bj_now.year}年{bj_now.month}月{bj_now.day}日"
 YEAR = bj_now.year
 TODAY_ISO = bj_now.strftime("%Y-%m-%d")
 
-# ⚠2026-08-07 养老日报恢复后一天会有两条管线跑到这里(养老日报 12:00 / 财经日报 14:00)。
-# 若当天已经检索过(12:00 那次会 commit 留底), 后一次直接复用, 不再重新联网检索 ——
-# 否则 14:00 那次会把 12:00 的结果当"上一期已用过"的排除清单, 财经日报养老档当天素材凭空清零
-# (与 7-29「跑了没发要清空排除清单」是同一族坑)。两条管线谁先跑到都成立, 顺序无所谓。
+# ⚠2026-08-07 起一天有两条管线跑到这里, 当天已检索过就复用留底、不重新联网检索。
+# ⚠2026-08-31 财经晨报改 07:00、养老日报仍 16:00, 两条拉开 9 小时后, 无条件复用会**害了养老号**:
+#   养老 16:00 会原样吃早上 7 点那批素材, 整个白天的养老新闻(政策通常上午/下午发)全部丢掉。
+#   故复用加时效窗口 REUSE_HOURS: 只有距上次检索够近才算"同一批新闻"。
+#   (原注释担心的"后跑那次把先跑的结果当排除清单、素材凭空清零"是 8-27 引入 14 天 history 之前的
+#    旧机制; 现在 exclude_for/程序化去重都从 pension_news_history.json 取且已过滤掉当天,
+#    重搜不会拿今天早上的排除自己 —— 代价只是多一次千问调用。)
+REUSE_HOURS = 4
 try:
     _prev_doc = json.load(open(OUT))
 except Exception:
     _prev_doc = {}
-if _prev_doc.get("fetched_date") == TODAY_ISO and _prev_doc.get("items"):
-    print(f"ⓘ 今天({TODAY_ISO})已检索过({len(_prev_doc['items'])} 条, 另一条管线留底), 直接复用不重搜")
+_prev_at = _prev_doc.get("fetched_at")
+_reuse_age = None
+if _prev_doc.get("fetched_date") == TODAY_ISO and _prev_doc.get("items") and _prev_at:
+    try:
+        _reuse_age = (bj_now.replace(tzinfo=None)
+                      - datetime.strptime(_prev_at, "%Y-%m-%d %H:%M:%S")).total_seconds() / 3600
+    except Exception:
+        _reuse_age = None
+if _reuse_age is not None and 0 <= _reuse_age < REUSE_HOURS:
+    print(f"ⓘ 今天 {_prev_at} 已检索过({len(_prev_doc['items'])} 条, 另一条管线留底, "
+          f"{_reuse_age:.1f} 小时前), 直接复用不重搜")
     sys.exit(0)
+if _prev_doc.get("fetched_date") == TODAY_ISO:
+    print(f"ⓘ 当天留底已过时(上次 {_prev_at or '无时刻'}, 超过 {REUSE_HOURS} 小时), 重新检索")
 
 # ---------- 跨天历史(2026-08-27 崔伟"变成宽素材") ----------
 # ⚠原做法: prev_by_topic 直接读 pension_news.json 当排除清单 —— 但那个文件**每天被整个覆盖**,
@@ -591,7 +606,8 @@ try:
 except Exception as e:
     print(f"⚠ 财新源取数失败(不阻塞): {type(e).__name__}: {str(e)[:60]}", file=sys.stderr)
 
-json.dump({"fetched_date": TODAY_ISO, "items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
+json.dump({"fetched_date": TODAY_ISO, "fetched_at": bj_now.strftime("%Y-%m-%d %H:%M:%S"),
+           "items": items}, open(OUT, "w"), ensure_ascii=False, indent=2)
 
 # 追加进 14 天历史(供次日起做程序化去重和每路排除清单)。⚠重新读一次盘, 不用内存里那份 ——
 # 同一天两条管线各跑一次时, 后跑的这次要能看见先跑那次已经写进去的内容。

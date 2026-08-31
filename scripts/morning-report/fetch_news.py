@@ -65,11 +65,15 @@ if sina is not None and len(sina):
         add += 1
     print(f"新浪补充 {add} 条")
 
-# ---- 时间窗: 只保留【今天(北京)】的新闻 ----
-# ⚠2026-07-28 由晨报(凌晨02:30跑, 窗口"近30小时=隔夜+今早")改为日报(17:05跑, 窗口"今天全天")。
+# ---- 时间窗: 保留【昨天全天 + 今天早上】的新闻 ----
+# ⚠2026-08-31 由日报(16:00跑, 窗口"今天全天")改回晨报(07:00跑): 早上7点"今天"几乎没有新闻,
+#   窗口必须往前推到昨天0点 —— 覆盖昨天白天A股/国内的事 + 昨夜隔夜外盘 + 今天早上。
+#   (历史: 6-25 晨报版是"近30小时"; 7-28 改下午发时收成"今天全天"; 现在回到晨报, 用自然日边界
+#    比"近31小时"更好懂, 也保证昨天早盘的新闻不会因为跑的时刻不同而时有时无。)
 # 时区: Action 跑在 UTC runner, 而东财/新浪的时间戳是北京时间, 必须换算后再比, 否则差 8 小时。
 BJ_NOW = datetime.utcnow() + timedelta(hours=8)
 BJ_TODAY0 = BJ_NOW.replace(hour=0, minute=0, second=0, microsecond=0)
+BJ_YDAY0 = BJ_TODAY0 - timedelta(days=1)
 
 def parse_ts(ts):
     """东财/新浪都给 'YYYY-MM-DD HH:MM:SS'(北京时间); 解析不了返回 None(无法判断, 一律保留)。"""
@@ -82,12 +86,12 @@ def after(cutoff):
     return [it for it in items
             if (parse_ts(it["time"]) is None) or (parse_ts(it["time"]) >= cutoff)]
 
-fresh = after(BJ_TODAY0)
+fresh = after(BJ_YDAY0)
 
-# 兜底: 今天条数太少(节假日/取数异常/时间戳格式变化)时放宽到近 24 小时, 宁可多给 AI 一点料也别开天窗
+# 兜底: 条数太少(长假/取数异常/时间戳格式变化)时再往前放宽一天, 宁可多给 AI 一点料也别开天窗
 if len(fresh) < 60:
-    print(f"⚠ 今日条数仅 {len(fresh)} 条, 放宽到近24小时")
-    fresh = after(BJ_NOW - timedelta(hours=24))
+    print(f"⚠ 昨天+今早条数仅 {len(fresh)} 条, 放宽到近 48 小时")
+    fresh = after(BJ_NOW - timedelta(hours=48))
 
 out = {
     "generated_utc": datetime.now(timezone.utc).isoformat(),
