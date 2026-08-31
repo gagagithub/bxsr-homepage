@@ -32,11 +32,28 @@ def is_noise(t):
 kept = [it for it in items if not is_noise(it["text"])]
 
 # 给每条编号(供 AI 引用原文链接, 避免它瞎编 link)；喂较完整正文以保留全部数字
+# ⚠2026-08-31 改晨报后补的 d 字段(发布时刻): 原来喂给 AI 的条目**只有正文没有时间**,
+#   它无从判断哪条是昨天、哪条是今早 —— 16:00 跑日报时无所谓(全是当天的), 但 07:00 跑晨报时
+#   新闻横跨昨天全天+今早, 不给时刻它就会把昨天下午的事写成"今天下午"(本地试跑实测出现过)。
+#   对 50+ 读者这是硬性错误: 今天下午还没到。
+import datetime as _dt0
+_BJ_TODAY0 = (_dt0.datetime.utcnow() + _dt0.timedelta(hours=8)).replace(
+    hour=0, minute=0, second=0, microsecond=0)
+
+def _daylabel(ts):
+    try:
+        t = _dt0.datetime.strptime(str(ts)[:19], "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return ""
+    dd = (_BJ_TODAY0.date() - t.date()).days
+    hm = t.strftime("%H:%M")
+    return {0: f"今天{hm}", 1: f"昨天{hm}", 2: f"前天{hm}"}.get(dd, t.strftime("%m月%d日") + hm)
+
 indexed = []
 idmap = {}  # 新id -> 原items下标
 for i, it in enumerate(kept):
     idmap[i] = items.index(it)
-    indexed.append({"id": i, "t": it["text"][:460]})
+    indexed.append({"id": i, "d": _daylabel(it.get("time")), "t": it["text"][:460]})
 print(f"预过滤后喂给 AI {len(indexed)} 条 (原始 {len(items)} 条)")
 
 # ---------- 养老民生素材(fetch_pension_news.py 联网检索, 崔伟 2026-07-28 要求) ----------
@@ -77,7 +94,7 @@ for it in _pn:
     local = bool(it.get("local"))
     if local:
         tag += "【地方性消息，只进正文不做主打，正文必须写清是哪个省市】"
-    indexed.append({"id": nid, "t": f"{tag}（据{src}）{t}"[:460]})
+    indexed.append({"id": nid, "d": "近期", "t": f"{tag}（据{src}）{t}"[:460]})
     # official 放宽: 部委正式发布 or 正规财经媒体报道 → 允许做主打/标题
     PENSION_SRC[nid] = {"src": src, "official": off or trusted,
                         "trusted": trusted and not off, "stale": stale, "local": local}
@@ -160,7 +177,8 @@ NEWS_JSON = json.dumps(indexed, ensure_ascii=False)
 
 def build_user(themes=None, want_meta=False, want_review=False, tip_topic=None):
     """themes=本次要产出的主题(健康/养老/传承子集); want_meta=产 hook+trend+moment+highlights; want_review=产 review; tip_topic=今天健康小课堂主题。"""
-    head = (f"""今天的真实财经新闻电报如下（JSON 数组，id 为编号，t 为内容，已含较完整细节，请把同主题多条合并成一条更完整的）：
+    head = (f"""这批真实财经新闻电报覆盖【昨天全天 + 今天早上】（JSON 数组，id 为编号，t 为内容，**d 为这条新闻的发布时刻**，已含较完整细节，请把同主题多条合并成一条更完整的）：
+⚠写时间措辞**一律以 d 为准**：d 是"昨天HH:MM"就写"昨天/昨天上午/昨天下午/昨天收盘"，d 是"今天HH:MM"就写"今天早上/今早/刚刚"，讲美股外盘写"昨夜/隔夜"，d 是"近期"的不要写具体时间。**绝不许把 d 标着昨天的事写成"今天"**——晨报是早上7点多发的，今天白天还没发生。
 {NEWS_JSON}
 
 请整理成《财经晨报》的【部分内容】。严格输出如下 JSON（不要多余文字、不要 markdown 代码块）：
@@ -468,7 +486,8 @@ def gen_briefs():
         if _l and _l not in used_labels:
             used_labels.append(_l)
     user = (
-        "下面是今天【已在晨报正文用过的新闻之外】剩下的真实新闻电报(JSON 数组, id 为编号):\n"
+        "下面是【已在晨报正文用过的新闻之外】剩下的真实新闻电报(JSON 数组, id 为编号, d 为发布时刻,\n"
+        "时间措辞以 d 为准: 昨天的写'昨天'、今早的写'今早', 别把昨天的写成今天):\n"
         + json.dumps(unused, ensure_ascii=False)
         + '\n\n请挑最多 12 条做成文末「其他要闻速览」。严格输出如下 JSON(不要多余文字、不要 markdown 代码块):\n'
           '{"briefs": [{"cat":"分类, 只能从这些里选: 股市/楼市/宏观/公司/环球", "label":"机构/主体(2-8字)", '
