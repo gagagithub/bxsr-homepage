@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""财经晨报·渲染：data.json(行情) + sections.json(AI整理的真实新闻) → morning-report.html(移动端H5)。
+"""财经日报·渲染：data.json(行情) + sections.json(AI整理的真实新闻) → morning-report.html(移动端H5)。
 pub_date 走环境变量 MX_PUB_DATE(Asia/Shanghai), 缺省取本机当天。"""
 import os, json, re
 from datetime import datetime
@@ -32,7 +32,7 @@ def idx_row(v, name):
         cls=pct_cls(v.get("day_pct")), ar=arrow(v.get("day_pct")),
     )
 
-# ---- 行情：A股三大指数(晨报=上一交易日收盘, 仍排首位) ----
+# ---- 行情：A股三大指数(今日收盘, 日报首位) ----
 # 下午发放, 读者最关心今天A股怎么收的; 老 data.json 没有 cn_indices 时整块不渲染(优雅降级)
 CN_IDX_NAME = {"SH": "上证指数", "SZ": "深证成指", "CYB": "创业板指"}
 cn_indices = []
@@ -111,9 +111,9 @@ ctx = dict(
     trend=S.get("trend", ""),
     highlights=[h for h in S.get("highlights", []) if h.get("text") or h.get("title")],
     cn_indices=cn_indices, indices=indices, chips=chips, themes=themes,
-    # A股时点标签跟着取数时刻走(fetch_cn.py 写入): 晨报 07:00 跑时 A股还没开盘,
-    # 自动写"上一交易日收盘"(周末写"最新收盘"); 缺字段时的回退也按晨报口径给
-    cn_asof=(D.get("cn_asof") or "上一交易日收盘"),
+    # A股时点标签跟着取数时刻走(fetch_cn.py 写入): 日报 16:00 跑时 A股(15:00)已收盘,
+    # 自动写"今日收盘"(周末写"最新收盘"); 缺字段时的回退也按日报口径给
+    cn_asof=(D.get("cn_asof") or "今日收盘"),
     review=S.get("review", {}),
     briefs=S.get("briefs", []) or [],
     has_video=has_video,
