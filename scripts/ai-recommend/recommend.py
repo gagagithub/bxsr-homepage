@@ -152,8 +152,30 @@ RANK_SCHEMA = {"type": "object", "properties": {"order": {"type": "array", "item
                "required": ["order"], "additionalProperties": False}
 
 
+# 运行报告(9-21 崔伟: 每天跑完夏梅发他一条, 成功失败都发)。只放条数/原因, 不放任何客户内容。
+STATUS = {"warnings": [], "last": ""}
+
+
 def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    STATUS["last"] = msg
+    if "失败" in msg:
+        STATUS["warnings"].append(msg)
+
+
+def report(ok, today, error=""):
+    if MODE != "run" or DRY:
+        return
+    body = {"date": today or time.strftime("%Y-%m-%d"), "ok": ok, "error": error, "warnings": STATUS["warnings"][:5]}
+    for k in ("jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip"):
+        if k in STATUS:
+            body[k] = STATUS[k]
+    try:
+        r = requests.post(f"{BASE_URL}/aiRecommend/report",
+                          data={"token": TOKEN, "payload": json.dumps(body, ensure_ascii=False)}, timeout=60)
+        print(f"运行报告: HTTP {r.status_code} {r.text[:80]}", flush=True)
+    except Exception as e:
+        print(f"运行报告发送失败 {type(e).__name__}", flush=True)
 
 
 def call_claude(system, user, schema):
@@ -250,7 +272,8 @@ def jev_rescue(custs, today):
             hits = list(pool.map(lambda c: jev_hit(c, today), custs))
         fail = sum(h is None for h in hits)
         got = {c["cid"] for c, h in zip(custs, hits) if h}
-        log(f"Jev 补漏: 查 {len(custs)} 户, 补进 {len(got)} 户, 失败 {fail} 户, {time.time() - t0:.0f}s")
+        log(f"Jev 补漏: 查 {len(custs)} 户, 补进 {len(got)} 户, 调用出错 {fail} 户, {time.time() - t0:.0f}s")
+        STATUS.update(jevChecked=len(custs), jevAdded=len(got))
         return got
     except Exception as e:
         log(f"Jev 补漏整体失败, 只用关键词 {type(e).__name__}")
@@ -292,7 +315,9 @@ def renew_all(today, planners, exclude):
     creations = d.get("creations") or []
     if not creations:
         log(f"翻新: {d.get('creationDate')} 没有作品, 今天不做翻新")
+        STATUS["renewSkip"] = f"{str(d.get('creationDate'))[5:]} 没有作品，今天不做"
         return {}
+    STATUS.update(renewDate=d.get("creationDate"), renewWorks=len(creations))
     cmap = {c["id"]: c for c in creations}
     works = "\n\n".join(
         f"【作品 {c['id']}】{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
@@ -360,6 +385,7 @@ def main():
         log(f"导出失败: {data.get('msg')}")
         sys.exit(1)
     today, persona = data["today"], data.get("persona") or ""
+    STATUS["today"] = today
     if not persona.strip():
         log("服务器上没有画像文件 persona.md, 停止")
         sys.exit(1)
@@ -446,7 +472,16 @@ def main():
     log(f"回传: code={body.get('code')} saved={body.get('saved')} msg={str(body.get('msg'))[:100]}")
     if body.get("code") != 0:
         sys.exit(1)
+    report(True, today)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit as e:
+        if e.code not in (0, None):
+            report(False, STATUS.get("today"), STATUS["last"])
+        raise
+    except Exception as e:
+        report(False, STATUS.get("today"), f"{type(e).__name__}: {str(e)[:150]}")
+        raise
