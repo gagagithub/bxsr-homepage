@@ -311,13 +311,8 @@ def main():
         log("没有可复盘的规划师, 结束(不推送)")
         return
 
+    # 崔伟 9-21: 他只要一条「所有人完整复盘链接」, 不要团队汇总 → 不再调团队汇总
     team_push = ""
-    try:
-        team_push, u = call_claude(TEAM_PROMPT, json.dumps(team_input, ensure_ascii=False))
-        total_cost += cost_usd(u)
-        log(f"团队汇总 ok, {usage_line(u)}")
-    except Exception as e:
-        log(f"团队汇总失败 {type(e).__name__}: {str(e)[:200]}")
 
     payload = {"windowStart": ws, "windowEnd": we, "testVxId": TEST_VXID,
                "planners": results, "team": {"push": name_unarchived(team_push)}}
