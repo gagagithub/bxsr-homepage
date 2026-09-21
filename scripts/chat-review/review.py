@@ -161,6 +161,8 @@ def build_user_prompt(p, window_start, window_end):
             meta.append(f"加好友{c['addDate']}")
         if c.get("silentDays") is not None:
             meta.append(f"本次之前已 {c['silentDays']} 天没聊过")
+        elif not c.get("history"):
+            meta.append("之前没有聊天记录")
         lines.append(f"===== 客户 {c['key']}（{' / '.join(m for m in meta if m)}）=====")
         if c.get("history"):
             lines.append("—— 之前的聊天（仅供理解来龙去脉）——")
@@ -204,7 +206,8 @@ def esc(s):
 
 
 def who(c):
-    return f"{{{{c:{esc(c)}}}}}"
+    key = (c or "").replace("{", "").replace("}", "").replace("c:", "").strip()
+    return f"{{{{c:{esc(key)}}}}}"
 
 
 def render_page(p, r, window_start, window_end):
