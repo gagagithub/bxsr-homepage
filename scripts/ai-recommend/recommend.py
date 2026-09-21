@@ -22,6 +22,7 @@ import requests
 BASE_URL = os.environ.get("AI_REC_BASE", "https://214club.com.cn")
 TOKEN = os.environ.get("CHAT_REVIEW_TOKEN", "")
 MODE = (os.environ.get("MODE") or "run").strip()
+DRY = os.environ.get("DRY") == "1"      # 只跑不回传(联调用)
 ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip()]
 
 MODEL = "claude-opus-5"
@@ -91,6 +92,31 @@ PICK_PROMPT = """你在为保险经纪公司「保心上人」的规划师挑选
 ========== 客户画像 ==========
 {persona}
 """
+
+RENEW_N = 10        # 翻新激活每人每天最多几户(9-21 崔伟定)
+
+RENEW_PROMPT = """你在帮保险经纪公司「保心上人」的规划师做「翻新激活」：把私海里很久没单聊的客户（P3 已成交 / P2 方案讲解 / P1 需求了解）一个个重新联系起来。今天是 {today}。
+公司昨天（{cdate}）发了几条新作品（视频/文章），给每位挑中的客户配一条最对口的作品，当作重新开口的由头。
+
+【要求】
+1. 从候选里挑**最多 {n} 户**，P3/P2/P1 三层混着挑（尽量每层都有）。每层候选已按轮换顺序排好，越靠前越该轮到，同样合适时优先挑靠前的。
+2. 只挑能和某条作品真正对上的客户：看第一诉求、成交产品、客户说过的话、跟进备注。对不上的不要硬配，宁缺毋滥，一户都对不上就返回空数组。
+   P3 已成交客户：配能引出加保、给家人配置、新一笔钱的作品，或和他已买产品相关的新动态；别配会让他觉得自己买亏了的作品。
+3. match_reason 一句话（40 字以内）说为什么这条作品配这位客户，要落到客户的诉求、说过的话或成交记录上。
+4. first_line 用规划师口吻写一句微信开场，自然带出这条作品（比如「昨天我们发了一条……想到你之前……」），能接住客户以前说过的话更好。
+   很久没联系了，语气别像推销，别一上来就问买不买；不许承诺收益、不许说保证、不许编作品里没有的产品事实；
+   称呼只能用资料里出现过的称呼（如「王总」「姐」），没有就不带称呼。
+5. 你看不到客户名字，所有文字里都不要写客户名字。
+"""
+
+RENEW_SCHEMA = {"type": "object", "properties": {"picks": {"type": "array", "items": {
+    "type": "object", "properties": {
+        "cid": {"type": "integer"}, "creation_id": {"type": "integer"},
+        "match_reason": {"type": "string"}, "first_line": {"type": "string"}},
+    "required": ["cid", "creation_id", "match_reason", "first_line"], "additionalProperties": False}}},
+    "required": ["picks"], "additionalProperties": False}
+
+LAYER_NAME = {"P3": "P3 已成交", "P2": "P2 方案讲解", "P1": "P1 需求了解"}
 
 RANK_PROMPT = """你在为保险经纪公司的规划师排「今天最值得联系的客户」。今天是 {today}。
 下面是分几批挑出来的候选（每户已写好命中的信号、客户原话、为什么是今天）。请严格按《客户画像》的信号优先级（信号①「客户自己说过的时间点到了/快到了」最优先；同一信号里，更具体、更近、离成交更近的在前），
@@ -251,6 +277,73 @@ def batches(custs):
     return out
 
 
+def renew_all(today, planners, exclude):
+    """翻新激活: 每位规划师从私海 P3/P2/P1 轮换队列里配昨天的作品挑 ≤RENEW_N 户。返回 {uid: [卡片]}。失败返回 {}。"""
+    try:
+        r = requests.get(f"{BASE_URL}/aiRecommend/renewExport", params={"token": TOKEN}, timeout=300)
+        r.raise_for_status()
+        d = r.json()
+    except Exception as e:
+        log(f"翻新: 导出失败 {type(e).__name__}")
+        return {}
+    if d.get("code") != 0:
+        log(f"翻新: 导出失败 {str(d.get('msg'))[:80]}")
+        return {}
+    creations = d.get("creations") or []
+    if not creations:
+        log(f"翻新: {d.get('creationDate')} 没有作品, 今天不做翻新")
+        return {}
+    cmap = {c["id"]: c for c in creations}
+    works = "\n\n".join(
+        f"【作品 {c['id']}】{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
+        for c in creations)
+    by = {}
+    for c in d.get("candidates") or []:
+        if c["uid"] in planners and (not ONLY or str(c["uid"]) in ONLY) and c["cid"] not in exclude.get(c["uid"], set()):
+            by.setdefault(c["uid"], []).append(c)
+    log(f"翻新: 作品 {len(creations)} 条, 候选 " + ", ".join(f"{u}:{len(v)}" for u, v in by.items()))
+    system = RENEW_PROMPT.format(today=today, cdate=d.get("creationDate"), n=RENEW_N)
+
+    def one(item):
+        uid, cs = item
+        parts = [f"========== 昨天的作品 ==========\n{works}\n\n========== 候选客户 =========="]
+        for layer in ("P3", "P2", "P1"):
+            rows = [c for c in cs if c["layer"] == layer]
+            if not rows:
+                continue
+            parts.append(f"\n## {LAYER_NAME[layer]}（按轮换顺序，越前越该轮到）")
+            for c in rows:
+                said = "；".join(c.get("said") or []) or "无"
+                notes = "；".join(c.get("notes") or []) or "无"
+                parts.append(f"客户ID {c['cid']} | 第一诉求：{c['appeal'] or '未填'} | 成交：{c['deals']} | "
+                             f"上次单聊：{c['lastSingle']} | 加微：{c['adddate']} | 客户说过：{said} | 跟进备注：{notes}")
+        t0 = time.time()
+        try:
+            out, u = call_claude(system, "\n".join(parts) + "\n\n请按要求挑选并输出。", RENEW_SCHEMA)
+        except Exception as e:
+            log(f"翻新 {uid}: 失败 {type(e).__name__}: {str(e)[:150]}")
+            return uid, []
+        meta = {c["cid"]: c for c in cs}
+        cards, seen = [], set()
+        for p in out["picks"]:
+            if p["cid"] not in meta or p["creation_id"] not in cmap or p["cid"] in seen:
+                continue
+            seen.add(p["cid"])
+            m, w = meta[p["cid"]], cmap[p["creation_id"]]
+            acct = w["account"] if w["account"] and w["account"] != "待定" else (w["category"] + "号" if w["category"] else "")
+            cards.append({"cid": p["cid"], "signal": "", "jiabao": False, "quotes": [], "context": [], "rank_note": "",
+                          "why_today": p["match_reason"], "first_line": p["first_line"],
+                          "creation_id": w["id"], "creation_title": w["title"], "creation_url": w["url"],
+                          "creation_account": acct, "state": m["state"], "appeal": m["appeal"],
+                          "deals": m["deals"], "sea": "私海"})
+        cards = cards[:RENEW_N]
+        log(f"翻新 {uid}: 候选 {len(cs)} → {len(cards)} 户, {time.time() - t0:.0f}s, {usage_line(u)}")
+        return uid, cards
+
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        return {uid: cards for uid, cards in pool.map(one, by.items()) if cards}
+
+
 def main():
     if not TOKEN:
         log("缺 CHAT_REVIEW_TOKEN")
@@ -332,9 +425,19 @@ def main():
         results.append({"userId": uid, "top": full[:TOP_N], "bench": full[TOP_N:]})
         log(f"{uid}: 前 {len(full[:TOP_N])} 户, 候补 {len(full[TOP_N:])} 户")
 
+    exclude = {r["userId"]: {c["cid"] for c in r["top"] + r["bench"]} for r in results}
+    renew = renew_all(today, planners, exclude)
+    for r in results:
+        r["renew"] = renew.pop(r["userId"], [])
+    for uid, cards in renew.items():
+        results.append({"userId": uid, "top": [], "bench": [], "renew": cards})
+
     if not results:
         log("没有推荐结果, 不回传")
         sys.exit(1)
+    if DRY:
+        log("DRY=1, 不回传")
+        return
     up = requests.post(f"{BASE_URL}/aiRecommend/upload",
                        data={"token": TOKEN, "payload": json.dumps({"date": today, "planners": results}, ensure_ascii=False)},
                        timeout=180)
