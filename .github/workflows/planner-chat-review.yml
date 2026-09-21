@@ -1,0 +1,63 @@
+name: 规划师聊天复盘 - 每日 18:00 (Claude 分析)
+
+# 2026-09-21 崔伟拍板: 规划师想当天看到自己所有客户聊天里哪里做得不好 → 由 Claude 逐客户复盘。
+# 流程: 生产导出过去 24 小时 1 对 1 聊天(已脱敏: 不带客户名、手机号/证件号打码)
+#       → Claude(claude-opus-5) 每人一份复盘 + 给崔伟的团队汇总
+#       → 回传生产 /chatReview/upload → 生产替换回客户昵称、存完整页、夏梅推送。
+# ⚠定时不走 GitHub schedule(白天排队延迟 1~3.5 小时), 由生产服务器计划任务
+#   ChatReviewDispatch(每天北京 18:00)准点 workflow_dispatch 触发。
+#   ⚠别加 schedule, 否则一天双跑、规划师收两条。
+# ⛔本仓库是 PUBLIC: Actions 日志人人可看 → 脚本只打印条数/耗时, 绝不打印聊天或分析内容, 也不传 artifact。
+# 手动: gh workflow run planner-chat-review.yml -f mode=run -f test_vxid=CuiWei   (只发崔伟一人)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'run=正式 / ping=只测 Claude key 通不通'
+        required: false
+        default: 'run'
+      test_vxid:
+        description: '填企微 userid 则所有消息只发给这一个人(联调用), 留空=正式发'
+        required: false
+        default: ''
+      only:
+        description: '只分析这些规划师 vx_id(逗号分隔), 留空=全部'
+        required: false
+        default: ''
+      end:
+        description: '窗口结束时间 yyyy-MM-dd HH:mm(北京), 留空=现在; 窗口=之前 24 小时'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: planner-chat-review
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -q anthropic requests
+
+      - name: Review
+        working-directory: scripts/chat-review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CHAT_REVIEW_TOKEN: ${{ secrets.CHAT_REVIEW_TOKEN }}
+          MODE: ${{ inputs.mode || 'run' }}
+          TEST_VXID: ${{ inputs.test_vxid }}
+          ONLY: ${{ inputs.only }}
+          WINDOW_END: ${{ inputs.end }}
+        run: python -u review.py
