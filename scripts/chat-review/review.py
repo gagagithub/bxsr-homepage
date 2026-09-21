@@ -1,7 +1,7 @@
 """规划师聊天复盘 —— 每天 18:00 由生产服务器 workflow_dispatch 触发。
 
 生产导出过去 24 小时的 1 对 1 聊天(已脱敏: 客户只有编号, 手机号/证件号已打码)
-→ Claude 每位规划师出一份复盘 + 一份给崔伟的团队汇总
+→ Claude(走崔伟的 Claude 订阅, CLI + CLAUDE_CODE_OAUTH_TOKEN) 每位规划师出一份复盘 + 一份给崔伟的团队汇总
 → 回传生产 /chatReview/upload, 生产把 {{c:编号}} 换回客户昵称、存完整页、夏梅推送。
 
 ⛔本仓库 PUBLIC, Actions 日志人人可看: 这里只打印条数/耗时/token, 绝不打印聊天或分析内容。
@@ -9,10 +9,11 @@
 import html
 import json
 import os
+import re
+import subprocess
 import sys
 import time
 
-import anthropic
 import requests
 
 BASE_URL = os.environ.get("CHAT_REVIEW_BASE", "https://214club.com.cn")
@@ -25,8 +26,6 @@ WINDOW_END = (os.environ.get("WINDOW_END") or "").strip()
 MODEL = "claude-opus-5"
 # 规划师窗口内和客户来往少于这么多条就不出复盘(没东西可说, 硬写只会是空话)
 MIN_MESSAGES = 6
-
-client = anthropic.Anthropic(max_retries=4, timeout=900)
 
 
 SYSTEM_PROMPT = """你是「保心上人」保险经纪团队的销售教练。每天傍晚，你把一位规划师过去 24 小时和客户的企业微信 1 对 1 聊天全部读一遍，告诉他哪里做得不好、换成怎么说更好，明天先联系谁。
@@ -111,44 +110,50 @@ PLANNER_SCHEMA = {
 }
 
 
+def name_unarchived(s):
+    """系统里没建档的客户(编号 x1、x2…)生产端查不到昵称, 这里直接写成「未建档客户1」, 规划师靠引用原话认人。"""
+    return re.sub(r"\{\{c:x(\d+)\}\}", r"未建档客户\1", s or "")
+
+
 def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def call_claude(system, user, schema=None, max_tokens=32000):
-    """一次分析调用。返回 (文本, usage)。遇到拒答自动由服务端切到 opus-4-8 兜底。"""
-    output_config = {"effort": "high"}
+def call_claude(system, user, schema=None):
+    """一次分析调用, 走崔伟的 Claude 订阅(Claude Code CLI + CLAUDE_CODE_OAUTH_TOKEN), 不走按量付费的 API。
+    返回 (文本, 用量信息 dict)。有 schema 时文本是保证合法的 JSON。"""
+    cmd = ["claude", "-p", "--model", MODEL, "--effort", "high", "--system-prompt", system,
+           "--tools", "", "--output-format", "json", "--no-session-persistence"]
     if schema:
-        output_config["format"] = {"type": "json_schema", "schema": schema}
-    with client.beta.messages.stream(
-        model=MODEL,
-        max_tokens=max_tokens,
-        thinking={"type": "adaptive"},
-        output_config=output_config,
-        betas=["server-side-fallback-2026-06-01"],
-        fallbacks=[{"model": "claude-opus-4-8"}],
-        system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": user}],
-    ) as stream:
-        msg = stream.get_final_message()
-    if msg.stop_reason == "refusal":
-        raise RuntimeError("模型拒答(refusal)")
-    if msg.stop_reason == "max_tokens":
-        raise RuntimeError("输出被 max_tokens 截断")
-    text = "".join(b.text for b in msg.content if b.type == "text").strip()
-    return text, msg.usage
+        cmd += ["--json-schema", json.dumps(schema, ensure_ascii=False)]
+    proc = subprocess.run(cmd, input=user, capture_output=True, text=True, timeout=1500)
+    try:
+        d = json.loads(proc.stdout)
+    except Exception:
+        # 只打退出码和错误输出开头, 不打任何聊天内容
+        raise RuntimeError(f"CLI 退出码 {proc.returncode}: {proc.stderr[:300]}")
+    if d.get("is_error"):
+        raise RuntimeError(f"CLI 报错 subtype={d.get('subtype')}: {str(d.get('result'))[:300]}")
+    if schema:
+        if d.get("structured_output") is None:
+            raise RuntimeError("没有拿到结构化输出")
+        text = json.dumps(d["structured_output"], ensure_ascii=False)
+    else:
+        text = (d.get("result") or "").strip()
+    return text, d
 
 
-def usage_line(u):
-    return (f"in={u.input_tokens} cache_read={getattr(u, 'cache_read_input_tokens', 0) or 0} "
-            f"cache_write={getattr(u, 'cache_creation_input_tokens', 0) or 0} out={u.output_tokens}")
+def usage_line(d):
+    parts = []
+    for m, u in (d.get("modelUsage") or {}).items():
+        parts.append(f"{m}: in={u.get('inputTokens')} cache_read={u.get('cacheReadInputTokens')} "
+                     f"cache_write={u.get('cacheCreationInputTokens')} out={u.get('outputTokens')}")
+    return "; ".join(parts) or "无用量信息"
 
 
-def cost_usd(u):
-    # claude-opus-5: 输入 $5 / 输出 $25 每百万 token; 缓存读 0.1 倍、写 1.25 倍
-    cr = getattr(u, "cache_read_input_tokens", 0) or 0
-    cw = getattr(u, "cache_creation_input_tokens", 0) or 0
-    return (u.input_tokens * 5 + cr * 0.5 + cw * 6.25 + u.output_tokens * 25) / 1e6
+def cost_usd(d):
+    # 按 API 牌价折算的等值金额(走订阅不实际扣费, 只用来观察用量)
+    return d.get("total_cost_usd") or 0.0
 
 
 def build_user_prompt(p, window_start, window_end):
@@ -253,7 +258,7 @@ def render_page(p, r, window_start, window_end):
 
 # ---------------------------------------------------------------- 主流程
 def ping():
-    text, u = call_claude("你是一个测试助手。", "只回复两个字：正常", max_tokens=2000)
+    text, u = call_claude("你是一个测试助手。", "只回复两个字：正常")
     log(f"ping ok, model={MODEL}, 回复长度={len(text)}, {usage_line(u)}")
 
 
@@ -296,8 +301,8 @@ def main():
         total_cost += cost_usd(u)
         log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条, 用时 {time.time() - t0:.0f}s, "
             f"风险{len(r['risks'])} 改进{len(r['improve'])} 好{len(r['good'])}, {usage_line(u)}")
-        results.append({"vxId": p["vxId"], "name": p["name"], "push": r["push"],
-                        "html": render_page(p, r, ws, we),
+        results.append({"vxId": p["vxId"], "name": p["name"], "push": name_unarchived(r["push"]),
+                        "html": name_unarchived(render_page(p, r, ws, we)),
                         "customerCount": len(p["customers"]), "msgCount": p["msgCount"]})
         team_input.append({"规划师": p["name"], "客户数": len(p["customers"]), "消息数": p["msgCount"],
                            "overview": r["overview"], "risks": r["risks"], "improve": r["improve"],
@@ -309,20 +314,20 @@ def main():
 
     team_push = ""
     try:
-        team_push, u = call_claude(TEAM_PROMPT, json.dumps(team_input, ensure_ascii=False), max_tokens=16000)
+        team_push, u = call_claude(TEAM_PROMPT, json.dumps(team_input, ensure_ascii=False))
         total_cost += cost_usd(u)
         log(f"团队汇总 ok, {usage_line(u)}")
     except Exception as e:
         log(f"团队汇总失败 {type(e).__name__}: {str(e)[:200]}")
 
     payload = {"windowStart": ws, "windowEnd": we, "testVxId": TEST_VXID,
-               "planners": results, "team": {"push": team_push}}
+               "planners": results, "team": {"push": name_unarchived(team_push)}}
     up = requests.post(f"{BASE_URL}/chatReview/upload",
                        data={"token": TOKEN, "payload": json.dumps(payload, ensure_ascii=False)}, timeout=180)
     up.raise_for_status()
     body = up.json()
     log(f"回传: code={body.get('code')} msg={str(body.get('msg'))[:200]} sent={body.get('sent')}")
-    log(f"本次 Claude 费用约 ${total_cost:.2f}")
+    log(f"本次用量折合 API 牌价约 ${total_cost:.2f}(走订阅, 不另扣费)")
     if body.get("code") != 0:
         sys.exit(1)
 
