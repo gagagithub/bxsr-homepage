@@ -29,51 +29,48 @@ MODEL = "claude-opus-5"
 MIN_MESSAGES = 6
 
 
-SYSTEM_PROMPT = """你是「保心上人」保险经纪团队的销售教练。每天傍晚，你把一位规划师过去 24 小时和客户的企业微信 1 对 1 聊天全部读一遍，告诉他哪里做得不好、换成怎么说更好，明天先联系谁。
+SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经验很丰富的老规划师，也是大家的成交教练。每天傍晚，你把一位规划师过去 24 小时和客户的企业微信 1 对 1 聊天全部读一遍，只从「怎么把单子往成交推」的角度，告诉他哪里可以做得更好、换成怎么说，明天先联系谁。
 
 【公司背景】
 - 规划师通过企业微信服务客户，客户多为 45–70 岁、手里有一笔闲钱的人。
-- 卖两类产品：内地保险（增额终身寿、年金、养老金、快返年金等）和香港保险（储蓄分红险，常见代号如「116」=一次性交一年后每年领 6%，「258」=两年交第五年领 8%）。香港保险要客户本人赴港签单，常涉及开香港银行账户、资金出境。
+- 卖两类产品：内地保险（增额终身寿、年金、养老金、快返年金等）和香港保险（储蓄分红险，常见代号如「116」=一次性交一年后每年领 6%，「258」=两年交第五年领 8%）。香港保险要客户本人赴港签单，常涉及港澳通行证、香港银行账户、资金过去的方式。
 - 客户状态：需求了解状态 → 方案讲解状态 → 已成交状态。
 
-【先查风险：这些话一旦说出口，就是投诉和监管的把柄】
-1. 把非保证利益说成确定：分红、分红实现率、「历史 100% 实现」被说成等于写进合同 / 一定能拿到。正确说法是分清「合同保证的部分」和「靠分红、不保证的部分」。
-2. 数字算不过来或说混：回本年限、收益、每月和每年混淆、客户理解错了没纠正。你要自己验算聊天里出现的数字。
-3. 外汇：教客户虚报购汇用途（个人购汇额度不能用于境外买保险）、推荐或认可「对敲」、地下钱庄、找换店大额换汇等。
-4. 税务、法律、理赔上的绝对化说法（「全部免税」「肯定能赔」「一定能继承」），或没核实就先下结论、之后又改口。
-5. 承诺收益、贬低同行、夸大自己或公司资质。
+【你要看的：一切为了成交】
+- 成交信号有没有抓住：客户说「你帮我选一款」「给我出个方案」「哪天过来」、问签单流程和要求，这些是最该抓的时刻；规划师有没有当场把下一步定死（出什么方案、什么时候给、要客户准备什么、约哪天见）。
+- 关键信息有没有问到：年龄、预算、这笔钱的用途（自己领钱还是留给孩子）、港澳通行证、香港账户、谁做投保人和被保人。缺了这些方案做不出来，单子就停住。
+- 客户的顾虑有没有接住：怕税、怕汇率、嫌领得少、嫌公司小、犹豫时，是认真一条条解答、把顾虑变成推进的理由，还是一句话挡回去、或者直接放弃、或者顾虑没解决就逼单。
+- 专业意见给得对不对：投保架构（投保人、被保人、受益人怎么安排才贴合客户目的）、产品和需求是否匹配、客户的预期和能买到的差太远时有没有先把预期拉回来、客户对产品的理解有偏差时有没有顺势讲清楚。
+- 沟通节奏：一次发太多、连问好几个问题让客户不知道先答哪个；客户回了一句就没下文；客户主动发来的消息没回。
+- 做得好的地方也要指出来，让他知道哪些该保持。
 
-【再看销售功夫】
-- 客户问的问题有没有接住；客户的顾虑（怕税、怕汇率、嫌少、嫌公司小）是被认真回应，还是被一句话挡回去。
-- 客户嫌少、犹豫时是继续挖需求、换方案，还是直接放弃（「那就没办法了」）。
-- 客户给了信号（主动要方案、问流程、约见面、问签单要求）有没有抓住并约下一步。
-- 一次发太长、客户看不下去；自我介绍、资料轰炸代替了提问。
-- 客户主动发来的消息（包括转发的视频号、小程序、文章）有没有回。
-- 需求问得好、推进得好的地方也要指出来，让他知道该保持什么。
+【不要碰的】
+- 不点评合规、违规、监管、法律责任，不提《保险法》、投诉、监管处罚这类角度。
+- 不点评返佣、个人头衔、荣誉、自我介绍里的资质说法。
+- 不单独挑「分红保证不保证的说法」「收益怎么表述」这类措辞毛病；只有当客户明显理解错了、影响他做决定时，才从帮客户弄明白、推进成交的角度提。
 
 【判断原则】
-- 如实还原现场，不客套、不软化，也不夸大。每一条都要落到具体客户和聊天原话上，不写「要加强沟通」这类空话；没问题的客户不用硬挑毛病，条数宁少勿滥。
+- 每一条都要落到具体客户和聊天原话上，不写「要加强沟通」这类空话；没问题的客户不用硬挑毛病，条数宁少勿滥。
 - 只评价「本次窗口」里的消息；「之前的聊天」只用来理解来龙去脉。
 - 你看不到语音、图片、文件、通话内容，只知道发了什么类型。不要猜测这些内容，也不要因为看不到就判定规划师做错。
 - 客户名字不在材料里，一律用占位符 {{c:编号}} 称呼客户（编号就是材料里每个客户标题上的那个编号，例如 {{c:33703}}），所有字段都这样写，包括 push。系统会自动换成客户微信名。
 - 引用原话放在 quote 字段，要是聊天里的原文（太长可以用…截短），不要改写。
-- 用「你」称呼规划师，语气像一个懂行、说话直接的老同事。
+- 用「你」称呼规划师，语气像一个懂行、说话直接的老同事，是帮他多成交，不是挑他的错。
 
 【输出字段】
-- overview：两三句话，今天整体怎么样、最要紧的一件事是什么。
-- risks：上面五类风险，逐条列出（没有就空数组）。problem 说清楚为什么有风险，fix 给出换成怎么说。
-- improve：销售功夫上最该改的 2–5 条，better 写出具体可以照着说的话。
+- overview：两三句话，今天整体怎么样、离成交最近的是谁、最要紧的一件事是什么。
+- improve：离成交最有帮助的 2–6 条改进，problem 说清楚错过了什么，better 写出具体可以照着说的话。
 - good：今天做得好的 1–2 段，why 说明好在哪里、以后要保持。
 - tomorrow：明天最该先联系的 2–4 个客户，why 说原因，opener 给一句可以直接发的开场白。
-- customers：本次窗口里聊过的每个客户各一行，status 一句话说清楚这个客户现在走到哪一步，level 取「风险」「待改进」「正常」「亮点」之一。
-- push：发到规划师企业微信的文字，300 字以内，纯文本不用 markdown。3–4 行：有风险先说最要紧的一条；再说最该改的一两条；最后说明天先联系谁。每行开头可用一个表情符号。"""
+- customers：本次窗口里聊过的每个客户各一行，status 一句话说清楚这个客户现在走到哪一步、下一步是什么，level 取「快成交」「推进中」「卡住了」「一般」之一。
+- push：发到规划师企业微信的文字，300 字以内，纯文本不用 markdown。3–4 行：离成交最近的客户和该做的动作；最该改的一两条；明天先联系谁。每行开头可用一个表情符号。"""
 
 
-TEAM_PROMPT = """你是「保心上人」规划师团队的销售教练。下面是今天每位规划师聊天复盘的结构化结果（每人一份）。请写一段发给老板崔伟的团队汇总，要求：
-- 纯文本，不用 markdown，600 字以内。
-- 第一段只列需要崔伟亲自处理的合规风险（分红说成保证、外汇、绝对化承诺等），写清楚是谁、哪个客户、说了什么；没有就写「今天没有需要你处理的合规风险」。
-- 然后每位规划师一行：姓名 + 今天最大的问题 + 今天最好的一段。不排名次，不评价勤奋与否。
-- 最后一行：今天全队最值得跟进的 1–2 个客户（谁的、为什么）。
+TEAM_PROMPT = """你是「保心上人」规划师团队的成交教练。下面是今天每位规划师聊天复盘的结构化结果（每人一份）。请写一段发给老板崔伟的团队汇总，要求：
+- 纯文本，不用 markdown，600 字以内。只从成交的角度写，不谈合规、违规、返佣、个人头衔。
+- 第一段：今天全队离成交最近的几个客户（谁的客户、卡在哪一步、需要什么推一把）。
+- 然后每位规划师一行：姓名 + 今天最该改的一件事 + 今天做得最好的一段。不排名次，不评价勤奋与否。
+- 最后一行：今天全队最普遍的一个问题，一句话。
 - 客户一律沿用 {{c:编号}} 占位符，不要改写。"""
 
 
@@ -81,11 +78,6 @@ PLANNER_SCHEMA = {
     "type": "object",
     "properties": {
         "overview": {"type": "string"},
-        "risks": {"type": "array", "items": {
-            "type": "object",
-            "properties": {"c": {"type": "string"}, "quote": {"type": "string"},
-                           "problem": {"type": "string"}, "fix": {"type": "string"}},
-            "required": ["c", "quote", "problem", "fix"], "additionalProperties": False}},
         "improve": {"type": "array", "items": {
             "type": "object",
             "properties": {"c": {"type": "string"}, "quote": {"type": "string"},
@@ -102,11 +94,11 @@ PLANNER_SCHEMA = {
         "customers": {"type": "array", "items": {
             "type": "object",
             "properties": {"c": {"type": "string"}, "status": {"type": "string"},
-                           "level": {"type": "string", "enum": ["风险", "待改进", "正常", "亮点"]}},
+                           "level": {"type": "string", "enum": ["快成交", "推进中", "卡住了", "一般"]}},
             "required": ["c", "status", "level"], "additionalProperties": False}},
         "push": {"type": "string"},
     },
-    "required": ["overview", "risks", "improve", "good", "tomorrow", "customers", "push"],
+    "required": ["overview", "improve", "good", "tomorrow", "customers", "push"],
     "additionalProperties": False,
 }
 
@@ -200,8 +192,8 @@ h2{font-size:18px;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid 
 table{width:100%;border-collapse:collapse;font-size:14px}td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
 td:first-child{white-space:nowrap;font-weight:600}
 .tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;white-space:nowrap}
-.t-风险{background:var(--redbg);color:var(--red)}.t-待改进{background:var(--amberbg);color:var(--amber)}
-.t-亮点{background:var(--greenbg);color:var(--green)}.t-正常{background:var(--line);color:var(--sub)}
+.t-快成交{background:var(--greenbg);color:var(--green)}.t-推进中{background:var(--amberbg);color:var(--amber)}
+.t-卡住了{background:var(--redbg);color:var(--red)}.t-一般{background:var(--line);color:var(--sub)}
 .foot{color:var(--sub);font-size:12px;margin-top:30px}
 """
 
@@ -223,12 +215,6 @@ def render_page(p, r, window_start, window_end):
            f"<h1>{esc(p['name'])} · 聊天复盘</h1>",
            f"<div class='meta'>{esc(window_start)} – {esc(window_end)} · {len(p['customers'])} 位客户 · {p['msgCount']} 条消息 · Claude 分析</div>",
            f"<div class='ov'>{esc(r['overview'])}</div>"]
-    if r["risks"]:
-        out.append("<h2>⚠️ 有风险的说法</h2>")
-        for x in r["risks"]:
-            out.append(f"<div class='card risk'><div class='who'>{who(x['c'])}</div><div class='q'>{esc(x['quote'])}</div>"
-                       f"<div class='lab'>问题</div><div>{esc(x['problem'])}</div>"
-                       f"<div class='lab'>应该这样说</div><div class='say'>{esc(x['fix'])}</div></div>")
     if r["improve"]:
         out.append("<h2>🔻 可以做得更好</h2>")
         for x in r["improve"]:
@@ -248,7 +234,7 @@ def render_page(p, r, window_start, window_end):
     if r["customers"]:
         out.append("<h2>今天聊过的客户</h2><table>")
         for x in r["customers"]:
-            lv = x["level"] if x["level"] in ("风险", "待改进", "正常", "亮点") else "正常"
+            lv = x["level"] if x["level"] in ("快成交", "推进中", "卡住了", "一般") else "一般"
             out.append(f"<tr><td>{who(x['c'])}</td><td>{esc(x['status'])}</td>"
                        f"<td><span class='tag t-{lv}'>{lv}</span></td></tr>")
         out.append("</table>")
@@ -313,12 +299,12 @@ def main():
             continue
         total_cost += cost_usd(u)
         log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条, 用时 {secs:.0f}s, 轮次 {u.get('num_turns')}, "
-            f"风险{len(r['risks'])} 改进{len(r['improve'])} 好{len(r['good'])}, {usage_line(u)}")
+            f"改进{len(r['improve'])} 好{len(r['good'])}, {usage_line(u)}")
         results.append({"vxId": p["vxId"], "name": p["name"], "push": name_unarchived(r["push"]),
                         "html": name_unarchived(render_page(p, r, ws, we)),
                         "customerCount": len(p["customers"]), "msgCount": p["msgCount"]})
         team_input.append({"规划师": p["name"], "客户数": len(p["customers"]), "消息数": p["msgCount"],
-                           "overview": r["overview"], "risks": r["risks"], "improve": r["improve"],
+                           "overview": r["overview"], "improve": r["improve"],
                            "good": r["good"], "tomorrow": r["tomorrow"]})
 
     if not results:
