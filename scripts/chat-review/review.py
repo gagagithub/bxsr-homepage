@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
@@ -284,6 +285,7 @@ def main():
     log(f"窗口 {ws} ~ {we}, 规划师 {len(planners)} 位")
 
     results, team_input, total_cost = [], [], 0.0
+    todo = []
     for p in planners:
         if ONLY and p["vxId"] not in ONLY:
             continue
@@ -291,15 +293,26 @@ def main():
         if p["msgCount"] < MIN_MESSAGES:
             log(f"{p['vxId']}: 窗口内 {p['msgCount']} 条, 少于 {MIN_MESSAGES} 条, 跳过")
             continue
+        todo.append(p)
+
+    def analyze(p):
         t0 = time.time()
         try:
             text, u = call_claude(SYSTEM_PROMPT, build_user_prompt(p, ws, we), schema=PLANNER_SCHEMA)
-            r = json.loads(text)
+            return p, json.loads(text), u, time.time() - t0
         except Exception as e:  # 一人失败不影响其他人
             log(f"{p['vxId']}: 分析失败 {type(e).__name__}: {str(e)[:200]}")
+            return p, None, None, time.time() - t0
+
+    # 每人一次调用互不依赖, 并行跑(串行时一人约 7 分钟, 4 人 23 分钟)
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        done = list(pool.map(analyze, todo))
+
+    for p, r, u, secs in done:
+        if r is None:
             continue
         total_cost += cost_usd(u)
-        log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条, 用时 {time.time() - t0:.0f}s, "
+        log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条, 用时 {secs:.0f}s, 轮次 {u.get('num_turns')}, "
             f"风险{len(r['risks'])} 改进{len(r['improve'])} 好{len(r['good'])}, {usage_line(u)}")
         results.append({"vxId": p["vxId"], "name": p["name"], "push": name_unarchived(r["push"]),
                         "html": name_unarchived(render_page(p, r, ws, we)),
