@@ -2,7 +2,8 @@
 
 生产 GET /aiRecommend/export：候选客户完整时间线（聊天+通话+跟进备注, 全带日期）+ 画像
     已脱敏：没有客户名，只有客户 id；手机号/证件号/银行卡已打码；已按规划师反馈和 7 天冷却剔过人
-→ 这里先用关键词粗筛（客户本人说过可能算意向的话），再分批交给 Claude 逐户读
+→ 这里先用关键词粗筛（客户本人说过可能算意向的话），关键词刷掉的再让 Jev(TypeSafe) 补漏，再分批交给 Claude 逐户读
+    Jev 补漏(9-21 崔伟批准): 关键词不认中文数字「一年十万」、老客户加保等; Jev 不会算「时间点到了」所以只补不删; Jev 挂了就只用关键词
 → 每位规划师：各批挑出的合并，由 Claude 排出最终前 5，其余进候补
 → POST /aiRecommend/upload 存库，规划师在后台「AI推荐」看
 
@@ -37,6 +38,34 @@ SIGNALS = [
     r"怎么买|怎么购买|如何购买|怎么操作|流程|手续|开户|银行卡|通行证|签注|投保人|被保人|需要(什么|哪些)|带什么|去香港|赴港|体检",
     r"[÷×*/=＝]|\d+\s*[%％]|回本|现金价值|领多少|每年领|IRR|怎么算|算下来|实际|分红实现",
 ]
+
+TYPESAFE_KEY = os.environ.get("TYPESAFE_API_KEY", "")
+JEV_MAX_CHARS = 16000      # state 上限 32k token, 超长只留最近的
+JEV_SIGNAL = 0.9           # 任一信号概率 ≥ 这个 或 worth ≥ JEV_WORTH 就补进池子(9-21 试点定)
+JEV_WORTH = 1.3
+JEV_Q = {
+    "s1_time": {"type": "noul", "instructions":
+        "The CUSTOMER (lines marked 客户：) themselves mentioned a specific future time or condition for deciding/buying "
+        "(e.g. after a holiday, after some date, when money arrives, next month), and that time has now arrived or is within about 7 days of TODAY."},
+    "s2_money": {"type": "noul", "instructions":
+        "The CUSTOMER themselves stated a budget/amount of money, their age, or who the insurance is for (child, spouse, parents)."},
+    "s3_howbuy": {"type": "noul", "instructions":
+        "The CUSTOMER themselves asked how to buy / the purchase process / account opening / who should be policyholder / what to bring / going to Hong Kong to sign."},
+    "s4_calc": {"type": "noul", "instructions":
+        "The CUSTOMER themselves did calculations or asked detailed follow-up questions about returns, cash value, payout amounts, or product terms."},
+    "s5_return": {"type": "noul", "instructions":
+        "After a period of silence, the CUSTOMER proactively came back with a real message (not just 'ok'/'thanks'), and the planner's reply did not really pick it up (short or no follow-up)."},
+    "jiabao": {"type": "noul", "instructions":
+        "The customer already bought a policy before (成交记录 is not 无) AND the customer themselves expressed a NEW purchase intent "
+        "(buy for family, another policy, new money, ask about a different product). Service questions about existing policies do not count."},
+    "worth_today": {"type": "score", "instructions":
+        "How worthwhile is it for the insurance planner to proactively contact this customer TODAY to push toward a sale, "
+        "based on the customer's own words and timing.",
+        "criteria": ["Not worth it: no real buying signal from the customer",
+                     "Weak: some interest but vague or old",
+                     "Good: clear recent buying signal",
+                     "Must contact today: a customer-stated time point has arrived or the customer is asking how to buy"]},
+}
 
 PICK_PROMPT = """你在为保险经纪公司「保心上人」的规划师挑选「今天最值得联系的客户」。今天是 {today}。
 
@@ -147,6 +176,55 @@ def _days(a, b):
     return (tb - ta) / 86400
 
 
+def jev_state(c, today):
+    head = (f"TODAY = {today}\n客户ID {c['cid']} | 状态：{c['state']} | 第一诉求：{c['appeal']} | "
+            f"成交记录：{c.get('deals') or '无'}\n")
+    keep, size = [], len(head)
+    for l in reversed(c["lines"]):
+        if size + len(l) + 1 > JEV_MAX_CHARS:
+            break
+        keep.append(l)
+        size += len(l) + 1
+    return head + "\n".join(reversed(keep))
+
+
+def jev_hit(c, today):
+    """True=Jev 判有信号; None=调用失败(当没命中处理)。"""
+    for attempt in range(4):
+        try:
+            r = requests.post("https://api.typesafe.ai/v1/systemone",
+                              headers={"Authorization": f"Bearer {TYPESAFE_KEY}"},
+                              json={"model": "jev-latest", "state": jev_state(c, today), "questions": JEV_Q},
+                              timeout=120)
+            if r.status_code in (429, 500, 502, 503, 529):
+                time.sleep(2 ** attempt)
+                continue
+            r.raise_for_status()
+            a = r.json()["answers"]
+            sig = max(v["noul"] for k, v in a.items() if v.get("type") == "noul")
+            return sig >= JEV_SIGNAL or a["worth_today"]["score"] >= JEV_WORTH
+        except Exception:
+            time.sleep(2 ** attempt)
+    return None
+
+
+def jev_rescue(custs, today):
+    """关键词刷掉的客户交给 Jev 补漏, 返回补进来的 cid 集合。任何异常都退回空集(只用关键词)。"""
+    if not TYPESAFE_KEY or not custs:
+        return set()
+    try:
+        t0 = time.time()
+        with ThreadPoolExecutor(max_workers=12) as pool:
+            hits = list(pool.map(lambda c: jev_hit(c, today), custs))
+        fail = sum(h is None for h in hits)
+        got = {c["cid"] for c, h in zip(custs, hits) if h}
+        log(f"Jev 补漏: 查 {len(custs)} 户, 补进 {len(got)} 户, 失败 {fail} 户, {time.time() - t0:.0f}s")
+        return got
+    except Exception as e:
+        log(f"Jev 补漏整体失败, 只用关键词 {type(e).__name__}")
+        return set()
+
+
 def dossier(c):
     head = (f"\n########## 客户ID {c['cid']} | 状态：{c['state']} | 第一诉求：{c['appeal']} | "
             f"成交记录：{c.get('deals') or '无'} | {c['sea']}")
@@ -190,9 +268,14 @@ def main():
     custs = data["customers"]
     log(f"{today} 导出 {len(custs)} 户, 剔除 {data.get('dropped')}")
 
+    mine = [c for c in custs if c["uid"] in planners and (not ONLY or str(c["uid"]) in ONLY)]
+    passed = {c["cid"] for c in mine if prefilter(c)}
+    log(f"关键词粗筛: {len(passed)}/{len(mine)} 户")
+    passed |= jev_rescue([c for c in mine if c["cid"] not in passed], today)
+
     by_planner = {}
-    for c in custs:
-        if c["uid"] in planners and (not ONLY or str(c["uid"]) in ONLY) and prefilter(c):
+    for c in mine:
+        if c["cid"] in passed:
             by_planner.setdefault(c["uid"], []).append(c)
     log("粗筛后: " + ", ".join(f"{uid}:{len(v)}" for uid, v in by_planner.items()))
 

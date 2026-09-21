@@ -51,6 +51,8 @@ jobs:
           # 走崔伟的 Claude 订阅, 与聊天复盘共用; ⚠别加 ANTHROPIC_API_KEY(CLI 会优先用它, 那个账户余额为 0)
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           CHAT_REVIEW_TOKEN: ${{ secrets.CHAT_REVIEW_TOKEN }}
+          # Jev(TypeSafe) 给关键词粗筛补漏; 缺了就只用关键词
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
           MODE: ${{ inputs.mode || 'run' }}
           ONLY: ${{ inputs.only }}
         run: python -u recommend.py
