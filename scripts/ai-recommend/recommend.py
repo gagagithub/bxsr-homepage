@@ -25,6 +25,7 @@ ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip(
 
 MODEL = "claude-opus-5"
 TOP_N = 5
+PICK_N = 8          # 每批最多挑几户: 多挑的进候补, 规划师点「换一个」时从候补顶上来
 BATCH_CHARS = 150_000      # 每批时间线大约多少字（一次调用读完）
 WORKERS = 4
 
@@ -47,7 +48,7 @@ PICK_PROMPT = """你在为保险经纪公司「保心上人」的规划师挑选
 ⚠ 备注和聊天里提到的时间点，一律按**那一行的日期**来理解。例如 2025-05-19 的备注「客户21号到香港」指的是 2025 年 5 月，早已过去。
 
 【要求】
-1. 从这批客户里选出**最多 {n} 户**最符合画像的，按画像的信号优先级排序（信号①「客户自己说过的时间点到了/快到了」最优先）。宁缺毋滥，不够就少选，一个都不合适就返回空数组。
+1. 从这批客户里选出**最多 {n} 户**最符合画像的（前 5 户给规划师，其余当候补，规划师不想跟时顶上），按画像的信号优先级排序（信号①「客户自己说过的时间点到了/快到了」最优先）。宁缺毋滥，不够就少选，一个都不合适就返回空数组。
 2. 每户必须有**客户本人**的原话和日期作为证据，逐字从时间线里摘，不许改写、不许编。
 3. 「为什么是今天」要基于今天 {today} 实际推理，时间点要算对。
 4. 「开口第一句」用规划师口吻写一句自然的微信开场，接住客户自己说过的话；不许承诺收益、不许说保证、不许编造时间线里没有的产品事实；不引导资金出境的违规做法。
@@ -61,7 +62,7 @@ PICK_PROMPT = """你在为保险经纪公司「保心上人」的规划师挑选
 
 RANK_PROMPT = """你在为保险经纪公司的规划师排「今天最值得联系的客户」。今天是 {today}。
 下面是分几批挑出来的候选（每户已写好命中的信号、客户原话、为什么是今天）。请严格按《客户画像》的信号优先级（信号①「客户自己说过的时间点到了/快到了」最优先；同一信号里，更具体、更近、离成交更近的在前），
-从中排出最终前 {n} 户，只返回它们的 cid（按优先级从高到低）。
+把全部候选按优先级从高到低排好，返回全部 cid（前 {n} 户给规划师，其余当候补按这个顺序顶上）。
 
 ========== 客户画像 ==========
 {persona}
@@ -196,7 +197,7 @@ def main():
     log("粗筛后: " + ", ".join(f"{uid}:{len(v)}" for uid, v in by_planner.items()))
 
     jobs = [(uid, b) for uid, cs in by_planner.items() for b in batches(cs)]
-    system = PICK_PROMPT.format(today=today, n=TOP_N, persona=persona)
+    system = PICK_PROMPT.format(today=today, n=PICK_N, persona=persona)
 
     def pick(job):
         uid, b = job
@@ -204,7 +205,7 @@ def main():
         ids = {c["cid"] for c, _ in b}
         try:
             out, u = call_claude(system, "".join(t for _, t in b) + "\n\n请按要求挑选并输出。", PICK_SCHEMA)
-            picks = [p for p in out["picks"] if p["cid"] in ids][:TOP_N]
+            picks = [p for p in out["picks"] if p["cid"] in ids][:PICK_N]
             log(f"{uid}: 批 {len(b)} 户 → {len(picks)} 户, {time.time() - t0:.0f}s, {usage_line(u)}")
             return uid, picks, b
         except Exception as e:
@@ -227,7 +228,7 @@ def main():
             try:
                 out, u = call_claude(RANK_PROMPT.format(today=today, n=TOP_N, persona=persona),
                                      json.dumps(brief, ensure_ascii=False), RANK_SCHEMA)
-                top = [i for i in out["order"] if i in order][:TOP_N]
+                top = [i for i in out["order"] if i in order]
                 order = top + [i for i in order if i not in top]
                 log(f"{uid}: 合并 {len(cards)} 户排序 ok, {usage_line(u)}")
             except Exception as e:
