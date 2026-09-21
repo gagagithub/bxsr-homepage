@@ -84,6 +84,9 @@ PICK_PROMPT = """你在为保险经纪公司「保心上人」的规划师挑选
 5. 已成交客户只有客户本人表达了新的购买意思才算「加保」；服务类问题（续期缴费、征税担心、理赔）不算。客户明确说没钱的不推。
 6. context 给出证据原话前后各 3 条左右的原文行（逐字复制时间线里的行）。
 7. 你看不到客户的名字，所有文字里不要写客户名字，开场白里的称呼只能用时间线里出现过的称呼（如「王总」「姐」）。
+8. 「成交指数」deal_index 0-100：这位客户**离成交有多近**（不是今天该不该联系，那个由排序体现）。只看客户本人的话和行为，参考档位：
+   90+ 已在谈投保细节/约好签单/问怎么付款；70-89 明确要买、在比方案或定金额；50-69 给了预算或对象、认真在了解；30-49 有兴趣但模糊、或有明显顾虑没解开；30 以下 只是随口问问。
+   index_reason 用一句话（30 字以内）说为什么是这个分，要落到客户说过的具体事，例如「给了预算 10 万、问过去香港怎么签，但还在比两款」。
 
 ========== 客户画像 ==========
 {persona}
@@ -110,8 +113,11 @@ CARD = {
         "first_line": {"type": "string"},
         "context": {"type": "array", "items": {"type": "string"}},
         "rank_note": {"type": "string"},
+        "deal_index": {"type": "integer"},
+        "index_reason": {"type": "string"},
     },
-    "required": ["cid", "signal", "jiabao", "quotes", "why_today", "first_line", "context", "rank_note"],
+    "required": ["cid", "signal", "jiabao", "quotes", "why_today", "first_line", "context", "rank_note",
+                 "deal_index", "index_reason"],
     "additionalProperties": False,
 }
 PICK_SCHEMA = {"type": "object", "properties": {"picks": {"type": "array", "items": CARD}},
