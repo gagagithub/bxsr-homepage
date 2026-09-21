@@ -1,0 +1,56 @@
+name: AI推荐 - 每日 02:00 (Claude 按客户画像挑人)
+
+# 2026-09-21 崔伟拍板: 规划师「AI推荐」改由 Claude 按《客户画像》逐户读聊天挑人(不再用 DeepSeek), 每人最多 5 户。
+# 流程: 生产 /aiRecommend/export(已脱敏: 无客户名, 手机/证件/卡号打码) → Claude → /aiRecommend/upload 存库
+#       → 规划师在后台「AI推荐」看, 反馈(已联系/推错了+一句话)写回库, 下次导出时按反馈剔人。
+# 画像在生产服务器 D:/ai-recommend/persona.md, 不进本仓库。
+# 凌晨跑, GitHub schedule 排队延迟(常见 0.5~3 小时)不影响早上看。
+# ⛔本仓库 PUBLIC: 脚本只打印条数/耗时, 绝不打印聊天、画像或推荐内容, 也不传 artifact。
+# 手动: gh workflow run ai-recommend.yml            (ONLY 填规划师 user_id 逗号分隔可只跑部分人)
+
+on:
+  schedule:
+    - cron: '0 18 * * *'   # UTC 18:00 = 北京 02:00
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'run=正式 / ping=只测 Claude 通不通'
+        required: false
+        default: 'run'
+      only:
+        description: '只跑这些规划师 user_id(逗号分隔), 留空=全部'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-recommend
+  cancel-in-progress: false
+
+jobs:
+  recommend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -q requests
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Recommend
+        working-directory: scripts/ai-recommend
+        env:
+          # 走崔伟的 Claude 订阅, 与聊天复盘共用; ⚠别加 ANTHROPIC_API_KEY(CLI 会优先用它, 那个账户余额为 0)
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CHAT_REVIEW_TOKEN: ${{ secrets.CHAT_REVIEW_TOKEN }}
+          MODE: ${{ inputs.mode || 'run' }}
+          ONLY: ${{ inputs.only }}
+        run: python -u recommend.py
