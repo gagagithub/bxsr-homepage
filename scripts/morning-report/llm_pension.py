@@ -179,7 +179,7 @@ SYS = """你是「崔伟说养老」公众号的主笔，每天中午编一份�
 
 def _call_once(user):
     payload = json.dumps({
-        "model": "deepseek-v4-pro",
+        "model": "deepseek-flash",  # 2026-09-22: V4-Pro → V4.1-Flash
         "messages": [{"role": "system", "content": SYS}, {"role": "user", "content": user}],
         # 2026-08-07 条目由 80-160 字放宽到 150-250 字并多了 means 字段, 12 条能顶到 6000+ token,
         # 8000 会把最后几条截在半截(虽有 JSON 修补兜底, 但那是丢内容不是省钱) → 提到 12000。

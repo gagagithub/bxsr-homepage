@@ -31,7 +31,7 @@ TIKHUB_BASE = "https://api.tikhub.io"
 
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
-DEEPSEEK_MODEL = "deepseek-v4-pro"
+DEEPSEEK_MODEL = "deepseek-flash"  # 2026-09-22: V4-Pro → V4.1-Flash
 
 # 一周前的时间戳：关键词搜索只保留最近 7 天发布的帖子
 ONE_WEEK_AGO = int((TODAY - timedelta(days=7)).timestamp())

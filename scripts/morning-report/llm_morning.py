@@ -249,7 +249,7 @@ if not key:
 
 def _call_once(user):
     payload = json.dumps({
-        "model": "deepseek-v4-pro",  # 2026-07-25: DeepSeek 下线 deepseek-chat, 只认 deepseek-v4-pro / deepseek-v4-flash
+        "model": "deepseek-flash",  # 2026-09-22: V4-Pro → V4.1-Flash(9-10 发布, 官方称强于 V4-Pro); 也是推理模型, 下面 max_tokens 的坑照旧
         "messages": [{"role": "system", "content": SYS}, {"role": "user", "content": user}],
         # ⚠2026-08-25: deepseek-v4-pro 是【推理模型】, 思维链(reasoning_tokens)也算进 max_tokens。
         #   实测一次调用光思考就烧 6000-8300 token, 正文其实只要 ~1200 token —— 原来的 8000 额度
