@@ -93,27 +93,42 @@ PICK_PROMPT = """你在为保险经纪公司「保心上人」的规划师挑选
 {persona}
 """
 
-RENEW_N = 10        # 翻新激活每人每天最多几户(9-21 崔伟定)
+RENEW_N = 10        # 时事激活每人每天最多几户(9-22 崔伟定, 尽量不重复)
 
-RENEW_PROMPT = """你在帮保险经纪公司「保心上人」的规划师做「翻新激活」：把私海里很久没单聊的客户（P3 已成交 / P2 方案讲解 / P1 需求了解）一个个重新联系起来。今天是 {today}。
-公司昨天（{cdate}）发了几条新作品（视频/文章），给每位挑中的客户配一条最对口的作品，当作重新开口的由头。
+RENEW_PROMPT = """你在帮保险经纪公司「保心上人」的规划师做「时事激活」：规划师名下 P3 已成交 / P2 方案讲解 / P1 需求了解的老客户，借公司昨天（{cdate}）发的一条新作品（视频/文章）当由头，重新开口。今天是 {today}。
+
+【时间线怎么读】
+每个客户以「########## 客户ID」开头，下面按时间排：「日期 客户：」是客户本人在企微里说的，「日期 规划师：」是规划师说的，
+「[群发]」是规划师群发给很多人的模板，「通话」是语音通话，「跟进备注」是规划师在系统里手写的跟进记录。
+⚠ 备注和聊天里提到的时间点，一律按**那一行的日期**来理解。
 
 【要求】
-1. 从候选里挑**最多 {n} 户**，P3/P2/P1 三层混着挑（尽量每层都有）。每层候选已按轮换顺序排好，越靠前越该轮到，同样合适时优先挑靠前的。
-2. 只挑能和某条作品真正对上的客户：看第一诉求、成交产品、客户说过的话、跟进备注。对不上的不要硬配，宁缺毋滥，一户都对不上就返回空数组。
-   P3 已成交客户：配能引出加保、给家人配置、新一笔钱的作品，或和他已买产品相关的新动态；别配会让他觉得自己买亏了的作品。
-3. match_reason 一句话（40 字以内）说为什么这条作品配这位客户，要落到客户的诉求、说过的话或成交记录上。
-4. first_line 用规划师口吻写一句微信开场，自然带出这条作品（比如「昨天我们发了一条……想到你之前……」），能接住客户以前说过的话更好。
+1. 从候选里挑**最多 {n} 户**，P3/P2/P1 混着挑。每层候选已按排队顺序排好，同样合适时优先挑靠前的。
+2. **只挑聊天记录或跟进记录和某条作品的文案真正对得上的**：客户说过的具体的事（孩子、父母、年龄、预算、担心的问题、想要的东西、买过的产品）和作品讲的内容接得上。
+   只凭「第一诉求」这个标签、聊天里从没聊过相关内容的，**不算对得上**，不要挑。对不上就不配，宁缺毋滥，一户都没有就返回空数组。
+3. P3 已成交客户：配能引出加保、给家人配置、新一笔钱的作品，或和他已买产品相关的新动态；别配会让他觉得自己买亏了的作品。
+4. quotes「原话」：至少 1 句，**逐字**从时间线里复制（不许改写、不许编、不许拼接），带那一行的日期；who 写这句是谁说的：
+   「客户」（客户: 行）/「规划师」（规划师: 行）/「跟进记录」（跟进备注: 行）。优先用客户本人说的。
+5. why_today「为什么是今天」（60 字以内）：写清楚原话里的哪件事和昨天哪条作品的文案对得上、对在哪儿。
+6. context「原话上下文」：原话前后各 3 条左右的原文行，逐字复制时间线里的整行。
+7. first_line「开口第一句」：规划师口吻的一句微信开场，**接住客户以前说过的话**，自然带出这条作品；
    很久没联系了，语气别像推销，别一上来就问买不买；不许承诺收益、不许说保证、不许编作品里没有的产品事实；
-   称呼只能用资料里出现过的称呼（如「王总」「姐」），没有就不带称呼。
-5. 你看不到客户名字，所有文字里都不要写客户名字。
+   称呼只能用时间线里出现过的称呼（如「王总」「姐」），没有就不带称呼。
+8. 你看不到客户名字，所有文字里都不要写客户名字。
 """
 
 RENEW_SCHEMA = {"type": "object", "properties": {"picks": {"type": "array", "items": {
     "type": "object", "properties": {
         "cid": {"type": "integer"}, "creation_id": {"type": "integer"},
-        "match_reason": {"type": "string"}, "first_line": {"type": "string"}},
-    "required": ["cid", "creation_id", "match_reason", "first_line"], "additionalProperties": False}}},
+        "quotes": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "properties": {
+                "date": {"type": "string"}, "who": {"type": "string", "enum": ["客户", "规划师", "跟进记录"]},
+                "text": {"type": "string"}},
+            "required": ["date", "who", "text"], "additionalProperties": False}},
+        "why_today": {"type": "string"},
+        "context": {"type": "array", "items": {"type": "string"}},
+        "first_line": {"type": "string"}},
+    "required": ["cid", "creation_id", "quotes", "why_today", "context", "first_line"], "additionalProperties": False}}},
     "required": ["picks"], "additionalProperties": False}
 
 LAYER_NAME = {"P3": "P3 已成交", "P2": "P2 方案讲解", "P1": "P1 需求了解"}
@@ -167,7 +182,7 @@ def report(ok, today, error=""):
     if MODE != "run" or DRY:
         return
     body = {"date": today or time.strftime("%Y-%m-%d"), "ok": ok, "error": error, "warnings": STATUS["warnings"][:5]}
-    for k in ("jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip"):
+    for k in ("jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip", "renewQuoteBad"):
         if k in STATUS:
             body[k] = STATUS[k]
     try:
@@ -300,23 +315,34 @@ def batches(custs):
     return out
 
 
+WHO_TAG = {"客户": " 客户：", "规划师": " 规划师：", "跟进记录": " 跟进备注："}
+
+
+def quote_ok(q, lines):
+    """原话能不能在原文里逐字找到(同一天、同一说话人的行)。只用来报警, 不删卡(9-22 崔伟)。"""
+    tag = WHO_TAG.get(q.get("who"), "：")
+    t = (q.get("text") or "").strip().strip("「」\"")
+    return bool(t) and any(l.startswith(q.get("date", "")[:10]) and tag in l and t in l for l in lines)
+
+
 def renew_all(today, planners, exclude):
-    """翻新激活: 每位规划师从私海 P3/P2/P1 轮换队列里配昨天的作品挑 ≤RENEW_N 户。返回 {uid: [卡片]}。失败返回 {}。"""
+    """时事激活: 每位规划师从 P3/P2/P1 排队里配昨天的作品挑 ≤RENEW_N 户。
+    返回 ({uid: [卡片]}, {uid: [给 Claude 看过的 cid]})。失败返回 ({}, {})。"""
     try:
         r = requests.get(f"{BASE_URL}/aiRecommend/renewExport", params={"token": TOKEN}, timeout=300)
         r.raise_for_status()
         d = r.json()
     except Exception as e:
-        log(f"翻新: 导出失败 {type(e).__name__}")
-        return {}
+        log(f"时事激活: 导出失败 {type(e).__name__}")
+        return {}, {}
     if d.get("code") != 0:
-        log(f"翻新: 导出失败 {str(d.get('msg'))[:80]}")
-        return {}
+        log(f"时事激活: 导出失败 {str(d.get('msg'))[:80]}")
+        return {}, {}
     creations = d.get("creations") or []
     if not creations:
-        log(f"翻新: {d.get('creationDate')} 没有作品, 今天不做翻新")
+        log(f"时事激活: {d.get('creationDate')} 没有作品, 今天不做")
         STATUS["renewSkip"] = f"{str(d.get('creationDate'))[5:]} 没有作品，今天不做"
-        return {}
+        return {}, {}
     STATUS.update(renewDate=d.get("creationDate"), renewWorks=len(creations))
     cmap = {c["id"]: c for c in creations}
     works = "\n\n".join(
@@ -326,8 +352,9 @@ def renew_all(today, planners, exclude):
     for c in d.get("candidates") or []:
         if c["uid"] in planners and (not ONLY or str(c["uid"]) in ONLY) and c["cid"] not in exclude.get(c["uid"], set()):
             by.setdefault(c["uid"], []).append(c)
-    log(f"翻新: 作品 {len(creations)} 条, 候选 " + ", ".join(f"{u}:{len(v)}" for u, v in by.items()))
+    log(f"时事激活: 作品 {len(creations)} 条, 候选 " + ", ".join(f"{u}:{len(v)}" for u, v in by.items()))
     system = RENEW_PROMPT.format(today=today, cdate=d.get("creationDate"), n=RENEW_N)
+    bad_quotes = []
 
     def one(item):
         uid, cs = item
@@ -336,18 +363,16 @@ def renew_all(today, planners, exclude):
             rows = [c for c in cs if c["layer"] == layer]
             if not rows:
                 continue
-            parts.append(f"\n## {LAYER_NAME[layer]}（按轮换顺序，越前越该轮到）")
+            parts.append(f"\n## {LAYER_NAME[layer]}（按排队顺序，越前越该轮到）")
             for c in rows:
-                said = "；".join(c.get("said") or []) or "无"
-                notes = "；".join(c.get("notes") or []) or "无"
-                parts.append(f"客户ID {c['cid']} | 第一诉求：{c['appeal'] or '未填'} | 成交：{c['deals']} | "
-                             f"上次单聊：{c['lastSingle']} | 加微：{c['adddate']} | 客户说过：{said} | 跟进备注：{notes}")
+                parts.append(f"\n########## 客户ID {c['cid']}（{c['sea']}）\n第一诉求：{c['appeal'] or '未填'} | 成交：{c['deals']} | "
+                             f"上次单聊：{c['lastSingle']} | 加微：{c['adddate'] or '未知'}\n" + "\n".join(c.get("lines") or []))
         t0 = time.time()
         try:
             out, u = call_claude(system, "\n".join(parts) + "\n\n请按要求挑选并输出。", RENEW_SCHEMA)
         except Exception as e:
-            log(f"翻新 {uid}: 失败 {type(e).__name__}: {str(e)[:150]}")
-            return uid, []
+            log(f"时事激活 {uid}: 失败 {type(e).__name__}: {str(e)[:150]}")
+            return uid, [], []
         meta = {c["cid"]: c for c in cs}
         cards, seen = [], set()
         for p in out["picks"]:
@@ -355,18 +380,25 @@ def renew_all(today, planners, exclude):
                 continue
             seen.add(p["cid"])
             m, w = meta[p["cid"]], cmap[p["creation_id"]]
+            for q in p["quotes"]:
+                if not quote_ok(q, m.get("lines") or []):
+                    bad_quotes.append(f"客户{p['cid']} {q.get('date', '')[5:10]} {q.get('who')}")
             acct = w["account"] if w["account"] and w["account"] != "待定" else (w["category"] + "号" if w["category"] else "")
-            cards.append({"cid": p["cid"], "signal": "", "jiabao": False, "quotes": [], "context": [], "rank_note": "",
-                          "why_today": p["match_reason"], "first_line": p["first_line"],
+            cards.append({"cid": p["cid"], "signal": "", "jiabao": False, "quotes": p["quotes"], "context": p["context"],
+                          "rank_note": "", "why_today": p["why_today"], "first_line": p["first_line"],
                           "creation_id": w["id"], "creation_title": w["title"], "creation_url": w["url"],
                           "creation_account": acct, "state": m["state"], "appeal": m["appeal"],
-                          "deals": m["deals"], "sea": "私海"})
+                          "deals": m["deals"], "sea": m["sea"]})
         cards = cards[:RENEW_N]
-        log(f"翻新 {uid}: 候选 {len(cs)} → {len(cards)} 户, {time.time() - t0:.0f}s, {usage_line(u)}")
-        return uid, cards
+        log(f"时事激活 {uid}: 候选 {len(cs)} → {len(cards)} 户, {time.time() - t0:.0f}s, {usage_line(u)}")
+        return uid, cards, [c["cid"] for c in cs]
 
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        return {uid: cards for uid, cards in pool.map(one, by.items()) if cards}
+        done = list(pool.map(one, by.items()))
+    if bad_quotes:
+        STATUS["renewQuoteBad"] = bad_quotes
+        log(f"时事激活: {len(bad_quotes)} 句原话在原文里没找到(只报警)")
+    return {uid: cards for uid, cards, _ in done if cards}, {uid: seen for uid, _, seen in done if seen}
 
 
 def main():
@@ -452,16 +484,20 @@ def main():
         log(f"{uid}: 前 {len(full[:TOP_N])} 户, 候补 {len(full[TOP_N:])} 户")
 
     exclude = {r["userId"]: {c["cid"] for c in r["top"] + r["bench"]} for r in results}
-    renew = renew_all(today, planners, exclude)
+    renew, offered = renew_all(today, planners, exclude)
     for r in results:
         r["renew"] = renew.pop(r["userId"], [])
-    for uid, cards in renew.items():
-        results.append({"userId": uid, "top": [], "bench": [], "renew": cards})
+        r["renewOffered"] = offered.pop(r["userId"], [])
+    for uid in set(renew) | set(offered):
+        results.append({"userId": uid, "top": [], "bench": [], "renew": renew.get(uid, []), "renewOffered": offered.get(uid, [])})
 
     if not results:
         log("没有推荐结果, 不回传")
         sys.exit(1)
     if DRY:
+        if os.environ.get("DUMP"):   # 本机出样用; ⛔公开仓库的 Actions 里别设
+            with open(os.environ["DUMP"], "w", encoding="utf-8") as f:
+                json.dump({"date": today, "planners": results}, f, ensure_ascii=False, indent=1)
         log("DRY=1, 不回传")
         return
     up = requests.post(f"{BASE_URL}/aiRecommend/upload",
