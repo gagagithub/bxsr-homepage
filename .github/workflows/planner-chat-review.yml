@@ -29,6 +29,10 @@ on:
         description: '窗口结束时间 yyyy-MM-dd HH:mm(北京), 留空=现在; 窗口=之前 24 小时'
         required: false
         default: ''
+      force:
+        description: 'true=今天已推过也照发(同日补跑用)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
@@ -64,4 +68,5 @@ jobs:
           TEST_VXID: ${{ inputs.test_vxid }}
           ONLY: ${{ inputs.only }}
           WINDOW_END: ${{ inputs.end }}
+          FORCE: ${{ inputs.force }}
         run: python -u review.py

@@ -23,6 +23,7 @@ MODE = (os.environ.get("MODE") or "run").strip()
 TEST_VXID = (os.environ.get("TEST_VXID") or "").strip()
 ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip()]
 WINDOW_END = (os.environ.get("WINDOW_END") or "").strip()
+FORCE = (os.environ.get("FORCE") or "").strip().lower() == "true"  # 同日补跑: 绕过 sent-<日期> 标记
 
 MODEL = "claude-opus-5"
 # 规划师窗口内和客户来往少于这么多条就不出复盘(没东西可说, 硬写只会是空话)
@@ -336,7 +337,7 @@ def main():
     payload = {"windowStart": ws, "windowEnd": we, "testVxId": TEST_VXID,
                "planners": results, "team": {"push": name_unarchived(team_push)}}
     up = requests.post(f"{BASE_URL}/chatReview/upload",
-                       data={"token": TOKEN, "payload": json.dumps(payload, ensure_ascii=False)}, timeout=180)
+                       data={"token": TOKEN, "force": str(FORCE).lower(), "payload": json.dumps(payload, ensure_ascii=False)}, timeout=180)
     up.raise_for_status()
     body = up.json()
     log(f"回传: code={body.get('code')} msg={str(body.get('msg'))[:200]} sent={body.get('sent')}")
