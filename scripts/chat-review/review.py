@@ -27,6 +27,23 @@ WINDOW_END = (os.environ.get("WINDOW_END") or "").strip()
 MODEL = "claude-opus-5"
 # 规划师窗口内和客户来往少于这么多条就不出复盘(没东西可说, 硬写只会是空话)
 MIN_MESSAGES = 6
+BROADCAST_MIN = 20  # 同一句话发给 ≥20 户视为群发
+
+
+def drop_broadcast_only(p):
+    """去掉「只收到群发、没回话」的客户。9-22 林付贤群发 1888 户, 原文 200 万字超上下文, 整人分析失败。
+    客户回了话的保留(群发那句是上下文)。"""
+    cnt = {}
+    for c in p["customers"]:
+        for t in {m["text"] for m in c["today"] if m["who"] == "规"}:
+            cnt[t] = cnt.get(t, 0) + 1
+    bc = {t for t, n in cnt.items() if n >= BROADCAST_MIN}
+    if not bc:
+        return
+    before = len(p["customers"])
+    p["customers"] = [c for c in p["customers"]
+                      if not all(m["who"] == "规" and m["text"] in bc for m in c["today"])]
+    log(f"{p['vxId']}: 识别群发 {len(bc)} 句, 剔除只收到群发的 {before - len(p['customers'])} 户")
 
 
 SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经验很丰富的老规划师，也是大家的成交教练。每天傍晚，你把一位规划师过去 24 小时和客户的企业微信 1 对 1 聊天全部读一遍，只从「怎么把单子往成交推」的角度，告诉他哪里可以做得更好、换成怎么说，明天先联系谁。
@@ -276,6 +293,7 @@ def main():
     for p in planners:
         if ONLY and p["vxId"] not in ONLY:
             continue
+        drop_broadcast_only(p)
         p["msgCount"] = sum(len(c["today"]) for c in p["customers"])
         if p["msgCount"] < MIN_MESSAGES:
             log(f"{p['vxId']}: 窗口内 {p['msgCount']} 条, 少于 {MIN_MESSAGES} 条, 跳过")
