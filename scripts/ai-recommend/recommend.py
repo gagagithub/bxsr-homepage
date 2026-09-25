@@ -9,6 +9,7 @@
 
 ⛔本仓库 PUBLIC, Actions 日志人人可看: 只打印条数/耗时/用量, 绝不打印聊天、画像或推荐内容。
 """
+import datetime
 import json
 import os
 import re
@@ -24,6 +25,7 @@ TOKEN = os.environ.get("CHAT_REVIEW_TOKEN", "")
 MODE = (os.environ.get("MODE") or "run").strip()
 DRY = os.environ.get("DRY") == "1"      # 只跑不回传(联调用)
 ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip()]
+FORCE = os.environ.get("FORCE") == "1"  # 非工作日也强制跑(联调用)
 
 MODEL = "claude-opus-5"
 TOP_N = 5
@@ -183,7 +185,7 @@ def report(ok, today, error=""):
     if MODE != "run" or DRY:
         return
     body = {"date": today or time.strftime("%Y-%m-%d"), "ok": ok, "error": error, "warnings": STATUS["warnings"][:5]}
-    for k in ("jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip", "renewQuoteBad"):
+    for k in ("jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip", "renewQuoteBad", "skipped"):
         if k in STATUS:
             body[k] = STATUS[k]
     try:
@@ -192,6 +194,27 @@ def report(ok, today, error=""):
         print(f"运行报告: HTTP {r.status_code} {r.text[:80]}", flush=True)
     except Exception as e:
         print(f"运行报告发送失败 {type(e).__name__}", flush=True)
+
+
+def workday_status(day):
+    """返回 (是否工作日, 说明)。数据源=国务院放假安排(holiday-cn, GitHub raw / jsdelivr 镜像)，
+    法定假日休、调休上班算工作日、其余周六日休；两处都拉不到就只按周末判。"""
+    year = day[:4]
+    days = None
+    for url in (f"https://raw.githubusercontent.com/NateScarlet/holiday-cn/master/{year}.json",
+                f"https://cdn.jsdelivr.net/gh/NateScarlet/holiday-cn@master/{year}.json"):
+        try:
+            days = requests.get(url, timeout=20).json()["days"]
+            break
+        except Exception as e:
+            log(f"节假日表拉取失败 {url.split('/')[2]} {type(e).__name__}")
+    for d in days or []:
+        if d.get("date") == day:
+            return (not d["isOffDay"], f"{d['name']}{'调休上班' if not d['isOffDay'] else '休息'}")
+    wd = datetime.date(int(day[:4]), int(day[5:7]), int(day[8:10])).weekday()
+    if wd >= 5:
+        return (False, "周六" if wd == 5 else "周日")
+    return (True, "工作日")
 
 
 def call_claude(system, user, schema):
@@ -409,6 +432,16 @@ def main():
     if MODE == "ping":
         _, u = call_claude("你是测试助手。", "回复 ok", RANK_SCHEMA)
         log(f"ping ok {usage_line(u)}")
+        return
+
+    # 9-25 崔伟定：非工作日（周末 + 法定假日，调休上班除外）不推；FORCE=1 可强制跑
+    bj_today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d")
+    is_work, why = workday_status(bj_today)
+    if not is_work and not FORCE:
+        log(f"{bj_today} {why}，今天不推")
+        STATUS["today"] = bj_today
+        STATUS["skipped"] = why
+        report(True, bj_today)
         return
 
     r = requests.get(f"{BASE_URL}/aiRecommend/export", params={"token": TOKEN}, timeout=300)
