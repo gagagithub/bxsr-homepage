@@ -1,11 +1,17 @@
-"""规划师聊天复盘 —— 每天 18:00 由生产服务器 workflow_dispatch 触发。
+"""规划师聊天复盘 —— 每天北京 12:00 由生产服务器 workflow_dispatch 触发。
 
-生产导出过去 24 小时的 1 对 1 聊天(已脱敏: 客户只有编号, 手机号/证件号已打码)
+⭐9-28 崔伟定: 按工作日切, 不再按「前 24 小时」。工作日中午出一份, 范围=上一个工作日 0 点 → 今天 0 点
+(即上一个工作日整天 + 后面连着的休息日; 例: 9-28 周一 = 9-24 + 9-25~27 中秋, 10-08 = 9-30 + 国庆 7 天)。
+休息日不出(挪到节后第一个工作日), 调休上班照出; 工作日口径与 AI 推荐同一份 holiday-cn。
+生产 /chatReview/export 只会导 24 小时 → 这里按天逐天拉(end=次日 0 点), 在 Python 端合并, 服务器不用换包。
+
+生产导出的 1 对 1 聊天(已脱敏: 客户只有编号, 手机号/证件号已打码)
 → Claude(走崔伟的 Claude 订阅, CLI + CLAUDE_CODE_OAUTH_TOKEN) 每位规划师出一份复盘 + 一份给崔伟的团队汇总
 → 回传生产 /chatReview/upload, 生产把 {{c:编号}} 换回客户昵称、存完整页、夏梅推送。
 
 ⛔本仓库 PUBLIC, Actions 日志人人可看: 这里只打印条数/耗时/token, 绝不打印聊天或分析内容。
 """
+import datetime
 import html
 import json
 import os
@@ -22,6 +28,7 @@ TOKEN = os.environ.get("CHAT_REVIEW_TOKEN", "")
 MODE = (os.environ.get("MODE") or "run").strip()
 TEST_VXID = (os.environ.get("TEST_VXID") or "").strip()
 ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip()]
+# 补跑用: 填「出复盘的那一天」yyyy-MM-dd(兼容旧格式 yyyy-MM-dd HH:mm, 只取日期), 留空=今天(北京)
 WINDOW_END = (os.environ.get("WINDOW_END") or "").strip()
 FORCE = (os.environ.get("FORCE") or "").strip().lower() == "true"  # 同日补跑: 绕过 sent-<日期> 标记
 
@@ -29,6 +36,88 @@ MODEL = "claude-opus-5"
 # 规划师窗口内和客户来往少于这么多条就不出复盘(没东西可说, 硬写只会是空话)
 MIN_MESSAGES = 6
 BROADCAST_MIN = 20  # 同一句话发给 ≥20 户视为群发
+# 一人材料超过这么多字就从最早一天开始丢(9-22 林付贤 200 万字直接报 Prompt is too long; 5 万字正常)
+MAX_CHARS = 300_000
+BJ = datetime.timezone(datetime.timedelta(hours=8))
+
+_HOLIDAYS = {}
+
+
+def workday_status(day):
+    """(是否工作日, 说明)。与 ai-recommend/recommend.py 同口径: 国务院放假安排(holiday-cn),
+    法定假日休、调休上班算工作日、其余周六日休; 拉不到表就只按周末判。"""
+    year = day[:4]
+    if year not in _HOLIDAYS:
+        _HOLIDAYS[year] = None
+        for url in (f"https://raw.githubusercontent.com/NateScarlet/holiday-cn/master/{year}.json",
+                    f"https://cdn.jsdelivr.net/gh/NateScarlet/holiday-cn@master/{year}.json"):
+            try:
+                _HOLIDAYS[year] = {d["date"]: d for d in requests.get(url, timeout=20).json()["days"]}
+                break
+            except Exception as e:
+                log(f"节假日表拉取失败 {url.split('/')[2]} {type(e).__name__}")
+    d = (_HOLIDAYS[year] or {}).get(day)
+    if d:
+        return (not d["isOffDay"], f"{d['name']}{'调休上班' if not d['isOffDay'] else '休息'}")
+    wd = datetime.date.fromisoformat(day).weekday()
+    if wd >= 5:
+        return (False, "周六" if wd == 5 else "周日")
+    return (True, "工作日")
+
+
+def window_days(report_day):
+    """出复盘那天 → 要分析的日期列表(上一个工作日 + 其后的休息日, 不含当天)。最多往回找 20 天。"""
+    d = datetime.date.fromisoformat(report_day)
+    days = []
+    for _ in range(20):
+        d -= datetime.timedelta(days=1)
+        days.insert(0, d.isoformat())
+        if workday_status(d.isoformat())[0]:
+            return days
+    return days
+
+
+def merge_exports(exports):
+    """多天导出合并: 同一规划师同一客户(已建档, 编号=客户 id)拼成一户; history 取最早那天的(真正的「之前」)。
+    未建档客户 x 编号每天各自从 1 数, 跨天对不上 → 统一重新编号, 同一人跨天会算两户(罕见, 可接受)。"""
+    planners, xseq = {}, 0
+    for data in exports:
+        for p in data["planners"]:
+            P = planners.setdefault(p["vxId"], {"vxId": p["vxId"], "name": p["name"], "customers": [], "_idx": {}})
+            for c in p["customers"]:
+                if c["key"].startswith("x"):
+                    xseq += 1
+                    c["key"] = f"x{xseq}"
+                old = P["_idx"].get(c["key"])
+                if old is None:
+                    P["_idx"][c["key"]] = c
+                    P["customers"].append(c)
+                else:
+                    old["today"] += c["today"]
+                    for k in ("state", "appeal", "dealState", "addDate"):
+                        if c.get(k):
+                            old[k] = c[k]
+    for P in planners.values():
+        P.pop("_idx")
+    return list(planners.values())
+
+
+def trim_to_fit(p):
+    """材料太长时从最早一天开始丢本次窗口的消息, 直到放得下(整份出不来比少看两天更糟)。消息时间 t 形如 MM-dd HH:mm。"""
+    def size():
+        return sum(len(m["text"]) + 16 for c in p["customers"] for m in c["today"] + c.get("history", []))
+    dropped = []
+    while size() > MAX_CHARS:
+        days = sorted({m["t"][:5] for c in p["customers"] for m in c["today"]})
+        if len(days) <= 1:
+            break
+        dropped.append(days[0])
+        for c in p["customers"]:
+            c["today"] = [m for m in c["today"] if m["t"][:5] != days[0]]
+        p["customers"] = [c for c in p["customers"] if c["today"]]
+    if dropped:
+        p["trimmed"] = dropped
+        log(f"{p['vxId']}: 材料超长, 丢掉最早的 {', '.join(dropped)}")
 
 
 def drop_broadcast_only(p):
@@ -47,7 +136,7 @@ def drop_broadcast_only(p):
     log(f"{p['vxId']}: 识别群发 {len(bc)} 句, 剔除只收到群发的 {before - len(p['customers'])} 户")
 
 
-SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经验很丰富的老规划师，也是大家的成交教练。每天傍晚，你把一位规划师过去 24 小时和客户的企业微信 1 对 1 聊天全部读一遍，只从「怎么把单子往成交推」的角度，告诉他哪里可以做得更好、换成怎么说，明天先联系谁。
+SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经验很丰富的老规划师，也是大家的成交教练。每个工作日中午，你把一位规划师上一个工作日（连同后面连着的休息日，可能是好几天）和客户的企业微信 1 对 1 聊天全部读一遍，只从「怎么把单子往成交推」的角度，告诉他哪里可以做得更好、换成怎么说，明天先联系谁。
 
 【公司背景】
 - 规划师通过企业微信服务客户，客户多为 45–70 岁、手里有一笔闲钱的人。
@@ -194,7 +283,10 @@ def cost_usd(d):
 
 
 def build_user_prompt(p, window_start, window_end):
-    lines = [f"规划师：{p['name']}", f"本次窗口：{window_start} 至 {window_end}（北京时间）", ""]
+    lines = [f"规划师：{p['name']}", f"本次窗口：{window_start} 至 {window_end}（北京时间）"]
+    if p.get("span_note"):
+        lines.append(p["span_note"])
+    lines.append("")
     for c in p["customers"]:
         meta = [c.get("state") or "", c.get("appeal") or ""]
         if c.get("dealState"):
@@ -257,7 +349,7 @@ def render_page(p, r, window_start, window_end):
            "<meta name='viewport' content='width=device-width,initial-scale=1'>",
            f"<title>聊天复盘 · {esc(p['name'])}</title><style>{PAGE_CSS}</style></head><body><div class='wrap'>",
            f"<h1>{esc(p['name'])} · 聊天复盘</h1>",
-           f"<div class='meta'>{esc(window_start)} – {esc(window_end)} · {len(p['customers'])} 位客户 · {p['msgCount']} 条消息 · Claude 分析</div>",
+           f"<div class='meta'>{esc(window_start)} – {esc(window_end)}{esc(p.get('span_label', ''))} · {len(p['customers'])} 位客户 · {p['msgCount']} 条消息 · Claude 分析</div>",
            f"<div class='ov'>{esc(r['overview'])}</div>"]
     if r["improve"]:
         out.append("<h2>🔻 可以做得更好</h2>")
@@ -301,18 +393,29 @@ def main():
         log("缺 CHAT_REVIEW_TOKEN")
         sys.exit(1)
 
-    params = {"token": TOKEN}
-    if WINDOW_END:
-        params["end"] = WINDOW_END
-    resp = requests.get(f"{BASE_URL}/chatReview/export", params=params, timeout=180)
-    resp.raise_for_status()
-    data = resp.json()
-    if data.get("code") != 0:
-        log(f"导出失败: {data.get('msg')}")
-        sys.exit(1)
-    ws, we = data["windowStart"], data["windowEnd"]
-    planners = data["planners"]
-    log(f"窗口 {ws} ~ {we}, 规划师 {len(planners)} 位")
+    report_day = WINDOW_END[:10] if WINDOW_END else datetime.datetime.now(BJ).date().isoformat()
+    ok, why = workday_status(report_day)
+    if not ok and not WINDOW_END and not FORCE:
+        log(f"{report_day} {why}, 不出复盘(挪到节后第一个工作日一起出)")
+        return
+    days = window_days(report_day)
+    exports = []
+    for d in days:
+        end = (datetime.date.fromisoformat(d) + datetime.timedelta(days=1)).isoformat() + " 00:00"
+        resp = requests.get(f"{BASE_URL}/chatReview/export", params={"token": TOKEN, "end": end}, timeout=180)
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("code") != 0:
+            log(f"导出 {d} 失败: {data.get('msg')}")
+            sys.exit(1)
+        exports.append(data)
+        log(f"导出 {d}({workday_status(d)[1]}): 规划师 {len(data['planners'])} 位")
+    planners = merge_exports(exports)
+    ws, we = f"{days[0][5:]} 00:00", f"{report_day[5:]} 00:00"
+    labels = [f"{d[5:]}{'' if workday_status(d)[0] else '(' + workday_status(d)[1] + ')'}" for d in days]
+    span_note = (f"本次共 {len(days)} 天：{'、'.join(labels)}。窗口跨了休息日，「明天先联系」指收到这份复盘的今天（{report_day[5:]}）。"
+                 if len(days) > 1 else "")
+    log(f"出复盘日 {report_day}, 窗口 {ws} ~ {we}({len(days)} 天), 规划师 {len(planners)} 位")
 
     results, team_input, total_cost = [], [], 0.0
     todo = []
@@ -320,6 +423,9 @@ def main():
         if ONLY and p["vxId"] not in ONLY:
             continue
         drop_broadcast_only(p)
+        trim_to_fit(p)
+        p["span_label"] = f"（共 {len(days)} 天）" if len(days) > 1 else ""
+        p["span_note"] = span_note + (f"材料太长，{('、'.join(p['trimmed']))} 这几天的聊天没放进来。" if p.get("trimmed") else "")
         p["msgCount"] = sum(len(c["today"]) for c in p["customers"])
         if p["msgCount"] < MIN_MESSAGES:
             log(f"{p['vxId']}: 窗口内 {p['msgCount']} 条, 少于 {MIN_MESSAGES} 条, 跳过")
