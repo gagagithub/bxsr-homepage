@@ -32,6 +32,13 @@ TOP_N = 5
 PICK_N = 8          # 每批最多挑几户: 多挑的进候补, 规划师点「换一个」时从候补顶上来
 BATCH_CHARS = 150_000      # 每批时间线大约多少字（一次调用读完）
 WORKERS = 4
+# 9-29 崔伟定: 这些规划师不推港险(按 user_id; 110=李颢)
+NO_HK = {110}
+# 作品是不是港险: 标题/账号/推荐产品里有港险字样或香港保司产品名(8-9 月 t_creation.recommended_product 里出现过的)
+HK = re.compile(r"港险|香港|港保|港币|赴港|去港|海外|傲[珑龙]盛世|周大福|飞扬88|匠心飞|星河尊享|永明|友邦|保诚|诚誉|"
+                r"中银人寿|富饶万家|盛利|立桥|宏利|安盛|万通|富卫|忠意|臻[颐頤]")
+NO_HK_NOTE = ("\n\n⚠ 这位规划师不做港险：不要挑只对港险/香港保险感兴趣的客户；"
+              "「为什么是今天」和「开口第一句」都不要往港险、香港保险、去香港上引；讲香港保险产品的作品不要配。")
 
 TRIVIAL = re.compile(r"^\s*(好的?|好滴|嗯+|哦+|OK|ok|收到|谢谢|感谢|在|在吗|你好|您好|\[[^\]]+\]|[。.！!~，,\s])*\s*$")
 # 粗筛：客户本人说过的话里至少沾一条画像信号的边（宽松, 真正判断交给 Claude）
@@ -369,9 +376,15 @@ def renew_all(today, planners, exclude):
         return {}, {}
     STATUS.update(renewDate=d.get("creationDate"), renewWorks=len(creations))
     cmap = {c["id"]: c for c in creations}
-    works = "\n\n".join(
-        f"【作品 {c['id']}】{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
-        for c in creations)
+    def fmt(cs):
+        return "\n\n".join(
+            f"【作品 {c['id']}】{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
+            for c in cs)
+    works = fmt(creations)
+    # 不推港险的规划师: 标题/分类/推荐产品沾港险的作品不给他配
+    hk_ids = {c["id"] for c in creations
+              if HK.search(" ".join(str(c.get(k) or "") for k in ("title", "category", "product")))}
+    works_no_hk = fmt([c for c in creations if c["id"] not in hk_ids])
     by = {}
     for c in d.get("candidates") or []:
         if c["uid"] in planners and (not ONLY or str(c["uid"]) in ONLY) and c["cid"] not in exclude.get(c["uid"], set()):
@@ -382,7 +395,11 @@ def renew_all(today, planners, exclude):
 
     def one(item):
         uid, cs = item
-        parts = [f"========== 昨天的作品 ==========\n{works}\n\n========== 候选客户 =========="]
+        no_hk = uid in NO_HK
+        if no_hk and len(hk_ids) == len(creations):
+            log(f"时事激活 {uid}: 作品全是港险, 不推港险跳过")
+            return uid, [], []
+        parts = [f"========== 昨天的作品 ==========\n{works_no_hk if no_hk else works}\n\n========== 候选客户 =========="]
         for layer in ("P3", "P2", "P1"):
             rows = [c for c in cs if c["layer"] == layer]
             if not rows:
@@ -393,14 +410,16 @@ def renew_all(today, planners, exclude):
                              f"上次单聊：{c['lastSingle']} | 加微：{c['adddate'] or '未知'}\n" + "\n".join(c.get("lines") or []))
         t0 = time.time()
         try:
-            out, u = call_claude(system, "\n".join(parts) + "\n\n请按要求挑选并输出。", RENEW_SCHEMA)
+            out, u = call_claude(system, "\n".join(parts) + (NO_HK_NOTE if no_hk else "")
+                                 + "\n\n请按要求挑选并输出。", RENEW_SCHEMA)
         except Exception as e:
             log(f"时事激活 {uid}: 失败 {type(e).__name__}: {str(e)[:150]}")
             return uid, [], []
         meta = {c["cid"]: c for c in cs}
         cards, seen = [], set()
         for p in out["picks"]:
-            if p["cid"] not in meta or p["creation_id"] not in cmap or p["cid"] in seen:
+            if p["cid"] not in meta or p["creation_id"] not in cmap or p["cid"] in seen \
+                    or (no_hk and p["creation_id"] in hk_ids):
                 continue
             seen.add(p["cid"])
             m, w = meta[p["cid"]], cmap[p["creation_id"]]
@@ -478,7 +497,8 @@ def main():
         t0 = time.time()
         ids = {c["cid"] for c, _ in b}
         try:
-            out, u = call_claude(system, "".join(t for _, t in b) + "\n\n请按要求挑选并输出。", PICK_SCHEMA)
+            out, u = call_claude(system, "".join(t for _, t in b) + (NO_HK_NOTE if uid in NO_HK else "")
+                                 + "\n\n请按要求挑选并输出。", PICK_SCHEMA)
             picks = [p for p in out["picks"] if p["cid"] in ids][:PICK_N]
             log(f"{uid}: 批 {len(b)} 户 → {len(picks)} 户, {time.time() - t0:.0f}s, {usage_line(u)}")
             return uid, picks, b
