@@ -36,7 +36,7 @@ WORKERS = 4
 NO_HK = {110}
 # 作品是不是港险: 标题/账号/推荐产品里有港险字样或香港保司产品名(8-9 月 t_creation.recommended_product 里出现过的)
 HK = re.compile(r"港险|香港|港保|港币|赴港|去港|海外|傲[珑龙]盛世|周大福|飞扬88|匠心飞|星河尊享|永明|友邦|保诚|诚誉|"
-                r"中银人寿|富饶万家|盛利|立桥|宏利|安盛|万通|富卫|忠意|臻[颐頤]")
+                r"中银人寿|富饶万家|盛利|立桥|宏利|安盛|万通|富卫|忠意|臻[颐頤]|世代")  # 9-29 崔伟: 太保世代3/世代悦享3 是港险
 NO_HK_NOTE = ("\n\n⚠ 这位规划师不做港险：不要挑只对港险/香港保险感兴趣的客户；"
               "「为什么是今天」和「开口第一句」都不要往港险、香港保险、去香港上引；讲香港保险产品的作品不要配。")
 
@@ -378,12 +378,12 @@ def renew_all(today, planners, exclude):
     cmap = {c["id"]: c for c in creations}
     def fmt(cs):
         return "\n\n".join(
-            f"【作品 {c['id']}】{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
+            f"【作品 {c['id']}】{'（港险）' if c['id'] in hk_ids else ''}{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
             for c in cs)
-    works = fmt(creations)
-    # 不推港险的规划师: 标题/分类/推荐产品沾港险的作品不给他配
+    # 港险作品在标题前标「（港险）」让 Claude 知道(9-29 太保世代3 被当内地年金配给了内地客户); 不推港险的规划师整条拿掉
     hk_ids = {c["id"] for c in creations
               if HK.search(" ".join(str(c.get(k) or "") for k in ("title", "category", "product")))}
+    works = fmt(creations)
     works_no_hk = fmt([c for c in creations if c["id"] not in hk_ids])
     by = {}
     for c in d.get("candidates") or []:
