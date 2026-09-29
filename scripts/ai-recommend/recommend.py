@@ -20,6 +20,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
+import promises
+
 BASE_URL = os.environ.get("AI_REC_BASE", "https://214club.com.cn")
 TOKEN = os.environ.get("CHAT_REVIEW_TOKEN", "")
 MODE = (os.environ.get("MODE") or "run").strip()
@@ -192,7 +194,7 @@ def report(ok, today, error=""):
     if MODE != "run" or DRY:
         return
     body = {"date": today or time.strftime("%Y-%m-%d"), "ok": ok, "error": error, "warnings": STATUS["warnings"][:5]}
-    for k in ("jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip", "renewQuoteBad", "skipped"):
+    for k in ("promises", "jevChecked", "jevAdded", "renewDate", "renewWorks", "renewSkip", "renewQuoteBad", "skipped"):
         if k in STATUS:
             body[k] = STATUS[k]
     try:
@@ -203,19 +205,24 @@ def report(ok, today, error=""):
         print(f"运行报告发送失败 {type(e).__name__}", flush=True)
 
 
+_HOL = {}
+
+
 def workday_status(day):
     """返回 (是否工作日, 说明)。数据源=国务院放假安排(holiday-cn, GitHub raw / jsdelivr 镜像)，
     法定假日休、调休上班算工作日、其余周六日休；两处都拉不到就只按周末判。"""
     year = day[:4]
-    days = None
-    for url in (f"https://raw.githubusercontent.com/NateScarlet/holiday-cn/master/{year}.json",
-                f"https://cdn.jsdelivr.net/gh/NateScarlet/holiday-cn@master/{year}.json"):
+    days = _HOL.get(year)
+    for url in ([] if days is not None else (f"https://raw.githubusercontent.com/NateScarlet/holiday-cn/master/{year}.json",
+                f"https://cdn.jsdelivr.net/gh/NateScarlet/holiday-cn@master/{year}.json")):
         try:
-            days = requests.get(url, timeout=20).json()["days"]
+            days = _HOL[year] = requests.get(url, timeout=20).json()["days"]
             break
         except Exception as e:
             log(f"节假日表拉取失败 {url.split('/')[2]} {type(e).__name__}")
-    for d in days or []:
+    if days is None:
+        days = _HOL[year] = []   # 两处都拉不到: 这一年只按周末判, 别每天重拉
+    for d in days:
         if d.get("date") == day:
             return (not d["isOffDay"], f"{d['name']}{'调休上班' if not d['isOffDay'] else '休息'}")
     wd = datetime.date(int(day[:4]), int(day[5:7]), int(day[8:10])).weekday()
@@ -463,6 +470,10 @@ def main():
         report(True, bj_today)
         return
 
+    if os.environ.get("PROMISE_ONLY") == "1":   # 只跑「你答应过的联系」(联调用)
+        run_promises(bj_today, None)
+        return
+
     r = requests.get(f"{BASE_URL}/aiRecommend/export", params={"token": TOKEN}, timeout=300)
     r.raise_for_status()
     data = r.json()
@@ -562,7 +573,28 @@ def main():
     log(f"回传: code={body.get('code')} saved={body.get('saved')} msg={str(body.get('msg'))[:100]}")
     if body.get("code") != 0:
         sys.exit(1)
+    run_promises(today, planners)
     report(True, today)
+
+
+def run_promises(today, planners):
+    """你答应过的联系(9-29 崔伟定)。出错只记一笔, 不影响当天推荐。"""
+    try:
+        if planners is None:
+            r = requests.get(f"{BASE_URL}/aiRecommend/export", params={"token": TOKEN}, timeout=300)
+            planners = {p["userId"]: p["name"] for p in r.json()["planners"]}
+        got = promises.run(today, planners, BASE_URL, TOKEN, call_claude, workday_status, log, ONLY)
+        STATUS["promises"] = len(got)
+        if DRY:
+            if os.environ.get("DUMP"):   # 本机出样用; ⛔公开仓库的 Actions 里别设
+                with open(os.environ["DUMP"] + ".promises.json", "w", encoding="utf-8") as f:
+                    json.dump(got, f, ensure_ascii=False, indent=1)
+            log(f"承诺 {len(got)} 条, DRY=1 不回传")
+            return
+        body = promises.upload(BASE_URL, TOKEN, got)
+        log(f"承诺回传: code={body.get('code')} saved={body.get('saved')} skipped={body.get('skipped')}")
+    except Exception as e:
+        log(f"承诺这一步失败 {type(e).__name__}: {str(e)[:150]}")
 
 
 if __name__ == "__main__":
