@@ -71,3 +71,16 @@ jobs:
           WINDOW_END: ${{ inputs.end }}
           FORCE: ${{ inputs.force }}
         run: python -u review.py
+
+      # 9-30 崔伟: 没回提醒里规划师点了「这条不用回」的, Claude 抽查哪些点错了(其实该回), 只发崔伟异常的, 都正常不发。
+      # 复盘失败也照跑(always); 只分析部分规划师(only)或 ping 时不跑。
+      - name: 「不用回」点错抽查
+        if: always() && (inputs.mode || 'run') == 'run' && inputs.only == ''
+        working-directory: scripts/chat-review
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CHAT_REVIEW_TOKEN: ${{ secrets.CHAT_REVIEW_TOKEN }}
+          TEST_VXID: ${{ inputs.test_vxid }}
+          WINDOW_END: ${{ inputs.end }}
+          FORCE: ${{ inputs.force }}
+        run: python -u skip_review.py
