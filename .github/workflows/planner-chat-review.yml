@@ -73,7 +73,7 @@ jobs:
         run: python -u review.py
 
       # 9-30 崔伟: 没回提醒里规划师点了「这条不用回」的, Claude 抽查哪些点错了(其实该回), 只发崔伟异常的, 都正常不发。
-      # 复盘失败或休息日不出复盘也照跑(always, 节假日也要回客户); 只分析部分规划师(only)或 ping 时不跑。
+      # 复盘失败也照跑(always); 只分析部分规划师(only)或 ping 时不跑。
       - name: 「不用回」点错抽查
         if: always() && (inputs.mode || 'run') == 'run' && inputs.only == ''
         working-directory: scripts/chat-review
