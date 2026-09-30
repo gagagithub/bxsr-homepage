@@ -1,4 +1,4 @@
-"""「这条不用回」点错抽查 —— 跟在聊天复盘后面跑(同一个 workflow, 同一个窗口)。
+"""「这条不用回」点错抽查 —— 跟在聊天复盘后面跑(同一个 workflow), 但每天都跑、只看前一天(节假日也要回客户)。
 
 崔伟 9-30: 没回提醒里规划师可以点「这条不用回」; 他要一个汇总, 但不要原话、不要全部,
 只要 Claude 觉得点错了(其实该回)的; 都正常就不发。
@@ -14,8 +14,7 @@ import sys
 
 import requests
 
-from review import (BASE_URL, BJ, FORCE, TEST_VXID, TOKEN, WINDOW_END, call_claude, log, usage_line,
-                    window_days, workday_status)
+from review import BASE_URL, BJ, TEST_VXID, TOKEN, WINDOW_END, call_claude, log, usage_line
 
 BATCH = 30
 
@@ -65,12 +64,9 @@ def main():
     if not TOKEN:
         log("缺 CHAT_REVIEW_TOKEN")
         sys.exit(1)
+    # 9-30 崔伟: 节假日规划师也要正常回客户 → 抽查每天都跑(不跟复盘的工作日口径), 只看前一天
     report_day = WINDOW_END[:10] if WINDOW_END else datetime.datetime.now(BJ).date().isoformat()
-    ok, why = workday_status(report_day)
-    if not ok and not WINDOW_END and not FORCE:
-        log(f"{report_day} {why}, 不抽查")
-        return
-    days = window_days(report_day)
+    days = [(datetime.date.fromisoformat(report_day) - datetime.timedelta(days=1)).isoformat()]
     resp = requests.get(f"{BASE_URL}/replyRemind/skipExport",
                         params={"token": TOKEN, "start": days[0], "end": report_day}, timeout=180)
     resp.raise_for_status()
