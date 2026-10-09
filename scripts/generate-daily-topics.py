@@ -25,6 +25,10 @@ DATE_CN = TODAY.strftime("%Y年%-m月%-d日")
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DETAIL_FILE = os.path.join(PROJECT_ROOT, "daily-topics.html")
+# 跨次运行的小状态(随 Action 的 git add -A 一起提交): 视频号 sph→finder username 永久缓存 + 上次生成日期。
+# 2026-10-09 改按钮按需生成后加: username 是固定不变的, 解析一次存下来, 以后不再每次花钱查;
+# 上次生成日期决定「对标账号动向」往前看几天(隔几天才点也不漏)。
+STATE_FILE = os.path.join(PROJECT_ROOT, "data", "topic-pool-state.json")
 
 TIKHUB_API_KEY = os.environ.get("TIKHUB_API_KEY", "")
 TIKHUB_BASE = "https://api.tikhub.io"
@@ -43,7 +47,9 @@ HEADERS = {
 
 # ── 话题/平台配置 ─────────────────────────────────────
 # 所有平台列表
-ALL_PLATFORMS = ["wechat_channels", "xigua", "bilibili", "douyin", "xiaohongshu"]
+# 2026-10-09 崔伟定(省钱第一档): 砍掉西瓜视频——搜出来全是老视频, 近7天过滤后几乎天天 0 条, 只拖慢速度。
+#   search_xigua 等代码保留, 恢复=加回 "xigua"。
+ALL_PLATFORMS = ["wechat_channels", "bilibili", "douyin", "xiaohongshu"]
 
 TOPICS = [
     {
@@ -1098,7 +1104,24 @@ def _fetch_account_posts(acc):
     return []
 
 
-_CHANNEL_USERNAME_MEMO = {}  # sph 视频号ID -> finder username, 本进程内只解析一次
+def _load_state():
+    try:
+        with open(STATE_FILE, encoding="utf-8") as f:
+            st = json.load(f)
+        return st if isinstance(st, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_state(st):
+    os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(st, f, ensure_ascii=False, indent=1, sort_keys=True)
+
+
+STATE = _load_state()
+# sph 视频号ID -> finder username。先读持久缓存(data/topic-pool-state.json), 没有的才花钱解析一次。
+_CHANNEL_USERNAME_MEMO = dict(STATE.get("channel_usernames") or {})
 
 
 def _resolve_channel_username(channel_id):
@@ -1278,13 +1301,32 @@ def _fetch_account_posts_once(acc):
     return out
 
 
+MONITOR_MAX_DAYS = 7          # 对标账号动向最多往前看 7 天
+MONITOR_SHARE_LINK_CAP = 8    # 视频号作品换永久短链(每条 $0.01)全场最多 8 条, 按赞取前 8; 其余只显示标题+赞
+
+
+def monitor_window_days():
+    """2026-10-09 改按需生成: 不再固定看「昨天」, 改看「上次生成那天 00:00 起 ~ 现在」, 最多 7 天。
+    这样编辑隔几天才点一次, 中间对标号发的作品也不漏。没有上次记录(首次)按 7 天。"""
+    today0 = TODAY.replace(hour=0, minute=0, second=0, microsecond=0)
+    last = STATE.get("last_run")
+    try:
+        last0 = datetime.strptime(last, "%Y-%m-%d").replace(tzinfo=BEIJING_TZ)
+        days = (today0 - last0).days
+    except Exception:
+        days = MONITOR_MAX_DAYS
+    return max(1, min(MONITOR_MAX_DAYS, days))
+
+
 def monitor_accounts():
-    """对标账号监控: 这些号每天都更新 → 直接列出每个号「昨天」发布的新作品(按赞排)。"""
+    """对标账号监控: 列出每个号「上次生成以来(最多7天)」发布的新作品(按赞排)。"""
     if not TIKHUB_API_KEY:
         return []
-    yest = TODAY - timedelta(days=1)
-    yest_start = int(yest.replace(hour=0, minute=0, second=0, microsecond=0).timestamp())
-    yest_end = yest_start + 86400  # 昨日 00:00 ~ 今日 00:00(不含)
+    days = monitor_window_days()
+    today0 = TODAY.replace(hour=0, minute=0, second=0, microsecond=0)
+    yest_start = int((today0 - timedelta(days=days)).timestamp())
+    yest_end = int(TODAY.timestamp()) + 60  # 一直看到现在(含今天已发的)
+    print(f"  对标窗口: 近 {days} 天(上次生成 {STATE.get('last_run') or '无记录'})")
     result = []
     for acc in MONITOR_ACCOUNTS:
         try:
@@ -1295,15 +1337,17 @@ def monitor_accounts():
         yposts = [p for p in posts
                   if p["create_time"] and yest_start <= p["create_time"] < yest_end]
         yposts.sort(key=lambda p: p.get("like", 0) or 0, reverse=True)
-        # 视频号作品到这里 url 还是空, 只带 object_id; 仅给真正会展示的昨日 top5 换永久微信短链
-        # (weixin.qq.com/sph/), 省计费调用。抖音/小红书的 url 在抓取时已就绪, 不动。
-        if acc["platform"] == "wechat_channels":
-            for p in yposts[:5]:
-                if not p.get("url") and p.get("object_id"):
-                    p["url"] = _get_channel_share_url(p["object_id"])
-        result.append({**acc, "yesterday": yposts})
-        print(f"  monitor {acc['name']}({acc['platform']}): 共{len(posts)}条, 昨日{len(yposts)}条")
+        result.append({**acc, "yesterday": yposts, "window_days": days})
+        print(f"  monitor {acc['name']}({acc['platform']}): 共{len(posts)}条, 近{days}天{len(yposts)}条")
         time.sleep(0.4)
+    # 视频号作品到这里 url 还是空, 只带 object_id。窗口变成多天后作品会变多, 为不多花钱:
+    # 只给全部视频号号里「会展示的(每号前5)」按赞排的前 MONITOR_SHARE_LINK_CAP 条换永久微信短链。
+    # 抖音/小红书的 url 在抓取时已就绪, 不动。
+    wx = [p for m in result if m["platform"] == "wechat_channels"
+          for p in m["yesterday"][:5] if not p.get("url") and p.get("object_id")]
+    wx.sort(key=lambda p: p.get("like", 0) or 0, reverse=True)
+    for p in wx[:MONITOR_SHARE_LINK_CAP]:
+        p["url"] = _get_channel_share_url(p["object_id"])
     return result
 
 
@@ -1313,7 +1357,7 @@ def render_monitor_section(monitor):
     rows = ""
     for m in monitor:
         yposts = m.get("yesterday") or []
-        if not yposts:        # 昨日没更新的号直接不显示(只留真发了的)
+        if not yposts:        # 窗口内没更新的号直接不显示(只留真发了的)
             continue
         pn = {"douyin": "抖音", "xiaohongshu": "小红书", "wechat_channels": "视频号"}.get(m["platform"], m["platform"])
         lines = []
@@ -1329,11 +1373,14 @@ def render_monitor_section(monitor):
         rows += (f'<tr><td style="white-space:nowrap;vertical-align:top;">{esc(m["name"])}</td>'
                  f'<td style="color:#888;white-space:nowrap;vertical-align:top;">{pn}</td>'
                  f'<td style="vertical-align:top;">{cell}</td></tr>')
-    if not rows:              # 所有号昨日都没更新 → 整块隐藏, 不显示空表
+    if not rows:              # 所有号窗口内都没更新 → 整块隐藏, 不显示空表
         return ""
-    return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向 · 昨日更新</div>'
+    days = (monitor[0].get("window_days") or 1) if monitor else 1
+    span = "昨日更新" if days == 1 else f"近{days}天更新(上次生成以来)"
+    col = "昨日发布作品" if days == 1 else f"近{days}天发布作品"
+    return (f'<div class="monitor-section"><div class="monitor-title">📡 对标账号动向 · {span}</div>'
             f'<table class="monitor-table"><thead><tr>'
-            f'<th>对标账号</th><th>平台</th><th>昨日发布作品</th>'
+            f'<th>对标账号</th><th>平台</th><th>{col}</th>'
             f'</tr></thead><tbody>{rows}</tbody></table></div>')
 
 
@@ -1863,7 +1910,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
   </div>
 </main>
 
-<footer>🔄 每日自动更新 · TikHub 搜索 + DeepSeek 选题分析</footer>
+<footer>🔄 编辑点「生成」按需更新 · TikHub 搜索 + DeepSeek 选题分析</footer>
 
 </body>
 </html>"""
@@ -1925,6 +1972,12 @@ def main():
     with open(DETAIL_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  Written: {DETAIL_FILE}")
+
+    # 成功生成才记状态: 上次生成日期(下次对标窗口从这天算) + 视频号 username 缓存(以后不再花钱解析)
+    STATE["last_run"] = DATE_STR
+    STATE["channel_usernames"] = _CHANNEL_USERNAME_MEMO
+    _save_state(STATE)
+    print(f"  State saved: {STATE_FILE}")
 
     print("=== Done ===")
 

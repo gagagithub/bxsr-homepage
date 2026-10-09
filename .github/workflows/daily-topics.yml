@@ -9,8 +9,15 @@ on:
     # 是 GitHub Actions 最拥挤的 cron 时刻、排队常延迟 15~60min+,导致页面 ~10 点才更新。
     # 改用非整点分钟(:30)排队更少,且留足 2.5h 缓冲。
     # - cron: '30 22 * * *'
+  # ⭐ 2026-10-09 崔伟定: 改「编辑点按钮才生成」——后台选题池页「生成今天的选题」按钮
+  #   → 服务器 workflow_dispatch 触发本 workflow(每天最多一次), 生成完推回后台, 夏梅通知点按钮的人。
+  #   没人点就不跑、不花 TikHub 的钱。定时 schedule 保持关闭。
   workflow_dispatch:
-    # 支持手动触发（方便测试）
+
+# 同一时间只跑一个(后台已限每天一次, 这里再兜一层, 防止重复扣费)
+concurrency:
+  group: daily-topics
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -64,3 +71,15 @@ jobs:
           echo "server response: ${RESP}"
           echo "${RESP}" | grep -q '"code":0' || { echo "::error::上传失败(令牌或服务端异常)"; exit 1; }
           echo "✓ 已推送今日选题池 HTML 到生产"
+
+      # 任何一步失败(TikHub 余额用完 / 采集过少 / 推送失败)都回报后台:
+      # 后台把状态改成「失败」放开按钮, 并让夏梅告诉点按钮的人和崔伟。
+      - name: Report failure to production
+        if: failure()
+        env:
+          TOPIC_POOL_UPLOAD_TOKEN: ${{ secrets.TOPIC_POOL_UPLOAD_TOKEN }}
+        run: |
+          curl -sS --max-time 30 \
+            -F "token=${TOPIC_POOL_UPLOAD_TOKEN}" \
+            -F "reason=GitHub 运行失败(多半是 TikHub 余额用完), run ${GITHUB_RUN_ID}" \
+            https://214club.com.cn/creation/topicPoolFail || true
