@@ -1832,7 +1832,7 @@ def generate_detail_page(data, insight="", monitor_html="", news_html=""):
       font-size: 0.95em;
       line-height: 1.35;
     }}
-    .tl:hover {{ color: #028090; text-decoration: underline; }}
+    a.tl:hover {{ color: #028090; text-decoration: underline; }}  /* 只有真链接才变色下划线, 没链接的 span 别装成能点 */
 
     .biz-badge {{
       display: inline-block;
