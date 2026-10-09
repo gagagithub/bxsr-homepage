@@ -49,7 +49,8 @@ HEADERS = {
 # 所有平台列表
 # 2026-10-09 崔伟定(省钱第一档): 砍掉西瓜视频——搜出来全是老视频, 近7天过滤后几乎天天 0 条, 只拖慢速度。
 #   search_xigua 等代码保留, 恢复=加回 "xigua"。
-ALL_PLATFORMS = ["wechat_channels", "bilibili", "douyin", "xiaohongshu"]
+# 2026-10-09 崔伟定: 加「公众号爆文」(wechat_mp), 沿用同一套关键词, 每词 1 次 $0.01。
+ALL_PLATFORMS = ["wechat_channels", "wechat_mp", "bilibili", "douyin", "xiaohongshu"]
 
 TOPICS = [
     {
@@ -88,6 +89,8 @@ TOPICS = [
 PLATFORM_FILTERS = {
     # 视频号点赞量整体偏低(几十级), 门槛设低些避免误杀; 主要靠相关度+近3月+护栏
     "wechat_channels": lambda item: item.get("like", 0) >= 10,
+    # 公众号: 阅读≥300(10-09 实测「香港保险」近7天最热 36 篇, 阅读 200~7000, 300 以上约 20 篇)
+    "wechat_mp":   lambda item: item.get("read", 0) >= 300,
     "xigua":       lambda item: item.get("play", 0) >= 50000,
     "bilibili":    lambda item: item.get("play", 0) >= 10000,
     "douyin":      lambda item: item.get("like", 0) >= 200,
@@ -101,6 +104,7 @@ FEATURED_MAX_DAYS = 2
 
 PLATFORM_NAMES = {
     "wechat_channels": "视频号",
+    "wechat_mp": "公众号",
     "xigua": "西瓜视频",
     "bilibili": "B站",
     "douyin": "抖音",
@@ -109,6 +113,7 @@ PLATFORM_NAMES = {
 
 PLATFORM_COLORS = {
     "wechat_channels": "#FA9D3B",
+    "wechat_mp": "#07C160",
     "xigua": "#F04142",
     "bilibili": "#00A1D6",
     "douyin": "#1A1A1A",
@@ -117,6 +122,7 @@ PLATFORM_COLORS = {
 
 PLATFORM_TAG_CLASSES = {
     "wechat_channels": "tag-channels",
+    "wechat_mp": "tag-mp",
     "xigua": "tag-xigua",
     "bilibili": "tag-bili",
     "douyin": "tag-douyin",
@@ -169,9 +175,10 @@ RETRY_BACKOFF = 2.0  # 秒；每次失败后等 backoff * attempt 再重试
 def _request_with_retry(method, url, **kwargs):
     """对 TikHub 接口做带退避的重试。仅对 5xx / 4xx(非401/403) / 网络异常重试。"""
     last_err = ""
+    timeout = kwargs.pop("timeout", 30)   # 搜一搜等慢接口可传更长超时(超时会已扣费但收不到)
     for attempt in range(1, RETRY_ATTEMPTS + 1):
         try:
-            resp = requests.request(method, url, timeout=30, **kwargs)
+            resp = requests.request(method, url, timeout=timeout, **kwargs)
             if resp.status_code == 200:
                 return resp
             # 401/403 是 token 问题，重试无意义
@@ -538,8 +545,67 @@ def search_wechat_channels(keyword):
     return items
 
 
+# 自家公众号不进选题池(搜出来会混进「崔伟说投资」等自己的文章)
+OWN_MP_ACCOUNTS = ("崔伟说", "保心上人")
+
+
+def search_wechat_mp(keyword):
+    """搜公众号文章(微信「搜一搜」wechat_search/v2/fetch_search, business_type=article)。
+    sort=hot + publish_time=week: 近7天最热。一次返回约 30+ 篇, 每篇带标题/公众号名/阅读数/链接,
+    阅读数在 source.tag 里(形如「阅读 7185」)。旧的 wechat_mp/web/fetch_search_article 已被 TikHub 下线。"""
+    resp = _request_with_retry(
+        "POST", f"{TIKHUB_BASE}/api/v1/wechat_search/v2/fetch_search",
+        headers=HEADERS, timeout=40,
+        json={"keyword": keyword, "business_type": "article", "sort": "hot",
+              "publish_time": "week", "offset": 0, "raw": False})
+    if resp is None:
+        return []
+    try:
+        data = (resp.json() or {}).get("data") or {}
+    except Exception as e:
+        print(f"  JSON parse failed: {e}")
+        return []
+    items = []
+    for v in (data.get("items") or [])[:30]:
+        if not isinstance(v, dict):
+            continue
+        title = re.sub(r"<[^>]+>", "", v.get("title") or "").strip()
+        if not title:
+            continue
+        src = v.get("source") if isinstance(v.get("source"), dict) else {}
+        author = (src.get("title") or "").strip()
+        if any(k in author for k in OWN_MP_ACCOUNTS):
+            continue
+        read = 0
+        for t in (src.get("tag") or []):
+            m = re.search(r"阅读\s*([\d.]+\s*[万wW]?\+?)", str((t or {}).get("title") or ""))
+            if m:
+                read = _to_int_count(m.group(1).replace("+", "").replace(" ", ""))
+                break
+        try:
+            ct = int(v.get("timestamp") or v.get("date") or 0)
+        except (ValueError, TypeError):
+            ct = 0
+        url = (v.get("doc_url") or "").strip()
+        if url.startswith("http://"):
+            url = "https://" + url[len("http://"):]
+        items.append({
+            "title": title,
+            "url": url,
+            "play": read,          # 热度/排序沿用 play 口径
+            "read": read,
+            "like": 0,
+            "comment": 0,
+            "create_time": ct,
+            "author": author,
+            "cid": str(v.get("docID") or ""),
+        })
+    return items
+
+
 SEARCH_FUNCS = {
     "wechat_channels": search_wechat_channels,
+    "wechat_mp": search_wechat_mp,
     "xigua": search_xigua,
     "bilibili": search_bilibili,
     "douyin": search_douyin,
@@ -775,7 +841,7 @@ def _call_deepseek_batch(topic_name, platform_key, items):
 
     sys_msg = (
         "你是保心上人公司（专注高端香港保险 + 分红险 + 养老规划）的内容选题分析助手, "
-        "为短视频/小红书内容编辑判断每条热门内容是否适合再创作。"
+        "为短视频/小红书/公众号内容编辑判断每条热门内容是否适合再创作。"
         "你的输出必须是合法的 JSON。"
     )
     user_msg = f"""平台: {platform_name}
@@ -1014,9 +1080,13 @@ def build_item_card(item, rank):
     reason_html = f'<div class="biz-reason">{biz_reason}</div>' if biz == "不建议" and biz_reason else ""
 
     stats = []
+    if item.get("author"):                        # 公众号文章: 显示是哪个号发的
+        stats.append(f"📝 {esc(item['author'])}")
     play_str = format_count(item.get("play", 0))
     like_str = format_count(item.get("like", 0))
-    if play_str:
+    if item.get("read"):
+        stats.append(f"👁 阅读 {format_count(item['read'])}")
+    elif play_str:
         stats.append(f"▶ {play_str}")
     if like_str:
         stats.append(f"♥ {like_str}")
