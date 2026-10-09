@@ -668,26 +668,32 @@ def collect_all_data():
 
 # ── 后处理：去重 / 归一化 / LLM enrich ──────────────────
 
-WECHAT_LINK_TOP_N = 5   # 每话题最多给前 N 条视频号搜索结果换永久短链(每条 2 次计费调用)
-
-
-def resolve_wechat_search_links(data):
-    """视频号 v2 搜索结果不带可播链接, 对去重后幸存的条目按点赞取每话题 top N,
-    经 fetch_video_detail→fetch_video_share_url 换成 weixin.qq.com/sph 永久短链。
-    放在全局去重之后调, 避免给注定被丢的条目白花计费调用。失败留空(渲染成不可点文字)。"""
-    converted = 0
+def resolve_wechat_search_links(data, featured=()):
+    """视频号 v2 搜索结果不带可播链接, 只给页面上真正会显示的条目换 weixin.qq.com/sph 永久短链
+    (fetch_video_detail→fetch_video_share_url, 每条 2 次计费调用)。
+    必须放在 DeepSeek 打标之后调: 显示的是剔掉「不建议」后的前 3 条 + 今日精选,
+    旧版在打标前按点赞取 top5, 跟实际显示的对不上 → 卡片标题点了没反应(10-09)。
+    失败重试一次, 仍失败留空(渲染成不可点文字)。"""
+    targets = []
     for topic in data:
         items = topic["platforms"].get("wechat_channels") or []
-        for item in sorted(items, key=lambda i: i.get("like", 0) or 0,
-                           reverse=True)[:WECHAT_LINK_TOP_N]:
-            export_id = item.get("_export_id")
-            if not export_id or item.get("url"):
-                continue
-            url = _get_channel_share_url_by_export(export_id)
-            if url:
-                item["url"] = url
-                converted += 1
-    print(f"  Resolved {converted} wechat_channels share links")
+        targets += [it for it in items if it.get("biz_relevance") != "不建议"][:3]
+    targets += [it for _, plat, it in featured if plat == "wechat_channels"]
+    converted = failed = 0
+    seen = set()
+    for item in targets:
+        export_id = item.get("_export_id")
+        if not export_id or item.get("url") or id(item) in seen:
+            continue
+        seen.add(id(item))
+        url = (_get_channel_share_url_by_export(export_id)
+               or _get_channel_share_url_by_export(export_id))
+        if url:
+            item["url"] = url
+            converted += 1
+        else:
+            failed += 1
+    print(f"  Resolved {converted} wechat_channels share links ({failed} failed)")
 
 
 def _normalize_title(title):
@@ -1248,7 +1254,8 @@ def _get_channel_share_url(object_id):
             su = ""
         if isinstance(su, str) and su.startswith("http"):
             url = su.strip()
-    _CHANNEL_SHARE_MEMO[object_id] = url
+    if url:  # 失败不记, 让重试真的再请求一次
+        _CHANNEL_SHARE_MEMO[object_id] = url
     return url
 
 
@@ -2017,9 +2024,6 @@ def main():
     print("Step 2: Dedupe across topics/platforms...")
     dedupe_across_topics(data)
 
-    print("Step 2.5: Resolve 视频号永久短链...")
-    resolve_wechat_search_links(data)
-
     print("Step 3: Normalize heat scores...")
     normalize_heat(data)
 
@@ -2028,6 +2032,9 @@ def main():
 
     print("Step 5: Enrich with DeepSeek...")
     enrich_with_llm(data)
+
+    print("Step 5.2: Resolve 视频号永久短链(只换要显示的)...")
+    resolve_wechat_search_links(data, pick_featured(data))
 
     print("Step 5.5: Synthesize daily insight...")
     insight = synthesize_insight(data)
