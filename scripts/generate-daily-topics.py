@@ -1122,6 +1122,9 @@ def _save_state(st):
 STATE = _load_state()
 # sph 视频号ID -> finder username。先读持久缓存(data/topic-pool-state.json), 没有的才花钱解析一次。
 _CHANNEL_USERNAME_MEMO = dict(STATE.get("channel_usernames") or {})
+# 解析不出来的 sph(账号改名/注销): 记下来以后直接跳过。10-09 实测这种号每次会重试 5 次, 每次都扣费($0.01),
+# 晨星财富规划/有财保险咨询两个号每次白扣 $0.10。要重新试某个号, 把它从 data/topic-pool-state.json 的 channel_dead 删掉即可。
+_CHANNEL_DEAD = set(STATE.get("channel_dead") or [])
 
 
 def _resolve_channel_username(channel_id):
@@ -1130,6 +1133,8 @@ def _resolve_channel_username(channel_id):
     解析结果缓存到本进程; 失败返回 None(该号当天不出动向, 不影响其它号)。"""
     if channel_id in _CHANNEL_USERNAME_MEMO:
         return _CHANNEL_USERNAME_MEMO[channel_id]
+    if channel_id in _CHANNEL_DEAD:
+        return None
     uname = None
     resp = _request_with_retry(
         "POST", f"{TIKHUB_BASE}/api/v1/wechat_channels/v2/fetch_channel_id_to_username",
@@ -1144,7 +1149,8 @@ def _resolve_channel_username(channel_id):
         _CHANNEL_USERNAME_MEMO[channel_id] = uname
         print(f"    resolved {channel_id} -> {uname}")
     else:
-        print(f"    ⚠ resolve channel_id {channel_id} failed (该号今日跳过)")
+        _CHANNEL_DEAD.add(channel_id)
+        print(f"    ⚠ resolve channel_id {channel_id} failed (记入 channel_dead, 以后跳过)")
     return uname
 
 
@@ -1976,6 +1982,7 @@ def main():
     # 成功生成才记状态: 上次生成日期(下次对标窗口从这天算) + 视频号 username 缓存(以后不再花钱解析)
     STATE["last_run"] = DATE_STR
     STATE["channel_usernames"] = _CHANNEL_USERNAME_MEMO
+    STATE["channel_dead"] = sorted(_CHANNEL_DEAD)
     _save_state(STATE)
     print(f"  State saved: {STATE_FILE}")
 
