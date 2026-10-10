@@ -45,7 +45,7 @@ concurrency:
 jobs:
   review:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
 
@@ -55,7 +55,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -q requests
+          pip install -q requests pillow
           npm install -g @anthropic-ai/claude-code
 
       - name: Review

@@ -9,7 +9,12 @@
 → Claude(走崔伟的 Claude 订阅, CLI + CLAUDE_CODE_OAUTH_TOKEN) 每位规划师出一份复盘 + 一份给崔伟的团队汇总
 → 回传生产 /chatReview/upload, 生产把 {{c:编号}} 换回客户昵称、存完整页、夏梅推送。
 
-⛔本仓库 PUBLIC, Actions 日志人人可看: 这里只打印条数/耗时/token, 绝不打印聊天或分析内容。
+⭐10-10 崔伟(林付贤一对一后)定:
+- 复盘要看图片: export 给已存图片编号 → /chatReview/media 取原图(缩到 1600px)存临时目录, Claude 用 Read 工具看。
+- export 带「企微已拉黑」、每户手填跟进记录(多为电话)、只打了电话没在企微聊的客户、当天 AI 推荐/到期约定联系的覆盖情况。
+- 不凑数: 只挑深入沟通的; 同类问题合并一条; 深聊少就查空余时间用在哪(coverage)。
+
+⛔本仓库 PUBLIC, Actions 日志人人可看: 这里只打印条数/耗时/token, 绝不打印聊天或分析内容, 图片只存 runner 临时目录不传 artifact。
 """
 import datetime
 import html
@@ -18,6 +23,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -39,6 +45,8 @@ BROADCAST_MIN = 20  # 同一句话发给 ≥20 户视为群发
 # 一人材料超过这么多字就从最早一天开始丢(9-22 林付贤 200 万字直接报 Prompt is too long; 5 万字正常)
 MAX_CHARS = 300_000
 BJ = datetime.timezone(datetime.timedelta(hours=8))
+MAX_IMAGES = 40   # 每位规划师最多给 Claude 看这么多张图(窗口内的优先)
+IMG_MAX_SIDE = 1600
 
 _HOLIDAYS = {}
 
@@ -77,13 +85,19 @@ def window_days(report_day):
     return days
 
 
-def merge_exports(exports):
+def merge_exports(exports, days=None):
     """多天导出合并: 同一规划师同一客户(已建档, 编号=客户 id)拼成一户; history 取最早那天的(真正的「之前」)。
     未建档客户 x 编号每天各自从 1 数, 跨天对不上 → 统一重新编号, 同一人跨天会算两户(罕见, 可接受)。"""
     planners, xseq = {}, 0
     for data in exports:
         for p in data["planners"]:
-            P = planners.setdefault(p["vxId"], {"vxId": p["vxId"], "name": p["name"], "customers": [], "_idx": {}})
+            P = planners.setdefault(p["vxId"], {"vxId": p["vxId"], "name": p["name"], "customers": [], "_idx": {},
+                                                "phoneOnly": [], "coverage": []})
+            if p.get("coverage") is not None:
+                P["coverage"].append(dict(p["coverage"], day=data.get("_day", "")))
+            for c in p.get("phoneOnly") or []:
+                if not any(x["key"] == c["key"] for x in P["phoneOnly"]):
+                    P["phoneOnly"].append(c)
             for c in p["customers"]:
                 if c["key"].startswith("x"):
                     xseq += 1
@@ -94,11 +108,13 @@ def merge_exports(exports):
                     P["customers"].append(c)
                 else:
                     old["today"] += c["today"]
-                    for k in ("state", "appeal", "dealState", "addDate"):
+                    for k in ("state", "appeal", "dealState", "addDate", "blacklisted", "connects"):
                         if c.get(k):
                             old[k] = c[k]
     for P in planners.values():
         P.pop("_idx")
+        chat_keys = {c["key"] for c in P["customers"]}
+        P["phoneOnly"] = [c for c in P["phoneOnly"] if c["key"] not in chat_keys]
     return list(planners.values())
 
 
@@ -118,6 +134,38 @@ def trim_to_fit(p):
     if dropped:
         p["trimmed"] = dropped
         log(f"{p['vxId']}: 材料超长, 丢掉最早的 {', '.join(dropped)}")
+
+
+def fetch_images(p, root):
+    """把窗口内(其次是之前的聊天里)已存的图片下到 root/<vx>/, 消息文字改成 [图片#n], 返回目录和张数。
+    下不到的保持 [图片](Claude 按看不到处理)。"""
+    d = os.path.join(root, re.sub(r"[^A-Za-z0-9_-]", "_", p["vxId"]))
+    os.makedirs(d, exist_ok=True)
+    cand = [m for c in p["customers"] for m in c["today"] if m.get("img")]
+    cand += [m for c in p["customers"] for m in c.get("history", [])[-4:] if m.get("img")]
+    n = 0
+    for m in cand:
+        if n >= MAX_IMAGES:
+            break
+        try:
+            r = requests.get(f"{BASE_URL}/chatReview/media", params={"token": TOKEN, "id": m["img"]}, timeout=60)
+            if r.status_code != 200 or not r.content:
+                continue
+            n += 1
+            fn = os.path.join(d, f"{n}.jpg")
+            try:
+                from io import BytesIO
+                from PIL import Image
+                im = Image.open(BytesIO(r.content)).convert("RGB")
+                im.thumbnail((IMG_MAX_SIDE, IMG_MAX_SIDE))
+                im.save(fn, "JPEG", quality=82)
+            except Exception:
+                with open(fn, "wb") as f:
+                    f.write(r.content)
+            m["text"] = f"[图片#{n}]"
+        except Exception as e:
+            log(f"{p['vxId']}: 取图失败 {type(e).__name__}")
+    return d, n
 
 
 def drop_broadcast_only(p):
@@ -161,7 +209,8 @@ SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经�
 - 写这类结论时一律说「当前记录里没看到……」，不要说「你没有……」，并且带上可核对的证据：客户几点说了什么、记录里最后一条规划师消息是几点、说的什么。例：「客户 09-22 17:10 问『这是啥』，记录里之后没看到你的消息；如果已经回了或打了电话，这条忽略。」
 - 记录里有通话（[语音通话 N 秒]）、聊天里提到「刚才电话里」「会议上说的」「上次见面」，说明很多事已经在线下谈过，文字里没出现的不要当成没谈。
 - 区分「当时可以做得更好」和「现在有没有补救」：规划师后面已经补了动作（比如已经追问「明天上午还是下午」），就不能再说他没追，只能说当时那一步可以更早。
-- 客户提问之后规划师发了 [图片]/[文件]/[语音]，答案很可能就在里面（计划书截图、标注过的说明图、语音解释）。这时不能写「没给数字」「没解释」，只能写「答案可能在 09-24 11:51 发的图片里，记录里看不到，请你自己确认」。
+- 图片现在能看：聊天里写成 [图片#n] 的，材料开头告诉了文件位置，用 Read 工具打开。客户提问后规划师发的图片、规划师说「你看我发的图」「你再理解一下这个图片」时，必须先打开看图里有没有回答；图里答了就不能判「没回答」「没解释」。规划师发的计划书、对比表截图，客户发来的保单/资料截图都要看，表情包类的不用管。
+- 只写 [图片]（没有编号）、[文件]、[语音] 的看不到，答案很可能就在里面。这时不能写「没给数字」「没解释」，只能写「答案可能在 09-24 11:51 发的图片里，看不到，请你自己确认」，evidence 标「需确认」。
 - 时间点也别机械卡：规划师说「等明天再约」，窗口截止前还没约，不算拖延；很多客户有固定方便的时段（比如只在下午看微信），规划师比你清楚。
 - 客户只回一个「哦」「收到」「嗯」，是弱信号，不要翻译成「嫌低」「没兴趣」；年龄、预算、用途都还没问到时，结论只能是「信息不足，先补齐」。
 
@@ -210,6 +259,13 @@ SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经�
 - 只写值得上会的：崔伟会拿 improve 里每一条和规划师当面讨论，所以只写值得在会上花几分钟谈的，宁可只写一两条，也不要凑数。
   值得写：①关于这个客户怎么走、值不值得继续投入的大判断——比如客户长期只来验证信息、不肯深入沟通；只谈返佣、拒绝电话、身份动机不明；支付能力和期待对不上。这类建议里要把「先放一放／降低联系频率／先核实身份」当成可选结论，不要只给一句新话术让规划师继续推。②快成交的客户真正卡在哪、下一步怎么推进。③客户明确说出的需求或选择标准，和规划师推荐的方向不一致。
   不写：第一次回答没把细节讲全（先简单让客户知道能解决、客户愿意再细聊才展开，是正常节奏；客户接着往下聊、甚至主动约时间，就说明这句没出问题）；原话也说得过去的话术微调（比如开放问题改二选一）；只凭一句话推断错过了机会（先看这个客户几个月来的沟通习惯）；因为客户没成交就倒推规划师做错了。
+- 【10-10 崔伟定：不凑数】improve 只挑和客户有深入沟通的。规划师只发了一句问候或一条消息、客户没回的，没有讨论价值，不进 improve。值得聊的只有 1 户就写 1 户，没有就不写。
+- 【同类合并】同一个问题出现在几户身上，合成一条：c 写成「{{c:编号1}}、{{c:编号2}}」，fact 分别列，problem 一句话说清共同的问题（例：「这几户都很久没联系、文字发了几轮没回——别再发文字，直接打电话，问清还打不打算办」）。
+- 【先说结论】problem 第一句就是结论（该做什么、哪里不对），理由最多两三句；better 写能照着做的动作，建议打电话时写清电话里问什么，不用每户附一大段话术。
+- 客户自己定了下次联系的时间或条件（「钱 12 月到期再说」），规划师也答应了的，不进 improve、不放「明天先联系」，customers 里写「按客户约定的时间再联系」。
+- 建议规划师「补一句 X」「说明一下 X」之前，先查之前的聊天里是不是已经说过；说过的不写。
+- 标了「⚠系统标记企微已拉黑」的客户：不点评话术，不放「明天先联系」，customers 里只写「系统显示已拉黑，先确认还能不能联系」。
+- 跟进记录里电话聊得深的客户（有金额、到账时间、要方案），比企微里只发了问候的客户更值得讨论，可以进 improve 和「明天先联系」；但电话内容你只看到规划师自己记的那一句，判断要保守。
 - 每条 improve 必须标 kind：
   「明确问题」= 事实答错、客户基础信息记错、客户的关键问题或条件被漏掉；
   「可优化」= 做法没错，但有更好的开场、顺序或更客户化的讲法；
@@ -217,12 +273,19 @@ SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经�
 - 涉及具体产品规则（能不能改 20 年交、改了保费涨多少、保额降到多少、领取金额），材料里没有依据的，不要把你想出来的方案当成标准答案，写成「待产品规则核实：……」。
 - 每一条都要落到具体客户和聊天原话上，不写「要加强沟通」这类空话；没问题的客户不用硬挑毛病，条数宁少勿滥。
 - 只评价「本次窗口」里的消息；「之前的聊天」只用来理解来龙去脉。
-- 你看不到语音、图片、文件、通话内容，只知道发了什么类型。不要猜测这些内容，也不要因为看不到就判定规划师做错。
+- 你看不到语音、文件、通话内容和没编号的图片，只知道发了什么类型。不要猜测这些内容，也不要因为看不到就判定规划师做错。
 - 客户名字不在材料里，一律用占位符 {{c:编号}} 称呼客户（编号就是材料里每个客户标题上的那个编号，例如 {{c:33703}}），所有字段都这样写，包括 push。系统会自动换成客户微信名。
 - 引用原话放在 quote 字段，要是聊天里的原文（太长可以用…截短），不要改写。
 - 「换成这样」本身要能执行：给出的话术需要的信息（产品方向、年龄、预算），材料里得真有；没有就换成先拿信息的那一句，不要为了显得具体去假设一个产品、一组对比。
 - 你写的「换成这样」和开场白，规划师会照着发给客户，所以里面不能出现你自己编的事实：公司的赴港行程和日期、名额、报销、优惠活动，产品的分红实现率、历史数据、具体利益数字，利率下调、产品停售之类的政策和市场说法。聊天材料里客户或规划师说过的可以用；材料里没有的，一律写成【待填：赴港日期】【待填：该产品分红实现率】这样的空位，让规划师自己核实后再填。
 - 用「你」称呼规划师，语气像一个懂行、说话直接的老同事，是帮他多成交，不是挑他的错。
+
+【空余时间用在哪：coverage 字段（10-10 崔伟定）】
+材料末尾的「覆盖情况」列了这位规划师当天：AI 推荐逐户有没有在企微发消息、有没有跟进记录、有没有点「已联系」「推错了」；答应过当天要联系的客户做没做；跟进记录总条数、只写一两个字的条数、录入时间。
+- 深入沟通的客户少，说明当天有不少空余时间：要如实写这些时间有没有用在追 AI 推荐、兑现答应过的联系、主动挖掘客户上。按事实写数字，例：「深入沟通只有 1 户。AI 重点推荐 5 户：企微联系 2 户（都只发了问候），2 户标推错，1 户没动；候补 13 户只碰了 2 户。跟进记录 14 条全在 17:53–17:56 录入，7 条只写了『1』」。
+- 「点了已联系」但当天企微和跟进记录都没有痕迹的，如实写「系统里没看到联系痕迹，可能用的私人微信或手机，需确认」，不下「造假」之类的结论。
+- 当天深入沟通的客户多、确实很忙时，coverage 一两句带过即可。
+- 只写事实和缺口，不替他找理由，也不扣帽子。
 
 【输出字段】
 - overview：两三句话，今天整体怎么样、离成交最近的是谁、最要紧的一件事是什么。
@@ -230,7 +293,8 @@ SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经�
 - good：今天做得好的 1–2 段，why 说明好在哪里、以后要保持。
 - tomorrow：明天最该先联系的 2–4 个客户，why 说原因，opener 给一句可以直接发的开场白。
 - customers：本次窗口里聊过的每个客户各一行，status 一句话，先写客户背景（新客户/老客户重新联系/重新加回/已成交等），再说清楚这个客户现在处在哪个阶段（了解产品/处理顾虑/比较方案/做决定/办手续，或在等某个外部条件）、下一步是什么，level 取「快成交」「推进中」「卡住了」「一般」之一。
-- push：发到规划师企业微信的文字，300 字以内，纯文本不用 markdown。3–4 行：离成交最近的客户和该做的动作；最该改的一两条（优先「明确问题」，没有就写可优化的）；明天先联系谁。每行开头可用一个表情符号。"""
+- coverage：按上面「空余时间用在哪」写，3–6 句纯文字；客户用 {{c:编号}}。
+- push：发到规划师企业微信的文字，300 字以内，纯文本不用 markdown。3–4 行：离成交最近的客户和该做的动作；最该改的一两条（优先「明确问题」，没有就写可优化的）；深聊少时加一行 AI 推荐/约定联系还差哪几户；明天先联系谁。每行开头可用一个表情符号。"""
 
 
 TEAM_PROMPT = """你是「保心上人」规划师团队的成交教练。下面是今天每位规划师聊天复盘的结构化结果（每人一份）。请写一段发给老板崔伟的团队汇总，要求：
@@ -266,9 +330,10 @@ PLANNER_SCHEMA = {
             "properties": {"c": {"type": "string"}, "status": {"type": "string"},
                            "level": {"type": "string", "enum": ["快成交", "推进中", "卡住了", "一般"]}},
             "required": ["c", "status", "level"], "additionalProperties": False}},
+        "coverage": {"type": "string"},
         "push": {"type": "string"},
     },
-    "required": ["overview", "improve", "good", "tomorrow", "customers", "push"],
+    "required": ["overview", "improve", "good", "tomorrow", "customers", "coverage", "push"],
     "additionalProperties": False,
 }
 
@@ -282,14 +347,16 @@ def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def call_claude(system, user, schema=None):
+def call_claude(system, user, schema=None, img_dir=None):
     """一次分析调用, 走崔伟的 Claude 订阅(Claude Code CLI + CLAUDE_CODE_OAUTH_TOKEN), 不走按量付费的 API。
-    返回 (文本, 用量信息 dict)。有 schema 时文本是保证合法的 JSON。"""
+    返回 (文本, 用量信息 dict)。有 schema 时文本是保证合法的 JSON。
+    img_dir: 有图片时只放开 Read 工具、只许读这个目录, 让 Claude 自己打开图片看。"""
+    tools = ["--tools", "Read", "--allowedTools", "Read", "--add-dir", img_dir] if img_dir else ["--tools", ""]
     cmd = ["claude", "-p", "--model", MODEL, "--effort", "high", "--system-prompt", system,
-           "--tools", "", "--output-format", "json", "--no-session-persistence"]
+           *tools, "--output-format", "json", "--no-session-persistence"]
     if schema:
         cmd += ["--json-schema", json.dumps(schema, ensure_ascii=False)]
-    proc = subprocess.run(cmd, input=user, capture_output=True, text=True, timeout=1500)
+    proc = subprocess.run(cmd, input=user, capture_output=True, text=True, timeout=2400, cwd=img_dir or None)
     try:
         d = json.loads(proc.stdout)
     except Exception:
@@ -319,28 +386,80 @@ def cost_usd(d):
     return d.get("total_cost_usd") or 0.0
 
 
-def build_user_prompt(p, window_start, window_end):
+def cust_meta(c):
+    meta = [c.get("state") or "", c.get("appeal") or ""]
+    if c.get("dealState"):
+        meta.append(f"成交情况:{c['dealState']}")
+    if c.get("addDate"):
+        meta.append(f"加好友{c['addDate']}")
+    if c.get("blacklisted"):
+        meta.append("⚠系统标记企微已拉黑")
+    return meta
+
+
+def connect_lines(c):
+    if not c.get("connects"):
+        return []
+    return (["—— 规划师手填的跟进记录（多是电话，最近几条）——"]
+            + [f"{x['t']} [{x.get('way') or ''}] {x.get('text') or ''}" for x in c["connects"]])
+
+
+def coverage_lines(p):
+    out = ["", "===== 覆盖情况（当天的 AI 推荐、答应过的联系、跟进记录；用来写 coverage）====="]
+    for cov in p.get("coverage") or []:
+        day = cov.get("day") or ""
+        cs = cov.get("connects") or {}
+        out.append(f"【{day}】跟进记录 {cs.get('total', 0)} 条，其中内容只有一两个字的 {cs.get('contentBlank', 0)} 条"
+                   + (f"，录入时间 {cs.get('firstEntry')} ~ {cs.get('lastEntry')}" if cs.get("firstEntry") else ""))
+        recs = cov.get("aiRec") or []
+        if recs:
+            out.append(f"【{day}】AI 推荐 {len(recs)} 户（企微=当天企微里给他发过消息；电话=当天有跟进记录）：")
+            for r in recs:
+                flags = ["企微有" if r.get("wechat") else "企微无", "电话有" if r.get("phone") else "电话无"]
+                if r.get("markedContacted"):
+                    flags.append(f"{r['markedContacted']} 点了已联系")
+                if r.get("markedWrong"):
+                    flags.append(f"标推错:{r['markedWrong']}")
+                out.append(f"  {r.get('type')}#{r.get('rank')} {{{{c:{r['key']}}}}}"
+                           + (f" 成交指数{r['dealIndex']}" if r.get("dealIndex") is not None else "") + " · " + " / ".join(flags))
+        else:
+            out.append(f"【{day}】当天没有 AI 推荐")
+        for r in cov.get("promises") or []:
+            out.append(f"【{day}】答应过当天联系 {{{{c:{r['key']}}}}}（{r.get('what') or ''}）：{r.get('status')}；"
+                       f"{'企微有' if r.get('wechat') else '企微无'} / {'电话有' if r.get('phone') else '电话无'}")
+    return out
+
+
+def build_user_prompt(p, window_start, window_end, img_dir=None, img_count=0):
     lines = [f"规划师：{p['name']}", f"本次窗口：{window_start} 至 {window_end}（北京时间）"]
     if p.get("span_note"):
         lines.append(p["span_note"])
+    if img_count:
+        lines.append(f"聊天里写成 [图片#n] 的图片已存成文件 {img_dir}/n.jpg（共 {img_count} 张），用 Read 工具打开看；"
+                     "只写 [图片] 没有编号的看不到。")
     lines.append("")
     for c in p["customers"]:
-        meta = [c.get("state") or "", c.get("appeal") or ""]
-        if c.get("dealState"):
-            meta.append(f"成交情况:{c['dealState']}")
-        if c.get("addDate"):
-            meta.append(f"加好友{c['addDate']}")
+        meta = cust_meta(c)
         if c.get("silentDays") is not None:
             meta.append(f"本次之前已 {c['silentDays']} 天没聊过")
         elif not c.get("history"):
             meta.append("之前没有聊天记录")
         lines.append(f"===== 客户 {c['key']}（{' / '.join(m for m in meta if m)}）=====")
+        lines += connect_lines(c)
         if c.get("history"):
             lines.append("—— 之前的聊天（仅供理解来龙去脉）——")
             lines += [f"{m['t']} {m['who']}：{m['text']}" for m in c["history"]]
-            lines.append("—— 本次窗口 ——")
+        lines.append("—— 本次窗口 ——")
         lines += [f"{m['t']} {m['who']}：{m['text']}" for m in c["today"]]
         lines.append("")
+    if p.get("phoneOnly"):
+        lines.append("===== 本次窗口只填了跟进记录（多是电话）、企微里没聊的客户 =====")
+        for c in p["phoneOnly"]:
+            lines.append(f"===== 客户 {c['key']}（{' / '.join(m for m in cust_meta(c) if m)}）=====")
+            lines += connect_lines(c)
+            lines.append("")
+    lines += coverage_lines(p)
+    lines.append("")
     lines.append("「规」= 规划师本人，「客」= 客户。请按要求输出。")
     return "\n".join(lines)
 
@@ -380,8 +499,9 @@ def esc(s):
 
 
 def who(c):
-    key = (c or "").replace("{", "").replace("}", "").replace("c:", "").strip()
-    return f"{{{{c:{esc(key)}}}}}"
+    """c 可以是一个编号, 也可以是合并条目的多个编号(「{{c:1}}、{{c:2}}」)。"""
+    keys = [k for k in re.split(r"[\s,，、;；]+", (c or "").replace("{", " ").replace("}", " ").replace("c:", " ")) if k]
+    return "、".join(f"{{{{c:{esc(k)}}}}}" for k in keys) or "{{c:?}}"
 
 
 def render_page(p, r, window_start, window_end):
@@ -400,6 +520,8 @@ def render_page(p, r, window_start, window_end):
                        + (f"<div class='lab'>事实</div><div>{esc(x['fact'])}</div>" if x.get('fact') else "")
                        + f"<div class='lab'>{'判断' if k == '明确问题' else '说明'}</div><div>{esc(x['problem'])}</div>"
                        f"<div class='lab'>换成这样</div><div class='say'>{esc(x['better'])}</div></div>")
+    if r.get("coverage"):
+        out.append(f"<h2>🕒 空余时间用在哪</h2><div class='card'>{esc(r['coverage'])}</div>")
     if r["good"]:
         out.append("<h2>✅ 做得好的</h2>")
         for x in r["good"]:
@@ -417,7 +539,7 @@ def render_page(p, r, window_start, window_end):
             out.append(f"<tr><td>{who(x['c'])}</td><td>{esc(x['status'])}</td>"
                        f"<td><span class='tag t-{lv}'>{lv}</span></td></tr>")
         out.append("</table>")
-    out.append("<div class='foot'>语音、图片、文件和通话内容 AI 看不到，只看文字。这份复盘只发给你本人。</div>")
+    out.append("<div class='foot'>AI 看了文字聊天、存下来的图片和你填的跟进记录；语音、文件和通话内容看不到。这份复盘只发给你本人。</div>")
     out.append("</div></body></html>")
     return "".join(out)
 
@@ -451,9 +573,10 @@ def main():
         if data.get("code") != 0:
             log(f"导出 {d} 失败: {data.get('msg')}")
             sys.exit(1)
+        data["_day"] = d[5:]
         exports.append(data)
         log(f"导出 {d}({workday_status(d)[1]}): 规划师 {len(data['planners'])} 位")
-    planners = merge_exports(exports)
+    planners = merge_exports(exports, days)
     ws, we = f"{days[0][5:]} 00:00", f"{report_day[5:]} 00:00"
     labels = [f"{d[5:]}{'' if workday_status(d)[0] else '(' + workday_status(d)[1] + ')'}" for d in days]
     span_note = (f"本次共 {len(days)} 天：{'、'.join(labels)}。窗口跨了休息日，「明天先联系」指收到这份复盘的今天（{report_day[5:]}）。"
@@ -470,15 +593,21 @@ def main():
         p["span_label"] = f"（共 {len(days)} 天）" if len(days) > 1 else ""
         p["span_note"] = span_note + (f"材料太长，{('、'.join(p['trimmed']))} 这几天的聊天没放进来。" if p.get("trimmed") else "")
         p["msgCount"] = sum(len(c["today"]) for c in p["customers"])
-        if p["msgCount"] < MIN_MESSAGES:
-            log(f"{p['vxId']}: 窗口内 {p['msgCount']} 条, 少于 {MIN_MESSAGES} 条, 跳过")
+        has_cov = p["phoneOnly"] or any(cv.get("aiRec") for cv in p["coverage"])
+        if p["msgCount"] < MIN_MESSAGES and not has_cov:
+            log(f"{p['vxId']}: 窗口内 {p['msgCount']} 条且没有电话/AI推荐, 跳过")
             continue
         todo.append(p)
+
+    img_root = tempfile.mkdtemp(prefix="chatimg-")
 
     def analyze(p):
         t0 = time.time()
         try:
-            text, u = call_claude(SYSTEM_PROMPT, build_user_prompt(p, ws, we), schema=PLANNER_SCHEMA)
+            img_dir, n_img = fetch_images(p, img_root)
+            p["imgCount"] = n_img
+            text, u = call_claude(SYSTEM_PROMPT, build_user_prompt(p, ws, we, img_dir, n_img), schema=PLANNER_SCHEMA,
+                                  img_dir=img_dir if n_img else None)
             return p, json.loads(text), u, time.time() - t0
         except Exception as e:  # 一人失败不影响其他人
             log(f"{p['vxId']}: 分析失败 {type(e).__name__}: {str(e)[:200]}")
@@ -492,7 +621,7 @@ def main():
         if r is None:
             continue
         total_cost += cost_usd(u)
-        log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条, 用时 {secs:.0f}s, 轮次 {u.get('num_turns')}, "
+        log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条/图 {p.get('imgCount', 0)} 张/电话户 {len(p['phoneOnly'])}, 用时 {secs:.0f}s, 轮次 {u.get('num_turns')}, "
             f"改进{len(r['improve'])} 好{len(r['good'])}, {usage_line(u)}")
         results.append({"vxId": p["vxId"], "name": p["name"], "push": name_unarchived(r["push"]),
                         "html": name_unarchived(render_page(p, r, ws, we)),
