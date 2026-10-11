@@ -1,10 +1,14 @@
-"""AI推荐 —— 每天北京 02:00（GitHub schedule）由 Claude 按《客户画像》给每位规划师挑最多 5 户。
+"""AI推荐 —— 每天北京 02:00（GitHub schedule）由 DeepSeek(deepseek-flash) 按《客户画像》给每位规划师挑最多 5 户。
+
+⭐2026-10-11 崔伟定: 从 Claude(claude-opus-5, Claude Code CLI+订阅) 迁到 DeepSeek V4.1-Flash(API, 按量付费)。
+   Claude CLI 的 --json-schema 换成: schema 写进系统提示 + json_object 模式, 拿回来自行校验、不合格重试。
+   为什么迁: Claude 订阅不能用后所有 Claude Code 功能失效; 全站 AI 统一到 DeepSeek。
 
 生产 GET /aiRecommend/export：候选客户完整时间线（聊天+通话+跟进备注, 全带日期）+ 画像
     已脱敏：没有客户名，只有客户 id；手机号/证件号/银行卡已打码；已按规划师反馈和 7 天冷却剔过人
-→ 这里先用关键词粗筛（客户本人说过可能算意向的话），关键词刷掉的再让 Jev(TypeSafe) 补漏，再分批交给 Claude 逐户读
+→ 这里先用关键词粗筛（客户本人说过可能算意向的话），关键词刷掉的再让 Jev(TypeSafe) 补漏，再分批交给 DeepSeek 逐户读
     Jev 补漏(9-21 崔伟批准): 关键词不认中文数字「一年十万」、老客户加保等; Jev 不会算「时间点到了」所以只补不删; Jev 挂了就只用关键词
-→ 每位规划师：各批挑出的合并，由 Claude 排出最终前 5，其余进候补
+→ 每位规划师：各批挑出的合并，由 DeepSeek 排出最终前 5，其余进候补
 → POST /aiRecommend/upload 存库，规划师在后台「AI推荐」看
 
 ⛔本仓库 PUBLIC, Actions 日志人人可看: 只打印条数/耗时/用量, 绝不打印聊天、画像或推荐内容。
@@ -13,7 +17,6 @@ import datetime
 import json
 import os
 import re
-import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -29,10 +32,29 @@ DRY = os.environ.get("DRY") == "1"      # 只跑不回传(联调用)
 ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip()]
 FORCE = os.environ.get("FORCE") == "1"  # 非工作日也强制跑(联调用)
 
-MODEL = "claude-opus-5"
+MODEL = "deepseek-flash"   # 2026-10-11: Claude Opus 5 → DeepSeek V4.1-Flash(带思考)
+DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
+MAX_TOKENS = 32000         # ⚠推理模型: 思考(reasoning_tokens)和正文共用这个额度, 别调小(照 llm_morning 的坑)
 TOP_N = 5
 PICK_N = 8          # 每批最多挑几户: 多挑的进候补, 规划师点「换一个」时从候补顶上来
-BATCH_CHARS = 150_000      # 每批时间线大约多少字（一次调用读完）
+BATCH_CHARS = 150_000      # 每批时间线大约多少字（一次调用读完）。实测 DeepSeek V4.1 上下文 ≥30 万 token, 这个量够放
+
+
+def get_key():
+    """本机跑时从 baoxin 的 application-dev.yml 取 DeepSeek key(和财经脚本同款); Actions 里用 DEEPSEEK_API_KEY。"""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for p in (os.path.join(here, "..", "..", "service", "src", "main", "resources", "application-dev.yml"),
+              os.path.expanduser("~/cuiwei_ai/baoxin/service/src/main/resources/application-dev.yml")):
+        try:
+            m = re.search(r"apiKey:\s*(sk-[A-Za-z0-9_\-]+)", open(p, encoding="utf-8", errors="ignore").read())
+            if m:
+                return m.group(1)
+        except Exception:
+            pass
+    return None
+
+
+DEEPSEEK_KEY = os.environ.get("DEEPSEEK_API_KEY") or get_key()
 WORKERS = 4
 # 9-29 崔伟定: 这些规划师不推港险(按 user_id; 110=李颢)
 NO_HK = {110}
@@ -43,7 +65,7 @@ NO_HK_NOTE = ("\n\n⚠ 这位规划师不做港险：不要挑只对港险/香�
               "「为什么是今天」和「开口第一句」都不要往港险、香港保险、去香港上引；讲香港保险产品的作品不要配。")
 
 TRIVIAL = re.compile(r"^\s*(好的?|好滴|嗯+|哦+|OK|ok|收到|谢谢|感谢|在|在吗|你好|您好|\[[^\]]+\]|[。.！!~，,\s])*\s*$")
-# 粗筛：客户本人说过的话里至少沾一条画像信号的边（宽松, 真正判断交给 Claude）
+# 粗筛：客户本人说过的话里至少沾一条画像信号的边（宽松, 真正判断交给 DeepSeek）
 SIGNALS = [
     r"下周|下个月|月底|月初|年底|年初|国庆|中秋|春节|过年|放假|暑假|寒假|几号|\d{1,2}号|\d{1,2}\s*月|\d{1,2}\.\d{1,2}|以后再|之后再|等.{1,12}(再|后)|回来再|到时候|明年|今年底",
     r"\d+\s*[万wW千]|预算|\d{2}\s*岁|\b[2-8]\d\b|年交|趸交|一次性|给(我|孩子|儿子|女儿|老婆|老公|父母|爸|妈|老人)",
@@ -231,28 +253,70 @@ def workday_status(day):
     return (True, "工作日")
 
 
-def call_claude(system, user, schema):
-    """走崔伟的 Claude 订阅(Claude Code CLI + CLAUDE_CODE_OAUTH_TOKEN), 返回 (dict, 用量)。"""
-    cmd = ["claude", "-p", "--model", MODEL, "--effort", "high", "--system-prompt", system,
-           "--tools", "", "--output-format", "json", "--no-session-persistence",
-           "--json-schema", json.dumps(schema, ensure_ascii=False)]
-    proc = subprocess.run(cmd, input=user, capture_output=True, text=True, timeout=1800)
-    try:
-        d = json.loads(proc.stdout)
-    except Exception:
-        raise RuntimeError(f"CLI 退出码 {proc.returncode}: {proc.stderr[:300]}")
-    if d.get("is_error"):
-        raise RuntimeError(f"CLI 报错 subtype={d.get('subtype')}")
-    if d.get("structured_output") is None:
-        raise RuntimeError("没有拿到结构化输出")
-    return d["structured_output"], d
+def _json_ok(out, schema):
+    """轻校验结构化输出: required 字段在、类型和 enum 大致对(数组逐项查)。不追求完备, 把明显跑偏的拦下来重试。"""
+    if not isinstance(schema, dict):
+        return True
+    t = schema.get("type")
+    if t == "object":
+        if not isinstance(out, dict) or any(k not in out for k in schema.get("required", [])):
+            return False
+        return all(_json_ok(out[k], v) for k, v in (schema.get("properties") or {}).items() if k in out)
+    if t == "array":
+        return isinstance(out, list) and all(_json_ok(x, schema.get("items") or {}) for x in out)
+    if "enum" in schema and out not in schema["enum"]:
+        return False
+    if t == "string":
+        return isinstance(out, str)
+    if t == "integer":
+        return isinstance(out, int) and not isinstance(out, bool)
+    if t == "number":
+        return isinstance(out, (int, float)) and not isinstance(out, bool)
+    if t == "boolean":
+        return isinstance(out, bool)
+    return True
 
 
-def usage_line(d):
-    parts = []
-    for m, u in (d.get("modelUsage") or {}).items():
-        parts.append(f"in={u.get('inputTokens')} cache_read={u.get('cacheReadInputTokens')} out={u.get('outputTokens')}")
-    return "; ".join(parts) or "-"
+def call_deepseek(system, user, schema, tries=3):
+    """一次分析调用, 走 DeepSeek(V4.1-Flash) API(按量付费), 返回 (结构化输出 dict, 用量 dict)。
+    Claude CLI 的 --json-schema 硬约束换成: schema 写进系统提示 + json_object 模式, 拿回来自行校验, 不合格整次重试。"""
+    if not DEEPSEEK_KEY:
+        raise RuntimeError("缺 DEEPSEEK_API_KEY(本机可从 baoxin application-dev.yml 读)")
+    system = (system + "\n\n【输出格式】只输出一个 JSON 对象（json），不要 markdown 代码块，严格符合以下 JSON Schema：\n"
+              + json.dumps(schema, ensure_ascii=False))
+    last = None
+    for k in range(tries):
+        try:
+            resp = requests.post(DEEPSEEK_URL,
+                                 headers={"Authorization": f"Bearer {DEEPSEEK_KEY}"},
+                                 json={"model": MODEL,
+                                       "messages": [{"role": "system", "content": system},
+                                                    {"role": "user", "content": user}],
+                                       "temperature": 0.3, "max_tokens": MAX_TOKENS,
+                                       "response_format": {"type": "json_object"}},
+                                 timeout=1800)
+            resp.raise_for_status()
+            d = resp.json()
+            content = (d["choices"][0]["message"].get("content") or "").strip()
+            content = re.sub(r"^```(json)?|```$", "", content, flags=re.MULTILINE).strip()
+            out = json.loads(content)
+            if not _json_ok(out, schema):
+                raise ValueError("结构不符合 schema")
+            return out, d.get("usage") or {}
+        except Exception as e:
+            last = e
+            if k < tries - 1:
+                log(f"DeepSeek 第{k+1}次失败({type(e).__name__}: {str(e)[:120]}), 重试")
+                time.sleep(2)
+    raise RuntimeError(f"DeepSeek 调用失败: {type(last).__name__}: {str(last)[:200]}")
+
+
+def usage_line(u):
+    if not u:
+        return "-"
+    rt = (u.get("completion_tokens_details") or {}).get("reasoning_tokens")
+    return (f"{MODEL}: in={u.get('prompt_tokens')} cache_hit={u.get('prompt_cache_hit_tokens')} "
+            f"out={u.get('completion_tokens')}" + (f"(思考{rt})" if rt else ""))
 
 
 def customer_said(c):
@@ -365,7 +429,7 @@ def quote_ok(q, lines):
 
 def renew_all(today, planners, exclude):
     """时事激活: 每位规划师从 P3/P2/P1 排队里配昨天的作品挑 ≤RENEW_N 户。
-    返回 ({uid: [卡片]}, {uid: [给 Claude 看过的 cid]})。失败返回 ({}, {})。"""
+    返回 ({uid: [卡片]}, {uid: [给 DeepSeek 看过的 cid]})。失败返回 ({}, {})。"""
     try:
         r = requests.get(f"{BASE_URL}/aiRecommend/renewExport", params={"token": TOKEN}, timeout=300)
         r.raise_for_status()
@@ -387,7 +451,7 @@ def renew_all(today, planners, exclude):
         return "\n\n".join(
             f"【作品 {c['id']}】{'（港险）' if c['id'] in hk_ids else ''}{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
             for c in cs)
-    # 港险作品在标题前标「（港险）」让 Claude 知道(9-29 太保世代3 被当内地年金配给了内地客户); 不推港险的规划师整条拿掉
+    # 港险作品在标题前标「（港险）」让 DeepSeek 知道(9-29 太保世代3 被当内地年金配给了内地客户); 不推港险的规划师整条拿掉
     hk_ids = {c["id"] for c in creations
               if HK.search(" ".join(str(c.get(k) or "") for k in ("title", "category", "product")))}
     works = fmt(creations)
@@ -417,7 +481,7 @@ def renew_all(today, planners, exclude):
                              f"上次单聊：{c['lastSingle']} | 加微：{c['adddate'] or '未知'}\n" + "\n".join(c.get("lines") or []))
         t0 = time.time()
         try:
-            out, u = call_claude(system, "\n".join(parts) + (NO_HK_NOTE if no_hk else "")
+            out, u = call_deepseek(system, "\n".join(parts) + (NO_HK_NOTE if no_hk else "")
                                  + "\n\n请按要求挑选并输出。", RENEW_SCHEMA)
         except Exception as e:
             log(f"时事激活 {uid}: 失败 {type(e).__name__}: {str(e)[:150]}")
@@ -456,7 +520,7 @@ def main():
         log("缺 CHAT_REVIEW_TOKEN")
         sys.exit(1)
     if MODE == "ping":
-        _, u = call_claude("你是测试助手。", "回复 ok", RANK_SCHEMA)
+        _, u = call_deepseek("你是测试助手。", "回复 ok", RANK_SCHEMA)
         log(f"ping ok {usage_line(u)}")
         return
 
@@ -508,7 +572,7 @@ def main():
         t0 = time.time()
         ids = {c["cid"] for c, _ in b}
         try:
-            out, u = call_claude(system, "".join(t for _, t in b) + (NO_HK_NOTE if uid in NO_HK else "")
+            out, u = call_deepseek(system, "".join(t for _, t in b) + (NO_HK_NOTE if uid in NO_HK else "")
                                  + "\n\n请按要求挑选并输出。", PICK_SCHEMA)
             picks = [p for p in out["picks"] if p["cid"] in ids][:PICK_N]
             log(f"{uid}: 批 {len(b)} 户 → {len(picks)} 户, {time.time() - t0:.0f}s, {usage_line(u)}")
@@ -531,7 +595,7 @@ def main():
         if len(cards) > TOP_N:
             brief = [{k: c[k] for k in ("cid", "signal", "jiabao", "quotes", "why_today", "rank_note")} for c in cards]
             try:
-                out, u = call_claude(RANK_PROMPT.format(today=today, n=TOP_N, persona=persona),
+                out, u = call_deepseek(RANK_PROMPT.format(today=today, n=TOP_N, persona=persona),
                                      json.dumps(brief, ensure_ascii=False), RANK_SCHEMA)
                 top = [i for i in out["order"] if i in order]
                 order = top + [i for i in order if i not in top]
@@ -583,7 +647,7 @@ def run_promises(today, planners):
         if planners is None:
             r = requests.get(f"{BASE_URL}/aiRecommend/export", params={"token": TOKEN}, timeout=300)
             planners = {p["userId"]: p["name"] for p in r.json()["planners"]}
-        got = promises.run(today, planners, BASE_URL, TOKEN, call_claude, workday_status, log, ONLY)
+        got = promises.run(today, planners, BASE_URL, TOKEN, call_deepseek, workday_status, log, ONLY)
         STATUS["promises"] = len(got)
         if DRY:
             if os.environ.get("DUMP"):   # 本机出样用; ⛔公开仓库的 Actions 里别设

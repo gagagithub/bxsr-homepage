@@ -6,22 +6,26 @@
 生产 /chatReview/export 只会导 24 小时 → 这里按天逐天拉(end=次日 0 点), 在 Python 端合并, 服务器不用换包。
 
 生产导出的 1 对 1 聊天(已脱敏: 客户只有编号, 手机号/证件号已打码)
-→ Claude(走崔伟的 Claude 订阅, CLI + CLAUDE_CODE_OAUTH_TOKEN) 每位规划师出一份复盘 + 一份给崔伟的团队汇总
+→ DeepSeek(V4.1-Flash API, 按量付费) 每位规划师出一份复盘(只从成交角度), 发本人; 崔伟只收一条全员完整复盘链接
 → 回传生产 /chatReview/upload, 生产把 {{c:编号}} 换回客户昵称、存完整页、夏梅推送。
 
+⭐2026-10-11 崔伟定: 从 Claude(claude-opus-5, Claude Code CLI+订阅) 迁到 DeepSeek V4.1-Flash(API), 不再依赖 Claude Code。
+- 结构化输出: Claude CLI 的 --json-schema 换成 schema 写进系统提示 + json_object 模式, 拿回来自行校验、不合格重试。
+- 图片: 原来 Claude 用 Read 工具读存下来的图片文件; 现在把图片 base64 直接附在消息里(多模态), [图片#n] = 第 n 张。
+
 ⭐10-10 崔伟(林付贤一对一后)定:
-- 复盘要看图片: export 给已存图片编号 → /chatReview/media 取原图(缩到 1600px)存临时目录, Claude 用 Read 工具看。
+- 复盘要看图片: export 给已存图片编号 → /chatReview/media 取原图(缩到 1600px)存临时目录, 附在消息里给模型看。
 - export 带「企微已拉黑」、每户手填跟进记录(多为电话)、只打了电话没在企微聊的客户、当天 AI 推荐/到期约定联系的覆盖情况。
 - 不凑数: 只挑深入沟通的; 同类问题合并一条; 深聊少就查空余时间用在哪(coverage)。
 
 ⛔本仓库 PUBLIC, Actions 日志人人可看: 这里只打印条数/耗时/token, 绝不打印聊天或分析内容, 图片只存 runner 临时目录不传 artifact。
 """
+import base64
 import datetime
 import html
 import json
 import os
 import re
-import subprocess
 import sys
 import tempfile
 import time
@@ -38,15 +42,35 @@ ONLY = [s.strip() for s in (os.environ.get("ONLY") or "").split(",") if s.strip(
 WINDOW_END = (os.environ.get("WINDOW_END") or "").strip()
 FORCE = (os.environ.get("FORCE") or "").strip().lower() == "true"  # 同日补跑: 绕过 sent-<日期> 标记
 
-MODEL = "claude-opus-5"
+MODEL = "deepseek-flash"   # 2026-10-11: Claude Opus 5 → DeepSeek V4.1-Flash(带思考, 支持看图)
+DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
+MAX_TOKENS = 32000         # ⚠推理模型: 思考(reasoning_tokens)和正文共用这个额度, 别调小(照 llm_morning 的坑)
 # 规划师窗口内和客户来往少于这么多条就不出复盘(没东西可说, 硬写只会是空话)
 MIN_MESSAGES = 6
 BROADCAST_MIN = 20  # 同一句话发给 ≥20 户视为群发
 # 一人材料超过这么多字就从最早一天开始丢(9-22 林付贤 200 万字直接报 Prompt is too long; 5 万字正常)
+# 实测 DeepSeek V4.1 上下文 ≥30 万 token(约 45 万字), 300k 字这个闸原样保留; analyze() 里另有超限重试兜底
 MAX_CHARS = 300_000
 BJ = datetime.timezone(datetime.timedelta(hours=8))
-MAX_IMAGES = 40   # 每位规划师最多给 Claude 看这么多张图(窗口内的优先)
+MAX_IMAGES = 40   # 每位规划师最多给模型看这么多张图(窗口内的优先)
 IMG_MAX_SIDE = 1600
+
+
+def get_key():
+    """本机跑时从 baoxin 的 application-dev.yml 取 DeepSeek key(和财经脚本同款); Actions 里用 DEEPSEEK_API_KEY。"""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for p in (os.path.join(here, "..", "..", "service", "src", "main", "resources", "application-dev.yml"),
+              os.path.expanduser("~/cuiwei_ai/baoxin/service/src/main/resources/application-dev.yml")):
+        try:
+            m = re.search(r"apiKey:\s*(sk-[A-Za-z0-9_\-]+)", open(p, encoding="utf-8", errors="ignore").read())
+            if m:
+                return m.group(1)
+        except Exception:
+            pass
+    return None
+
+
+DEEPSEEK_KEY = os.environ.get("DEEPSEEK_API_KEY") or get_key()
 
 _HOLIDAYS = {}
 
@@ -118,12 +142,14 @@ def merge_exports(exports, days=None):
     return list(planners.values())
 
 
-def trim_to_fit(p):
-    """材料太长时从最早一天开始丢本次窗口的消息, 直到放得下(整份出不来比少看两天更糟)。消息时间 t 形如 MM-dd HH:mm。"""
+def trim_to_fit(p, limit=None):
+    """材料太长时从最早一天开始丢本次窗口的消息, 直到放得下(整份出不来比少看两天更糟)。
+    消息时间 t 形如 MM-dd HH:mm。limit 默认 MAX_CHARS; 超上下文重试时传更小的值。"""
+    limit = limit or MAX_CHARS
     def size():
         return sum(len(m["text"]) + 16 for c in p["customers"] for m in c["today"] + c.get("history", []))
     dropped = []
-    while size() > MAX_CHARS:
+    while size() > limit:
         days = sorted({m["t"][:5] for c in p["customers"] for m in c["today"]})
         if len(days) <= 1:
             break
@@ -138,12 +164,12 @@ def trim_to_fit(p):
 
 def fetch_images(p, root):
     """把窗口内(其次是之前的聊天里)已存的图片下到 root/<vx>/, 消息文字改成 [图片#n], 返回目录和张数。
-    下不到的保持 [图片](Claude 按看不到处理)。"""
+    下不到的保持 [图片](按看不到处理)。图片之后会 base64 附进请求, 图多时压得更狠, 别堆成巨无霸。"""
     d = os.path.join(root, re.sub(r"[^A-Za-z0-9_-]", "_", p["vxId"]))
     os.makedirs(d, exist_ok=True)
     cand = [m for c in p["customers"] for m in c["today"] if m.get("img")]
     cand += [m for c in p["customers"] for m in c.get("history", [])[-4:] if m.get("img")]
-    n = 0
+    n, tot = 0, 0
     for m in cand:
         if n >= MAX_IMAGES:
             break
@@ -157,11 +183,16 @@ def fetch_images(p, root):
                 from io import BytesIO
                 from PIL import Image
                 im = Image.open(BytesIO(r.content)).convert("RGB")
-                im.thumbnail((IMG_MAX_SIDE, IMG_MAX_SIDE))
-                im.save(fn, "JPEG", quality=82)
+                if tot > 8_000_000:
+                    im.thumbnail((1000, 1000))
+                    im.save(fn, "JPEG", quality=72)
+                else:
+                    im.thumbnail((IMG_MAX_SIDE, IMG_MAX_SIDE))
+                    im.save(fn, "JPEG", quality=82)
             except Exception:
                 with open(fn, "wb") as f:
                     f.write(r.content)
+            tot += os.path.getsize(fn)
             m["text"] = f"[图片#{n}]"
         except Exception as e:
             log(f"{p['vxId']}: 取图失败 {type(e).__name__}")
@@ -209,7 +240,7 @@ SYSTEM_PROMPT = """你是「保心上人」保险经纪团队里一位成交经�
 - 写这类结论时一律说「当前记录里没看到……」，不要说「你没有……」，并且带上可核对的证据：客户几点说了什么、记录里最后一条规划师消息是几点、说的什么。例：「客户 09-22 17:10 问『这是啥』，记录里之后没看到你的消息；如果已经回了或打了电话，这条忽略。」
 - 记录里有通话（[语音通话 N 秒]）、聊天里提到「刚才电话里」「会议上说的」「上次见面」，说明很多事已经在线下谈过，文字里没出现的不要当成没谈。
 - 区分「当时可以做得更好」和「现在有没有补救」：规划师后面已经补了动作（比如已经追问「明天上午还是下午」），就不能再说他没追，只能说当时那一步可以更早。
-- 图片现在能看：聊天里写成 [图片#n] 的，材料开头告诉了文件位置，用 Read 工具打开。客户提问后规划师发的图片、规划师说「你看我发的图」「你再理解一下这个图片」时，必须先打开看图里有没有回答；图里答了就不能判「没回答」「没解释」。规划师发的计划书、对比表截图，客户发来的保单/资料截图都要看，表情包类的不用管。
+- 图片现在能看：聊天里写成 [图片#n] 的图片已按编号附在你收到的消息里（第 n 张就是 [图片#n]）。客户提问后规划师发的图片、规划师说「你看我发的图」「你再理解一下这个图片」时，必须先看图里有没有回答；图里答了就不能判「没回答」「没解释」。规划师发的计划书、对比表截图，客户发来的保单/资料截图都要看，表情包类的不用管。
 - 客户的追问本身建立在误解上（比如没看懂一张表的口径，把「按销售年份分批统计」当成「每年给产品打分」），规划师重发带标注的图、再约电话或视频讲，是合理做法，不判「明确问题」「没正面回答」（10-10 崔伟定，34741）。最多归「可优化」：文字里先用一句话把客户理解偏的那一点掰过来，再约电话。
 - 只写 [图片]（没有编号）、[文件]、[语音] 的看不到，答案很可能就在里面。这时不能写「没给数字」「没解释」，只能写「答案可能在 09-24 11:51 发的图片里，看不到，请你自己确认」，evidence 标「需确认」。
 - 时间点也别机械卡：规划师说「等明天再约」，窗口截止前还没约，不算拖延；很多客户有固定方便的时段（比如只在下午看微信），规划师比你清楚。
@@ -348,43 +379,97 @@ def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def call_claude(system, user, schema=None, img_dir=None):
-    """一次分析调用, 走崔伟的 Claude 订阅(Claude Code CLI + CLAUDE_CODE_OAUTH_TOKEN), 不走按量付费的 API。
-    返回 (文本, 用量信息 dict)。有 schema 时文本是保证合法的 JSON。
-    img_dir: 有图片时只放开 Read 工具、只许读这个目录, 让 Claude 自己打开图片看。"""
-    tools = ["--tools", "Read", "--allowedTools", "Read", "--add-dir", img_dir] if img_dir else ["--tools", ""]
-    cmd = ["claude", "-p", "--model", MODEL, "--effort", "high", "--system-prompt", system,
-           *tools, "--output-format", "json", "--no-session-persistence"]
+def _mime_of(data):
+    """按文件头判图片类型(取图失败的兜底保存没经 PIL 重编码, 不一定是 jpeg)。"""
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    if data[:6] in (b"GIF87a", b"GIF89a"):
+        return "image/gif"
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "image/webp"
+    return "image/jpeg"
+
+
+def _json_ok(out, schema):
+    """轻校验结构化输出: required 字段在、类型和 enum 大致对(数组逐项查)。不追求完备, 把明显跑偏的拦下来重试。"""
+    if not isinstance(schema, dict):
+        return True
+    t = schema.get("type")
+    if t == "object":
+        if not isinstance(out, dict) or any(k not in out for k in schema.get("required", [])):
+            return False
+        return all(_json_ok(out[k], v) for k, v in (schema.get("properties") or {}).items() if k in out)
+    if t == "array":
+        return isinstance(out, list) and all(_json_ok(x, schema.get("items") or {}) for x in out)
+    if "enum" in schema and out not in schema["enum"]:
+        return False
+    if t == "string":
+        return isinstance(out, str)
+    if t == "integer":
+        return isinstance(out, int) and not isinstance(out, bool)
+    if t == "number":
+        return isinstance(out, (int, float)) and not isinstance(out, bool)
+    if t == "boolean":
+        return isinstance(out, bool)
+    return True
+
+
+def call_deepseek(system, user, schema=None, images=None, tries=3):
+    """一次分析调用, 走 DeepSeek(V4.1-Flash) API(按量付费)。
+    返回 (文本或 dict, 用量 dict): 有 schema 时返回校验过的 dict, 否则返回纯文本。
+    images: 图片文件路径列表, 按顺序 base64 附在用户消息后面(材料里 [图片#n] = 第 n 张)。
+    Claude CLI 的 --json-schema 硬约束换成: schema 写进系统提示 + json_object 模式, 拿回来自行校验, 不合格整次重试。"""
+    if not DEEPSEEK_KEY:
+        raise RuntimeError("缺 DEEPSEEK_API_KEY(本机可从 baoxin application-dev.yml 读)")
     if schema:
-        cmd += ["--json-schema", json.dumps(schema, ensure_ascii=False)]
-    proc = subprocess.run(cmd, input=user, capture_output=True, text=True, timeout=2400, cwd=img_dir or None)
-    try:
-        d = json.loads(proc.stdout)
-    except Exception:
-        # 只打退出码和错误输出开头, 不打任何聊天内容
-        raise RuntimeError(f"CLI 退出码 {proc.returncode}: {proc.stderr[:300]}")
-    if d.get("is_error"):
-        raise RuntimeError(f"CLI 报错 subtype={d.get('subtype')}: {str(d.get('result'))[:300]}")
-    if schema:
-        if d.get("structured_output") is None:
-            raise RuntimeError("没有拿到结构化输出")
-        text = json.dumps(d["structured_output"], ensure_ascii=False)
-    else:
-        text = (d.get("result") or "").strip()
-    return text, d
+        system = (system + "\n\n【输出格式】只输出一个 JSON 对象（json），不要 markdown 代码块，严格符合以下 JSON Schema：\n"
+                  + json.dumps(schema, ensure_ascii=False))
+    content = user
+    if images:
+        parts = [{"type": "text", "text": user}]
+        for p in images:
+            try:
+                raw = open(p, "rb").read()
+                parts.append({"type": "image_url",
+                              "image_url": {"url": f"data:{_mime_of(raw)};base64,{base64.b64encode(raw).decode()}"}})
+            except Exception as e:
+                log(f"读图失败 {os.path.basename(p)} {type(e).__name__}")
+        content = parts
+    last = None
+    for k in range(tries):
+        try:
+            body = {"model": MODEL,
+                    "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
+                    "temperature": 0.3, "max_tokens": MAX_TOKENS}
+            if schema:
+                body["response_format"] = {"type": "json_object"}
+            resp = requests.post(DEEPSEEK_URL, headers={"Authorization": f"Bearer {DEEPSEEK_KEY}"},
+                                 json=body, timeout=2400)
+            resp.raise_for_status()
+            d = resp.json()
+            text = (d["choices"][0]["message"].get("content") or "").strip()
+            text = re.sub(r"^```(json)?|```$", "", text, flags=re.MULTILINE).strip()
+            u = d.get("usage") or {}
+            if not schema:
+                return text, u
+            out = json.loads(text)
+            if not _json_ok(out, schema):
+                raise ValueError("结构不符合 schema")
+            return out, u
+        except Exception as e:
+            last = e
+            if k < tries - 1:
+                log(f"DeepSeek 第{k+1}次失败({type(e).__name__}: {str(e)[:120]}), 重试")
+                time.sleep(2)
+    raise RuntimeError(f"DeepSeek 调用失败: {type(last).__name__}: {str(last)[:200]}")
 
 
-def usage_line(d):
-    parts = []
-    for m, u in (d.get("modelUsage") or {}).items():
-        parts.append(f"{m}: in={u.get('inputTokens')} cache_read={u.get('cacheReadInputTokens')} "
-                     f"cache_write={u.get('cacheCreationInputTokens')} out={u.get('outputTokens')}")
-    return "; ".join(parts) or "无用量信息"
-
-
-def cost_usd(d):
-    # 按 API 牌价折算的等值金额(走订阅不实际扣费, 只用来观察用量)
-    return d.get("total_cost_usd") or 0.0
+def usage_line(u):
+    if not u:
+        return "无用量信息"
+    rt = (u.get("completion_tokens_details") or {}).get("reasoning_tokens")
+    return (f"{MODEL}: in={u.get('prompt_tokens')} cache_hit={u.get('prompt_cache_hit_tokens')} "
+            f"out={u.get('completion_tokens')}" + (f"(含思考 {rt})" if rt else ""))
 
 
 def cust_meta(c):
@@ -431,12 +516,12 @@ def coverage_lines(p):
     return out
 
 
-def build_user_prompt(p, window_start, window_end, img_dir=None, img_count=0):
+def build_user_prompt(p, window_start, window_end, img_count=0):
     lines = [f"规划师：{p['name']}", f"本次窗口：{window_start} 至 {window_end}（北京时间）"]
     if p.get("span_note"):
         lines.append(p["span_note"])
     if img_count:
-        lines.append(f"聊天里写成 [图片#n] 的图片已存成文件 {img_dir}/n.jpg（共 {img_count} 张），用 Read 工具打开看；"
+        lines.append(f"聊天里写成 [图片#n] 的 {img_count} 张图片已按编号顺序附在本次消息后面（第 n 张 = [图片#n]）；"
                      "只写 [图片] 没有编号的看不到。")
     lines.append("")
     for c in p["customers"]:
@@ -510,7 +595,7 @@ def render_page(p, r, window_start, window_end):
            "<meta name='viewport' content='width=device-width,initial-scale=1'>",
            f"<title>聊天复盘 · {esc(p['name'])}</title><style>{PAGE_CSS}</style></head><body><div class='wrap'>",
            f"<h1>{esc(p['name'])} · 聊天复盘</h1>",
-           f"<div class='meta'>{esc(window_start)} – {esc(window_end)}{esc(p.get('span_label', ''))} · {len(p['customers'])} 位客户 · {p['msgCount']} 条消息 · Claude 分析</div>",
+           f"<div class='meta'>{esc(window_start)} – {esc(window_end)}{esc(p.get('span_label', ''))} · {len(p['customers'])} 位客户 · {p['msgCount']} 条消息 · AI 分析</div>",
            f"<div class='ov'>{esc(r['overview'])}</div>"]
     if r["improve"]:
         out.append("<h2>🔻 可以做得更好</h2><div class='meta'>明确问题＝要改；可优化＝有更好的做法；策略参考＝另一种思路，不评对错。直接证据＝文字记录直接支持；推断＝结合上下文推的；需确认＝关键内容看不到，请你确认</div>")
@@ -547,7 +632,7 @@ def render_page(p, r, window_start, window_end):
 
 # ---------------------------------------------------------------- 主流程
 def ping():
-    text, u = call_claude("你是一个测试助手。", "只回复两个字：正常")
+    text, u = call_deepseek("你是一个测试助手。", "只回复两个字：正常")
     log(f"ping ok, model={MODEL}, 回复长度={len(text)}, {usage_line(u)}")
 
 
@@ -584,7 +669,7 @@ def main():
                  if len(days) > 1 else "")
     log(f"出复盘日 {report_day}, 窗口 {ws} ~ {we}({len(days)} 天), 规划师 {len(planners)} 位")
 
-    results, team_input, total_cost = [], [], 0.0
+    results, team_input, usages = [], [], []
     todo = []
     for p in planners:
         if ONLY and p["vxId"] not in ONLY:
@@ -607,9 +692,21 @@ def main():
         try:
             img_dir, n_img = fetch_images(p, img_root)
             p["imgCount"] = n_img
-            text, u = call_claude(SYSTEM_PROMPT, build_user_prompt(p, ws, we, img_dir, n_img), schema=PLANNER_SCHEMA,
-                                  img_dir=img_dir if n_img else None)
-            return p, json.loads(text), u, time.time() - t0
+            images = [os.path.join(img_dir, f"{i}.jpg") for i in range(1, n_img + 1)] or None
+            for attempt in (0, 1):
+                try:
+                    r, u = call_deepseek(SYSTEM_PROMPT, build_user_prompt(p, ws, we, n_img),
+                                         schema=PLANNER_SCHEMA, images=images)
+                    return p, r, u, time.time() - t0
+                except Exception as e:
+                    # 兜底: 万一整份超上下文, 再丢掉一半材料重试一次
+                    if attempt == 0 and p["customers"] and re.search(r"上下文|context|too long|maximum", str(e), re.I):
+                        trim_to_fit(p, 120_000)
+                        p["msgCount"] = sum(len(c["today"]) for c in p["customers"])
+                        log(f"{p['vxId']}: 超上下文, 剩 {p['msgCount']} 条重试一次")
+                        continue
+                    raise
+            raise RuntimeError("unreachable")
         except Exception as e:  # 一人失败不影响其他人
             log(f"{p['vxId']}: 分析失败 {type(e).__name__}: {str(e)[:200]}")
             return p, None, None, time.time() - t0
@@ -621,8 +718,8 @@ def main():
     for p, r, u, secs in done:
         if r is None:
             continue
-        total_cost += cost_usd(u)
-        log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条/图 {p.get('imgCount', 0)} 张/电话户 {len(p['phoneOnly'])}, 用时 {secs:.0f}s, 轮次 {u.get('num_turns')}, "
+        usages.append(u or {})
+        log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条/图 {p.get('imgCount', 0)} 张/电话户 {len(p['phoneOnly'])}, 用时 {secs:.0f}s, "
             f"改进{len(r['improve'])} 好{len(r['good'])}, {usage_line(u)}")
         results.append({"vxId": p["vxId"], "name": p["name"], "push": name_unarchived(r["push"]),
                         "html": name_unarchived(render_page(p, r, ws, we)),
@@ -645,7 +742,11 @@ def main():
     up.raise_for_status()
     body = up.json()
     log(f"回传: code={body.get('code')} msg={str(body.get('msg'))[:200]} sent={body.get('sent')}")
-    log(f"本次用量折合 API 牌价约 ${total_cost:.2f}(走订阅, 不另扣费)")
+    tot_in = sum(x.get("prompt_tokens", 0) for x in usages)
+    tot_hit = sum(x.get("prompt_cache_hit_tokens", 0) for x in usages)
+    tot_out = sum(x.get("completion_tokens", 0) for x in usages)
+    tot_rt = sum((x.get("completion_tokens_details") or {}).get("reasoning_tokens", 0) for x in usages)
+    log(f"本次用量: in={tot_in}(缓存命中 {tot_hit}) out={tot_out}(含思考 {tot_rt}), {len(results)} 位（deepseek-flash 按量付费）")
     if body.get("code") != 0:
         sys.exit(1)
 

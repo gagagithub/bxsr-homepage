@@ -1,7 +1,8 @@
-name: AI推荐 - 每日 02:00 (Claude 按客户画像挑人)
+name: AI推荐 - 每日 02:00 (DeepSeek 按客户画像挑人)
 
-# 2026-09-21 崔伟拍板: 规划师「AI推荐」改由 Claude 按《客户画像》逐户读聊天挑人(不再用 DeepSeek), 每人最多 5 户。
-# 流程: 生产 /aiRecommend/export(已脱敏: 无客户名, 手机/证件/卡号打码) → Claude → /aiRecommend/upload 存库
+# 2026-09-21 崔伟拍板: 规划师「AI推荐」改由 AI 按《客户画像》逐户读聊天挑人(不再用规则式推荐), 每人最多 5 户。
+# ⭐2026-10-11 崔伟定: Claude(订阅/CLI) 换 DeepSeek V4.1-Flash(deepseek-flash, API), 不再依赖 Claude Code。
+# 流程: 生产 /aiRecommend/export(已脱敏: 无客户名, 手机/证件/卡号打码) → DeepSeek → /aiRecommend/upload 存库
 #       → 规划师在后台「AI推荐」看, 反馈(已联系/推错了+一句话)写回库, 下次导出时按反馈剔人。
 # 画像在生产服务器 D:/ai-recommend/persona.md, 不进本仓库。
 # 凌晨跑, GitHub schedule 排队延迟(常见 0.5~3 小时)不影响早上看。
@@ -14,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'run=正式 / ping=只测 Claude 通不通'
+        description: 'run=正式 / ping=只测 DeepSeek 通不通'
         required: false
         default: 'run'
       only:
@@ -47,13 +48,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -q requests
-          npm install -g @anthropic-ai/claude-code
 
       - name: Recommend
         working-directory: scripts/ai-recommend
         env:
-          # 走崔伟的 Claude 订阅, 与聊天复盘共用; ⚠别加 ANTHROPIC_API_KEY(CLI 会优先用它, 那个账户余额为 0)
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # 2026-10-11 起走 DeepSeek API(和财经日报/选题池同一个 key, 按量付费)
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           CHAT_REVIEW_TOKEN: ${{ secrets.CHAT_REVIEW_TOKEN }}
           # Jev(TypeSafe) 给关键词粗筛补漏; 缺了就只用关键词
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}

@@ -2,7 +2,7 @@
 
 随 AI推荐 02:00 一起跑（工作日才跑）：
   窗口 = 上一个工作日 + 其后的休息日（和聊天复盘同口径），逐天 GET /chatReview/export 合并
-  → 规划师消息里带时间字眼的客户才交给 Claude（每位规划师一次调用）
+  → 规划师消息里带时间字眼的客户才交给 DeepSeek（每位规划师一次调用）
   → 只收规划师本人说的、带具体时间的承诺，换算成具体日期；没说时间的不编
   → POST /aiRecommend/promiseUpload 存 t_contact_promise；后台到期那天起看到规划师联系过就自动消掉
 未建档客户（没有客户编号）不进。
@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-# 规划师消息里有这些字眼才值得让 Claude 看（宽一点，是不是承诺由 Claude 判断）
+# 规划师消息里有这些字眼才值得让 DeepSeek 看（宽一点，是不是承诺由 DeepSeek 判断）
 TIME_WORDS = re.compile(r"明天|明早|明晚|后天|今晚|今天(上午|中午|下午|晚上|晚些)|晚点|周[一二三四五六日天末]|星期|礼拜|下周|下个?月|"
                         r"\d{1,2}[号日]|\d{1,2}[月/.]\d{1,2}|[一二三四五六七八九十]+号|节后|假期|国庆|中秋|元旦|春节|月初|月中|月底|"
                         r"这两天|过两天|两三天|改天|到时候|回头|之后再|再联系|再跟您|再给您|再找您|再约")
@@ -104,7 +104,7 @@ def export_window(base_url, token, days, log):
     return planners
 
 
-def run(today, planners_by_id, base_url, token, call_claude, workday_status, log, only=None):
+def run(today, planners_by_id, base_url, token, call_model, workday_status, log, only=None):
     """返回要上传的承诺列表 [{uid,cid,saidAt,quote,what,due}]。"""
     days = window_days(today, workday_status)
     chats = export_window(base_url, token, days, log)
@@ -130,7 +130,7 @@ def run(today, planners_by_id, base_url, token, call_claude, workday_status, log
             f"===== 客户 {c['key']} =====\n" + "\n".join(f"{m['t']} {m['who']}：{m['text']}" for m in c["today"])
             for c in cand)
         try:
-            out, _ = call_claude(system, f"规划师：{name}\n\n{text}\n\n请按要求输出。", SCHEMA)
+            out, _ = call_model(system, f"规划师：{name}\n\n{text}\n\n请按要求输出。", SCHEMA)
         except Exception as e:
             log(f"承诺 {uid}: 失败 {type(e).__name__}: {str(e)[:150]}")
             return []

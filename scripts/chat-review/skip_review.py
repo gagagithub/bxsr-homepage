@@ -1,10 +1,10 @@
 """「这条不用回」点错抽查 —— 跟在聊天复盘后面跑(同一个 workflow, 同一个窗口)。
 
 崔伟 9-30: 没回提醒里规划师可以点「这条不用回」; 他要一个汇总, 但不要原话、不要全部,
-只要 Claude 觉得点错了(其实该回)的; 都正常就不发。
+只要 AI 觉得点错了(其实该回)的; 都正常就不发。2026-10-11 起判断走 DeepSeek(deepseek-flash)。
 
 生产 /replyRemind/skipExport 拉窗口内所有「不用回」+ 前后聊天(脱敏, 客户不带名字)
-→ Claude 判断 → /replyRemind/skipReport 只回传判为该回的, 生产换回名字发崔伟。
+→ DeepSeek 判断 → /replyRemind/skipReport 只回传判为该回的, 生产换回名字发崔伟。
 
 ⛔本仓库 PUBLIC: 只打印条数, 不打印聊天或判断内容。
 """
@@ -14,7 +14,7 @@ import sys
 
 import requests
 
-from review import (BASE_URL, BJ, FORCE, TEST_VXID, TOKEN, WINDOW_END, call_claude, log, usage_line,
+from review import (BASE_URL, BJ, FORCE, TEST_VXID, TOKEN, WINDOW_END, call_deepseek, log, usage_line,
                     window_days, workday_status)
 
 BATCH = 30
@@ -90,8 +90,8 @@ def main():
         user = ("下面是规划师点了「不用回」的记录，每条有 id、规划师、客户开始等的时间、点的时间，"
                 "以及前后聊天（中间有一行标出点「不用回」的时刻）。逐条判断，只输出点错的。\n\n"
                 + json.dumps(batch, ensure_ascii=False, indent=1))
-        text, u = call_claude(SYSTEM_PROMPT, user, schema=SCHEMA)
-        got = [f for f in json.loads(text)["flagged"] if f.get("id") in ids and f.get("reason")]
+        out, u = call_deepseek(SYSTEM_PROMPT, user, schema=SCHEMA)
+        got = [f for f in out["flagged"] if f.get("id") in ids and f.get("reason")]
         flagged += got
         log(f"第 {i // BATCH + 1} 批 {len(batch)} 条, 判为点错 {len(got)} 条, {usage_line(u)}")
 
