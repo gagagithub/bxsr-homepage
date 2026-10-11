@@ -44,7 +44,8 @@ FORCE = (os.environ.get("FORCE") or "").strip().lower() == "true"  # 同日补�
 
 MODEL = "deepseek-flash"   # 2026-10-11: Claude Opus 5 → DeepSeek V4.1-Flash(带思考, 支持看图)
 DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
-MAX_TOKENS = 32000         # ⚠推理模型: 思考(reasoning_tokens)和正文共用这个额度, 别调小(照 llm_morning 的坑)
+MAX_TOKENS = 64000         # ⚠推理模型: 思考(reasoning_tokens)和正文共用这个额度。实测单次可输出 4.6 万 token(finish=stop);
+                           #    10-11 首跑大批次顶到 32000 上限, 调成 64k 留足余量
 # 规划师窗口内和客户来往少于这么多条就不出复盘(没东西可说, 硬写只会是空话)
 MIN_MESSAGES = 6
 BROADCAST_MIN = 20  # 同一句话发给 ≥20 户视为群发
@@ -447,7 +448,10 @@ def call_deepseek(system, user, schema=None, images=None, tries=3):
                                  json=body, timeout=2400)
             resp.raise_for_status()
             d = resp.json()
-            text = (d["choices"][0]["message"].get("content") or "").strip()
+            ch = d["choices"][0]
+            if ch.get("finish_reason") == "length":
+                raise RuntimeError(f"输出被 max_tokens({MAX_TOKENS}) 截断")
+            text = (ch["message"].get("content") or "").strip()
             text = re.sub(r"^```(json)?|```$", "", text, flags=re.MULTILINE).strip()
             u = d.get("usage") or {}
             if not schema:

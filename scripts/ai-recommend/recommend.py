@@ -34,7 +34,8 @@ FORCE = os.environ.get("FORCE") == "1"  # 非工作日也强制跑(联调用)
 
 MODEL = "deepseek-flash"   # 2026-10-11: Claude Opus 5 → DeepSeek V4.1-Flash(带思考)
 DEEPSEEK_URL = "https://api.deepseek.com/v1/chat/completions"
-MAX_TOKENS = 32000         # ⚠推理模型: 思考(reasoning_tokens)和正文共用这个额度, 别调小(照 llm_morning 的坑)
+MAX_TOKENS = 64000         # ⚠推理模型: 思考(reasoning_tokens)和正文共用这个额度。实测单次可输出 4.6 万 token(finish=stop);
+                           #    10-11 首跑大批次输出顶到 32000 上限(靠重试救回), 调成 64k 留足余量
 TOP_N = 5
 PICK_N = 8          # 每批最多挑几户: 多挑的进候补, 规划师点「换一个」时从候补顶上来
 BATCH_CHARS = 150_000      # 每批时间线大约多少字（一次调用读完）。实测 DeepSeek V4.1 上下文 ≥30 万 token, 这个量够放
@@ -297,7 +298,10 @@ def call_deepseek(system, user, schema, tries=3):
                                  timeout=1800)
             resp.raise_for_status()
             d = resp.json()
-            content = (d["choices"][0]["message"].get("content") or "").strip()
+            ch = d["choices"][0]
+            if ch.get("finish_reason") == "length":
+                raise RuntimeError(f"输出被 max_tokens({MAX_TOKENS}) 截断")
+            content = (ch["message"].get("content") or "").strip()
             content = re.sub(r"^```(json)?|```$", "", content, flags=re.MULTILINE).strip()
             out = json.loads(content)
             if not _json_ok(out, schema):
