@@ -12,12 +12,18 @@ on:
   #   服务器触发失败时手动兜底: gh workflow run daily-morning-report.yml
   # 全流程约 8-15 分钟(取数 2 + AI 整理 3-8 + 渲染截图 1 + 上传)。
   workflow_dispatch:
+    inputs:
+      test_alert:
+        description: '仅验证夏梅失败通知，不生成日报、不创建草稿或下发朋友圈'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
   generate:
+    if: ${{ !inputs.test_alert }}
     runs-on: ubuntu-latest
 
     steps:
@@ -164,7 +170,7 @@ jobs:
   # 独立 job：即使生成 job 的 checkout/依赖安装失败，也能回报；不重跑、不重复分发。
   notify-failure:
     needs: generate
-    if: ${{ failure() && needs.generate.result == 'failure' }}
+    if: ${{ always() && (needs.generate.result == 'failure' || inputs.test_alert) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -174,13 +180,14 @@ jobs:
         uses: actions/github-script@v7
         env:
           MORNING_REPORT_TOKEN: ${{ secrets.MORNING_REPORT_TOKEN }}
+          TEST_ALERT: ${{ inputs.test_alert && '1' || '' }}
         with:
           script: |
             if (!process.env.MORNING_REPORT_TOKEN) {
               core.setFailed('失败告警未发送：缺少 MORNING_REPORT_TOKEN');
               return;
             }
-            let stage = '财经日报生成或上传';
+            let stage = process.env.TEST_ALERT ? '上线验证（模拟失败，仅测试夏梅通知）' : '财经日报生成或上传';
             let reportDate = new Intl.DateTimeFormat('sv-SE', {
               timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'
             }).format(new Date());
@@ -190,7 +197,7 @@ jobs:
                 per_page: 100
               });
               const generated = jobs.find(job => job.name === 'generate');
-              if (generated) {
+              if (generated && !process.env.TEST_ALERT) {
                 // 延迟结束跨天时也保留本次生成 job 的北京日期。
                 reportDate = new Intl.DateTimeFormat('sv-SE', {
                   timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'
