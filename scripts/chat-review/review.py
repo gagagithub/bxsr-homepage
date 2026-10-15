@@ -448,7 +448,11 @@ def call_deepseek(system, user, schema=None, images=None, tries=3):
                                  json=body, timeout=2400)
             resp.raise_for_status()
             d = resp.json()
-            ch = d["choices"][0]
+            choices = d.get("choices") if isinstance(d, dict) else None
+            if not isinstance(choices, list) or not choices:
+                # 不把接口原始响应写进公开日志（可能包含请求内容或凭证）。
+                raise RuntimeError("DeepSeek 返回异常：缺少有效 choices 结果")
+            ch = choices[0]
             if ch.get("finish_reason") == "length":
                 raise RuntimeError(f"输出被 max_tokens({MAX_TOKENS}) 截断")
             text = (ch["message"].get("content") or "").strip()
@@ -673,7 +677,7 @@ def main():
                  if len(days) > 1 else "")
     log(f"出复盘日 {report_day}, 窗口 {ws} ~ {we}({len(days)} 天), 规划师 {len(planners)} 位")
 
-    results, team_input, usages = [], [], []
+    results, team_input, usages, failed = [], [], [], []
     todo = []
     for p in planners:
         if ONLY and p["vxId"] not in ONLY:
@@ -721,6 +725,7 @@ def main():
 
     for p, r, u, secs in done:
         if r is None:
+            failed.append({"vxId": p["vxId"], "name": p["name"]})
             continue
         usages.append(u or {})
         log(f"{p['vxId']}: {len(p['customers'])} 户/{p['msgCount']} 条/图 {p.get('imgCount', 0)} 张/电话户 {len(p['phoneOnly'])}, 用时 {secs:.0f}s, "
@@ -732,15 +737,23 @@ def main():
                            "overview": r["overview"], "improve": r["improve"],
                            "good": r["good"], "tomorrow": r["tomorrow"]})
 
-    if not results:
+    if not results and not failed:
         log("没有可复盘的规划师, 结束(不推送)")
         return
+
+    if failed:
+        log(f"分析未全部完成: 应分析 {len(todo)} 位, 成功 {len(results)} 位, "
+            f"失败 {len(failed)} 位: {', '.join(p['vxId'] for p in failed)}")
 
     # 崔伟 9-21: 他只要一条「所有人完整复盘链接」, 不要团队汇总 → 不再调团队汇总
     team_push = ""
 
     payload = {"windowStart": ws, "windowEnd": we, "testVxId": TEST_VXID,
-               "planners": results, "team": {"push": name_unarchived(team_push)}}
+               "planners": results, "failedPlanners": failed,
+               "team": {"push": name_unarchived(team_push)}}
+    if os.environ.get("GITHUB_REPOSITORY") and os.environ.get("GITHUB_RUN_ID"):
+        payload["runUrl"] = (f"https://github.com/{os.environ['GITHUB_REPOSITORY']}"
+                             f"/actions/runs/{os.environ['GITHUB_RUN_ID']}")
     up = requests.post(f"{BASE_URL}/chatReview/upload",
                        data={"token": TOKEN, "force": str(FORCE).lower(), "payload": json.dumps(payload, ensure_ascii=False)}, timeout=180)
     up.raise_for_status()
@@ -751,7 +764,9 @@ def main():
     tot_out = sum(x.get("completion_tokens", 0) for x in usages)
     tot_rt = sum((x.get("completion_tokens_details") or {}).get("reasoning_tokens", 0) for x in usages)
     log(f"本次用量: in={tot_in}(缓存命中 {tot_hit}) out={tot_out}(含思考 {tot_rt}), {len(results)} 位（deepseek-flash 按量付费）")
-    if body.get("code") != 0:
+    # 后台旧版本可能仍返回 code=0；脚本也独立检查人数，避免把部分成功报成整次成功。
+    if failed or body.get("code") != 0 or body.get("sent") != len(results):
+        log("复盘任务失败: 存在分析、回传或发送失败，请检查上述结果（不自动补跑）")
         sys.exit(1)
 
 
