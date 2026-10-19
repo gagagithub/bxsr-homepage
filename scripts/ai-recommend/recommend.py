@@ -57,8 +57,9 @@ def get_key():
 
 DEEPSEEK_KEY = os.environ.get("DEEPSEEK_API_KEY") or get_key()
 WORKERS = 4
-# 9-29 崔伟定: 这些规划师不推港险(按 user_id; 110=李颢)
-NO_HK = {110}
+# 10-19 崔伟定: 取消「李颢不推港险」, 所有规划师都可推港险(原为 {110})。
+# 以后若再限制某位规划师, 把他的 user_id 加进这个集合(110=李颢); 港险作品仍会标「（港险）」。
+NO_HK = set()
 # 作品是不是港险: 标题/账号/推荐产品里有港险字样或香港保司产品名(8-9 月 t_creation.recommended_product 里出现过的)
 HK = re.compile(r"港险|香港|港保|港币|赴港|去港|海外|傲[珑龙]盛世|周大福|飞扬88|匠心飞|星河尊享|永明|友邦|保诚|诚誉|"
                 r"中银人寿|富饶万家|盛利|立桥|宏利|安盛|万通|富卫|忠意|臻[颐頤]|世代")  # 9-29 崔伟: 太保世代3/世代悦享3 是港险
@@ -455,7 +456,8 @@ def renew_all(today, planners, exclude):
         return "\n\n".join(
             f"【作品 {c['id']}】{'（港险）' if c['id'] in hk_ids else ''}{c['title']}\n分类：{c['category']} | 账号：{c['account']} | 推荐产品：{c['product']} | 形式：{c['type']}\n脚本：{c['script']}"
             for c in cs)
-    # 港险作品在标题前标「（港险）」让 DeepSeek 知道(9-29 太保世代3 被当内地年金配给了内地客户); 不推港险的规划师整条拿掉
+    # 港险作品在标题前标「（港险）」让 DeepSeek 知道(9-29 太保世代3 被当内地年金配给了内地客户);
+    # 10-19 起 NO_HK 为空, 默认不拿掉任何人的港险作品
     hk_ids = {c["id"] for c in creations
               if HK.search(" ".join(str(c.get(k) or "") for k in ("title", "category", "product")))}
     works = fmt(creations)
