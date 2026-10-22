@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保心上人 - 编辑团队周报 (09.20-09.26)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
+:root {
+  --gold-primary: #D4AF37;
+  --gold-light: #F5E6AD;
+  --black-bg: #0d0d0d;
+  --black-card: #1a1a1a;
+  --danger: #ff4d4f;
+  --success: #52c41a;
+  --info: #4A90E2;
+}
+body { background-color: var(--black-bg); color: #e0e0e0; font-family: 'Noto Sans SC', sans-serif; }
+.gold-gradient-text { background: linear-gradient(135deg, #D4AF37 0%, #FFFACD 50%, #C5A028 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.gold-text { color: var(--gold-primary); }
+.section-header { border-left: 4px solid var(--gold-primary); padding-left: 1rem; margin-bottom: 2rem; font-size: 1.5rem; font-weight: 700; }
+.subsection-header { border-left: 3px solid var(--gold-primary); padding-left: 0.75rem; font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 1rem; color: #fff; }
+.card { background: var(--black-card); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 12px; padding: 1.5rem; }
+.data-table th { color: #888; font-size: 0.75rem; text-transform: uppercase; padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+.data-table td { padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.85rem; vertical-align: top; }
+.progress-container { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; margin-top: 12px; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #D4AF37, #F5E6AD); border-radius: 3px; }
+.rate-high { color: var(--success); font-weight: bold; }
+.rate-low { color: var(--danger); font-weight: bold; }
+.verdict { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.v-ok { color: #52c41a; border: 1px solid rgba(82,196,26,.4); background: rgba(82,196,26,.08); }
+.v-part { color: #ffa500; border: 1px solid rgba(255,165,0,.4); background: rgba(255,165,0,.08); }
+.v-no { color: #ff4d4f; border: 1px solid rgba(255,77,79,.4); background: rgba(255,77,79,.08); }
+.v-bad { color: #fff; border: 1px solid #ff4d4f; background: #ff4d4f; }
+@media print { .no-print { display: none; } }
+</style>
+<body class="p-6 md:p-12 max-w-7xl mx-auto">
+
+<!-- 顶栏 -->
+<header class="flex justify-between items-center mb-16 no-print border-b border-white/5 pb-8">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-black text-2xl shadow-lg shadow-[#D4AF37]/20">保</div>
+    <h1 class="text-2xl font-bold tracking-tight gold-gradient-text">保心上人，保护你的心上人。</h1>
+  </div>
+  <div class="text-right text-sm text-gray-500">内容编辑周报 · 第 39 周 | 2026.09.20 - 09.26<br><span class="text-[11px]">周日至周六 7 天（9/25–9/26 中秋假期）· 数据截至 9/27（周日）</span></div>
+</header>
+
+<!-- 1、目标完成 -->
+<section class="mb-16">
+  <div class="flex justify-between items-end mb-8">
+    <h2 class="section-header gold-gradient-text mb-0">1、这周的目标，完成了 18 / 16</h2>
+    <p class="text-xs text-gray-500 italic">目标为 9-20 崔伟拍板：崔伟 5 · 陈鑫 5（主账号）· 军伟 3 · 婷婷 3（干货线索）</p>
+  </div>
+
+  <div class="card border-l-4 border-l-[#D4AF37] bg-[#D4AF37]/5 mb-8">
+    <p class="text-xl font-bold text-[#D4AF37] mb-2">三人达标，合计超过目标；婷婷还差 2 条</p>
+    <p class="text-sm text-gray-300 leading-relaxed">合计 <span class="text-[#D4AF37] font-bold">18 条</span>（目标 16）。<span class="text-white">崔伟、陈鑫、军伟达标</span>，婷婷差 2 条。<br>9/25–9/26 是中秋假期，这两天只有崔伟登记了 2 件作品（9/25「15 天开始领取的养老年金」一篇出 4 条），其他三人没有新作品。和 9/25 那版（5 天 13 条）比，多出的 5 条是：崔伟新作品 4 条 + 陈鑫「养老快返年金」9/26 又进 1 条。<br>视频号线索一般晚到 3–5 天，下周一复核时数字可能还会涨。</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+
+    <div class="card border-t-2 border-t-[#52c41a]">
+      <div class="flex justify-between items-start mb-3">
+        <p class="font-bold text-white">崔伟 <span class="text-[10px] text-gray-500">主账号</span></p>
+        <span class="verdict v-ok">超额</span>
+      </div>
+      <p class="text-6xl font-bold text-[#52c41a] leading-none">9<span class="text-xl text-gray-500"> / 5</span></p>
+      <div class="progress-container"><div class="progress-bar" style="width:100%"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-relaxed">6 件作品，3 件出线索。<span class="text-white">「50 万存款先别急，月月能领 2354 元」4 条、9/25「15 天开始领取的养老年金」4 条</span>，「100 万这么存，月月领 8000」1 条。<br><span class="text-[#52c41a]">9 条全部来自公众号。</span></p>
+    </div>
+
+    <div class="card border-t-2 border-t-[#52c41a]">
+      <div class="flex justify-between items-start mb-3">
+        <p class="font-bold text-white">陈鑫 <span class="text-[10px] text-gray-500">主账号</span></p>
+        <span class="verdict v-ok">达标</span>
+      </div>
+      <p class="text-6xl font-bold text-[#52c41a] leading-none">5<span class="text-xl text-gray-500"> / 5</span></p>
+      <div class="progress-container"><div class="progress-bar" style="width:100%"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-relaxed">5 件作品，<span class="text-white">3 件出线索</span>（太保储蓄险 2、养老快返年金 2、50 岁+养老方案 1），命中率全队最高。<br>上周 3 条，本周 5 条，<span class="text-[#52c41a]">在往上走</span>。5 条全部来自公众号文章扫码。</p>
+    </div>
+
+    <div class="card border-t-2 border-t-[#52c41a]">
+      <div class="flex justify-between items-start mb-3">
+        <p class="font-bold text-white">吕军伟 <span class="text-[10px] text-gray-500">干货线索</span></p>
+        <span class="verdict v-ok">达标</span>
+      </div>
+      <p class="text-6xl font-bold text-[#52c41a] leading-none">3<span class="text-xl text-gray-500"> / 3</span></p>
+      <div class="progress-container"><div class="progress-bar" style="width:100%"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-relaxed">10 件作品，2 件出线索：「快享年金 第 5 年领钱」2 条、「云收租 月月拿 5000」1 条。<br><span class="text-[#52c41a]">上周干货 1 条，本周 3 条。</span>3 条都来自保心上人投资公众号。</p>
+    </div>
+
+    <div class="card border-t-2 border-t-[#ffa500]">
+      <div class="flex justify-between items-start mb-3">
+        <p class="font-bold text-white">吴婷婷 <span class="text-[10px] text-gray-500">干货线索</span></p>
+        <span class="verdict v-part">差 2 条</span>
+      </div>
+      <p class="text-6xl font-bold text-[#ffa500] leading-none">1<span class="text-xl text-gray-500"> / 3</span></p>
+      <div class="progress-container"><div class="progress-bar" style="width:33%"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-relaxed">5 件全部是干货，「央企家族年金」出 1 条（视频号）。<br><span class="text-white">9/22「太平洋高龄领钱王」1.49 万播放，是全队本周最高，但发出 4 天了还是 0 条</span>——上周同题材那条是第 2–5 天陆续到了 9 条（见第 2 节），这条目前没跟上，下周一再看一次。</p>
+    </div>
+
+  </div>
+
+  <div class="card border-l-2 border-l-[#4A90E2] bg-[#4A90E2]/5">
+    <p class="text-sm text-gray-300 leading-relaxed">📊 <span class="text-white font-bold">本周 26 件作品全部是干货，30 秒极短 0 条</span>（上周 6 条）。军伟、婷婷按上周定的「只算干货线索」把重心整个挪了过来。军伟 10 件是全队最多，崔伟 6 件，陈鑫 5 件，婷婷 5 件。</p>
+  </div>
+</section>
+
+<!-- 2、最值得记住 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">2、本周最值得记住的事：18 条线索里，17 条来自公众号</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="card text-center border-t-2 border-t-[#52c41a]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">公众号</p>
+      <p class="text-7xl font-bold text-[#52c41a] leading-none">17<span class="text-2xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-4">文章里扫码建档 12 · 老客户扫码回流 4 · 保心上人投资公众号 1</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#ffa500]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">视频号</p>
+      <p class="text-7xl font-bold text-[#ffa500] leading-none">1<span class="text-2xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-4">婷婷「央企家族年金」</p>
+    </div>
+  </div>
+
+  <div class="card border-l-4 border-l-[#52c41a] bg-[#52c41a]/5 mb-8">
+    <p class="font-bold text-[#52c41a] mb-2">9-17 上线的「文章里扫码加好友」，这周成了主要来源</p>
+    <p class="text-sm text-gray-300 leading-relaxed">上周这条路只加上 1 个人，这周加上 <span class="text-white font-bold">22 个</span>（16 个来自本周文章，4 个来自上周文章，2 个没带来源）。崔伟 9 条、陈鑫 5 条、军伟 3 条，全部来自公众号。<br>详细漏斗见第 4 节。</p>
+  </div>
+
+  <div class="card mb-6">
+    <p class="subsection-header mt-0">但视频号的线索不是没有，是来得慢 —— 上周数字复核</p>
+    <table class="w-full data-table">
+      <thead><tr><th>编辑</th><th>上周周报（9/20 取数）</th><th>今天同口径重跑（9/27）</th><th>多出来</th></tr></thead>
+      <tbody>
+        <tr><td class="font-bold text-white">吴婷婷</td><td>6</td><td class="rate-high text-lg">13</td><td class="rate-high">+7</td></tr>
+        <tr><td class="font-bold text-white">崔伟</td><td>4</td><td class="text-lg">9</td><td>+5</td></tr>
+        <tr><td class="font-bold text-white">陈鑫</td><td>3</td><td class="text-lg">6</td><td>+3</td></tr>
+        <tr><td class="font-bold text-white">吕军伟</td><td>2</td><td class="text-lg">5</td><td>+3</td></tr>
+        <tr class="bg-white/[0.02]"><td class="font-bold gold-text">合计</td><td class="font-bold">15</td><td class="font-bold gold-text text-lg">33</td><td class="font-bold">+18</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-400 mt-4 leading-relaxed">上周周报发出后，又到了 18 条，<span class="text-white">翻了一倍还多</span>。其中最大的一笔是 <span class="text-[#52c41a] font-bold">婷婷 9/18「太平洋 9 月新品！高龄快返年金，今天交明天领」：周报时 1 条，现在 9 条</span>——全部是 9/20–9/23 陆续从视频号进来的（9 人已建档，其中 4 人已加上好友）。<br>所以<span class="text-white">视频号的线索要等 3–5 天再看</span>。但也不是每条都会补上：婷婷 9/22 同题材的「高龄领钱王」播放 1.49 万，发出 4 天了还是 0。</p>
+  </div>
+
+  <div class="card border-l-2 border-l-[#D4AF37] bg-[#D4AF37]/5">
+    <p class="text-sm text-gray-300 leading-relaxed">📌 <span class="text-white font-bold">两件事放一起看：</span>公众号文章线索来得快（扫码当天建档），视频号来得慢但量不小。婷婷的内容只发视频号、不进公众号，所以她这周的数字吃亏在「来得慢」；崔伟、陈鑫、军伟都有文章，这周数字是「已经到了」。</p>
+  </div>
+</section>
+
+<!-- 3、流量篇 -->
+<section class="mb-16">
+  <div class="flex justify-between items-end mb-8">
+    <h2 class="section-header gold-gradient-text mb-0">3、流量篇</h2>
+    <p class="text-xs text-gray-500 italic">数据源：两个视频号 + 两个公众号后台导出（9/25 导出，覆盖 9/20–9/24）</p>
+  </div>
+
+  <div class="card border-l-4 border-l-[#ffa500] bg-[#ffa500]/5 mb-8">
+    <p class="text-sm text-gray-300 leading-relaxed">⏳ <span class="text-white font-bold">这一节还是 9/20–9/24 的数</span>：流量要从视频号、公众号后台导出，9/25–9/26 两天（含崔伟 9/25 公众号文章、9/26「内行人劝你…香港分红险」）还没导出。补导出后更新本节。</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="card text-center border-t-2 border-t-[#ff4d4f]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">视频号总播放</p>
+      <p class="text-5xl font-bold text-[#ff4d4f] leading-none">37,792</p>
+      <p class="text-xs text-gray-500 mt-3">25 条 · 上周 24.7 万（6 天 31 条）<span class="text-[#ff4d4f]">↓ −85%</span></p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#52c41a]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">公众号总阅读（剔日报）</p>
+      <p class="text-5xl font-bold text-[#52c41a] leading-none">7,552</p>
+      <p class="text-xs text-gray-500 mt-3">26 篇 · 上周 4,430（24 篇）<span class="text-[#52c41a]">↑ +70%</span></p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#4A90E2]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">本周爆款（≥2 万播放）</p>
+      <p class="text-5xl font-bold text-gray-500 leading-none">0<span class="text-2xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-3">上周 5 条 · 本周最高 14,940（婷婷）</p>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <p class="subsection-header mt-0">3.1　视频号：两个号 25 条、3.8 万播放</p>
+    <table class="w-full data-table">
+      <thead><tr><th>归属</th><th>号</th><th>条数</th><th>播放量</th><th>单条最高</th></tr></thead>
+      <tbody>
+        <tr><td class="font-bold text-white">吴婷婷</td><td>保心上人投资</td><td>5</td><td class="rate-high text-lg">17,717</td><td>高龄领钱王 14,940（完播 32%）</td></tr>
+        <tr><td class="font-bold text-white">吕军伟</td><td>保心上人投资</td><td>9</td><td class="text-lg">9,535</td><td>马爸爸旗下新年金 6,389（完播 30%）</td></tr>
+        <tr><td class="font-bold text-white">崔伟</td><td>崔伟说投资</td><td>5</td><td class="text-lg">3,610</td><td>50 万存款先别急 1,165</td></tr>
+        <tr><td class="font-bold text-white">陈鑫</td><td>崔伟说投资</td><td>5</td><td class="text-lg">3,454</td><td>养老快返年金 973</td></tr>
+        <tr><td class="text-gray-500">未登记</td><td>崔伟说投资</td><td>1</td><td class="text-lg text-gray-400">3,476</td><td class="text-gray-500">爸妈必买的 2 款救命保险，一年只要 169 元</td></tr>
+        <tr class="bg-white/[0.02]"><td class="font-bold gold-text">合计</td><td>—</td><td class="font-bold">25</td><td class="font-bold gold-text text-lg">37,792</td><td></td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-4 leading-relaxed">这周没有出爆款，播放掉得很厉害；上周 5 条爆款里 3 条是婷婷的，这周她最高那条 1.49 万。<span class="text-white">保心上人投资号 14 条 2.7 万，崔伟说投资号 11 条 1.05 万</span>，崔伟说投资号除了一条未登记的 169 元医疗险视频（3,476），其余都在 1,200 以下。<br>崔伟 9/24「15 天开始领取的养老年金」（528）是 9/25 才补登记的，已算进崔伟。</p>
+  </div>
+
+  <div class="card mb-6">
+    <p class="subsection-header mt-0">3.2　公众号：崔伟说投资 7,024 · 保心上人投资 528</p>
+    <table class="w-full data-table">
+      <thead><tr><th>归属</th><th>号</th><th>篇数</th><th>阅读人数</th><th>单篇最高</th></tr></thead>
+      <tbody>
+        <tr><td class="font-bold text-white">崔伟</td><td>崔伟说投资</td><td>5</td><td class="rate-high text-lg">3,867</td><td>50 万存款先别急 1,760（另一次推送 585）</td></tr>
+        <tr><td class="font-bold text-white">陈鑫</td><td>崔伟说投资</td><td>10</td><td class="text-lg">2,902</td><td>别只知道银行定存！太保储蓄险 1,014</td></tr>
+        <tr><td class="font-bold text-white">吕军伟</td><td>保心上人投资</td><td>7</td><td class="text-lg">423</td><td>行长都在用的云收租 95</td></tr>
+        <tr><td class="text-gray-500">未登记</td><td>两个号</td><td>4</td><td class="text-lg text-gray-400">360</td><td class="text-gray-500">工行大额存单利率竟低于定期存款 249</td></tr>
+        <tr class="bg-white/[0.02]"><td class="font-bold gold-text">合计（剔日报）</td><td>—</td><td class="font-bold">26</td><td class="font-bold gold-text text-lg">7,552</td><td></td></tr>
+        <tr><td class="text-gray-500">财经日报</td><td>崔伟说投资</td><td class="text-gray-500">5</td><td class="text-gray-500">1,476</td><td class="text-gray-500">9/21 四大行重启五年期大额存单 1,123</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-4 leading-relaxed"><span class="text-[#52c41a]">崔伟说投资号阅读连续第二周回升</span>（2,804 → 3,894 → 7,024），破千的有 3 篇：崔伟「50 万存款先别急」1,760、崔伟「100 万这么存」1,094、陈鑫「太保储蓄险」1,014，陈鑫「养老快返年金」804 紧随其后。这 4 篇带来了本周 9 条线索。<br><span class="text-[#ffa500]">保心上人投资号仍是冷号</span>：9 篇 528 阅读，单篇均值 59，军伟 7 篇 423。<br>财经日报 9/21 那篇 1,123 阅读，按惯例不计入。</p>
+  </div>
+</section>
+
+<!-- 4、扫码链路 -->
+<section class="mb-16">
+  <div class="flex justify-between items-end mb-8">
+    <h2 class="section-header gold-gradient-text mb-0">4、公众号文章扫码加好友 · 第二周</h2>
+    <p class="text-xs text-gray-500 italic">9-17 上线 · 对比上周 9/14–9/19 同口径</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="card text-center border-t-2 border-t-[#4A90E2]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">扫码出码人次</p>
+      <p class="text-6xl font-bold text-[#4A90E2] leading-none">264</p>
+      <p class="text-xs text-gray-500 mt-3">上周 66</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#4A90E2]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">去重扫码人</p>
+      <p class="text-6xl font-bold text-[#4A90E2] leading-none">225</p>
+      <p class="text-xs text-gray-500 mt-3">上周 32 · 7 倍</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#52c41a]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">真的加上好友</p>
+      <p class="text-6xl font-bold text-[#52c41a] leading-none">22</p>
+      <p class="text-xs text-gray-500 mt-3">上周 1 · 江宁 9 · 林付贤 9 · 马康挺 4</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#ffa500]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">扫码 → 加友转化</p>
+      <p class="text-6xl font-bold text-[#ffa500] leading-none">9.8<span class="text-2xl">%</span></p>
+      <p class="text-xs text-gray-500 mt-3">22 / 225 · 上周 3.1%</p>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <p class="subsection-header mt-0">哪些文章在带扫码（按去重人数，只列本周作品和仍在带量的上周作品）</p>
+    <table class="w-full data-table">
+      <thead><tr><th>文章</th><th>编辑</th><th>发布</th><th>去重扫码人</th><th>加上好友</th></tr></thead>
+      <tbody>
+        <tr><td>50 万存款先别急，换个存法，月月能领 2354 元，笑眯眯</td><td>崔伟</td><td>9/20</td><td class="rate-high">44</td><td class="rate-high">4</td></tr>
+        <tr><td>别只知道银行定存！国资太保新储蓄险：10 年预期 5.5%</td><td>陈鑫</td><td>9/20</td><td class="rate-high">33</td><td class="rate-high">2</td></tr>
+        <tr><td>50 岁+专属养老方案：今年存 100 万，明年起月月到账 2083 元</td><td>陈鑫</td><td>9/22</td><td>19</td><td class="rate-high">1</td></tr>
+        <tr><td>15 天开始领取的养老年金 <span class="text-[10px] text-[#D4AF37]">假期发</span></td><td>崔伟</td><td>9/25</td><td>19</td><td class="rate-high">4</td></tr>
+        <tr><td>银行行长都在用的「云收租」，交完马上领钱，月月拿 5000 块</td><td>吕军伟</td><td>9/21</td><td>17</td><td class="rate-high">1</td></tr>
+        <tr><td>太平洋【养老快返年金】：今天交明天领，年年 2.7 万</td><td>陈鑫</td><td>9/23</td><td>17</td><td class="rate-high">2</td></tr>
+        <tr><td>100 万这么存，45 岁提前 8 年退休，月月领钱 8000 元</td><td>崔伟</td><td>9/23</td><td>13</td><td class="rate-high">1</td></tr>
+        <tr><td>交完钱就能领，存 50 万，本金不动，月月到账 1150 元 <span class="text-[10px] text-gray-500">上周</span></td><td>崔伟</td><td>9/17</td><td>10</td><td class="rate-high">1</td></tr>
+        <tr><td>内行人劝你，哪怕 6.5% 收益再高，也不要轻易买香港分红险 <span class="text-[10px] text-[#D4AF37]">假期发</span></td><td>崔伟</td><td>9/26</td><td>9</td><td class="text-gray-600">0</td></tr>
+        <tr><td>周大福新品太狠了：第 2 年起年年 6%</td><td>陈鑫</td><td>9/20</td><td>8</td><td class="text-gray-600">0</td></tr>
+        <tr><td>听内行人一句劝，千万别再用保险存钱了 <span class="text-[10px] text-gray-500">上周</span></td><td>崔伟</td><td>9/18</td><td>7</td><td class="text-gray-600">0</td></tr>
+        <tr><td>超级社保，每年 10 万交 5 年，之后每年领 1 万元</td><td>崔伟</td><td>9/22</td><td>7</td><td class="text-gray-600">0</td></tr>
+        <tr><td>2026 快享年金 第 5 年领钱 每年领 80000</td><td>吕军伟</td><td>9/22</td><td>5</td><td class="rate-high">1</td></tr>
+        <tr><td class="text-gray-500">其余 5 篇 + 无来源参数</td><td class="text-gray-500">—</td><td></td><td>24</td><td class="rate-high">5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="card border-l-4 border-l-[#52c41a] bg-[#52c41a]/5">
+      <p class="font-bold text-[#52c41a] mb-2">✅ 量上来了，转化也翻了三倍</p>
+      <p class="text-xs text-gray-400 leading-relaxed">扫码人数是上周的 7 倍，转化从 3.1% 到 9.8%。上周担心的「轮询全给了江宁」这周缓解了：出码里林付贤 109、江宁 95、马康挺 56。<br>中秋两天也没停：9/25–9/26 又有 74 次出码、加上 9 个，其中 4 个来自崔伟 9/25 那篇。<br><span class="text-white">带扫码最多的，就是阅读破千的那几篇</span>——阅读量上去了，扫码自然跟上。</p>
+    </div>
+    <div class="card border-l-4 border-l-[#ffa500] bg-[#ffa500]/5">
+      <p class="font-bold text-[#ffa500] mb-2">⚠ 还有 203 个人扫了码没加上</p>
+      <p class="text-xs text-gray-400 leading-relaxed">九成多的人还是看到二维码就走了。上周列的三个可能原因（倒计时、没有加好友的理由、规划师没及时通过）这周没有排查。<br>另外，<span class="text-white">婷婷的内容没有公众号版本</span>，这条路她目前用不上。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5、风控合规 -->
+<section class="mb-16">
+  <h2 class="section-header gold-gradient-text">5、内容风控：按 9-23 定的四条线对照</h2>
+
+  <div class="card border-l-4 border-l-red-500 bg-red-500/5 mb-8">
+    <p class="text-xl font-bold text-red-400 mb-3">🚨 9-30 新规下周三施行</p>
+    <p class="text-sm text-gray-300 leading-relaxed mb-4">9-23 晨会崔伟定的四条线：</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+      <div class="rounded-md bg-black/40 p-3 border-l-2 border-l-red-500">① 平台禁止的 8 类行为：<span class="text-white">不管实质上是不是，都不能有</span></div>
+      <div class="rounded-md bg-black/40 p-3 border-l-2 border-l-red-500">② 香港保险可以讲知识，<span class="text-white">产品不能指明是港险</span></div>
+      <div class="rounded-md bg-black/40 p-3 border-l-2 border-l-red-500">③ <span class="text-white">不要写 6%、4% 这样的收益率</span></div>
+      <div class="rounded-md bg-black/40 p-3 border-l-2 border-l-red-500">④ 被我们 AI 还是被监管 AI 测到都是同一个维度；<span class="text-white">检测到直接封号，没有申诉的机会</span></div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="card text-center border-t-2 border-t-gray-600">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">9/20–9/22 · 定线之前 · 13 件</p>
+      <p class="text-6xl font-bold text-gray-400 leading-none">8<span class="text-xl text-gray-500"> 件高风险</span></p>
+      <p class="text-xs text-gray-500 mt-3">写了收益率数字的 7 件</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#ffa500]">
+      <p class="text-xs text-gray-500 mb-2 tracking-widest">9/23–9/26 · 定线之后 · 13 件</p>
+      <p class="text-6xl font-bold text-[#ffa500] leading-none">7<span class="text-xl text-gray-500"> 件高风险</span></p>
+      <p class="text-xs text-gray-500 mt-3">写了收益率数字的 4 件 · 中 3 · 低 2 · 干净 1</p>
+    </div>
+  </div>
+
+  <div class="card border-l-2 border-l-[#ffa500] bg-[#ffa500]/5 mb-6">
+    <p class="text-sm text-gray-300 leading-relaxed"><span class="text-white font-bold">定线之后，写收益率数字的少了（7 件 → 4 件），方向是对的。</span>但 9/23–9/26 还有 7 件碰了线，主要集中在三类：<span class="text-white">收益率数字 + 指明港险</span>、<span class="text-white">「上头撑腰」这类暗示国家背书的说法</span>（9-23 评估时建议停用「国家／国家队／上面」），以及<span class="text-white">「唯一」这类绝对化说法</span>。<br>中秋假期崔伟发的 2 件都碰了线：9/26 那篇是劝大家别跟风买港险，但标题直接写了「6.5% 收益」——第③条只看有没有写这个数，不看是正着说还是反着说。</p>
+  </div>
+
+  <div class="card mb-6">
+    <p class="subsection-header mt-0">定线之后（9/23–9/26）仍碰线的 7 件 · 脚本原话</p>
+    <table class="w-full data-table">
+      <thead><tr><th>作品</th><th>原话</th><th>碰了哪条</th></tr></thead>
+      <tbody>
+        <tr><td class="whitespace-nowrap">陈鑫 9/23<br><span class="text-gray-500 text-[11px]">养老快返年金</span></td><td>「本金还随时能动用，<span class="text-red-400 font-bold">稳赚不赔</span>！」</td><td>① 承诺保本收益</td></tr>
+        <tr><td class="whitespace-nowrap">陈鑫 9/24<br><span class="text-gray-500 text-[11px]">大额存单利率倒挂</span></td><td>「可以看看<span class="text-red-400 font-bold">太平洋人寿在香港推出的</span>，目前市面上仅剩的一款<span class="text-red-400 font-bold">复利 3.5%</span> 的产品」「持有 23 年……<span class="text-red-400 font-bold">年化 4.86%</span>」</td><td>② 指明港险 · ③ 收益率</td></tr>
+        <tr><td class="whitespace-nowrap">吕军伟 9/24<br><span class="text-gray-500 text-[11px]">马爸爸旗下新年金</span></td><td>「每年能领<span class="text-red-400 font-bold">「6 个点」</span>储蓄型年金，<span class="text-red-400 font-bold">把港险市场都卷麻了</span>」「我们也是刚<span class="text-red-400 font-bold">通过内部人员</span>拿到一手材料」</td><td>② 港险 · ③ 收益率</td></tr>
+        <tr><td class="whitespace-nowrap">吕军伟 9/23<br><span class="text-gray-500 text-[11px]">40 岁以后注意</span></td><td>「40 岁投，领取比例 <span class="text-red-400 font-bold">4.5%</span>；50 岁接近 <span class="text-red-400 font-bold">4.84%</span>；60 岁超过 <span class="text-red-400 font-bold">5.4%</span>；70 岁接近 <span class="text-red-400 font-bold">6.19%</span>；再往上算甚至能到 <span class="text-red-400 font-bold">8%</span> 左右」</td><td>③ 收益率</td></tr>
+        <tr><td class="whitespace-nowrap">吕军伟 9/24<br><span class="text-gray-500 text-[11px]">80 万金饭碗</span></td><td>「它背后<span class="text-red-400 font-bold">有上头撑腰</span>，可不是什么民间小作坊」</td><td>① 暗示国家背书</td></tr>
+        <tr><td class="whitespace-nowrap">崔伟 9/25<br><span class="text-gray-500 text-[11px]">15 天开始领取的养老年金</span></td><td>「这款产品是目前市面上<span class="text-red-400 font-bold">唯一一款</span>每月领取的养老金」</td><td>① 绝对化用语</td></tr>
+        <tr><td class="whitespace-nowrap">崔伟 9/26<br><span class="text-gray-500 text-[11px]">别轻易买香港分红险</span></td><td>标题「哪怕 <span class="text-red-400 font-bold">6.5% 收益</span>再高，也不要轻易买香港分红险」；正文「每年领取 <span class="text-red-400 font-bold">4%</span> 利息」「每年能领 <span class="text-red-400 font-bold">6%</span> 利息」「私信"港险"……<span class="text-red-400 font-bold">几十款港险产品对比表</span>直接发给您」</td><td>③ 收益率 · ② 引导港险产品</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-4 leading-relaxed">另有 3 件中风险：崔伟 9/23「央企保险公司太平洋」「国资太平洋」（9/25 那篇也有「老牌国资保险公司太平洋」）；军伟 9/24「属于<span class="text-white">上头大力发展</span>的养老第三支柱」；婷婷 9/24「直接把<span class="text-white">行业天花板</span>都掀了」「谁也动不了」。</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="card border-l-4 border-l-[#52c41a] bg-[#52c41a]/5">
+      <p class="font-bold text-[#52c41a] mb-2">✅ 值得保留的做法</p>
+      <p class="text-xs text-gray-400 leading-relaxed">• <span class="text-white">军伟 9/22「存款超过 50 万」、9/24「手里闲钱超 50 万」两篇结尾加了非保证说明</span>：「所列领取方案基于产品内部演示数据，非保证收益……以官方合同及保单文件为准」。9-23 评估建议的就是这个。<br>• 婷婷 9/23「没有退休金的父母」：一个数字、一个产品名都没有，四条线全不碰。<br>• 崔伟 9/23「100 万这么存」把回本 4–11 年、「归原红利和终期红利是浮动的、非保证的」讲在了前面。<br>• 崔伟 9/25「15 天领年金」专门讲了「两点务必看明白」：本金第 5 年后才能全取、第 2–4 年取出要亏一半；15 天就领有年龄条件（女 55、男 60 以上）。</p>
+    </div>
+    <div class="card border-l-4 border-l-[#ffa500] bg-[#ffa500]/5">
+      <p class="font-bold text-[#ffa500] mb-2">⚠ 按人看（定线之后）</p>
+      <p class="text-xs text-gray-400 leading-relaxed">• <span class="text-white">陈鑫</span>：2 件都碰线。「稳赚不赔」是 8 类里最直接的一类；9/24 又点名了太平洋香港产品和 3.5%。<br>• <span class="text-white">军伟</span>：6 件里 3 件高、1 件中。「上头」一词两天出现两次，「6 个点」「4.5%–8%」还在。<br>• <span class="text-white">崔伟</span>：3 件里 2 件高（9/25「唯一一款」、9/26 标题「6.5%」）、1 件中（央企／国资）。<br>• <span class="text-white">婷婷</span>：1 件中（「天花板」）、1 件干净。</p>
+    </div>
+  </div>
+
+  <div class="card border-l-2 border-l-gray-600">
+    <p class="text-xs text-gray-400 leading-relaxed">📎 <span class="text-white">定线之前（9/20–9/22）的 13 件简记：</span>收益率数字 7 件（陈鑫「5.5%」「年年 6%」、崔伟「5.6% 的利息，还是固定收益」、军伟「年年派发 6%」「预计每年 8%」「年化单利 4.25%」、婷婷标题「每年领 7% 现金流」）；国家背书 2 件（崔伟「国家大力扶持」、军伟「万亿级国家队保险巨头」）；指明／暗示港险 3 件（陈鑫「国资太平洋人寿在香港推出」、陈鑫周大福、崔伟「产品不是在内地买……跑到其他城市买」）。其中 9/20 的 5 件已在 9-23 的 30 件评估里逐篇点过。</p>
+  </div>
+</section>
+
+<!-- 6、下周目标 -->
+<section class="mb-16">
+  <div class="flex justify-between items-end mb-8">
+    <h2 class="section-header gold-gradient-text mb-0">6、下周目标</h2>
+    <p class="text-xs text-gray-500 italic">9-27 崔伟拍板</p>
+  </div>
+
+  <div class="card border-l-4 border-l-[#D4AF37] bg-[#D4AF37]/5 mb-8">
+    <p class="text-xl font-bold text-[#D4AF37] mb-2">下周 = 9/28–9/30 + 10/8–10/10，共 6 个工作日 · 合计 20 条</p>
+    <p class="text-sm text-gray-300 leading-relaxed">中间 10/1–10/7 国庆假期不算在内。<span class="text-white">四个人都只算干货线索。</span></p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="card text-center border-t-2 border-t-[#D4AF37]">
+      <p class="font-bold text-white mb-3">崔伟</p>
+      <p class="text-6xl font-bold text-[#D4AF37] leading-none">6<span class="text-xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-4">本周 9 条</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#D4AF37]">
+      <p class="font-bold text-white mb-3">陈鑫</p>
+      <p class="text-6xl font-bold text-[#D4AF37] leading-none">6<span class="text-xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-4">本周 5 条</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#D4AF37]">
+      <p class="font-bold text-white mb-3">吕军伟</p>
+      <p class="text-6xl font-bold text-[#D4AF37] leading-none">5<span class="text-xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-4">本周 3 条</p>
+    </div>
+    <div class="card text-center border-t-2 border-t-[#D4AF37]">
+      <p class="font-bold text-white mb-3">吴婷婷</p>
+      <p class="text-6xl font-bold text-[#D4AF37] leading-none">3<span class="text-xl text-gray-500"> 条</span></p>
+      <p class="text-xs text-gray-500 mt-4">本周 1 条</p>
+    </div>
+  </div>
+
+  <p class="subsection-header mt-10">陈鑫、军伟：本周都达标了，下周重点</p>
+
+  <div class="card border-l-2 border-l-[#4A90E2] bg-[#4A90E2]/5 mb-6">
+    <p class="text-sm text-gray-300 leading-relaxed">📌 <span class="text-white font-bold">两人本周的线索全部来自公众号文章扫码</span>，视频号 14 条作品（陈鑫 5 条 3,454 播放、军伟 9 条 9,535 播放）都还没出线索。只算干货线索的口径下，<span class="text-white">把时间多放在文章上，回报最高。</span></p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="card border-t-2 border-t-[#52c41a]">
+      <p class="font-bold text-white mb-1">陈鑫 <span class="text-[10px] text-gray-500">主账号 · 本周 5 / 5 达标</span></p>
+      <p class="text-xs text-gray-500 mb-4">下周目标 6 条</p>
+      <table class="w-full data-table mb-4">
+        <thead><tr><th>本周文章</th><th>阅读</th><th>扫码人</th><th>线索</th></tr></thead>
+        <tbody>
+          <tr><td>太保储蓄险</td><td>1,014</td><td>33</td><td class="rate-high">2</td></tr>
+          <tr><td>养老快返年金</td><td>804</td><td>17</td><td class="rate-high">2</td></tr>
+          <tr><td>50 岁+养老方案（两次推送）</td><td>438</td><td>19</td><td class="rate-high">1</td></tr>
+          <tr><td>周大福「年年 6%」（两次推送）</td><td>267</td><td>8</td><td class="text-gray-600">0</td></tr>
+          <tr><td>大额存单利率倒挂</td><td>93</td><td>3</td><td class="text-gray-600">0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-400 leading-relaxed mb-3">阅读破千，线索就跟上：大约<span class="text-white">每 450 个阅读出 1 条</span>。近两周 10 件作品里，标题写「<span class="text-white">金额 + 什么时候领</span>」的 3 件全部出线索（「每年 5.5 万」「月月到账 2083 元」「年年 2.7 万」，共 5 条）；标题写百分比的 3 件只有 1 件出线索；纯新闻题（医保目录、大额存单）都没出。</p>
+      <p class="text-xs font-bold text-[#52c41a] mb-1">下周重点</p>
+      <p class="text-xs text-gray-300 leading-relaxed">① 标题统一用「年龄／本金 ＋ 什么时候领 ＋ 每月（每年）到账多少」——出线索最稳，也正好不碰第③条「不写收益率」。<br>② 纯新闻题、港险题先停：近两周基本没出线索，又最容易碰线（定线后 2 件碰线：「稳赚不赔」、点名太平洋香港产品和 3.5%）。<br>③ 每个工作日保证 1 篇这样的文章：6 条大约需要 3 篇各做到 800–1,000 阅读。</p>
+    </div>
+
+    <div class="card border-t-2 border-t-[#52c41a]">
+      <p class="font-bold text-white mb-1">吕军伟 <span class="text-[10px] text-gray-500">干货线索 · 本周 3 / 3 达标</span></p>
+      <p class="text-xs text-gray-500 mb-4">下周目标 5 条</p>
+      <table class="w-full data-table mb-4">
+        <thead><tr><th>本周 10 件作品</th><th>件数</th><th>线索</th></tr></thead>
+        <tbody>
+          <tr><td>发了保心上人投资公众号文章的</td><td>5</td><td class="rate-high">3</td></tr>
+          <tr><td>只发了视频号的（9/23 三条、9/24 两条）</td><td>5</td><td class="text-gray-600">0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-400 leading-relaxed mb-3">他的读者其实很愿意扫码：「云收租」两次推送共 169 阅读，<span class="text-white">18 人扫码（约 11%，陈鑫太保储蓄险是 3%）</span>。卡在号太冷——保心上人投资公众号约 1.95 万人能收到推送（崔伟说投资约 10.9 万），单篇只有 30–95 阅读。<br>✅ 值得保留：「存款超过 50 万」「手里闲钱超 50 万」两篇结尾主动加了非保证说明。</p>
+      <p class="text-xs font-bold text-[#52c41a] mb-1">下周重点</p>
+      <p class="text-xs text-gray-300 leading-relaxed">① 每件作品都配一篇公众号文章、文章里挂小程序码——只发视频的 5 件本周都没出线索，这是最直接的增量。<br>② 转化好的文章可以考虑同步到崔伟说投资公众号，同样的扫码率放到 5 倍多的读者面前（<span class="text-[#ffa500]">待崔伟定</span>）。<br>③ 写稿前对照一遍「不能写的词」：上头、国家、几个点、港险、内部人员；把那句非保证说明做成每篇的固定结尾。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 口径 -->
+<section class="mb-16">
+  <div class="card">
+    <p class="subsection-header mt-0">📐 数据口径说明（每项数字的来源，便于复核）</p>
+    <div class="text-xs text-gray-400 leading-relaxed space-y-3">
+      <p><span class="text-white">线索数</span>：与后台「线索月度排行榜」同一套查询（t_creation × t_creation_interactive_data，按<span class="text-white">作品登记日</span> 9/20~9/26 汇总这些作品带来的线索）。数据截至 9/27。9/25 首版只算到 9/24（13 条），本版按崔伟要求改为 9/20–9/26。<span class="text-[#ffa500]">⚠ 9/20（周日，调休上班）上周周报也算过</span>——所以 9/20 的 5 件作品（线索 6 条：崔伟 4、陈鑫 2）两份周报里都有。</p>
+      <p><span class="text-white">上周复核</span>：同一套查询按 9/14~9/20 重跑，得 33 条（周报当时 9/20 取数为 15 条，9/25 重跑为 32 条）。婷婷 9/18 那条的 9 条是排行榜口径（建档即计），其中 4 人已加上企微好友。</p>
+      <p><span class="text-white">线索来源拆分</span>：按客户档案的来源字段（公众号文章扫码／公众号自动分发·老客户回流）和账号（保心上人投资公众号 = 34）区分；18 条中 17 条走公众号，1 条（婷婷）走视频号。</p>
+      <p><span class="text-white">扫码漏斗</span>：t_mp_dispatch，create_time 9/20 00:00 ~ 9/26 24:00。status=2 为已加友建档；「去重人」按 openid 去重。来源文章按 source_create_id 反查 t_creation。上周对比按同口径取 9/14–9/19（66 次 / 32 人 / 1 人），与上周周报（含 9/20，78 / 44 / 2）略有不同。</p>
+      <p><span class="text-white">风控对照</span>：本周 26 件作品的<span class="text-white">脚本全文</span>（t_creation.script_content）逐篇对照 9-23 崔伟定的四条线，与 9-23「30 件评估」同一把尺子；只标「平台模型会盯上的话」，不做法律判断。「定线之前 / 之后」以 9/23 为界。</p>
+      <p><span class="text-white">流量数据</span>：视频号保心上人投资（14 条）、视频号崔伟说投资（11 条）、公众号保心上人投资（9 篇）、公众号崔伟说投资（22 篇，含日报 5 篇），9/25 后台导出，覆盖 9/20–9/24，<span class="text-[#ffa500]">9/25–9/26 待补导出</span>。上周导出为 6 天（9/14–9/19），这里 5 天，环比仅供参考。存钱视频号本周无发布，未导出。</p>
+      <p><span class="text-white">流量归属</span>：用创作日历标题逐条匹配导出表，对不上的一律标「未登记」，不按形态推断。同一篇多次推送（标题略改）按内容合并计入首发编辑。婷婷 9/21 视频号标题为「国寿家族版养老年金」，创作日历登记为「央企家族年金」，按内容判为同一条。</p>
+      <p><span class="text-white">公众号阅读</span>：一律剔除「财经日报」后计算，与历史周报口径一致。</p>
+      <p><span class="text-white">陈鑫、军伟下周重点</span>：阅读数来自 9/25 导出（9/20–9/24，同一篇多次推送合并）；扫码人来自 t_mp_dispatch（9/20–9/26，按作品编号、openid 去重）；线索按作品登记日 9/20–9/24（两人 9/25–9/26 无新作品）。</p>
+      <p>本报告全程只读数据库，未做任何写操作。</p>
+    </div>
+  </div>
+</section>
+
+<footer class="text-center py-10 no-print border-t border-white/5">
+  <button onclick="window.print()" class="px-10 py-3 bg-[#D4AF37] text-black font-bold rounded-full">预览并打印</button>
+  <p class="mt-6 text-gray-600 text-[10px] tracking-widest uppercase italic">保心上人 · 内部复盘 · 2026.09.20-09.26</p>
+</footer>
+
+</body>
+</html>

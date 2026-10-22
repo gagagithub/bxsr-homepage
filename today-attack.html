@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>今日攻坚 · 规划师工作台原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#07C160;        /* 企微/微信绿 → 打开会话 */
+    --hot:#FF3B30;          /* A 热 */
+    --warm:#F5A623;         /* B 温 */
+    --ink:#1a1d24; --ink2:#5b6472; --ink3:#9aa3b2;
+    --bg:#eceef1; --card:#ffffff; --line:#eaecef;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;background:#d8dce2;font-family:"Noto Sans SC","PingFang SC",-apple-system,sans-serif;color:var(--ink);}
+  body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:26px 0 60px;
+    background:radial-gradient(circle at 50% -8%, #f3f4f6 0%, #cdd2da 60%);}
+
+  /* 说明条 */
+  .demo-note{max-width:412px;width:calc(100% - 24px);font-size:12px;color:#56607a;line-height:1.7;
+    background:rgba(255,255,255,.7);border:1px solid #d6dbe4;border-radius:12px;padding:12px 16px;margin-bottom:18px;}
+  .demo-note b{color:#c2410c;}
+
+  /* 手机框 */
+  .phone{width:412px;max-width:calc(100% - 16px);background:var(--bg);border-radius:30px;overflow:hidden;
+    box-shadow:0 24px 70px rgba(20,30,55,.35), 0 4px 14px rgba(0,0,0,.12);border:1px solid #c4cad4;}
+  /* 企微顶栏 */
+  .wxbar{height:44px;background:#fff;display:flex;align-items:center;justify-content:center;position:relative;
+    font-size:15px;font-weight:700;color:#111;border-bottom:1px solid #f0f1f3;}
+  .wxbar .back{position:absolute;left:14px;color:#333;font-size:18px;}
+  .wxbar .more{position:absolute;right:14px;color:#333;font-size:18px;letter-spacing:1px;}
+
+  /* header */
+  header{background:linear-gradient(135deg,#1f2533 0%,#2d3650 100%);color:#fff;padding:18px 18px 14px;}
+  .h-top{display:flex;align-items:baseline;justify-content:space-between;}
+  .h-title{font-size:20px;font-weight:900;letter-spacing:.5px;}
+  .h-title .date{font-size:12px;color:#aeb8cc;font-weight:500;margin-left:8px;}
+  .h-who{font-size:13px;color:#cdd5e6;font-weight:700;}
+  .h-sum{margin-top:12px;display:flex;gap:8px;}
+  .pill{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:11px;
+    padding:9px 12px;display:flex;align-items:center;gap:8px;}
+  .pill .n{font-size:22px;font-weight:900;line-height:1;}
+  .pill .t{font-size:11px;color:#b9c2d6;line-height:1.3;}
+  .pill.a .n{color:#FF6b5a;} .pill.b .n{color:#FFC24d;}
+  /* progress */
+  .prog{margin-top:13px;}
+  .prog-row{display:flex;justify-content:space-between;font-size:11px;color:#b9c2d6;margin-bottom:6px;}
+  .prog-row b{color:#fff;font-weight:700;}
+  .bar{height:6px;background:rgba(255,255,255,.13);border-radius:99px;overflow:hidden;}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#3fe089);
+    border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1);}
+
+  /* tabs */
+  .tabs{display:flex;background:#fff;border-bottom:1px solid #eef0f3;position:sticky;top:0;z-index:5;}
+  .tabs button{flex:1;border:0;background:none;padding:13px 0;font-size:14px;font-weight:700;color:var(--ink3);
+    font-family:inherit;position:relative;cursor:pointer;}
+  .tabs button.on{color:var(--ink);}
+  .tabs button.on::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:0;
+    width:30px;height:3px;border-radius:3px;background:var(--hot);}
+  .tabs button[data-tab="P2B"].on::after{background:var(--warm);}
+  .tabs .cnt{font-size:11px;color:#fff;border-radius:99px;padding:1px 7px;margin-left:5px;vertical-align:1px;}
+  .tabs [data-tab="P2A"] .cnt{background:var(--hot);} .tabs [data-tab="P2B"] .cnt{background:var(--warm);}
+
+  /* list */
+  .list{padding:14px 12px 26px;min-height:300px;}
+  .empty{text-align:center;color:var(--ink3);font-size:13px;padding:50px 0;}
+
+  /* card */
+  .card{background:var(--card);border-radius:16px;padding:15px 15px 13px;margin-bottom:13px;
+    box-shadow:0 2px 10px rgba(30,40,70,.06);border:1px solid #f0f1f4;border-left:4px solid var(--hot);
+    transition:opacity .3s, transform .3s;position:relative;}
+  .card.b{border-left-color:var(--warm);}
+  .card.done{opacity:.5;}
+  .card.done .acts .open,.card.done .acts .copy{filter:grayscale(1);}
+  .c-top{display:flex;align-items:center;gap:9px;}
+  .chip{font-size:11px;font-weight:900;color:#fff;border-radius:7px;padding:3px 8px;letter-spacing:.5px;flex-shrink:0;}
+  .chip.a{background:var(--hot);} .chip.b{background:var(--warm);}
+  .c-name{font-size:17px;font-weight:900;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .c-recency{font-size:12px;color:var(--ink2);flex-shrink:0;display:flex;align-items:center;gap:3px;}
+  .c-recency.hot{color:var(--hot);font-weight:700;}
+  .c-meta{font-size:12.5px;color:var(--ink2);margin:7px 0 0;}
+  .c-meta .dot{color:#cfd5de;margin:0 6px;}
+  .c-meta .sub{color:var(--ink);font-weight:700;}
+  .c-why{font-size:12px;color:#8a93a4;margin:7px 0 0;line-height:1.5;}
+  .c-why b{color:#e0671f;font-weight:700;}
+  /* opener */
+  .opener{margin-top:11px;background:#f6f8fb;border:1px solid #e9eef5;border-radius:12px;padding:11px 12px;
+    font-size:13.5px;line-height:1.6;color:#2a3242;position:relative;}
+  .opener .lab{font-size:10.5px;font-weight:800;color:#07C160;letter-spacing:1px;display:flex;align-items:center;gap:5px;margin-bottom:5px;}
+  .opener .lab .edit{margin-left:auto;color:#9aa3b2;font-weight:600;font-size:10.5px;}
+  .opener .txt{outline:none;}
+  .opener .txt:focus{background:#fffef4;}
+  /* actions */
+  .acts{display:flex;gap:9px;margin-top:12px;}
+  .acts button{font-family:inherit;font-weight:700;border-radius:11px;cursor:pointer;border:0;
+    display:flex;align-items:center;justify-content:center;gap:5px;}
+  .acts .open{flex:1.5;background:var(--green);color:#fff;font-size:14px;padding:11px 0;box-shadow:0 3px 10px rgba(7,193,96,.3);}
+  .acts .copy{flex:1;background:#fff;color:#3a4356;font-size:13px;padding:11px 0;border:1px solid #dde1e8;}
+  .acts .done-btn{width:46px;background:#f2f4f7;color:#9aa3b2;font-size:16px;padding:0;}
+  .acts .done-btn.is-done{background:#e7f8ef;color:var(--green);}
+
+  .toast{position:fixed;left:50%;bottom:38px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:rgba(20,24,33,.94);color:#fff;font-size:13px;padding:11px 18px;border-radius:12px;
+    transition:.28s;z-index:99;max-width:340px;text-align:center;line-height:1.5;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .foot{max-width:412px;width:calc(100% - 24px);font-size:11px;color:#7b8499;text-align:center;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="demo-note">
+  <b>原型演示</b> · 数据为 2026-06-01 真实 P2A/P2B（江宁名下 23 户）。可点：切换 P2A/P2B、改开场白、复制、打勾归档。
+  「打开企微会话」「发送」为模拟——真机里走企微 JS-SDK 直接拉起与该客户的聊天。
+</div>
+
+<div class="phone">
+  <div class="wxbar"><span class="back">‹</span>今日攻坚<span class="more">···</span></div>
+
+  <header>
+    <div class="h-top">
+      <div class="h-title">今日攻坚<span class="date">6月1日 周一</span></div>
+      <div class="h-who">江宁</div>
+    </div>
+    <div class="h-sum">
+      <div class="pill a"><span class="n" id="naP2A">7</span><span class="t">P2A<br/>今天必攻</span></div>
+      <div class="pill b"><span class="n" id="naP2B">16</span><span class="t">P2B<br/>排队加热</span></div>
+    </div>
+    <div class="prog">
+      <div class="prog-row"><span>今日进度</span><span><b id="pdone">0</b> / <span id="ptot">23</span> 已联系</span></div>
+      <div class="bar"><i id="pbar"></i></div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button data-tab="P2A" class="on">攻坚 <span class="cnt" id="tcA">7</span></button>
+    <button data-tab="P2B">回温 <span class="cnt" id="tcB">16</span></button>
+  </div>
+
+  <div class="list" id="list"></div>
+</div>
+
+<div class="foot">保心上人 · 规划师工作台 · 今日攻坚（原型）<br/>排序：客户上次回复从近到远，越上面越烫</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* 真实数据：江宁名下 P2A/P2B（2026-06-01，state=方案讲解状态、客户60天内回过话） */
+const DATA = [
+  {tag:'P2A', name:'刘蓉嘉', d:5,  sub:'异议处理中',  appeal:'商业养老金'},
+  {tag:'P2A', name:'zy',     d:10, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'雪天转晴', d:10, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'Peipei', d:13, sub:'异议处理中',  appeal:'待明确'},
+  {tag:'P2A', name:'坚持不懈', d:14, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'Coco',   d:14, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'苹果',   d:14, sub:'等待方案讲解', appeal:'商业养老金'},
+
+  {tag:'P2B', name:'杨海峰', d:17, sub:'异议处理中',  appeal:'储蓄险'},
+  {tag:'P2B', name:'曾曾日上', d:17, sub:'异议处理中',  appeal:'港险'},
+  {tag:'P2B', name:'山村读书人', d:18, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'陈小艾', d:19, sub:'等待方案讲解', appeal:'商业养老金'},
+  {tag:'P2B', name:'jenny',  d:20, sub:'等待方案讲解', appeal:'增额终身寿险'},
+  {tag:'P2B', name:'王学明', d:23, sub:'等待方案讲解', appeal:'储蓄险'},
+  {tag:'P2B', name:'严于律己', d:26, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'俞如禄', d:32, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'若水',   d:33, sub:'等待方案讲解', appeal:'商业养老金'},
+  {tag:'P2B', name:'大道至简', d:39, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'盛泰建材', d:40, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'秋实',   d:41, sub:'异议处理中',  appeal:'港险'},
+  {tag:'P2B', name:'彭涛',   d:46, sub:'异议处理中',  appeal:'储蓄险'},
+  {tag:'P2B', name:'雪儿妈妈', d:49, sub:'做方案',     appeal:'增额终身寿险'},
+  {tag:'P2B', name:'chai',   d:49, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'。',     d:53, sub:'等待方案讲解', appeal:'重疾险'},
+];
+
+/* 按 子状态 + 诉求 生成开场白（真机由 AI 读聊天记录生成，这里用模板示意） */
+const CONCERN = {'港险':'分红实现率','港险分红险':'分红实现率','商业养老金':'每月能领多少、领多久','储蓄险':'中途取用灵不灵活','增额终身寿险':'复利和减保规则','重疾险':'保额够不够','待明确':'最在意的那点'};
+const PROOF   = {'港险':'友邦近 5 年分红达成率','港险分红险':'友邦近 5 年分红达成率','商业养老金':'几款产品的现金流测算表','储蓄险':'灵活取用的几种用法','增额终身寿险':'逐年现金价值对照表','重疾险':'同龄人保额配置参考','待明确':'对比资料'};
+function opener(c){
+  const n=c.name;
+  if(c.sub==='异议处理中') return `${n}，您上次顾虑的「${CONCERN[c.appeal]||'那点'}」，我特意整理了${PROOF[c.appeal]||'资料'}，几个关键数据发您参考一下👇`;
+  if(c.sub==='做方案')     return `${n}，您的${c.appeal}方案我在收尾，想再跟您确认下预算和缴费年限，这两点定了我今天就出。`;
+  return `${n}，您要的${c.appeal}方案我做好了，做了 3 个版本帮您对比，今晚方便我发您过目吗？`;
+}
+function whyNow(c){
+  if(c.sub==='异议处理中') return `客户在处理异议、<b>${c.d}天</b>没动 —— 趁热回应，别让它凉`;
+  if(c.sub==='做方案')     return `方案在收尾 —— 确认细节，今天就能出`;
+  return `方案已就绪、客户 <b>${c.d}天</b>没催 —— 主动约讲解`;
+}
+
+let tab='P2A';
+const done=new Set();
+const $=s=>document.querySelector(s);
+
+function render(){
+  const list=$('#list'); list.innerHTML='';
+  const rows=DATA.map((c,i)=>({...c,i})).filter(c=>c.tag===tab);
+  if(!rows.length){list.innerHTML='<div class="empty">这一档清空啦 🎉</div>';return;}
+  rows.forEach(c=>{
+    const a=c.tag==='P2A';
+    const isDone=done.has(c.i);
+    const el=document.createElement('div');
+    el.className='card'+(a?'':' b')+(isDone?' done':'');
+    el.innerHTML=`
+      <div class="c-top">
+        <span class="chip ${a?'a':'b'}">${c.tag}</span>
+        <span class="c-name">${c.name}</span>
+        <span class="c-recency ${c.d<=7?'hot':''}">⏱ ${c.d}天前回过你</span>
+      </div>
+      <div class="c-meta"><span class="sub">${c.sub}</span><span class="dot">·</span>${c.appeal}</div>
+      <div class="c-why">▸ 为什么现在：${whyNow(c)}</div>
+      <div class="opener">
+        <div class="lab">💬 建议开场白 <span class="edit">点字可改</span></div>
+        <div class="txt" contenteditable="true" spellcheck="false">${opener(c)}</div>
+      </div>
+      <div class="acts">
+        <button class="open">💬 打开企微会话</button>
+        <button class="copy">📋 复制</button>
+        <button class="done-btn ${isDone?'is-done':''}">${isDone?'✓':'✓'}</button>
+      </div>`;
+    el.querySelector('.open').onclick=()=>toast(`📲 演示：企微将拉起与「${c.name}」的会话<br/>（真机：openEnterpriseChat 直接进聊天）`);
+    el.querySelector('.copy').onclick=()=>{
+      const t=el.querySelector('.txt').innerText;
+      (navigator.clipboard?.writeText(t)||Promise.resolve()).finally(()=>toast('已复制开场白，去会话里粘贴发送'));
+    };
+    el.querySelector('.done-btn').onclick=()=>{
+      if(done.has(c.i))done.delete(c.i); else done.add(c.i);
+      updateProg(); render();
+    };
+    list.appendChild(el);
+  });
+}
+function updateProg(){
+  $('#pdone').textContent=done.size;
+  $('#pbar').style.width=(done.size/DATA.length*100)+'%';
+}
+let tt;
+function toast(msg){const t=$('#toast');t.innerHTML=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
+
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  tab=b.dataset.tab;
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+$('#naP2A').textContent=$('#tcA').textContent=DATA.filter(c=>c.tag==='P2A').length;
+$('#naP2B').textContent=$('#tcB').textContent=DATA.filter(c=>c.tag==='P2B').length;
+$('#ptot').textContent=DATA.length;
+render(); updateProg();
+</script>
+</body>
+</html>

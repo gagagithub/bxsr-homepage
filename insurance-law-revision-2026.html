@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保险法修订草案征求意见稿 · 规划师讲解</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold-primary:#D4AF37; --gold-soft:#F9E79F; --gold-deep:#AA8439;
+  --black-bg:#0A0A0A; --emerald:#34D399; --crimson:#EF4444; --ice:#7DD3FC;
+}
+html{font-size:19px;}
+body{background-color:var(--black-bg);color:#E5E5E5;font-family:'Inter','Noto Serif SC',sans-serif;overflow-x:hidden;scroll-behavior:smooth;}
+.gold-text{background:linear-gradient(to right,#D4AF37,#F9E79F,#AA8439);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.emerald-text{background:linear-gradient(to right,#34D399,#A7F3D0,#047857);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.crimson-text{background:linear-gradient(to right,#FCA5A5,#EF4444,#7F1D1D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ice-text{background:linear-gradient(to right,#BAE6FD,#7DD3FC,#38BDF8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:84px 28px 34px;position:relative;overflow:hidden;}
+.slide-inner{max-width:1560px;margin:0 auto;width:100%;position:relative;z-index:10;}
+.eyebrow{font-size:14px;letter-spacing:.5em;font-weight:700;margin-bottom:22px;}
+.glass-nav{background:rgba(10,10,10,.92);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,.2);}
+
+/* 条文卡 */
+.law-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;}
+.law-card.new{border-color:rgba(52,211,153,.35);background:linear-gradient(180deg,rgba(52,211,153,.07),rgba(255,255,255,.02));}
+.law-card.mod{border-color:rgba(212,175,55,.32);background:linear-gradient(180deg,rgba(212,175,55,.07),rgba(255,255,255,.02));}
+.law-card.warn{border-color:rgba(239,68,68,.35);background:linear-gradient(180deg,rgba(239,68,68,.08),rgba(255,255,255,.02));}
+.tag{display:inline-block;font-size:11px;letter-spacing:.18em;font-weight:800;padding:3px 10px;border-radius:999px;vertical-align:middle;}
+.tag-new{background:rgba(52,211,153,.16);color:#6EE7B7;border:1px solid rgba(52,211,153,.4);}
+.tag-mod{background:rgba(212,175,55,.16);color:#F9E79F;border:1px solid rgba(212,175,55,.4);}
+.tag-keep{background:rgba(255,255,255,.07);color:#9CA3AF;border:1px solid rgba(255,255,255,.15);}
+.tag-warn{background:rgba(239,68,68,.16);color:#FCA5A5;border:1px solid rgba(239,68,68,.4);}
+.artno{font-weight:900;letter-spacing:.02em;}
+.quote{border-left:3px solid rgba(212,175,55,.5);padding-left:14px;color:#D8D3C4;font-family:'Noto Serif SC',serif;line-height:1.75;}
+.hl{color:#F9E79F;font-weight:700;}
+.hl-r{color:#FCA5A5;font-weight:700;}
+.hl-g{color:#6EE7B7;font-weight:700;}
+table.cmp{width:100%;border-collapse:collapse;font-size:.86rem;}
+table.cmp th{text-align:left;padding:9px 10px;color:#9CA3AF;font-weight:600;border-bottom:1px solid rgba(255,255,255,.14);}
+table.cmp th.text-right{text-align:right;}
+table.cmp th.text-center{text-align:center;}
+table.cmp td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:top;}
+table.cmp tr:hover td{background:rgba(212,175,55,.05);}
+.old{color:#6B7280;text-decoration:line-through;text-decoration-color:rgba(107,114,128,.5);}
+#more-hint{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(10px);z-index:60;pointer-events:none;padding:6px 15px;border-radius:999px;background:rgba(0,0,0,.75);border:1px solid rgba(212,175,55,.35);color:#D4AF37;font-size:12px;letter-spacing:.12em;opacity:0;transition:opacity .25s,transform .25s;}
+#more-hint.show{opacity:1;transform:translateX(-50%) translateY(0);animation:hintBob 1.8s ease-in-out infinite;}
+@keyframes hintBob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(5px);}}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--black-bg);}
+::-webkit-scrollbar-thumb{background:var(--gold-primary);border-radius:10px;}
+@media print{.slide{min-height:auto;page-break-after:always;}nav,#more-hint{display:none;}}
+</style>
+</head>
+<body>
+
+<nav class="fixed top-0 w-full z-50 glass-nav px-6 py-2 flex justify-between items-center">
+  <div class="text-sm tracking-[0.25em] gold-text font-black">保心上人 · 内部讲解</div>
+  <div class="hidden lg:flex gap-6 text-xs tracking-widest text-gray-400">
+    <a href="#cover" class="hover:text-yellow-500 transition">封面</a>
+    <a href="#redline" class="hover:text-yellow-500 transition">口径红线</a>
+    <a href="#overview" class="hover:text-yellow-500 transition">全景</a>
+    <a href="#sales" class="hover:text-yellow-500 transition">销售</a>
+    <a href="#service" class="hover:text-yellow-500 transition">售后</a>
+    <a href="#client" class="hover:text-yellow-500 transition">投保人</a>
+    <a href="#bankrupt" class="hover:text-yellow-500 transition">公司倒闭</a>
+    <a href="#cross" class="hover:text-yellow-500 transition">跨境</a>
+    <a href="#penalty" class="hover:text-yellow-500 transition">罚则</a>
+    <a href="#action" class="hover:text-yellow-500 transition">行动项</a>
+  </div>
+  <div class="text-[11px] tracking-[0.3em] text-gray-600">仅内部使用</div>
+</nav>
+
+<!-- 01 封面 -->
+<header id="cover" class="slide text-center">
+  <div class="absolute inset-0 opacity-[0.08]" style="background-image:radial-gradient(circle at 50% 40%,#D4AF37 0%,transparent 62%);"></div>
+  <div class="slide-inner">
+    <p class="eyebrow gold-text">INSURANCE&nbsp;LAW &middot; DRAFT&nbsp;FOR&nbsp;COMMENT</p>
+    <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight" style="font-family:'Noto Serif SC',serif;">
+      中华人民共和国<span class="gold-text">保险法</span><br>
+      <span class="text-4xl md:text-5xl">（修订草案征求意见稿）</span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-400 mb-10">金融监管总局起草 &middot; 全面修订 &middot; 公开征求意见中</p>
+    <div class="flex flex-wrap justify-center gap-4 mb-12">
+      <div class="law-card px-7 py-4"><div class="text-3xl font-black gold-text">8 章 214 条</div><div class="text-sm text-gray-500 mt-1">现行法 185 条 &middot; 净增 29 条</div></div>
+      <div class="law-card px-7 py-4"><div class="text-3xl font-black emerald-text">五大方向</div><div class="text-sm text-gray-500 mt-1">股东穿透 &middot; 审慎监管 &middot; 风险处置<br>消费者保护 &middot; 提高违法成本</div></div>
+      <div class="law-card px-7 py-4"><div class="text-3xl font-black crimson-text">尚未生效</div><div class="text-sm text-gray-500 mt-1">第二百一十四条施行日期<br>仍写作「××年××月××日」</div></div>
+    </div>
+    <p class="text-gray-500 text-sm">现行保险法 1995 年施行，2002、2009、2014、2015 年四次修改；本次是<span class="hl">全面修订</span>。<br>本页所有条文序号，若无特别标注，均指<span class="hl">修订草案</span>的条号。</p>
+  </div>
+</header>
+
+<!-- 02 口径红线 -->
+<section id="redline" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">开场 &middot; 00 &middot; 讲之前先立四条口径</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">今天这堂课，<span class="crimson-text">先说不能说什么</span></h2>
+    <p class="text-gray-400 mb-8 text-lg">这四条，比后面所有条文都重要。说错一句，就是我们自己踩第一百三十九条。</p>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="law-card warn">
+        <div class="text-2xl font-black mb-2">① 不能说「新规已经实施」</div>
+        <p class="text-gray-300 leading-relaxed">这是<span class="hl-r">征求意见稿</span>，不是生效的法律。后面还要走国务院、全国人大常委会审议，条文可能还会改。对客户、对镜头，一律说「<span class="hl">保险法正在全面修订，目前在公开征求意见</span>」。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="text-2xl font-black mb-2">② 不能拿立法当促销由头</div>
+        <p class="text-gray-300 leading-relaxed">「趁新法没落地赶紧买」「新法一出这个产品就没了」——这类话属于<span class="hl-r">引人误解的宣传</span>，正好是草案第一百二十三条、第一百三十九条<span class="hl-r">新列的第一项</span>禁止行为。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="text-2xl font-black mb-2">③ 不能说「国家兜底、全额赔付」</div>
+        <p class="text-gray-300 leading-relaxed">草案第九十七条把保险保障基金明确定性为「<span class="hl-r">非政府性</span>行业风险救助基金」，并且写明「<span class="hl-r">实行限额救助</span>」。这是新增的表述，比现行法更收紧，不是更宽。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="text-2xl font-black mb-2">④ 犹豫期具体天数还没写死</div>
+        <p class="text-gray-300 leading-relaxed">第五十条只写「应当按照<span class="hl">国务院保险监督管理机构的规定</span>设置犹豫期」。天数由监管规章定，不是法律直接规定 15 天。别把「法律规定犹豫期 15 天」说出口。</p>
+      </div>
+    </div>
+    <p class="text-gray-600 text-sm mt-7">这四条不是保守，是因为草案把「对保险产品作虚假或者引人误解的宣传」从原来的第若干项<span class="hl">提到了禁止行为清单的第一项</span>——立法者在明确表态，销售误导是这轮修订的头号靶子。</p>
+  </div>
+</section>
+
+<!-- 03 全景 -->
+<section id="overview" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow text-gray-500">全景 &middot; 01 &middot; 这轮修订在改什么</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">五个方向，<span class="gold-text">只有两个跟我们天天相关</span></h2>
+    <div class="grid md:grid-cols-5 gap-4 mb-9">
+      <div class="law-card text-center opacity-60"><div class="text-sm text-gray-500 mb-2">一</div><div class="text-lg font-bold mb-2">股东穿透监管</div><p class="text-xs text-gray-500 leading-relaxed">主要股东、实际控制人纳入监管，新增专门罚则</p></div>
+      <div class="law-card text-center opacity-60"><div class="text-sm text-gray-500 mb-2">二</div><div class="text-lg font-bold mb-2">审慎监管制度</div><p class="text-xs text-gray-500 leading-relaxed">公司治理、偿付能力、资产负债、资金运用</p></div>
+      <div class="law-card text-center opacity-60"><div class="text-sm text-gray-500 mb-2">三</div><div class="text-lg font-bold mb-2">风险处置机制</div><p class="text-xs text-gray-500 leading-relaxed">早期纠正、接管、重组、市场退出</p></div>
+      <div class="law-card mod text-center"><div class="text-sm gold-text mb-2">四</div><div class="text-lg font-black mb-2 gold-text">保险消费者保护</div><p class="text-xs text-gray-300 leading-relaxed">犹豫期入法、个人信息保护、<span class="hl">禁止销售误导</span>、消费纠纷调解</p></div>
+      <div class="law-card warn text-center"><div class="text-sm crimson-text mb-2">五</div><div class="text-lg font-black mb-2 crimson-text">提高违法成本</div><p class="text-xs text-gray-300 leading-relaxed">扩大责任覆盖面、<span class="hl-r">罚款上限普遍抬高 5～10 倍</span></p></div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="law-card">
+        <div class="text-xs tracking-[0.25em] text-gray-500 mb-2">起草说明原话</div>
+        <p class="quote text-sm">「保险机构违法成本过低，消费者权益保护效能偏弱……有必要修改完善保险法，扎紧制度『铁篱笆』，加大对违法行为的处罚力度。」</p>
+      </div>
+      <div class="law-card">
+        <div class="text-xs tracking-[0.25em] text-gray-500 mb-2">起草说明原话</div>
+        <p class="quote text-sm">「丰富消费者权益保护内容，增加<span class="hl">个人信息保护规则</span>，<span class="hl">禁止销售误导</span>等侵害消费者合法权益行为……将<span class="hl">犹豫期</span>等成熟实践上升为法律制度。」</p>
+      </div>
+      <div class="law-card">
+        <div class="text-xs tracking-[0.25em] text-gray-500 mb-2">起草说明原话</div>
+        <p class="quote text-sm">「坚持过罚相当、<span class="hl-r">罚没并举</span>、宽严相济……适度提高罚款幅度，提高违法成本，切实扭转『<span class="hl-r">罚不及损</span>』『<span class="hl-r">罚不及得</span>』等情况。」</p>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-7">「罚没并举」这四个字要记住：以前很多条只写罚款区间，这次几乎全部改成「<span class="hl-r">没收违法所得，并处违法所得 1～10 倍罚款</span>」——先把赚的收走，再罚。</p>
+  </div>
+</section>
+
+<!-- 04 销售 · 禁止行为清单 -->
+<section id="sales" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">销售 &middot; 01 &middot; 我们每天在做的事，条文怎么写</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">禁止行为清单扩容：<span class="crimson-text">10 项 → 12 项</span></h2>
+    <p class="text-gray-400 mb-7 text-lg">第一百三十九条，管的就是<span class="hl">保险代理人、保险经纪人及其从业人员</span>——也就是在座每一位。</p>
+    <div class="grid lg:grid-cols-2 gap-5">
+      <div class="law-card warn">
+        <div class="mb-3"><span class="tag tag-new">新增</span> <span class="artno text-2xl ml-2">第一百三十九条（一）</span></div>
+        <p class="quote text-lg mb-3">对保险产品作<span class="hl-r">虚假或者引人误解的宣传</span>；</p>
+        <p class="text-gray-300 text-sm leading-relaxed">现行法这一条的第一项是「欺骗保险人、投保人、被保险人或者受益人」。草案<span class="hl-r">把「虚假或引人误解的宣传」插到最前面，变成第一项</span>，原来的欺骗顺延为第二项。<br><br><span class="hl">落到我们身上：</span>收益演示必须标明非保证；讲分红要给<span class="hl">全表实现率</span>不能只挑好年份；不能用别家的演示表；不能说「保本保息」「稳赚」「和存款一样」。</p>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-2xl ml-2">第一百三十九条（四）</span></div>
+        <p class="quote text-lg mb-3">阻碍投保人<span class="hl">或者被保险人</span>履行本法规定的如实告知义务，或者诱导其不履行本法规定的如实告知义务；</p>
+        <p class="text-gray-300 text-sm leading-relaxed">现行法只写「阻碍投保人」。草案把<span class="hl">被保险人</span>加进来，和第十七条如实告知义务的主体扩大是配套的。<br><br><span class="hl">落到我们身上：</span>健康告知<span class="hl-r">必须被保险人本人确认</span>，不能由投保人代答、更不能由我们代填代勾。「这个不用填」「填了过不了」这类话，直接落在「诱导」两个字上。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-2xl ml-2">第一百三十九条（八）</span></div>
+        <p class="quote text-lg mb-3">挪用、截留、侵占保险费、保险金<span class="hl-r">或者保险单的现金价值</span>；</p>
+        <p class="text-gray-300 text-sm leading-relaxed">现行法只有「保险费或者保险金」。草案<span class="hl-r">新增「保险单的现金价值」</span>——立法者直接冲着「<span class="hl-r">代理退保黑产</span>」去的。<br><br><span class="hl">落到我们身上：</span>不碰客户退保款、不代收代转、不参与任何形式的「代理维权退保」。同样的字，第一百二十三条（八）也给保险公司及其工作人员加了一遍。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-3"><span class="tag tag-new">新增</span> <span class="artno text-2xl ml-2">第一百三十九条（十一）</span></div>
+        <p class="quote text-lg mb-3">泄露、<span class="hl-r">出售或者非法向他人提供</span>在业务活动中知悉的保险人、投保人、被保险人、<span class="hl-r">受益人</span>的商业秘密<span class="hl-r">或者个人信息</span>；</p>
+        <p class="text-gray-300 text-sm leading-relaxed">现行法只写「泄露……商业秘密」。草案加了三样：<span class="hl-r">出售、非法提供</span>三种行为方式；<span class="hl-r">受益人</span>也纳入保护对象；<span class="hl-r">个人信息</span>与商业秘密并列。<br><br><span class="hl">落到我们身上：</span>客户名单、保单截图、体检报告、聊天记录——外发、拉群、换线索、卖名单，全部在射程内。</p>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-6">另外（五）把「合同约定以外的利益」改成「合同约定以外的<span class="hl">不正当</span>利益」；（十二）新增兜底项「违反法律、行政法规和国务院保险监督管理机构规定的其他行为」。第一百二十三条对保险公司及其工作人员做了同样口径的扩容（13 项 → 15 项），并新增「<span class="hl">唆使、诱导保险代理人、保险经纪人或者保险评估机构进行违背诚信义务的活动</span>」。</p>
+  </div>
+</section>
+
+<!-- 05 销售 · 持证上岗 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">销售 &middot; 02 &middot; 人的资格</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">「持证上岗」<span class="gold-text">第一次写进法律</span></h2>
+    <div class="grid lg:grid-cols-3 gap-5 mb-7">
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第一百一十六条</span></div>
+        <p class="quote mb-3">保险公司从事保险销售的人员应当品行良好，具有保险销售所需的专业能力，<span class="hl">具备保险从业资格</span>。</p>
+        <p class="text-gray-400 text-sm">面向<span class="hl">保险公司</span>的销售人员。</p>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第一百三十条</span></div>
+        <p class="quote mb-3">个人保险代理人、保险代理机构的代理从业人员、保险经纪人的经纪从业人员，应当品行良好，具有从事保险代理业务或者保险经纪业务所需的专业能力，<span class="hl">具备保险从业资格</span>。</p>
+        <p class="text-gray-400 text-sm">面向<span class="hl-r">中介渠道</span>——就是我们。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-3"><span class="tag tag-mod">罚则加重</span> <span class="artno text-xl ml-2">第一百九十条</span></div>
+        <p class="quote mb-3">聘任不具有任职资格、<span class="hl-r">从业资格</span>的人员的，责令改正，处<span class="hl-r">五万元以上五十万元以下</span>的罚款。</p>
+        <p class="text-gray-400 text-sm">现行第一百六十七条只写「任职资格」，罚款<span class="old">二万元以上十万元以下</span>。<span class="hl-r">上限翻 5 倍，并把从业资格纳入。</span></p>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-5">
+      <div class="law-card">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第一百一十七条</span></div>
+        <p class="quote mb-2">保险公司应当建立保险代理人、<span class="hl">保险经纪人管理机制</span>，<span class="hl">完善</span>登记制度，加强对保险代理人、<span class="hl">保险经纪人</span>的培训和管理。</p>
+        <p class="text-gray-400 text-sm">现行条文只管代理人，且末句是「不得唆使、诱导保险代理人进行违背诚信义务的活动」——那句被<span class="hl">挪进了第一百二十三条的禁止行为清单</span>，从「软要求」变成「可罚的硬禁令」。</p>
+      </div>
+      <div class="law-card">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第一百三十三条</span></div>
+        <p class="quote mb-2">个人保险代理人在代为办理人寿保险<span class="hl">或者年金保险</span>业务时，不得同时接受两个以上保险人的委托。</p>
+        <p class="text-gray-400 text-sm">现行只写「人寿保险业务」。草案<span class="hl">把年金保险并列写入</span>——这是全文的一条暗线：年金保险在草案里被反复从人寿保险中单独拎出来点名（第一百零四条业务范围、第二十七条时效、第三十九条、第九十八条、第一百零一条都是）。</p>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-6"><span class="artno">第一百三十八条</span>（未修改）：保险佣金只限于向保险代理人、保险经纪人支付，<span class="hl-r">不得向其他人支付</span>。这条老条文一个字没动，但配合罚则加重后杀伤力变了——飞单、挂靠、转佣、给非持牌人分佣，都在这条上。</p>
+  </div>
+</section>
+
+<!-- 06 销售 · 牌照与边界 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">销售 &middot; 03 &middot; 机构的边界</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">牌照、经营区域、名称：<span class="crimson-text">三道新围栏</span></h2>
+    <div class="grid lg:grid-cols-2 gap-5">
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-new">新增段落</span> <span class="artno text-xl ml-2">第一百二十七条</span></div>
+        <p class="quote mb-3">保险专业代理机构、保险经纪人应当在国务院保险监督管理机构批准的<span class="hl">业务范围和经营区域内</span>从事经营活动。<br>保险专业代理机构、保险经纪人的<span class="hl">变更、终止以及分支机构设立，应当经保险监督管理机构批准</span>，并在经批准后依法向经营主体登记机关办理登记。</p>
+        <p class="text-gray-400 text-sm">同时注册资本最低限额改由<span class="hl">监管机构规定</span>（不再挂靠公司法），且必须为<span class="hl">实缴</span>货币资本。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-3"><span class="tag tag-new">全新</span> <span class="artno text-xl ml-2">第一百二十九条</span></div>
+        <p class="quote mb-3">保险专业代理机构、保险经纪人或者其分支机构<span class="hl-r">无正当理由连续六个月以上未开展保险业务</span>的，保险监督管理机构<span class="hl-r">有权予以撤销</span>，并由经营主体登记机关依法注销其营业执照。</p>
+        <p class="text-gray-400 text-sm">保险兼业代理机构同理，可撤销其业务许可证。<br><span class="hl">这是清理空壳牌照的条款</span>——对行业格局的影响会比想象中大。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-3"><span class="tag tag-new">全新</span> <span class="artno text-xl ml-2">第一百四十四条</span></div>
+        <p class="quote mb-3">未经保险监督管理机构批准，任何单位<span class="hl-r">不得在名称和经营范围中使用与保险业务有关的字样</span>、其他可能产生混淆误导以及法律、行政法规禁止使用的字样，法律、行政法规另有规定的除外。</p>
+        <p class="text-gray-400 text-sm">公司名、公众号名、账号简介、名片抬头，凡带「保险」二字都要过一遍这条。</p>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-new">新增段落</span> <span class="artno text-xl ml-2">第一百四十条</span></div>
+        <p class="quote mb-3">保险代理机构、保险经纪人的<span class="hl">报告、报表、文件和资料应当如实记录，不得有虚假记载、误导性陈述和重大遗漏</span>。</p>
+        <p class="text-gray-400 text-sm">此前这套「三不」标准只对保险公司有要求（第九十五条），现在<span class="hl">对中介同样适用</span>。业务台账、对账单、投保资料留档，标准拉平了。</p>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-6">超范围/超区域经营的罚则同步加重：<span class="artno">第一百八十二条</span>——违法所得 1～10 倍；无违法所得或不足五十万元的，处<span class="hl-r">五十万元以上五百万元以下</span>罚款（现行：<span class="old">十万元以上五十万元以下</span>）。</p>
+  </div>
+</section>
+
+<!-- 07 销售 · 内容与传播 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">销售 &middot; 04 &middot; 内容团队重点看这一屏</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">第一百五十六条：<span class="crimson-text">传播口径第一次入法</span></h2>
+    <p class="text-gray-400 mb-8 text-lg">这条是全新的，而且它管的不只是保险机构，是「<span class="hl-r">任何单位和个人</span>」。</p>
+    <div class="law-card warn mb-6">
+      <div class="mb-3"><span class="tag tag-new">全新</span> <span class="artno text-2xl ml-2">第一百五十六条</span></div>
+      <p class="quote text-xl">任何单位和个人<span class="hl-r">不得编造、传播虚假信息或者误导性信息</span>，扰乱保险业务经营活动和保险市场秩序。<br><span class="hl-r">传播媒介传播保险市场信息应当真实、客观，不得误导。</span></p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-5">
+      <div class="law-card">
+        <div class="text-lg font-black mb-2 gold-text">和 9 月 30 日那件事叠在一起看</div>
+        <p class="text-gray-300 text-sm leading-relaxed">《金融产品网络营销管理办法》<span class="hl">9 月 30 日施行</span>。那是部门规章，管的是「谁能在网上营销金融产品」；这条草案是法律，管的是「<span class="hl">发出去的内容真不真</span>」。<br><br>两条并行：<span class="hl-r">资格</span>一条线，<span class="hl-r">内容</span>一条线，各自独立成立。</p>
+      </div>
+      <div class="law-card">
+        <div class="text-lg font-black mb-2 gold-text">我们内容线的三条自查</div>
+        <ol class="text-gray-300 text-sm leading-relaxed list-decimal ml-5 space-y-2">
+          <li>凡出现数字，必须能追到<span class="hl">可查信源</span>（保司条款、演示表、官方公告、权威媒体）。</li>
+          <li>凡讲收益，必须同屏出现<span class="hl">「演示不代表未来」</span>类表述，且演示表用我们代理的那一家的原表。</li>
+          <li>凡讲政策，只转述<span class="hl">原文</span>，不加「所以现在必须买」的推论。</li>
+        </ol>
+      </div>
+      <div class="law-card">
+        <div class="text-lg font-black mb-2 gold-text">还有一条配套</div>
+        <p class="text-gray-300 text-sm leading-relaxed"><span class="artno">第一百四十二条</span>把监管机构制定的审慎经营规则内容明确列举，其中直接点名了「<span class="hl">产品营销</span>」「<span class="hl">消费者保护</span>」「<span class="hl">网络和数据安全</span>」——意味着后续会有更细的营销规章落下来，今天这套口径只会更严不会更松。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 售后 · 犹豫期与保单借款 -->
+<section id="service" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow emerald-text">售后 &middot; 01 &middot; 两个「第一次入法」</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">犹豫期 &amp; 保单借款，<span class="emerald-text">从行业惯例变成法条</span></h2>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="law-card new">
+        <div class="mb-4"><span class="tag tag-new">全新</span> <span class="artno text-3xl ml-2 emerald-text">第五十条</span></div>
+        <p class="quote text-xl mb-4">保险期间<span class="hl-g">一年以上</span>的人身保险合同，应当按照国务院保险监督管理机构的规定<span class="hl-g">设置犹豫期</span>。投保人在犹豫期内<span class="hl-g">有权解除保险合同</span>，保险人应当<span class="hl-g">及时退还保险费</span>。</p>
+        <div class="border-t border-white/10 pt-4">
+          <div class="text-sm font-bold gold-text mb-2">讲解要点</div>
+          <ul class="text-gray-300 text-sm leading-relaxed list-disc ml-5 space-y-1.5">
+            <li>此前犹豫期只写在<span class="hl">监管规章和保险条款</span>里，现在写进法律，客户的这项权利有了上位法依据。</li>
+            <li>适用范围是「保险期间<span class="hl">一年以上</span>的<span class="hl">人身保险</span>合同」——一年期医疗、意外不在内。</li>
+            <li>退的是「<span class="hl">保险费</span>」，不是现金价值。</li>
+            <li><span class="hl-r">天数仍由监管规定</span>，法律没写死。别对客户说「法律规定 15 天」。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="law-card new">
+        <div class="mb-4"><span class="tag tag-new">全新</span> <span class="artno text-3xl ml-2 emerald-text">第四十三条</span></div>
+        <p class="quote text-xl mb-4">投保人可以<span class="hl-g">以持有的保险单的现金价值为限</span>，向签发保险单的保险人<span class="hl-g">申请借款</span>。投保人尚未清偿全部借款的，保险人可以就该保险单的现金价值、退还的保险费或者保险金<span class="hl-g">优先受偿</span>。</p>
+        <div class="border-t border-white/10 pt-4">
+          <div class="text-sm font-bold gold-text mb-2">讲解要点</div>
+          <ul class="text-gray-300 text-sm leading-relaxed list-disc ml-5 space-y-1.5">
+            <li>保单贷款（保单质押贷款）第一次有了明确法律依据，客户问「这钱能不能借出来」时可以直接引条文。</li>
+            <li>额度上限是<span class="hl">现金价值</span>——不是保额，也不是已交保费。</li>
+            <li>第二句是给保险公司的：借款未还清时，公司对现金价值、退还保费、保险金<span class="hl-r">优先受偿</span>。<br>也就是说，<span class="hl-r">有贷款未还，理赔金会先被扣</span>。这一点讲清楚，能免掉后面一场纠纷。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-7">配套还有<span class="artno">第一百四十八条</span>（全新）：监管机构对保险业消费者权益保护工作实施监督管理，<span class="hl">建立健全保险业消费纠纷调解机制，指导设立保险业消费纠纷调解机构</span>。客户投诉/调解的路径，从此有法律依据。</p>
+  </div>
+</section>
+
+<!-- 09 售后 · 受益人与合同变更 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow emerald-text">售后 &middot; 02 &middot; 最容易在理赔时出事的一条</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">变更受益人：<span class="crimson-text">口头说了不算，批注也不够了</span></h2>
+    <p class="text-gray-400 mb-7 text-lg">第四十二条改了三处，每一处都直接影响我们的售后动作。</p>
+    <div class="law-card mod mb-6">
+      <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-2xl ml-2">第四十二条</span></div>
+      <p class="quote text-lg">被保险人或者投保人可以变更受益人并书面通知保险人。保险人收到变更受益人的书面通知后，应当<span class="hl">变更保险合同</span>。<span class="hl-r">被保险人或者投保人未履行通知义务的，变更行为对保险人不发生效力。</span><br>投保人变更受益人时须经被保险人同意。<span class="hl">被保险人变更受益人的，保险人应当通知投保人。</span></p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-5">
+      <div class="law-card">
+        <div class="text-sm tracking-[0.2em] text-gray-500 mb-2">改动一</div>
+        <div class="text-xl font-black mb-2">「批注或附贴批单」→「<span class="gold-text">变更保险合同</span>」</div>
+        <p class="text-gray-300 text-sm leading-relaxed">现行法写的是保险人应当「在保险单或者其他保险凭证上批注或者附贴批单」。草案改成「应当变更保险合同」——<span class="hl">形式要求放宽，实质要求提高</span>，适配电子保单。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="text-sm tracking-[0.2em] text-gray-500 mb-2">改动二 &middot; 最要命</div>
+        <div class="text-xl font-black mb-2">未通知 = <span class="crimson-text">对保险人不发生效力</span></div>
+        <p class="text-gray-300 text-sm leading-relaxed">这是<span class="hl-r">新增的一句</span>。客户改了遗嘱、签了纸、跟我们说过——只要没书面通知到保险公司，理赔时<span class="hl-r">按原受益人赔</span>。<br><br><span class="hl">动作项：</span>凡客户提到变更受益人，必须走保司正式变更流程并<span class="hl">回执留档</span>。</p>
+      </div>
+      <div class="law-card">
+        <div class="text-sm tracking-[0.2em] text-gray-500 mb-2">改动三</div>
+        <div class="text-xl font-black mb-2">被保险人改受益人，<span class="gold-text">要通知投保人</span></div>
+        <p class="text-gray-300 text-sm leading-relaxed">也是新增的。以前只规定「投保人变更须经被保险人同意」，反方向没规定。现在补齐了：<span class="hl">被保险人单方变更，公司要通知投保人</span>。<br><br>投保人和被保险人不是同一人的保单（父母为子女投保、夫妻互保），要提前跟客户讲明白。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 售后 · 告知与说明 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow emerald-text">售后 &middot; 03 &middot; 承保前的两个义务</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">如实告知 &amp; 明确说明，<span class="gold-text">两头都在往客户一侧挪</span></h2>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-2xl ml-2">第十七条 &middot; 如实告知</span></div>
+        <ul class="text-gray-300 text-base leading-relaxed space-y-3">
+          <li><span class="hl">义务人扩大：</span>「投保人<span class="hl">或者被保险人</span>」应当如实告知。故意或重大过失未告知的后果，同样及于被保险人。</li>
+          <li><span class="hl-g">对客户有利的一处：</span>保险人在合同订立时已经知道<span class="hl-g">或者应当知道</span>投保人或被保险人未如实告知的，<span class="hl-g">不得解除合同</span>；发生保险事故的，应当承担赔付责任。<br><span class="text-sm text-gray-400">现行法只有「已经知道」，草案加了「<span class="hl-g">应当知道</span>」——保险公司的核保注意义务被抬高了。</span></li>
+          <li>不可抗辩期（合同成立满二年不得解除）、30 日解除权行使期限，均未变。</li>
+        </ul>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-2xl ml-2">第十八条 &middot; 明确说明</span></div>
+        <ul class="text-gray-300 text-base leading-relaxed space-y-3">
+          <li><span class="hl">对象扩大：</span>从「免除保险人责任的条款」扩到「免除<span class="hl">或者减轻</span>保险人责任<span class="hl">等重大利害关系</span>条款」——等待期、既往症、免赔额、赔付比例、责任限额，全都进来了。</li>
+          <li><span class="hl">方式：</span>提示 + 「<span class="hl">按照投保人的要求</span>对该条款的内容以书面或者口头形式作出明确说明」。</li>
+          <li><span class="hl-r">后果变了：</span>未作提示或者未按要求明确说明，<span class="hl-r">致使投保人没有注意或者理解</span>与其有重大利害关系的条款的，投保人可以主张<span class="hl-r">该条款不成为合同的内容</span>。<br><span class="text-sm text-gray-400">现行法是「该条款不产生效力」。改成「不成为合同的内容」，是<span class="hl">与民法典格式条款规则衔接</span>。</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-6 mt-5">
+      <div class="law-card">
+        <div class="mb-2"><span class="tag tag-mod">修改</span> <span class="artno text-lg ml-2">第二十条 &middot; 无效条款</span></div>
+        <p class="quote text-sm">（一）免除、<span class="hl">减轻</span>保险人依法应当承担的义务，或者加重投保人、被保险人责任的；<br>（二）排除<span class="hl">或者限制</span>投保人、被保险人或者受益人依法享有的权利的。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="text-lg font-black mb-2">→ 我们的动作项</div>
+        <p class="text-gray-300 text-sm leading-relaxed">销售环节的<span class="hl">「说明 + 留痕」</span>从加分项变成必选项。<br>健康告知<span class="hl-r">让被保险人本人逐条确认</span>；免责条款、等待期、免赔额<span class="hl-r">逐条念到</span>；过程用录音录像或微信文字固定下来并归档。<br>出事时，能拿出证据的是我们，不是客户。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 售后 · 理赔与时效 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow emerald-text">售后 &middot; 04 &middot; 理赔环节</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">三处改动，<span class="emerald-text">都在给客户加时间、加保障</span></h2>
+    <div class="grid lg:grid-cols-3 gap-5">
+      <div class="law-card new">
+        <div class="mb-3"><span class="tag tag-new">新增款</span> <span class="artno text-xl ml-2">第十四条第三款</span></div>
+        <p class="quote mb-3">保险人<span class="hl-g">接受投保人提出的投保申请并收取保险费</span>，尚未作出是否承保的意思表示，<span class="hl-g">发生保险事故，符合承保条件的，视为保险合同成立</span>。</p>
+        <p class="text-gray-300 text-sm leading-relaxed">俗称「<span class="hl">暂保责任</span>」。以前只能靠司法解释和判例，现在写进法律。<br><br><span class="hl">客户最常问的一句</span>——「我钱交了还没承保，这几天出事怎么办」——终于有条文可答：<span class="hl-g">符合承保条件的，视为合同成立</span>。</p>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-3"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第二十七条 &middot; 诉讼时效</span></div>
+        <table class="cmp mb-3">
+          <tr><th>险种</th><th class="text-right">现行</th><th class="text-right">草案</th></tr>
+          <tr><td>人寿保险</td><td class="text-right text-gray-500">5 年</td><td class="text-right gold-text font-bold">5 年</td></tr>
+          <tr><td><span class="hl">年金保险</span></td><td class="text-right text-gray-500">（未单列）</td><td class="text-right emerald-text font-bold">5 年</td></tr>
+          <tr><td>其他保险</td><td class="text-right old">2 年</td><td class="text-right emerald-text font-bold">3 年</td></tr>
+        </table>
+        <p class="text-gray-300 text-sm leading-relaxed">自知道或者应当知道保险事故发生之日起算。<br><span class="hl">客户维权窗口变长了</span>——重疾、医疗、意外从 2 年延到 3 年；年金保险明确按 5 年。</p>
+      </div>
+      <div class="law-card">
+        <div class="mb-3"><span class="tag tag-keep">保留</span> <span class="artno text-xl ml-2">第二十四条 &middot; 核定时限</span></div>
+        <ul class="text-gray-300 text-sm leading-relaxed list-disc ml-5 space-y-2">
+          <li>及时核定；情形复杂的<span class="hl">三十日内</span>核定（合同另有约定除外）。</li>
+          <li>属于保险责任的，达成协议后<span class="hl">十日内</span>履行赔付。</li>
+          <li>认为材料不完整的，应当<span class="hl">及时一次性</span>通知补充提供。</li>
+          <li>未及时履行的，除支付保险金外，还应赔偿被保险人或受益人因此受到的损失。</li>
+          <li><span class="hl-r">任何单位和个人不得非法干预</span>保险人履行赔付义务，也不得限制被保险人或受益人取得保险金的权利。</li>
+        </ul>
+        <p class="text-gray-500 text-xs mt-3">这条实质未改，但配合第二十七条时效延长，客户手上的牌变多了。</p>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-6">另外两条与健康险直接相关：<span class="artno">第四十八条</span>新增「<span class="hl">费用补偿型人身保险参照适用</span>第六十三条至第六十六条规定（代位求偿）」；<span class="artno">第五十九条</span>新增「<span class="hl">费用补偿型人身保险参照适用本条规定</span>（重复保险按比例分摊）」。<span class="hl-r">百万医疗「不能重复报销」从此有了法律条文，不再只是条款约定。</span></p>
+  </div>
+</section>
+
+<!-- 12 投保人 · 个人信息 -->
+<section id="client" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow ice-text">投保人 &middot; 01 &middot; 「我的保单，别人查得到吗」</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">个人信息保护<span class="ice-text">写进保险法</span></h2>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="law-card new">
+        <div class="mb-3"><span class="tag tag-new">全新</span> <span class="artno text-2xl ml-2">第一百二十一条</span></div>
+        <p class="quote text-lg mb-4">保险公司应当<span class="hl-g">建立健全个人信息保护管理制度</span>，依法履行个人信息保护义务，<span class="hl-g">防范身份冒用、欺诈和信息泄露风险</span>。<br><br>保险公司<span class="hl-g">有权拒绝投保人、被保险人、受益人之外的任何单位或者个人查询保险单信息</span>，法律、行政法规另有规定的除外。</p>
+        <p class="text-gray-300 text-sm leading-relaxed"><span class="hl">对客户的标准答法：</span>除了你本人（投保人 / 被保险人 / 受益人），任何单位和个人来查你的保单信息，保险公司都有权拒绝——除非法律、行政法规另有规定（比如司法机关依法调取）。</p>
+      </div>
+      <div class="space-y-5">
+        <div class="law-card new">
+          <div class="mb-2"><span class="tag tag-new">全新</span> <span class="artno text-xl ml-2">第一百二十二条</span></div>
+          <p class="quote text-sm mb-2">保险业建立<span class="hl-g">行业服务平台</span>，为保险单信息提供<span class="hl-g">登记服务</span>，为保险产品、保险资产管理产品等提供交易服务。国务院保险监督管理机构对行业服务平台进行管理，制定具体管理办法。</p>
+          <p class="text-gray-400 text-sm">未来可能出现全国统一的<span class="hl">保单登记查询平台</span>。对客户「保单丢了 / 家人不知道我买了什么」的痛点是正面消息，但<span class="hl-r">现在还没建成，别当成已有服务讲</span>。</p>
+        </div>
+        <div class="law-card">
+          <div class="mb-2"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第九十六条</span></div>
+          <p class="quote text-sm mb-2">账簿、原始凭证和有关资料的保管期限，自保险合同终止之日起计算，<span class="hl">不得少于十年</span>。</p>
+          <p class="text-gray-400 text-sm">现行法按保险期间分档（<span class="old">一年以下不少于五年、一年以上不少于十年</span>），草案<span class="hl">统一为十年</span>。客户十年内回头查资料，公司必须有。</p>
+        </div>
+        <div class="law-card">
+          <div class="mb-2"><span class="tag tag-mod">修改</span> <span class="artno text-xl ml-2">第一百二十三条（十四）&middot; 第一百三十九条（十一）</span></div>
+          <p class="text-gray-300 text-sm">泄露、<span class="hl-r">出售或者非法向他人提供</span>投保人、被保险人、<span class="hl-r">受益人</span>的商业秘密<span class="hl-r">或者个人信息</span>——公司侧和中介侧<span class="hl-r">两条同时加</span>，罚则也同步抬高到十万～一百万元级别。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 投保人 · 十条速查 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow ice-text">投保人 &middot; 02 &middot; 一页讲给客户听</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-7">对投保人来说，<span class="ice-text">这十条最要紧</span></h2>
+    <div class="grid md:grid-cols-2 gap-x-8 gap-y-4">
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">01</span><div><div class="font-bold text-lg mb-1">犹豫期成为法定权利</div><p class="text-gray-400 text-sm">保险期间一年以上的人身险，必须设犹豫期；期内可解约，退还保险费。<span class="text-gray-600">（第五十条 · 新增）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">02</span><div><div class="font-bold text-lg mb-1">保单可以借款</div><p class="text-gray-400 text-sm">以现金价值为限向承保公司申请借款；未还清时公司对现金价值、退费、保险金优先受偿。<span class="text-gray-600">（第四十三条 · 新增）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">03</span><div><div class="font-bold text-lg mb-1">交了钱还没承保，出事也可能算</div><p class="text-gray-400 text-sm">已收保费、尚未表示是否承保期间出险，符合承保条件的，视为合同成立。<span class="text-gray-600">（第十四条 · 新增款）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">04</span><div><div class="font-bold text-lg mb-1">没讲清楚的免责条款，可以不算数</div><p class="text-gray-400 text-sm">范围扩到「免除<b>或减轻</b>责任等重大利害关系条款」；未按要求说明的，投保人可主张该条款<b>不成为合同内容</b>。<span class="text-gray-600">（第十八条）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">05</span><div><div class="font-bold text-lg mb-1">告知义务：两头都变了</div><p class="text-gray-400 text-sm">投保人<b>和被保险人</b>都要如实告知；但保险公司「已经知道<b>或者应当知道</b>」的，不得解除合同。<span class="text-gray-600">（第十七条）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">06</span><div><div class="font-bold text-lg mb-1">打官司的时间变长了</div><p class="text-gray-400 text-sm">人寿险、年金险 5 年不变；其他险种索赔诉讼时效由 <b>2 年延长到 3 年</b>。<span class="text-gray-600">（第二十七条）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">07</span><div><div class="font-bold text-lg mb-1">改受益人，必须书面通知公司</div><p class="text-gray-400 text-sm">未履行通知义务的，<b>变更行为对保险人不发生效力</b>；被保险人变更受益人的，公司应通知投保人。<span class="text-gray-600">（第四十二条）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">08</span><div><div class="font-bold text-lg mb-1">保单信息，外人查不到</div><p class="text-gray-400 text-sm">公司有权拒绝投保人、被保险人、受益人之外的任何单位或个人查询保险单信息。<span class="text-gray-600">（第一百二十一条 · 新增）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">09</span><div><div class="font-bold text-lg mb-1">两种情形退现金价值，不再要求「交满两年」</div><p class="text-gray-400 text-sm">投保人故意造成被保险人死伤病、被保险人故意犯罪致死伤——均<b>直接按约定退还现金价值</b>，删去「已交足二年以上保险费」前提。<span class="text-gray-600">（第四十五、四十七条）</span></p></div></div></div>
+      <div class="law-card"><div class="flex gap-3"><span class="text-2xl font-black gold-text">10</span><div><div class="font-bold text-lg mb-1">医疗险不能重复报销，有法条了</div><p class="text-gray-400 text-sm">费用补偿型人身保险<b>参照适用</b>代位求偿（第六十三～六十六条）与重复保险分摊规则（第五十九条）。<span class="text-gray-600">（第四十八、五十九条 · 新增）</span></p></div></div></div>
+    </div>
+    <p class="text-gray-500 text-sm mt-6">另外未变但仍是硬红线：<span class="artno">第三十四条</span>不得为无民事行为能力人投保以死亡为给付条件的保险（父母为未成年子女投保除外，且身故保额受监管限额约束）；<span class="artno">第三十五条</span>以死亡为给付条件的合同未经被保险人同意并认可保险金额的<span class="hl-r">无效</span>；<span class="artno">第三十七条</span>分期交费宽限期六十日；<span class="artno">第三十八条</span>效力中止后二年内可协商复效。</p>
+  </div>
+</section>
+
+<!-- 14 公司倒闭 -->
+<section id="bankrupt" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow ice-text">投保人 &middot; 03 &middot; 客户问得最多的那个问题</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">「保险公司倒了，<span class="ice-text">我的保单怎么办</span>」</h2>
+    <p class="text-gray-400 mb-7 text-lg">草案在这块动了四条。<span class="hl-r">有两条是利好，有一条是收紧——收紧的那条必须讲。</span></p>
+    <div class="grid lg:grid-cols-4 gap-5">
+      <div class="law-card mod">
+        <div class="mb-2"><span class="tag tag-mod">扩大</span> <span class="artno text-lg ml-2">第九十八条</span></div>
+        <p class="quote text-sm mb-3">经营<span class="hl">人寿保险、年金保险、长期健康保险</span>业务的保险公司，除因分立、合并或者被依法撤销外，<span class="hl">不得解散</span>。</p>
+        <p class="text-gray-400 text-sm">现行法只保护「人寿保险」。草案把<span class="hl">年金保险、长期健康保险</span>一起纳入——长期重疾、终身年金的客户吃了一颗定心丸。</p>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-2"><span class="tag tag-mod">扩大</span> <span class="artno text-lg ml-2">第一百零一条</span></div>
+        <p class="quote text-sm mb-3">被撤销、被宣告破产<span class="hl">或者存在其他重大风险需要退出市场</span>的，其持有的人寿保险合同、<span class="hl">年金保险合同、长期健康保险合同</span>及责任准备金，<span class="hl">应当转让</span>给其他经营<span class="hl">同类</span>业务的保险公司；不能达成协议的，由国务院保险监督管理机构<span class="hl">指定</span>接受转让。</p>
+        <p class="text-gray-400 text-sm"><span class="hl-g">核心答案：保单不会消失，会被转让给另一家公司继续有效。</span></p>
+      </div>
+      <div class="law-card mod">
+        <div class="mb-2"><span class="tag tag-mod">顺位补强</span> <span class="artno text-lg ml-2">第一百条</span></div>
+        <p class="quote text-sm mb-3">破产财产在优先清偿破产费用和共益债务后，按下列顺序清偿：<br>（一）职工工资、社保等；<br>（二）<span class="hl">赔偿或者给付保险金、退还未满期保费或者保险单的现金价值</span>；<br>（三）所欠税款；（四）普通破产债权。</p>
+        <p class="text-gray-400 text-sm">第二顺位<span class="hl">新增了「退还未满期保费或者保险单的现金价值」</span>——把还没出险的保单持有人也放进了高顺位。</p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-2"><span class="tag tag-warn">收紧 · 必讲</span> <span class="artno text-lg ml-2">第九十七条</span></div>
+        <p class="quote text-sm mb-3">保险保障基金是<span class="hl-r">非政府性行业风险救助基金</span>……保险保障基金<span class="hl-r">实行限额救助，超出救助限额的部分</span>由投保人、被保险人、受益人从被撤销或者被宣告破产的保险公司<span class="hl-r">清算财产中受偿</span>。</p>
+        <p class="text-gray-400 text-sm"><span class="hl-r">「非政府性」「限额救助」是新增表述。</span>所以对客户只能说到这里：<span class="hl">保单会被转让继续有效，保险保障基金在限额内救助，超限部分参与清算受偿</span>。<span class="hl-r">不能说国家兜底、不能说全额赔付。</span></p>
+      </div>
+    </div>
+    <p class="text-gray-500 text-sm mt-6">配套：<span class="artno">第九十七条</span>还把保险保障基金的动用情形从「被撤销、被宣告破产」扩到「<span class="hl">或者存在其他重大风险需要退出市场</span>」，并新增「保险公司存在重大风险，可能严重危害保险市场秩序，损害投保人、被保险人或者受益人合法权益时，<span class="hl">依法参与风险处置</span>」——救助时点<span class="hl">前移</span>了，不必等到破产才动。</p>
+  </div>
+</section>
+
+<!-- 15 跨境 -->
+<section id="cross" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">跨境 &middot; 01 &middot; 我们做港险，这一屏单独看</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">三条新条文，<span class="crimson-text">第一次把「境外保险活动」写进保险法</span></h2>
+    <p class="text-gray-400 mb-6 text-lg">下面是条文原文。<span class="hl-r">先读条文，不做延伸结论</span>——最终口径等定稿和配套细则。</p>
+    <div class="grid lg:grid-cols-3 gap-5 mb-5">
+      <div class="law-card warn">
+        <div class="mb-2"><span class="tag tag-new">全新</span> <span class="artno text-lg ml-2">第一百六十三条</span></div>
+        <p class="quote text-sm">国务院保险监督管理机构可以和其他国家或者地区的保险监督管理机构建立监督管理<span class="hl">合作机制，实施跨境监督管理</span>。<br><br><span class="hl-r">境外保险监督管理机构不得在中华人民共和国境内直接进行调查取证等活动。未经国务院保险监督管理机构和国务院有关主管部门同意，任何单位和个人不得擅自向境外监督管理机构提供与保险业务活动有关的文件和资料。</span></p>
+      </div>
+      <div class="law-card warn">
+        <div class="mb-2"><span class="tag tag-new">全新</span> <span class="artno text-lg ml-2">第一百六十四条</span></div>
+        <p class="quote text-sm">在中华人民共和国境外的保险活动，<span class="hl-r">危害中华人民共和国国家金融安全，扰乱境内市场秩序，损害我国公民、组织合法权益的</span>，依照本法以及相关法律规定处理并追究法律责任。</p>
+        <p class="text-gray-400 text-sm mt-3">这是一条<span class="hl-r">域外效力（长臂）条款</span>。构成要件是三个「危害/扰乱/损害」，不是对境外保险本身的一般性禁止。</p>
+      </div>
+      <div class="law-card">
+        <div class="mb-2"><span class="tag tag-keep">未修改</span> <span class="artno text-lg ml-2">第七条 &middot; 第八条</span></div>
+        <p class="quote text-sm">第七条　保险业务由依法设立的保险公司以及法律、行政法规规定的其他保险组织经营，<span class="hl">其他单位和个人不得经营保险业务</span>。<br><br>第八条　在中华人民共和国境内的法人和其他组织需要办理<span class="hl">境内保险</span>的，应当向中华人民共和国境内的保险公司投保。</p>
+        <p class="text-gray-400 text-sm mt-3">这两条一个字没改，是<span class="hl">现行法就有</span>的老规则。讲的时候不要说成「新增」。</p>
+      </div>
+    </div>
+    <div class="law-card warn">
+      <div class="mb-3"><span class="tag tag-mod">罚则大幅加重</span> <span class="artno text-xl ml-2">第二百零一条 &middot; 外国保险机构</span></div>
+      <table class="cmp">
+        <tr><th style="width:44%">行为</th><th class="text-right">现行（第一百七十三条）</th><th class="text-right">草案（第二百零一条）</th></tr>
+        <tr><td>外国保险机构未经批准擅自在境内设立代表机构</td><td class="text-right old">五万元以上三十万元以下</td><td class="text-right crimson-text font-black">五十万元以上五百万元以下</td></tr>
+        <tr><td>境内代表机构从事保险经营活动（有违法所得）</td><td class="text-right old">违法所得 1～5 倍</td><td class="text-right crimson-text font-black">违法所得 1～10 倍</td></tr>
+        <tr><td>境内代表机构从事保险经营活动（无违法所得或不足）</td><td class="text-right old">不足二十万元的，处二十万～一百万元</td><td class="text-right crimson-text font-black">不足一百万元的，处一百万～一千万元</td></tr>
+        <tr><td>首席代表 / 机构</td><td class="text-right text-gray-400">可责令撤换；情节严重撤销代表机构</td><td class="text-right text-gray-300">同左（未变）</td></tr>
+      </table>
+    </div>
+    <p class="text-gray-500 text-sm mt-5"><span class="hl">我的建议口径：</span>这三条对我们不是「今天就要改业务」的信号，是「<span class="hl-r">监管在给跨境这件事补法律工具箱</span>」的信号。周一先做两件事——① 全员知道有这三条；② 任何对外内容<span class="hl-r">不得出现「监管管不到」「境外不受内地法律约束」这类表述</span>。真正的展业口径，等草案定稿、配套规则出来后再统一，别各自解读。</p>
+  </div>
+</section>
+
+<!-- 16 罚则 -->
+<section id="penalty" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow crimson-text">罚则 &middot; 01 &middot; 违法成本价目表</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-3">「<span class="crimson-text">罚不及损、罚不及得</span>」这八个字，被写进了起草说明</h2>
+    <p class="text-gray-400 mb-6 text-lg">几乎所有条款都改成了<span class="hl-r">「没收违法所得 + 违法所得 1～10 倍罚款」</span>，只有查不到违法所得时才按固定区间罚。</p>
+    <div class="law-card">
+      <table class="cmp">
+        <thead>
+          <tr><th style="width:38%">行为</th><th style="width:12%">草案条号</th><th class="text-right" style="width:25%">现行</th><th class="text-right" style="width:25%">修订草案</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>擅自设立保险公司 / 非法经营商业保险业务</td><td class="text-gray-500">§179</td><td class="text-right old">1～5 倍；无所得 20 万～100 万</td><td class="text-right crimson-text font-bold">1～10 倍；无所得 100 万～1000 万</td></tr>
+          <tr><td>擅自设立专业代理 / 经纪机构，或无证从事代理、经纪业务</td><td class="text-gray-500">§180</td><td class="text-right old">1～5 倍；无所得 5 万～30 万</td><td class="text-right crimson-text font-bold">1～10 倍；无所得 50 万～500 万</td></tr>
+          <tr><td>超出批准的业务范围<span class="hl">或者经营区域</span>经营</td><td class="text-gray-500">§182</td><td class="text-right old">1～5 倍；无所得 10 万～50 万</td><td class="text-right crimson-text font-bold">1～10 倍；无所得 50 万～500 万</td></tr>
+          <tr style="background:rgba(239,68,68,.06)"><td><b>保险公司及其工作人员违反禁止行为</b>（§123，含虚假/误导宣传、隐瞒重要情况、返佣、泄露个人信息）</td><td class="text-gray-500">§183</td><td class="text-right old">5 万～30 万</td><td class="text-right crimson-text font-black">没收违法所得 + 1～10 倍；<br>无所得或不足 10 万的，10 万～100 万</td></tr>
+          <tr style="background:rgba(239,68,68,.06)"><td><b>保险代理机构、保险经纪人违反禁止行为</b>（§139，含虚假/误导宣传、阻碍如实告知、侵占现金价值、出售个人信息）</td><td class="text-gray-500">§188</td><td class="text-right old">5 万～30 万</td><td class="text-right crimson-text font-black">没收违法所得 + 1～10 倍；<br>无所得或不足 10 万的，10 万～100 万；<br>情节严重可停业整顿或吊销许可证</td></tr>
+          <tr style="background:rgba(239,68,68,.06)"><td><b>个人保险代理人违规</b></td><td class="text-gray-500">§200</td><td class="text-right old">警告 + 2 万以下；情节严重 2 万～10 万</td><td class="text-right crimson-text font-black">警告 + 2 万以下；<br>情节严重 <b>2 万～20 万</b></td></tr>
+          <tr><td>聘任不具有任职资格、<span class="hl">从业资格</span>的人员</td><td class="text-gray-500">§190</td><td class="text-right old">2 万～10 万</td><td class="text-right crimson-text font-bold">5 万～50 万</td></tr>
+          <tr><td>转让、出租、出借业务许可证</td><td class="text-gray-500">§191</td><td class="text-right old">1 万～10 万</td><td class="text-right crimson-text font-bold">没收违法所得 + 1～10 倍；<br>无所得或不足 50 万的，50 万～500 万</td></tr>
+          <tr><td>未按规定缴存保证金或投保职业责任保险；未设专门账簿</td><td class="text-gray-500">§189</td><td class="text-right old">2 万～10 万</td><td class="text-right crimson-text font-bold">10 万～100 万</td></tr>
+          <tr><td>报告报表文件资料有<span class="hl">虚假记载、误导性陈述或者重大遗漏</span>；拒绝妨碍检查</td><td class="text-gray-500">§193</td><td class="text-right old">10 万～50 万</td><td class="text-right crimson-text font-bold">没收违法所得 + 1～10 倍；<br>无所得或不足 20 万的，20 万～200 万</td></tr>
+          <tr style="background:rgba(212,175,55,.07)"><td><b>对直接负责的主管人员和其他直接责任人员</b></td><td class="text-gray-500">§194</td><td class="text-right old">警告 + 1 万～10 万；情节严重撤销任职资格</td><td class="text-right crimson-text font-black">保险公司条线：警告 + <b>5 万～50 万</b><br>中介机构条线：警告 + <b>2 万～20 万</b><br>情节严重：取消一定期限直至<b>终身</b>任职资格</td></tr>
+          <tr><td>违反法律、行政法规规定（兜底）</td><td class="text-gray-500">§205</td><td class="text-right old">情节严重的可禁止进入保险业</td><td class="text-right crimson-text font-bold">可对责任人员警告 + <b>5 万～50 万</b>；<br>情节严重可取消任职资格直至终身、禁入</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-gray-500 text-sm mt-5">新增的整条罚则还有：<span class="artno">§181</span>（提交虚假申请文件骗取许可）、<span class="artno">§187</span>（中介超范围经营 / 未经批准变更终止）、<span class="artno">§195～§198</span>（资金运用、股东与实际控制人专门罚则）、<span class="artno">§199</span>（为保险公司提供信息科技服务的机构）。</p>
+  </div>
+</section>
+
+<!-- 17 行动项 -->
+<section id="action" class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow gold-text">收尾 &middot; 周一散会后做什么</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-8">七条团队红线 + <span class="gold-text">三个对客统一口径</span></h2>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div>
+        <div class="text-xl font-black crimson-text mb-4 tracking-wide">A &middot; 七条团队红线（对内）</div>
+        <div class="space-y-3">
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">1</span><div><b>宣传不得虚假、不得引人误解。</b><span class="text-gray-400 text-sm">收益演示标明非保证、分红给全表实现率、只用我司代理产品的原始演示表。</span><span class="text-gray-600 text-xs">§123(1) §139(1)</span></div></div></div>
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">2</span><div><b>自媒体内容真实、客观。</b><span class="text-gray-400 text-sm">数字必须能追到可查信源；不做「所以现在必须买」的推论。与 9-30 施行的《金融产品网络营销管理办法》叠加执行。</span><span class="text-gray-600 text-xs">§156</span></div></div></div>
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">3</span><div><b>客户信息不外流。</b><span class="text-gray-400 text-sm">名单、保单截图、体检报告、聊天记录，一律不外发、不换、不卖。受益人信息同样受保护。</span><span class="text-gray-600 text-xs">§139(11) §121</span></div></div></div>
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">4</span><div><b>持证上岗，证在有效期内。</b><span class="text-gray-400 text-sm">团队本周内自查一遍执业证状态；无证不得单独面客展业。</span><span class="text-gray-600 text-xs">§130 §190</span></div></div></div>
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">5</span><div><b>健康告知让被保险人本人确认。</b><span class="text-gray-400 text-sm">不代填、不代勾、不说「这个不用填」。被保险人已是法定告知义务人。</span><span class="text-gray-600 text-xs">§17 §139(4)</span></div></div></div>
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">6</span><div><b>说明义务要留痕。</b><span class="text-gray-400 text-sm">免除<b>或减轻</b>责任、等待期、免赔额、赔付比例，逐条讲到并留下录音录像或文字记录。</span><span class="text-gray-600 text-xs">§18</span></div></div></div>
+          <div class="law-card warn py-3"><div class="flex gap-3 items-start"><span class="text-xl font-black crimson-text">7</span><div><b>不碰客户的钱。</b><span class="text-gray-400 text-sm">保费、保险金、<b>现金价值</b>一律不经手；不参与任何形式的代理退保。</span><span class="text-gray-600 text-xs">§139(8)</span></div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="text-xl font-black gold-text mb-4 tracking-wide">B &middot; 三个对客统一口径（对外）</div>
+        <div class="space-y-4 mb-6">
+          <div class="law-card mod">
+            <div class="text-lg font-black mb-2">口径一 &middot; 立法进度</div>
+            <p class="quote text-sm">「保险法正在全面修订，目前是<b>公开征求意见</b>阶段，还没有生效。里面有几条对客户是明确利好，我先跟您说一下方向，最终以正式发布为准。」</p>
+          </div>
+          <div class="law-card mod">
+            <div class="text-lg font-black mb-2">口径二 &middot; 公司会不会倒</div>
+            <p class="quote text-sm">「草案写明：经营人寿、年金、长期健康保险的公司<b>不得解散</b>；真出问题时，保单<b>应当转让给经营同类业务的公司</b>继续有效；保险保障基金<b>在限额内救助</b>，超出部分从清算财产中受偿。」<br><span class="hl-r">——不说「国家兜底」，不说「全额赔付」。</span></p>
+          </div>
+          <div class="law-card mod">
+            <div class="text-lg font-black mb-2">口径三 &middot; 客户多了哪些权利</div>
+            <p class="quote text-sm">「犹豫期写进法律了；保单借款写进法律了；交了钱还没承保期间出险、符合承保条件的视为合同成立；没讲清楚的免责条款客户可以主张不算数；打官司的时效从 2 年延到 3 年。」</p>
+          </div>
+        </div>
+        <div class="law-card">
+          <div class="text-lg font-black mb-2 ice-text">C &middot; 我这边负责跟进的三件事</div>
+          <ol class="text-gray-300 text-sm leading-relaxed list-decimal ml-5 space-y-1.5">
+            <li>盯草案后续进展（人大审议稿、正式发布稿），有变化即时更新本页。</li>
+            <li>把第十八条的说明义务留痕，做进现有销售流程和系统留档。</li>
+            <li>跨境三条（§163 §164 §201）的展业口径，等定稿和配套细则出来后统一发布，<span class="hl-r">在此之前谁都不要自己解读</span>。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 附录 -->
+<section class="slide">
+  <div class="slide-inner">
+    <p class="eyebrow text-gray-500">附录 &middot; 条文速查</p>
+    <h2 class="text-4xl md:text-5xl font-black mb-7">本页引用的条文 <span class="gold-text">一览</span></h2>
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="law-card">
+        <div class="text-lg font-black gold-text mb-3">第二章 &middot; 保险合同</div>
+        <table class="cmp">
+          <tr><td class="artno">§14</td><td>已收保费未表示承保，出险视为合同成立 <span class="tag tag-new">新增款</span></td></tr>
+          <tr><td class="artno">§17</td><td>如实告知义务人扩至被保险人；「应当知道」 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§18</td><td>免除<b>或减轻</b>责任条款说明义务 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§20</td><td>无效格式条款扩至「减轻」「限制」 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§24</td><td>核定 30 日 / 给付 10 日 / 一次性补件 <span class="tag tag-keep">保留</span></td></tr>
+          <tr><td class="artno">§27</td><td>诉讼时效 2→3 年；年金险列入 5 年 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§31</td><td>格式条款不利解释规则 <span class="tag tag-keep">保留</span></td></tr>
+          <tr><td class="artno">§39</td><td>人寿、<b>年金</b>保费不得诉讼追缴 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§42</td><td>受益人变更：未通知不发生效力 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§43</td><td><b>保单借款</b> <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§45 §47</td><td>删去「交足二年」前提，直退现金价值 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§48 §59</td><td>费用补偿型人身险参照代位求偿 / 重复保险 <span class="tag tag-new">新增</span></td></tr>
+          <tr><td class="artno">§50</td><td><b>犹豫期</b> <span class="tag tag-new">全新</span></td></tr>
+        </table>
+      </div>
+      <div class="law-card">
+        <div class="text-lg font-black gold-text mb-3">第三、四章 &middot; 保险公司 / 经营规则</div>
+        <table class="cmp">
+          <tr><td class="artno">§96</td><td>资料保管统一不少于十年 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§97</td><td>保障基金：非政府性、<b>限额救助</b> <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§98</td><td>寿险/年金/长期健康险公司不得解散 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§100</td><td>破产清偿第二顺位增列现金价值 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§101</td><td>保单转让给同类业务公司 + 基金限额救助 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§104</td><td>人身险业务明确列入<b>年金保险</b> <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§116</td><td>保险公司销售人员须具备<b>从业资格</b> <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§117</td><td>建立经纪人管理机制、完善登记制度 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§121</td><td><b>个人信息保护 + 拒绝第三方查询保单</b> <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§122</td><td><b>行业服务平台</b>（保单登记服务） <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§123</td><td>公司及员工禁止行为 13→<b>15 项</b> <span class="tag tag-mod">修改</span></td></tr>
+        </table>
+      </div>
+      <div class="law-card">
+        <div class="text-lg font-black gold-text mb-3">第五～七章 &middot; 中介 / 监管 / 责任</div>
+        <table class="cmp">
+          <tr><td class="artno">§127</td><td>业务范围与<b>经营区域</b>；变更终止须批准 <span class="tag tag-new">新增段</span></td></tr>
+          <tr><td class="artno">§129</td><td>连续 6 个月未展业可撤销 <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§130</td><td>中介从业人员须具备<b>从业资格</b> <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§133</td><td>个人代理人一对一：加入<b>年金保险</b> <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§138</td><td>佣金只付给代理人、经纪人 <span class="tag tag-keep">保留</span></td></tr>
+          <tr><td class="artno">§139</td><td>中介及从业人员禁止行为 10→<b>12 项</b> <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§140</td><td>中介资料如实记录「三不」 <span class="tag tag-new">新增段</span></td></tr>
+          <tr><td class="artno">§142</td><td>审慎经营规则含产品营销、消保、数据安全 <span class="tag tag-mod">修改</span></td></tr>
+          <tr><td class="artno">§144</td><td>名称/经营范围不得擅用保险字样 <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§148</td><td><b>消费纠纷调解机制</b> <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§156</td><td><b>不得编造传播虚假/误导信息</b> <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§163 §164</td><td><b>跨境监管 / 境外保险活动</b> <span class="tag tag-new">全新</span></td></tr>
+          <tr><td class="artno">§179～§205</td><td>法律责任：罚款幅度普遍提高 <span class="tag tag-mod">修改</span></td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="text-gray-600 text-sm mt-6">资料来源：《中华人民共和国保险法（修订草案征求意见稿）》正文（8 章 214 条）及《修改前后对照表》；《〈中华人民共和国保险法（修订草案征求意见稿）〉起草说明》。<br>条号均为修订草案条号；标注「现行」处指现行保险法（2015 年修正）。本页仅供保心上人内部培训使用，不构成法律意见。</p>
+  </div>
+</section>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const EDGE = 8;
+function currentSlideIndex(){
+  const y = window.scrollY + 2;
+  let idx = 0;
+  slides.forEach((s,i)=>{ if (s.offsetTop <= y + window.innerHeight*0.35) idx = i; });
+  return idx;
+}
+function gotoSlide(i){
+  if (i < 0 || i >= slides.length) return;
+  window.scrollTo({ top: slides[i].offsetTop, behavior:'smooth' });
+}
+function pageNext(){
+  const i = currentSlideIndex(), s = slides[i];
+  const slideBottom = s.offsetTop + s.offsetHeight;
+  if (slideBottom - (window.scrollY + window.innerHeight) > EDGE) {
+    window.scrollBy({ top: window.innerHeight*0.85, behavior:'smooth' });
+  } else { gotoSlide(i+1); }
+}
+function pagePrev(){
+  const i = currentSlideIndex(), s = slides[i];
+  if (window.scrollY - s.offsetTop > EDGE) {
+    window.scrollBy({ top: -window.innerHeight*0.85, behavior:'smooth' });
+  } else { gotoSlide(i-1); }
+}
+function fitSlides(){
+  slides.forEach(sec=>{
+    const inner = sec.querySelector('.slide-inner');
+    if (!inner) return;
+    inner.style.zoom = 1;
+    const cs = getComputedStyle(sec);
+    const avail = window.innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const need = inner.scrollHeight;
+    if (need > avail + 2) inner.style.zoom = Math.max(0.78, avail/need);
+  });
+}
+window.addEventListener('resize', fitSlides);
+fitSlides();
+
+const moreHint = document.createElement('div');
+moreHint.id = 'more-hint';
+moreHint.textContent = '↓ 本页还有内容';
+document.body.appendChild(moreHint);
+function refreshHint(){
+  const i = currentSlideIndex(), s = slides[i];
+  const slideBottom = s.offsetTop + s.offsetHeight;
+  moreHint.classList.toggle('show', slideBottom - (window.scrollY + window.innerHeight) > EDGE);
+}
+window.addEventListener('scroll', refreshHint, { passive:true });
+window.addEventListener('resize', refreshHint);
+setTimeout(function(){ fitSlides(); refreshHint(); }, 300);
+refreshHint();
+
+document.addEventListener('keydown', (e)=>{
+  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+  if (['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)) { e.preventDefault(); pageNext(); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); pagePrev(); }
+});
+</script>
+</body>
+</html>

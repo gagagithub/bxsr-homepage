@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>今日攻坚 · 看板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F0E8D6; --card:#FCFAF4; --line:#E4DAC2; --line2:#EFE7D4;
+    --ink:#332a1b; --ink2:#7c6d54; --ink3:#a99c83;
+    --red:#BE3A2B; --redS:#fbeae6; --gold:#BC8620; --goldS:#f6edd3;
+    --green:#4E8A5B; --greenS:#e7f0e8; --espresso:#241b12;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Sans SC","PingFang SC",-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+  .demo-note{font-size:12.5px;color:#7a5a2a;background:#f7eccd;border-bottom:1px solid #e6d3a3;padding:8px 30px;line-height:1.5;}
+  .demo-note b{color:#9a3412;}
+  .wrap{max-width:1560px;margin:0 auto;padding:26px 30px 50px;}
+
+  /* 头 */
+  .head .ttl{font-size:30px;font-weight:900;letter-spacing:.5px;display:flex;align-items:center;gap:10px;}
+  .head .sub{font-size:14px;color:var(--ink2);margin-top:6px;}
+  .head .sub b{color:var(--ink);}
+
+  /* 过滤 */
+  .filters{display:flex;align-items:center;gap:10px;margin:22px 0 4px;flex-wrap:wrap;}
+  .chip{border:1px solid var(--line);background:#faf6ec;color:var(--ink2);border-radius:99px;
+    padding:8px 16px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;}
+  .chip:hover{border-color:#d8caa9;}
+  .chip.on{background:var(--espresso);color:#f3ead4;border-color:var(--espresso);}
+  .chip.on.a{background:var(--red);border-color:var(--red);}
+  .chip.on.b{background:var(--gold);border-color:var(--gold);}
+  .chip .dt{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;}
+  .chip .dt.a{background:var(--red);} .chip .dt.b{background:var(--gold);}
+  .spacer{flex:1;}
+  .btn-dark{background:var(--espresso);color:#f3ead4;border:0;border-radius:99px;padding:9px 18px;
+    font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .btn-ghost{background:#faf6ec;border:1px solid var(--line);color:var(--ink2);border-radius:99px;
+    padding:9px 16px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+  /* 大数字 */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:18px 0 26px;}
+  .stat{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;}
+  .stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ink3);}
+  .stat.k1::before{background:var(--ink);} .stat.k2::before{background:var(--red);}
+  .stat.k3::before{background:var(--gold);} .stat.k4::before{background:var(--green);}
+  .stat .n{font-size:40px;font-weight:900;line-height:1;letter-spacing:-1px;}
+  .stat.k2 .n{color:var(--red);} .stat.k3 .n{color:var(--gold);} .stat.k4 .n{color:var(--green);}
+  .stat .n small{font-size:18px;color:var(--ink3);font-weight:700;}
+  .stat .lb{font-size:13px;color:var(--ink2);margin-top:9px;font-weight:500;}
+  .stat .lb b{color:var(--ink);font-weight:700;}
+
+  /* 看板 */
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:start;}
+  .col-h{margin-bottom:14px;}
+  .col-h .step{font-size:11px;letter-spacing:2.5px;color:var(--ink3);font-weight:800;}
+  .col-h .nm{font-size:17px;font-weight:900;margin-top:3px;display:flex;align-items:center;gap:7px;}
+  .col-h .ct{font-size:12.5px;color:var(--ink2);margin-top:2px;}
+  .col-h .ct b{color:var(--ink);}
+  .col-h.goal .nm{color:var(--green);}
+  .col-body{min-height:80px;display:flex;flex-direction:column;gap:12px;}
+  .col-empty{border:1.5px dashed #ddd0b4;border-radius:14px;color:var(--ink3);font-size:13px;
+    text-align:center;padding:30px 0;background:rgba(255,255,255,.3);}
+
+  /* 卡片 */
+  .kc{background:var(--card);border:1px solid var(--line2);border-left:4px solid var(--red);border-radius:14px;
+    padding:13px 14px 12px;box-shadow:0 1px 4px rgba(60,45,20,.05);transition:.2s;}
+  .kc.b{border-left-color:var(--gold);}
+  .kc:hover{box-shadow:0 6px 18px rgba(60,45,20,.13);transform:translateY(-1px);}
+  .kc.done{opacity:.45;}
+  .kc-top{display:flex;align-items:center;gap:8px;}
+  .kc-nm{font-size:16px;font-weight:900;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .hchip{font-size:10.5px;font-weight:900;color:#fff;border-radius:6px;padding:2px 7px;letter-spacing:.5px;flex-shrink:0;}
+  .hchip.a{background:var(--red);} .hchip.b{background:var(--gold);}
+  .kc-meta{font-size:12.5px;color:var(--ink2);margin-top:6px;}
+  .kc-meta .d{color:var(--ink);font-weight:700;}
+  .kc-op{font-size:12.5px;color:#5a4f3d;line-height:1.5;margin-top:9px;padding:8px 10px;background:#f7f1e3;
+    border-radius:9px;border:1px solid #ece1c8;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:text;}
+  .kc-op.full{-webkit-line-clamp:unset;}
+  .kc-acts{display:flex;gap:7px;margin-top:10px;}
+  .kc-acts button{font-family:inherit;font-weight:700;border-radius:9px;cursor:pointer;border:0;transition:.15s;}
+  .kc-acts .ct{flex:1;background:var(--espresso);color:#f3ead4;font-size:13px;padding:9px 0;}
+  .kc-acts .ct:hover{background:#3a2c1c;}
+  .kc-acts .cp{background:#f3ecdd;border:1px solid var(--line);color:var(--ink2);font-size:12.5px;padding:9px 12px;}
+  .kc-acts .dn{width:40px;background:#f3ecdd;color:var(--ink3);font-size:15px;padding:0;border:1px solid var(--line);}
+  .kc-acts .dn.is{background:var(--greenS);color:var(--green);border-color:#bcd9c2;}
+
+  .toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(18px);opacity:0;
+    background:var(--espresso);color:#f3ead4;font-size:13.5px;padding:12px 20px;border-radius:12px;
+    transition:.28s;z-index:99;max-width:440px;text-align:center;line-height:1.5;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.25);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="demo-note"><b>原型演示</b>　数据为 2026-06-01 真实 P2A/P2B（江宁名下 23 户）。可操作：过滤 P2A/P2B、点开场白展开/改、复制、打勾归档。「联系」为模拟——真机走企微 JS-SDK 直接拉起与该客户的聊天。</div>
+
+<div class="wrap">
+  <div class="head">
+    <div class="ttl">🎯 今日攻坚</div>
+    <div class="sub">P2A / P2B · <b>有方案的热客户</b> · 按方案推进阶段排，越往右越接近成交 · 规划师 <b>江宁</b> · 6月1日</div>
+  </div>
+
+  <div class="filters">
+    <button class="chip on" data-f="ALL">全部 <span id="fAll"></span></button>
+    <button class="chip a" data-f="P2A"><span class="dt a"></span>P2A 攻坚 <span id="fA"></span></button>
+    <button class="chip b" data-f="P2B"><span class="dt b"></span>P2B 加热 <span id="fB"></span></button>
+    <button class="chip" style="cursor:default">全部规划师 ▾</button>
+    <span class="spacer"></span>
+    <button class="btn-ghost" id="copyAll">📋 复制今日清单</button>
+    <button class="btn-dark" style="cursor:default">⟳ 刷新</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat k1"><div class="n" id="s1">23</div><div class="lb"><b>今日清单</b> · 有方案待跟进</div></div>
+    <div class="stat k2"><div class="n" id="s2">7</div><div class="lb"><b>P2A</b> 今天必攻 · 客户≤14天回</div></div>
+    <div class="stat k3"><div class="n" id="s3">16</div><div class="lb"><b>P2B</b> 待加热 · 15–60天没回</div></div>
+    <div class="stat k4"><div class="n"><span id="s4">0</span><small> / 23</small></div><div class="lb"><b>已联系</b> · 今日进度</div></div>
+  </div>
+
+  <div class="board" id="board"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = [
+  {tag:'P2A', name:'刘蓉嘉', d:5,  sub:'异议处理中',  appeal:'商业养老金'},
+  {tag:'P2A', name:'zy',     d:10, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'雪天转晴', d:10, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'Peipei', d:13, sub:'异议处理中',  appeal:'待明确'},
+  {tag:'P2A', name:'坚持不懈', d:14, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'Coco',   d:14, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2A', name:'苹果',   d:14, sub:'等待方案讲解', appeal:'商业养老金'},
+  {tag:'P2B', name:'杨海峰', d:17, sub:'异议处理中',  appeal:'储蓄险'},
+  {tag:'P2B', name:'曾曾日上', d:17, sub:'异议处理中',  appeal:'港险'},
+  {tag:'P2B', name:'山村读书人', d:18, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'陈小艾', d:19, sub:'等待方案讲解', appeal:'商业养老金'},
+  {tag:'P2B', name:'jenny',  d:20, sub:'等待方案讲解', appeal:'增额终身寿险'},
+  {tag:'P2B', name:'王学明', d:23, sub:'等待方案讲解', appeal:'储蓄险'},
+  {tag:'P2B', name:'严于律己', d:26, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'俞如禄', d:32, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'若水',   d:33, sub:'等待方案讲解', appeal:'商业养老金'},
+  {tag:'P2B', name:'大道至简', d:39, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'盛泰建材', d:40, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'秋实',   d:41, sub:'异议处理中',  appeal:'港险'},
+  {tag:'P2B', name:'彭涛',   d:46, sub:'异议处理中',  appeal:'储蓄险'},
+  {tag:'P2B', name:'雪儿妈妈', d:49, sub:'做方案',     appeal:'增额终身寿险'},
+  {tag:'P2B', name:'chai',   d:49, sub:'等待方案讲解', appeal:'港险'},
+  {tag:'P2B', name:'。',     d:53, sub:'等待方案讲解', appeal:'重疾险'},
+];
+const COLS=[
+  {key:'做方案',     step:'阶段 1', icon:'✍️', nm:'做方案中'},
+  {key:'等待方案讲解', step:'阶段 2', icon:'📋', nm:'等待讲解'},
+  {key:'异议处理中',  step:'阶段 3', icon:'💬', nm:'异议处理 · 临门一脚'},
+  {key:'成交',       step:'目标',   icon:'🎯', nm:'成交', goal:true},
+];
+const CONCERN={'港险':'分红实现率','港险分红险':'分红实现率','商业养老金':'每月能领多少、领多久','储蓄险':'中途取用灵不灵活','增额终身寿险':'复利和减保规则','重疾险':'保额够不够','待明确':'最在意的那点'};
+const PROOF={'港险':'友邦近 5 年分红达成率','港险分红险':'友邦近 5 年分红达成率','商业养老金':'几款产品的现金流测算表','储蓄险':'灵活取用的几种用法','增额终身寿险':'逐年现金价值对照表','重疾险':'同龄人保额配置参考','待明确':'对比资料'};
+function opener(c){const n=c.name;
+  if(c.sub==='异议处理中')return `${n}，您上次顾虑的「${CONCERN[c.appeal]||'那点'}」，我整理了${PROOF[c.appeal]||'资料'}，几个关键数据发您参考👇`;
+  if(c.sub==='做方案')return `${n}，您的${c.appeal}方案我在收尾，想再确认下预算和缴费年限，定了我今天就出。`;
+  return `${n}，您要的${c.appeal}方案我做好了，做了 3 个版本帮您对比，今晚发您过目方便吗？`;}
+
+let filter='ALL';
+const done=new Set();
+const $=s=>document.querySelector(s);
+function visible(){return DATA.map((c,i)=>({...c,i})).filter(c=>filter==='ALL'||c.tag===filter);}
+function render(){
+  const board=$('#board');board.innerHTML='';
+  const rows=visible();
+  COLS.forEach(col=>{
+    const items=rows.filter(c=>c.sub===col.key).sort((a,b)=>a.d-b.d);
+    const wrap=document.createElement('div');
+    wrap.className='col';
+    wrap.innerHTML=`<div class="col-h ${col.goal?'goal':''}">
+        <div class="step">${col.step}</div>
+        <div class="nm">${col.icon} ${col.nm}</div>
+        <div class="ct"><b>${items.length}</b> 户</div>
+      </div><div class="col-body"></div>`;
+    const body=wrap.querySelector('.col-body');
+    if(!items.length){body.innerHTML=`<div class="col-empty">${col.goal?'今天先空着 · 目标在此':'暂无'}</div>`;}
+    items.forEach(c=>{
+      const a=c.tag==='P2A',isDone=done.has(c.i);
+      const card=document.createElement('div');
+      card.className='kc'+(a?'':' b')+(isDone?' done':'');
+      card.innerHTML=`
+        <div class="kc-top"><span class="kc-nm">${c.name}</span><span class="hchip ${a?'a':'b'}">${c.tag}</span></div>
+        <div class="kc-meta">${c.appeal} · 上次回复 <span class="d">${c.d}天前</span></div>
+        <div class="kc-op" title="点击展开/收起">${opener(c)}</div>
+        <div class="kc-acts">
+          <button class="ct">💬 联系</button>
+          <button class="cp">复制</button>
+          <button class="dn ${isDone?'is':''}" title="标记已联系">✓</button>
+        </div>`;
+      card.querySelector('.kc-op').onclick=e=>e.currentTarget.classList.toggle('full');
+      card.querySelector('.ct').onclick=()=>toast(`📲 演示：企微将拉起与「${c.name}」的会话（真机：openEnterpriseChat 直接进聊天）`);
+      card.querySelector('.cp').onclick=()=>{const t=card.querySelector('.kc-op').innerText;(navigator.clipboard?.writeText(t)||Promise.resolve()).finally(()=>toast('已复制开场白'));};
+      card.querySelector('.dn').onclick=()=>{done.has(c.i)?done.delete(c.i):done.add(c.i);$('#s4').textContent=done.size;render();};
+      body.appendChild(card);
+    });
+    board.appendChild(wrap);
+  });
+}
+let tt;function toast(m){const t=$('#toast');t.innerHTML=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
+document.querySelectorAll('.chip[data-f]').forEach(b=>b.onclick=()=>{
+  filter=b.dataset.f;
+  document.querySelectorAll('.chip[data-f]').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+$('#copyAll').onclick=()=>{
+  const lines=visible().sort((a,b)=>a.d-b.d).map(c=>`【${c.tag}】${c.name} · ${c.appeal} · ${c.sub} · ${c.d}天前回`);
+  const txt='今日攻坚（江宁 6月1日）\n'+lines.join('\n');
+  (navigator.clipboard?.writeText(txt)||Promise.resolve()).finally(()=>toast(`已复制今日清单 ${lines.length} 户`));
+};
+const nA=DATA.filter(c=>c.tag==='P2A').length, nB=DATA.filter(c=>c.tag==='P2B').length;
+$('#s1').textContent=$('#fAll').textContent=DATA.length;
+$('#s2').textContent=$('#fA').textContent=nA;
+$('#s3').textContent=$('#fB').textContent=nB;
+render();
+</script>
+</body>
+</html>
